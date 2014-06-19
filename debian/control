@@ -1,0 +1,14 @@
+Source: qt-components-hildon
+Section: libs
+Priority: optional
+Maintainer: Stuart Howarth <showarth@marxoft.co.uk>
+Build-Depends: debhelper (>= 5), libqt4-dev
+Standards-Version: 3.7.3
+
+Package: qt-components-hildon
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libqtm-12
+Description: QML components with Hildon styling.
+ Qt Components Hildon allows application developers to create
+ Maemo5 applications with Hildon styling using declarative code.
+XB-Maemo-Display-Name: qt-components-hildon

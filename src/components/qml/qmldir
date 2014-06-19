@@ -1,0 +1,4 @@
+plugin hildoncomponents
+
+ProgressDialog 1.0 ProgressDialog.qml
+QueryDialog 1.0 QueryDialog.qml

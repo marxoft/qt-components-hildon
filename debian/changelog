@@ -1,0 +1,11 @@
+qt-components-hildon (0.1.0) unstable; urgency=low
+
+  * Now exposing Qt widgets to QML.
+
+ -- Stuart Howarth <showarth@marxoft.co.uk>  Thu, 19 Jun 2014 15:12:56 +0100
+
+qt-components-hildon (0.0.1) unstable; urgency=low
+
+  * Initial Release.
+
+ -- Stuart Howarth <stuhowarth77@gmail.com>  Sun, 31 Mar 2013 15:01:46 +0000

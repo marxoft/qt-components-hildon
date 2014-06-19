@@ -1,0 +1,11 @@
+#!/bin/sh
+
+set -e
+
+if [ ! -e  /usr/lib/qt4/imports/org/hildon ]
+    then
+        mkdir -p /usr/lib/qt4/imports/org/
+        ln -s /opt/lib/qt4/imports/org/hildon/ /usr/lib/qt4/imports/org/
+fi
+
+exit 0

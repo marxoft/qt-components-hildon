@@ -1,0 +1,10 @@
+#!/bin/sh
+
+set -e
+
+if [ -h /usr/lib/qt4/imports/org/hildon ]
+    then
+        rm /usr/lib/qt4/imports/org/hildon
+fi
+
+exit 0
