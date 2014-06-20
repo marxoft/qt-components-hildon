@@ -1,3 +1,9 @@
+qt-components-hildon (0.1.1) unstable; urgency=low
+
+  * Fix undefined symbol error in org.hildon.webkit.
+
+ -- Stuart Howarth <showarth@marxoft.co.uk>  Thu, 19 Jun 2014 19:21:34 +0100
+
 qt-components-hildon (0.1.0) unstable; urgency=low
 
   * Now exposing Qt widgets to QML.

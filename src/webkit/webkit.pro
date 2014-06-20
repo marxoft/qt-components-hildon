@@ -7,11 +7,18 @@ TARGET = hildonwebkit
 INCLUDEPATH += ../components
 
 HEADERS += \
+    ../components/anchorline_p.h \
+    ../components/anchors_p.h \
+    ../components/anchors_p_p.h \
+    ../components/item_p.h \
+    ../components/item_p_p.h \
     webview_p.h \
     webview_p_p.h \
     plugin_p.h
 
 SOURCES += \
+    ../components/anchors.cpp \
+    ../components/item.cpp \
     webview.cpp \
     plugin.cpp
 
