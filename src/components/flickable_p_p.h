@@ -20,12 +20,16 @@
 
 #include "item_p_p.h"
 #include "flickable_p.h"
+#include <QAbstractKineticScroller>
 
 class FlickablePrivate : public ItemPrivate
 {
 
 public:
-    FlickablePrivate(Flickable *parent) : ItemPrivate(parent) {}
+    FlickablePrivate(Flickable *parent) :
+        ItemPrivate(parent),
+        kineticScroller(parent->property("kineticScroller").value<QAbstractKineticScroller*>())
+    {}
 
     static void data_append(QDeclarativeListProperty<QObject> *list, QObject *obj);
 
@@ -34,6 +38,8 @@ public:
     QDeclarativeListProperty<QObject> data();
 
     QDeclarativeListProperty<QObject> actions();
+
+    QAbstractKineticScroller *kineticScroller;
 
     Q_DECLARE_PUBLIC(Flickable)
 };

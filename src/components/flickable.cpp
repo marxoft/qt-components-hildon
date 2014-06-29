@@ -20,13 +20,15 @@
 #include <QActionGroup>
 #include <QMoveEvent>
 #include <QResizeEvent>
+#include <QScrollBar>
 
 Flickable::Flickable(QWidget *parent) :
     QScrollArea(parent),
     d_ptr(new FlickablePrivate(this))
 {
     this->setWidgetResizable(true);
-    this->setWidget(new Item(this));
+    this->connect(this->horizontalScrollBar(), SIGNAL(valueChanged(int)), this, SIGNAL(contentXChanged()));
+    this->connect(this->verticalScrollBar(), SIGNAL(valueChanged(int)), this, SIGNAL(contentYChanged()));
 }
 
 Flickable::Flickable(FlickablePrivate &dd, QWidget *parent) :
@@ -34,7 +36,8 @@ Flickable::Flickable(FlickablePrivate &dd, QWidget *parent) :
     d_ptr(&dd)
 {
     this->setWidgetResizable(true);
-    this->setWidget(new Item(this));
+    this->connect(this->horizontalScrollBar(), SIGNAL(valueChanged(int)), this, SIGNAL(contentXChanged()));
+    this->connect(this->verticalScrollBar(), SIGNAL(valueChanged(int)), this, SIGNAL(contentYChanged()));
 }
 
 Flickable::~Flickable() {}
@@ -85,6 +88,92 @@ AnchorLine Flickable::verticalCenter() const {
     Q_D(const Flickable);
 
     return d->verticalCenter;
+}
+
+bool Flickable::interactive() const {
+    Q_D(const Flickable);
+
+    return d->kineticScroller->isEnabled();
+}
+
+void Flickable::setInteractive(bool interactive) {
+    if (interactive != this->interactive()) {
+        Q_D(Flickable);
+        d->kineticScroller->setEnabled(interactive);
+        emit interactiveChanged();
+    }
+}
+
+bool Flickable::moving() const {
+    Q_D(const Flickable);
+
+    switch (d->kineticScroller->state()) {
+    case QAbstractKineticScroller::Pushing:
+    case QAbstractKineticScroller::AutoScrolling:
+        return true;
+    default:
+        return false;
+    }
+}
+
+bool Flickable::atXBeginning() const {
+    return this->horizontalScrollBar()->value();
+}
+
+bool Flickable::atXEnd() const {
+    return this->horizontalScrollBar()->value() == this->horizontalScrollBar()->maximum();
+}
+
+bool Flickable::atYBeginning() const {
+    return this->verticalScrollBar()->value() == 0;
+}
+
+bool Flickable::atYEnd() const {
+    return this->verticalScrollBar()->value() == this->verticalScrollBar()->maximum();
+}
+
+int Flickable::contentX() const {
+    return this->horizontalScrollBar()->value();
+}
+
+void Flickable::setContentX(int x) {
+    this->horizontalScrollBar()->setValue(x);
+}
+
+int Flickable::contentY() const {
+    return this->horizontalScrollBar()->value();
+}
+
+void Flickable::setContentY(int y) {
+    this->verticalScrollBar()->setValue(y);
+}
+
+qreal Flickable::flickDeceleration() const {
+    Q_D(const Flickable);
+
+    return d->kineticScroller->decelerationFactor();
+}
+
+void Flickable::setFlickDeceleration(qreal deceleration) {
+    if (deceleration != this->flickDeceleration()) {
+        Q_D(Flickable);
+        d->kineticScroller->setDecelerationFactor(deceleration);
+        emit flickDecelerationChanged();
+    }
+}
+
+qreal Flickable::maximumFlickVelocity() const {
+    Q_D(const Flickable);
+
+    return d->kineticScroller->maximumVelocity();
+}
+
+void Flickable::setMaximumFlickVelocity(qreal maximum) {
+    if (maximum != this->maximumFlickVelocity()) {
+        Q_D(Flickable);
+        d->kineticScroller->setMaximumVelocity(maximum);
+        emit maximumFlickVelocityChanged();
+    }
 }
 
 void Flickable::changeEvent(QEvent *event) {
@@ -146,7 +235,11 @@ void FlickablePrivate::data_append(QDeclarativeListProperty<QObject> *list, QObj
 
     if (Flickable *flickable = qobject_cast<Flickable*>(list->object)) {
         flickable->d_func()->dataList.append(obj);
-        obj->setParent(flickable->widget());
+        obj->setParent(flickable);
+
+        if ((!flickable->widget()) && (obj->isWidgetType())) {
+            flickable->setWidget(qobject_cast<QWidget*>(obj));
+        }
     }
 }
 

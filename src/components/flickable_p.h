@@ -41,6 +41,16 @@ class Flickable : public QScrollArea, public QDeclarativeParserStatus
     Q_PROPERTY(AnchorLine bottom READ bottom CONSTANT FINAL)
     Q_PROPERTY(AnchorLine horizontalCenter READ horizontalCenter CONSTANT FINAL)
     Q_PROPERTY(AnchorLine verticalCenter READ verticalCenter CONSTANT FINAL)
+    Q_PROPERTY(bool interactive READ interactive WRITE setInteractive NOTIFY interactiveChanged)
+    Q_PROPERTY(bool moving READ moving)
+    Q_PROPERTY(bool atXBeginning READ atXBeginning NOTIFY contentXChanged)
+    Q_PROPERTY(bool atXEnd READ atXEnd NOTIFY contentXChanged)
+    Q_PROPERTY(bool atYBeginning READ atYBeginning NOTIFY contentYChanged)
+    Q_PROPERTY(bool atYEnd READ atYEnd NOTIFY contentYChanged)
+    Q_PROPERTY(int contentX READ contentX WRITE setContentX NOTIFY contentXChanged)
+    Q_PROPERTY(int contentY READ contentY WRITE setContentY NOTIFY contentYChanged)
+    Q_PROPERTY(qreal flickDeceleration READ flickDeceleration WRITE setFlickDeceleration NOTIFY flickDecelerationChanged)
+    Q_PROPERTY(qreal maximumFlickVelocity READ maximumFlickVelocity WRITE setMaximumFlickVelocity NOTIFY maximumFlickVelocityChanged)
     Q_PRIVATE_PROPERTY(Flickable::d_func(), QDeclarativeListProperty<QObject> data READ data)
     Q_PRIVATE_PROPERTY(Flickable::d_func(), QDeclarativeListProperty<QObject> actions READ actions)
     Q_PRIVATE_PROPERTY(Flickable::d_func(), bool visible READ qmlVisible WRITE setQmlVisible)
@@ -63,12 +73,41 @@ public:
     AnchorLine horizontalCenter() const;
     AnchorLine verticalCenter() const;
 
+    bool interactive() const;
+    void setInteractive(bool interactive);
+
+    bool moving() const;
+
+    bool atXBeginning() const;
+    bool atXEnd() const;
+
+    bool atYBeginning() const;
+    bool atYEnd() const;
+
+    int contentX() const;
+    void setContentX(int x);
+
+    int contentY() const;
+    void setContentY(int y);
+
+    qreal flickDeceleration() const;
+    void setFlickDeceleration(qreal deceleration);
+
+    qreal maximumFlickVelocity() const;
+    void setMaximumFlickVelocity(qreal maximum);
+
 signals:
     void parentChanged();
     void xChanged();
     void yChanged();
     void widthChanged();
     void heightChanged();
+    void interactiveChanged();
+    void movingChanged();
+    void contentXChanged();
+    void contentYChanged();
+    void flickDecelerationChanged();
+    void maximumFlickVelocityChanged();
 
 private:
     Flickable(FlickablePrivate &dd, QWidget *parent = 0);
