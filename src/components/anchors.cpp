@@ -18,7 +18,6 @@
 #include "anchors_p.h"
 #include "anchors_p_p.h"
 #include <qdeclarativeinfo.h>
-#include <QDebug>
 
 static int position(QWidget *widget, AnchorLine::Line line) {
     int ret = 0;
@@ -872,42 +871,36 @@ bool AnchorsPrivate::isWidgetComplete() const {
 }
 
 void AnchorsPrivate::setWidgetX(int x) {
-    qDebug() << "Setting x to" << x << "for" << widget;
     updatingMe = true;
     widget->move(x, widget->y());
     updatingMe = false;
 }
 
 void AnchorsPrivate::setWidgetY(int y) {
-    qDebug() << "Setting y to" << y << "for" << widget;
     updatingMe = true;
     widget->move(widget->x(), y);
     updatingMe = false;
 }
 
 void AnchorsPrivate::setWidgetPos(const QPoint &pos) {
-    qDebug() << "Setting pos to" << pos << "for" << widget;
     updatingMe = true;
     widget->move(pos);
     updatingMe = false;
 }
 
 void AnchorsPrivate::setWidgetWidth(int width) {
-    qDebug() << "Setting width to" << width << "for" << widget;
     updatingMe = true;
     widget->setFixedWidth(width);
     updatingMe = false;
 }
 
 void AnchorsPrivate::setWidgetHeight(int height) {
-    qDebug() << "Setting height to" << height << "for" << widget;
     updatingMe = true;
     widget->setFixedHeight(height);
     updatingMe = false;
 }
 
 void AnchorsPrivate::setWidgetSize(const QSize &size) {
-    qDebug() << "Setting size to" << size << "for" << widget;
     updatingMe = true;
     widget->setFixedSize(size);
     updatingMe = false;
@@ -1019,7 +1012,6 @@ void AnchorsPrivate::onWidgetCompleted() {
 }
 
 void AnchorsPrivate::update() {
-    qDebug() << "Updating anchors for" << widget;
     this->fillChanged();
     this->centerInChanged();
 
@@ -1036,8 +1028,6 @@ void AnchorsPrivate::_q_updateVerticalAnchors() {
     if ((fill) || (centerIn) || (!this->isWidgetComplete())) {
         return;
     }
-
-    qDebug() << "Updating vertical anchors for" << widget;
 
     if (updatingVerticalAnchor < 2) {
         ++updatingVerticalAnchor;
@@ -1122,8 +1112,6 @@ void AnchorsPrivate::_q_updateHorizontalAnchors() {
     if ((fill) || (centerIn) || (!this->isWidgetComplete())) {
         return;
     }
-
-    qDebug() << "Updating horizontal anchors for" << widget;
 
     if (updatingHorizontalAnchor < 3) {
         ++updatingHorizontalAnchor;
