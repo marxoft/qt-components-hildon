@@ -22,89 +22,95 @@ Window {
 
     windowTitle: qsTr("Buttons")
 
-    Column {
+    Flickable {
+        id: flicker
+
         anchors {
             fill: parent
             margins: 10
         }
-        spacing: 10
 
-        ButtonRow {
+        Column {
+            id: column
+
             anchors {
                 left: parent.left
                 right: parent.right
+                top: parent.top
             }
-            exclusive: true
+            spacing: 10
+
+            ButtonRow {
+                width: parent.width
+                exclusive: true
+
+                Button {
+                    checkable: true
+                    checked: true
+                    text: qsTr("One")
+                }
+
+                Button {
+                    checkable: true
+                    text: qsTr("Two")
+                }
+
+                Button {
+                    checkable: true
+                    text: qsTr("Three")
+                }
+            }
 
             Button {
-                checkable: true
-                checked: true
-                text: qsTr("One")
+                width: parent.width
+                text: qsTr("Push button")
+                onClicked: infobox.showMessage(qsTr("Button clicked"))
             }
 
-            Button {
-                checkable: true
-                text: qsTr("Two")
-            }
-
-            Button {
-                checkable: true
-                text: qsTr("Three")
-            }
-        }
-
-        Button {
-            anchors {
-                left: parent.left
-                right: parent.right
-            }
-            text: qsTr("Push button")
-            onClicked: infobox.showMessage(qsTr("Button clicked"))
-        }
-
-        ValueButton {
-            anchors {
-                left: parent.left
-                right: parent.right
-            }
-            text: qsTr("Screen orientation")
-            selector: ListSelector {
-                model: [ qsTr("Landscape"), qsTr("Portrait"), qsTr("Automatic") ]
-                currentIndex: screen.orientationLock === Screen.AutoOrientation ? 2 : screen.orientationLock === Screen.PortraitOrientation ? 1 : 0
-                onSelected: {
-                    switch (currentIndex) {
-                    case 1:
-                        screen.orientationLock = Screen.PortraitOrientation;
-                        return;
-                    case 2:
-                        screen.orientationLock = Screen.AutoOrientation;
-                        return;
-                    default:
-                        screen.orientationLock = Screen.LandscapeOrientation;
-                        return;
+            ValueButton {
+                width: parent.width
+                text: qsTr("Screen orientation")
+                selector: ListSelector {
+                    model: [ qsTr("Landscape"), qsTr("Portrait"), qsTr("Automatic") ]
+                    currentIndex: screen.orientationLock === Screen.AutoOrientation ? 2 : screen.orientationLock === Screen.PortraitOrientation ? 1 : 0
+                    onSelected: {
+                        switch (currentIndex) {
+                        case 1:
+                            screen.orientationLock = Screen.PortraitOrientation;
+                            return;
+                        case 2:
+                            screen.orientationLock = Screen.AutoOrientation;
+                            return;
+                        default:
+                            screen.orientationLock = Screen.LandscapeOrientation;
+                            return;
+                        }
                     }
                 }
             }
-        }
 
-        ValueButton {
-            anchors {
-                left: parent.left
-                right: parent.right
+            ValueButton {
+                width: parent.width
+                text: qsTr("Select values")
+                valueText: qsTr("None chosen")
+                selector: MultiListSelector {
+                    model: 10
+                }
             }
-            text: qsTr("Select a date")
-            valueText: qsTr("None chosen")
-            selector: DateSelector {}
-        }
 
-        ValueButton {
-            anchors {
-                left: parent.left
-                right: parent.right
+            ValueButton {
+                width: parent.width
+                text: qsTr("Select a date")
+                valueText: qsTr("None chosen")
+                selector: DateSelector {}
             }
-            text: qsTr("Select a time")
-            valueText: qsTr("None chosen")
-            selector: TimeSelector {}
+
+            ValueButton {
+                width: parent.width
+                text: qsTr("Select a time")
+                valueText: qsTr("None chosen")
+                selector: TimeSelector {}
+            }
         }
     }
 

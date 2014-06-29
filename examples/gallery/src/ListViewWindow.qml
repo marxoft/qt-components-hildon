@@ -27,6 +27,5 @@ Window {
 
         anchors.fill: parent
         model: qsTr("This is a model constructed from list of strings").split(" ")
-        onClicked: windowStack.push(Qt.resolvedUrl("ListEditWindow.qml"))
     }
 }

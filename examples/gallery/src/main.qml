@@ -43,37 +43,47 @@ Window {
 
         Button {
             text: qsTr("Buttons")
-            onClicked: windowStack.push(Qt.resolvedUrl("ButtonsWindow.qml"))
+            onClicked: windowStack.push(Qt.resolvedUrl("ButtonsWindow.qml"), {})
         }
 
         Button {
             text: qsTr("Text input")
-            onClicked: windowStack.push(Qt.resolvedUrl("TextInputWindow.qml"))
+            onClicked: windowStack.push(Qt.resolvedUrl("TextInputWindow.qml"), {})
         }
 
         Button {
             text: qsTr("Files")
-            onClicked: windowStack.push(Qt.resolvedUrl("FilesWindow.qml"))
+            onClicked: windowStack.push(Qt.resolvedUrl("FilesWindow.qml"), {})
         }
 
         Button {
             text: qsTr("Groups")
-            onClicked: windowStack.push(Qt.resolvedUrl("GroupsWindow.qml"))
+            onClicked: windowStack.push(Qt.resolvedUrl("GroupsWindow.qml"), {})
         }
 
         Button {
             text: qsTr("ListView")
-            onClicked: windowStack.push(Qt.resolvedUrl("ListViewWindow.qml"))
+            onClicked: windowStack.push(Qt.resolvedUrl("ListViewWindow.qml"), {})
         }
 
         Button {
             text: qsTr("Edit")
-            onClicked: windowStack.push(Qt.resolvedUrl("ListEditWindow.qml"))
+            onClicked: windowStack.push(Qt.resolvedUrl("ListEditWindow.qml"), {})
         }
 
         Button {
             text: qsTr("MouseArea")
-            onClicked: windowStack.push(Qt.resolvedUrl("MouseAreaWindow.qml"))
+            onClicked: windowStack.push(Qt.resolvedUrl("MouseAreaWindow.qml"), {})
+        }
+
+        Button {
+            text: qsTr("Images")
+            onClicked: windowStack.push(Qt.resolvedUrl("ImagesWindow.qml"), {})
+        }
+
+        Button {
+            text: qsTr("Rectangles")
+            onClicked: windowStack.push(Qt.resolvedUrl("RectanglesWindow.qml"), {})
         }
     }
 

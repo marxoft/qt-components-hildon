@@ -4,10 +4,12 @@
         <file>AboutDialog.qml</file>
         <file>ButtonsWindow.qml</file>
         <file>GroupsWindow.qml</file>
+	<file>ImagesWindow.qml</file>
         <file>ListEditWindow.qml</file>
         <file>ListViewWindow.qml</file>
         <file>TextInputWindow.qml</file>
         <file>FilesWindow.qml</file>
 	<file>MouseAreaWindow.qml</file>
+	<file>RectanglesWindow.qml</file>
     </qresource>
 </RCC>
