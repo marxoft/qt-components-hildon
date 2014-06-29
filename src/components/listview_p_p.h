@@ -20,6 +20,7 @@
 
 #include "item_p_p.h"
 #include "listview_p.h"
+#include <QAbstractKineticScroller>
 
 class VariantListModel;
 
@@ -29,7 +30,9 @@ class ListViewPrivate : public ItemPrivate
 public:
     ListViewPrivate(ListView *parent) :
         ItemPrivate(parent),
-        variantModel(0)
+        kineticScroller(parent->property("kineticScroller").value<QAbstractKineticScroller*>()),
+        variantModel(0),
+        delegateComponent(0)
     {
     }
 
@@ -50,15 +53,19 @@ public:
     QVariant currentIndex() const;
     void setCurrentIndex(const QVariant &index);
 
-    ItemDelegate* delegate() const;
-    void setDelegate(ItemDelegate *delegate);
+    QDeclarativeComponent* delegate() const;
+    void setDelegate(QDeclarativeComponent *delegate);
     void resetDelegate();
+
+    void createDelegate(const QModelIndex &index);
 
     QVariant modelVariant;
 
+    QAbstractKineticScroller *kineticScroller;
+
     VariantListModel *variantModel;
 
-    ItemDelegate *del;
+    QDeclarativeComponent *delegateComponent;
 
     Q_DECLARE_PUBLIC(ListView)
 };

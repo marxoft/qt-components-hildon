@@ -18,21 +18,28 @@
 #include "listview_p.h"
 #include "listview_p_p.h"
 #include "variantlistmodel_p.h"
-#include "itemdelegate_p.h"
 #include <QMoveEvent>
 #include <QResizeEvent>
 #include <QActionGroup>
+#include <QScrollBar>
+#include <QDeclarativeEngine>
+#include <QDeclarativeComponent>
+#include <qdeclarative.h>
 
 ListView::ListView(QWidget *parent) :
     QListView(parent),
     d_ptr(new ListViewPrivate(this))
 {
+    this->connect(this->horizontalScrollBar(), SIGNAL(valueChanged(int)), this, SIGNAL(contentXChanged()));
+    this->connect(this->verticalScrollBar(), SIGNAL(valueChanged(int)), this, SIGNAL(contentYChanged()));
 }
 
 ListView::ListView(ListViewPrivate &dd, QWidget *parent) :
     QListView(parent),
     d_ptr(&dd)
 {
+    this->connect(this->horizontalScrollBar(), SIGNAL(valueChanged(int)), this, SIGNAL(contentXChanged()));
+    this->connect(this->verticalScrollBar(), SIGNAL(valueChanged(int)), this, SIGNAL(contentYChanged()));
 }
 
 ListView::~ListView() {}
@@ -85,6 +92,114 @@ AnchorLine ListView::verticalCenter() const {
     return d->verticalCenter;
 }
 
+bool ListView::interactive() const {
+    Q_D(const ListView);
+
+    return d->kineticScroller->isEnabled();
+}
+
+void ListView::setInteractive(bool interactive) {
+    if (interactive != this->interactive()) {
+        Q_D(ListView);
+        d->kineticScroller->setEnabled(interactive);
+        emit interactiveChanged();
+    }
+}
+
+bool ListView::moving() const {
+    Q_D(const ListView);
+
+    switch (d->kineticScroller->state()) {
+    case QAbstractKineticScroller::Pushing:
+    case QAbstractKineticScroller::AutoScrolling:
+        return true;
+    default:
+        return false;
+    }
+}
+
+bool ListView::atXBeginning() const {
+    return this->horizontalScrollBar()->value();
+}
+
+bool ListView::atXEnd() const {
+    return this->horizontalScrollBar()->value() == this->horizontalScrollBar()->maximum();
+}
+
+bool ListView::atYBeginning() const {
+    return this->verticalScrollBar()->value() == 0;
+}
+
+bool ListView::atYEnd() const {
+    return this->verticalScrollBar()->value() == this->verticalScrollBar()->maximum();
+}
+
+int ListView::contentX() const {
+    return this->horizontalScrollBar()->value();
+}
+
+void ListView::setContentX(int x) {
+    this->horizontalScrollBar()->setValue(x);
+}
+
+int ListView::contentY() const {
+    return this->horizontalScrollBar()->value();
+}
+
+void ListView::setContentY(int y) {
+    this->verticalScrollBar()->setValue(y);
+}
+
+qreal ListView::flickDeceleration() const {
+    Q_D(const ListView);
+
+    return d->kineticScroller->decelerationFactor();
+}
+
+void ListView::setFlickDeceleration(qreal deceleration) {
+    if (deceleration != this->flickDeceleration()) {
+        Q_D(ListView);
+        d->kineticScroller->setDecelerationFactor(deceleration);
+        emit flickDecelerationChanged();
+    }
+}
+
+qreal ListView::maximumFlickVelocity() const {
+    Q_D(const ListView);
+
+    return d->kineticScroller->maximumVelocity();
+}
+
+void ListView::setMaximumFlickVelocity(qreal maximum) {
+    if (maximum != this->maximumFlickVelocity()) {
+        Q_D(ListView);
+        d->kineticScroller->setMaximumVelocity(maximum);
+        emit maximumFlickVelocityChanged();
+    }
+}
+
+void ListView::positionViewAtBeginning() {
+    if (this->model()) {
+        this->scrollTo(this->model()->index(0, 0), QListView::PositionAtTop);
+    }
+}
+
+void ListView::positionViewAtEnd() {
+    if (this->model()) {
+        this->scrollTo(this->model()->index(model()->rowCount() - 1, 0), QListView::PositionAtBottom);
+    }
+}
+
+void ListView::positionViewAtIndex(const QModelIndex &index, ScrollHint mode) {
+    this->scrollTo(index, mode);
+}
+
+void ListView::positionViewAtIndex(int index, ScrollHint mode) {
+    if (this->model()) {
+        this->positionViewAtIndex(this->model()->index(index, 0), mode);
+    }
+}
+
 void ListView::changeEvent(QEvent *event) {
     switch (event->type()) {
     case QEvent::ParentChange:
@@ -121,12 +236,12 @@ void ListView::resizeEvent(QResizeEvent *event) {
     QListView::resizeEvent(event);
 }
 
+void ListView::rowsInserted(const QModelIndex &parent, int start, int end) {
+    QListView::rowsInserted(parent, start, end);
+}
+
 void ListView::dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight) {
-    for (int i = topLeft.row(); i <= bottomRight.row(); i++) {
-        if (QAbstractItemDelegate *del = this->itemDelegateForRow(i)) {
-            del->setProperty("display", this->model()->data(this->model()->index(i, 0)));
-        }
-    }
+    QListView::dataChanged(topLeft, bottomRight);
 }
 
 void ListView::classBegin() {}
@@ -239,26 +354,43 @@ void ListViewPrivate::setCurrentIndex(const QVariant &index) {
     q->setCurrentIndex(index.value<QModelIndex>());
 }
 
-ItemDelegate* ListViewPrivate::delegate() const {
-    return del;
+QDeclarativeComponent* ListViewPrivate::delegate() const {
+    return delegateComponent;
 }
 
-void ListViewPrivate::setDelegate(ItemDelegate *delegate) {
-    if (delegate != del) {
+void ListViewPrivate::setDelegate(QDeclarativeComponent *delegate) {
+    if (delegate != delegateComponent) {
         Q_Q(ListView);
-        del = delegate;
+        QDeclarativeComponent *oldDelegate = delegateComponent;
+        delegateComponent = delegate;
 
-        if (delegate) {
-            q->setItemDelegate(delegate);
+        if (delegateComponent) {
+            delegateComponent->setParent(q);
         }
-        else {
-            q->setItemDelegate(new QStyledItemDelegate(q));
+
+        if (oldDelegate) {
+            delete oldDelegate;
         }
     }
 }
 
 void ListViewPrivate::resetDelegate() {
     this->setDelegate(0);
+}
+
+void ListViewPrivate::createDelegate(const QModelIndex &index) {
+    if (delegateComponent) {
+        Q_Q(ListView);
+
+        QObject *delegate = delegateComponent->beginCreate(qmlEngine(q)->contextForObject(q));
+
+        if ((delegate) && (delegate->isWidgetType())) {
+            delegateComponent->completeCreate();
+            QWidget *widget = qobject_cast<QWidget*>(delegate);
+            widget->setAutoFillBackground(true);
+            q->setIndexWidget(index, widget);
+        }
+    }
 }
 
 #include "moc_listview_p.cpp"

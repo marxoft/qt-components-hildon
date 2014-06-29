@@ -23,8 +23,7 @@
 #include <QDeclarativeParserStatus>
 #include <qdeclarative.h>
 
-class ItemDelegate;
-
+class QDeclarativeComponent;
 class ListViewPrivate;
 
 class ListView : public QListView, public QDeclarativeParserStatus
@@ -43,13 +42,21 @@ class ListView : public QListView, public QDeclarativeParserStatus
     Q_PROPERTY(AnchorLine bottom READ bottom CONSTANT FINAL)
     Q_PROPERTY(AnchorLine horizontalCenter READ horizontalCenter CONSTANT FINAL)
     Q_PROPERTY(AnchorLine verticalCenter READ verticalCenter CONSTANT FINAL)
+    Q_PROPERTY(bool interactive READ interactive WRITE setInteractive NOTIFY interactiveChanged)
+    Q_PROPERTY(bool moving READ moving)
+    Q_PROPERTY(bool atXBeginning READ atXBeginning NOTIFY contentXChanged)
+    Q_PROPERTY(bool atXEnd READ atXEnd NOTIFY contentXChanged)
+    Q_PROPERTY(bool atYBeginning READ atYBeginning NOTIFY contentYChanged)
+    Q_PROPERTY(bool atYEnd READ atYEnd NOTIFY contentYChanged)
+    Q_PROPERTY(int contentX READ contentX WRITE setContentX NOTIFY contentXChanged)
+    Q_PROPERTY(int contentY READ contentY WRITE setContentY NOTIFY contentYChanged)
     Q_PRIVATE_PROPERTY(ListView::d_func(), QDeclarativeListProperty<QObject> data READ data)
     Q_PRIVATE_PROPERTY(ListView::d_func(), QDeclarativeListProperty<QObject> actions READ actions)
     Q_PRIVATE_PROPERTY(ListView::d_func(), bool visible READ qmlVisible WRITE setQmlVisible)
     Q_PRIVATE_PROPERTY(ListView::d_func(), QVariant model READ model WRITE setModel)
     Q_PRIVATE_PROPERTY(ListView::d_func(), QVariant rootIndex READ rootIndex WRITE setRootIndex)
     Q_PRIVATE_PROPERTY(ListView::d_func(), QVariant currentIndex READ currentIndex WRITE setCurrentIndex)
-    Q_PRIVATE_PROPERTY(ListView::d_func(), ItemDelegate* delegate READ delegate WRITE setDelegate RESET resetDelegate)
+    Q_PRIVATE_PROPERTY(ListView::d_func(), QDeclarativeComponent* delegate READ delegate WRITE setDelegate RESET resetDelegate)
 
     Q_INTERFACES(QDeclarativeParserStatus)
 
@@ -69,21 +76,58 @@ public:
     AnchorLine horizontalCenter() const;
     AnchorLine verticalCenter() const;
 
+    bool interactive() const;
+    void setInteractive(bool interactive);
+
+    bool moving() const;
+
+    bool atXBeginning() const;
+    bool atXEnd() const;
+
+    bool atYBeginning() const;
+    bool atYEnd() const;
+
+    int contentX() const;
+    void setContentX(int x);
+
+    int contentY() const;
+    void setContentY(int y);
+
+    qreal flickDeceleration() const;
+    void setFlickDeceleration(qreal deceleration);
+
+    qreal maximumFlickVelocity() const;
+    void setMaximumFlickVelocity(qreal maximum);
+
+public slots:
+    void positionViewAtBeginning();
+    void positionViewAtEnd();
+    void positionViewAtIndex(const QModelIndex &index, ScrollHint mode);
+    void positionViewAtIndex(int index, ScrollHint mode);
+
 signals:
     void parentChanged();
     void xChanged();
     void yChanged();
     void widthChanged();
     void heightChanged();
+    void interactiveChanged();
+    void movingChanged();
+    void contentXChanged();
+    void contentYChanged();
+    void flickDecelerationChanged();
+    void maximumFlickVelocityChanged();
 
-private:
+protected slots:
+    void rowsInserted(const QModelIndex &parent, int start, int end);
+    void dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
+
+protected:
     ListView(ListViewPrivate &dd, QWidget *parent = 0);
 
     void changeEvent(QEvent *event);
     void moveEvent(QMoveEvent *event);
     void resizeEvent(QResizeEvent *event);
-
-    void dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
 
     void classBegin();
     void componentComplete();
