@@ -19,6 +19,7 @@
 #define LISTSELECTOR_P_H
 
 #include "valueselector_p.h"
+#include <QStyledItemDelegate>
 
 class ListSelectorPrivate;
 
@@ -52,8 +53,23 @@ signals:
 private:
     ListSelector(ListSelectorPrivate &dd, QObject *parent = 0);
 
+    void componentComplete();
+
     Q_DISABLE_COPY(ListSelector)
     Q_DECLARE_PRIVATE(ListSelector)
+};
+
+class ListPickDelegate : public QStyledItemDelegate
+{
+    Q_OBJECT
+
+public:
+    explicit ListPickDelegate(QObject *parent = 0);
+
+    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+
+private:
+    Q_DISABLE_COPY(ListPickDelegate)
 };
 
 QML_DECLARE_TYPE(ListSelector)

@@ -19,6 +19,10 @@
 #include "listselector_p_p.h"
 #include "variantlistmodel_p.h"
 #include <QMaemo5ListPickSelector>
+#include <QListView>
+#include <QStaticText>
+#include <QTextOption>
+#include <QPainter>
 
 ListSelector::ListSelector(QObject *parent) :
     ValueSelector(*new ListSelectorPrivate(this), parent)
@@ -32,13 +36,6 @@ ListSelector::ListSelector(QObject *parent) :
 ListSelector::ListSelector(ListSelectorPrivate &dd, QObject *parent) :
     ValueSelector(dd, parent)
 {
-    Q_D(ListSelector);
-
-    if (!d->selector) {
-        d->selector = new QMaemo5ListPickSelector(this);
-    }
-
-    this->connect(d->selector, SIGNAL(selected(QString)), this, SIGNAL(selected(QString)));
 }
 
 ListSelector::~ListSelector() {}
@@ -124,6 +121,45 @@ QString ListSelector::currentValueText() const {
     Q_D(const ListSelector);
 
     return d->selector->currentValueText();
+}
+
+void ListSelector::componentComplete() {
+    ValueSelector::componentComplete();
+
+    if (QWidget *widget = qobject_cast<QWidget*>(this->parent())) {
+        Q_D(ListSelector);
+
+        if (QMaemo5ListPickSelector *selector = qobject_cast<QMaemo5ListPickSelector*>(d->selector)) {
+            QListView *view = new QListView(widget);
+            view->setItemDelegate(new ListPickDelegate(view));
+            view->setMinimumHeight(70 * 5);
+            selector->setView(view);
+        }
+    }
+}
+
+ListPickDelegate::ListPickDelegate(QObject *parent) :
+    QStyledItemDelegate(parent)
+{
+}
+
+void ListPickDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const {
+    if ((option.state) & (QStyle::State_Selected)) {
+        painter->drawImage(option.rect, QImage("/etc/hildon/theme/images/TouchListBackgroundPressed.png"));
+    }
+    else {
+        painter->drawImage(option.rect, QImage("/etc/hildon/theme/images/TouchListBackgroundNormal.png"));
+    }
+
+    QRect rect = option.rect;
+    rect.setLeft(rect.left() + 8);
+    rect.setRight(rect.right() - 8);
+
+    QStaticText text(index.data().toString());
+    text.setTextOption(QTextOption(Qt::AlignCenter));
+    text.setTextWidth(rect.width());
+
+    painter->drawStaticText(rect.left(), rect.center().y() - text.size().height() / 2, text);
 }
 
 #include "moc_listselector_p.cpp"
