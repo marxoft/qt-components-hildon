@@ -1,3 +1,12 @@
+qt-components-hildon (0.2.0) unstable; urgency=low
+
+  * Added DoubleSpinBox, Image, BorderImage, MultiListSelector, Rectangle and ScreenShot components (ScreenShot requires org.hildon.utils).
+  * Added 'theme' image provider (usage: image://theme/$IMAGE_FILENAME_WITHOUT_SUFFIX).
+  * Added QML ScreenShot example application.
+  * Improvements to Flickable and ListView components.
+
+ -- Stuart Howarth <showarth@marxoft.co.uk>  Sat, 28 Jun 2014 16:23:51 +0100
+
 qt-components-hildon (0.1.1) unstable; urgency=low
 
   * Fix undefined symbol error in org.hildon.webkit.
