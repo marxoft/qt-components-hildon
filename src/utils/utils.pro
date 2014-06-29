@@ -9,12 +9,15 @@ HEADERS += \
     process_p_p.h \
     screensaver_p.h \
     screensaver_p_p.h \
+    screenshot_p.h \
+    screenshot_p_p.h \
     settings_p.h \
     plugin_p.h
 
 SOURCES += \
     process.cpp \
     screensaver.cpp \
+    screenshot.cpp \
     settings.cpp \
     plugin.cpp
 
