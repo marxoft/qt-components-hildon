@@ -3,4 +3,5 @@ SUBDIRS += \
     browser \
     gallery \
     network \
-    process
+    process \
+    screenshot

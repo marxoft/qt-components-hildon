@@ -1,0 +1,11 @@
+[Desktop Entry]
+Encoding=UTF-8
+Version=1.0
+Type=Application
+Terminal=false
+Name=QML ScreenShot
+Exec=/opt/qt-components-hildon/bin/screenshot
+Icon=qt-components-hildon-screenshot
+X-Window-Icon=
+X-HildonDesk-ShowInToolbar=true
+X-Osso-Type=application/x-executable
