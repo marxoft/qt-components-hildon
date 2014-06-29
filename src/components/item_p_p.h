@@ -27,6 +27,7 @@ class ItemPrivate
 public:
     ItemPrivate(QWidget *parent) :
         q_ptr(parent),
+        keys(0),
         anc(0),
         left(AnchorLine(parent, AnchorLine::Left)),
         right(AnchorLine(parent, AnchorLine::Right)),
@@ -45,6 +46,8 @@ public:
 
     static void actions_append(QDeclarativeListProperty<QObject> *list, QObject *obj);
 
+    Keys* attachedKeys();
+
     Anchors* anchors();
 
     virtual QDeclarativeListProperty<QObject> data();
@@ -57,6 +60,8 @@ public:
     virtual void componentComplete();
 
     QWidget *q_ptr;
+
+    Keys* keys;
 
     Anchors *anc;
 
