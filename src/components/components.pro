@@ -1,6 +1,6 @@
 TEMPLATE = lib
 CONFIG = qt plugin
-QT += maemo5 declarative dbus
+QT += maemo5 declarative dbus network
 
 TARGET = hildoncomponents
 
@@ -11,6 +11,8 @@ HEADERS += \
     anchorline_p.h \
     anchors_p.h \
     anchors_p_p.h \
+    borderimage_p.h \
+    borderimage_p_p.h \
     button_p.h \
     button_p_p.h \
     buttonrow_p.h \
@@ -20,10 +22,10 @@ HEADERS += \
     column_p.h \
     column_p_p.h \
     dateselector_p.h \
-    #delegateitem_p.h \
-    #delegateitem_p_p.h \
     dialog_p.h \
     dialog_p_p.h \
+    doublespinbox_p.h \
+    doublespinbox_p_p.h \
     editbar_p.h \
     editbar_p_p.h \
     filedialog_p.h \
@@ -34,14 +36,19 @@ HEADERS += \
     flow_p_p.h \
     grid_p.h \
     grid_p_p.h \
+    image_p.h \
+    image_p_p.h \
+    imagebase_p.h \
+    imagebase_p_p.h \
+    imageloader_p.h \
+    imageloader_p_p.h \
+    imageproviders_p.h \
     informationbox_p.h \
     informationbox_p_p.h \
     item_p.h \
     item_p_p.h \
-    #itemdelegate_p.h \
-    #itemdelegate_p_p.h \
-    #itemdelegatetext_p.h \
-    #itemdelegatetext_p_p.h \
+    keys_p.h \
+    keys_p_p.h \
     label_p.h \
     listselector_p.h \
     listselector_p_p.h \
@@ -53,11 +60,15 @@ HEADERS += \
     menu_p_p.h \
     mousearea_p.h \
     mousearea_p_p.h \
+    multilistselector_p.h \
+    multilistselector_p_p.h \
     platformstyle_p.h \
     progressbar_p.h \
     progressbar_p_p.h \
     radiobutton_p.h \
     radiobutton_p_p.h \
+    rectangle_p.h \
+    rectangle_p_p.h \
     row_p.h \
     row_p_p.h \
     screen_p.h \
@@ -98,30 +109,36 @@ SOURCES += \
     action.cpp \
     actiongroup.cpp \
     anchors.cpp \
+    borderimage.cpp \
     button.cpp \
     buttonrow.cpp \
     checkbox.cpp \
     column.cpp \
     dateselector.cpp \
-    #delegateitem.cpp \
     dialog.cpp \
+    doublespinbox.cpp \
     editbar.cpp \
     filedialog.cpp \
     flickable.cpp \
     flow.cpp \
     grid.cpp \
+    image.cpp \
+    imagebase.cpp \
+    imageloader.cpp \
+    imageproviders.cpp \
     informationbox.cpp \
     item.cpp \
-    #itemdelegate.cpp \
-    #itemdelegatetext.cpp \
+    keys.cpp \
     listselector.cpp \
     listview.cpp \
     loader.cpp \
     menu.cpp \
     mousearea.cpp \
+    multilistselector.cpp \
     platformstyle.cpp \
     progressbar.cpp \
     radiobutton.cpp \
+    rectangle.cpp \
     row.cpp \
     screen.cpp \
     separator.cpp \
@@ -144,6 +161,7 @@ SOURCES += \
 
 qdeclarativesources.files += \
     qml/qmldir \
+    qml/ListItem.qml \
     qml/ProgressDialog.qml \
     qml/QueryDialog.qml
 
