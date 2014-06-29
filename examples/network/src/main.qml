@@ -48,12 +48,18 @@ Window {
     Flickable {
         id: flicker
 
+        anchors {
+            fill: parent
+            margins: 10
+        }
+
         Column {
             id: column
 
             anchors {
-                fill: parent
-                margins: 10
+                left: parent.left
+                right: parent.right
+                top: parent.top
             }
             spacing: 10
 
