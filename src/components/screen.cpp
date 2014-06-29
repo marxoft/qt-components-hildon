@@ -23,9 +23,27 @@
 
 Screen* Screen::self = 0;
 
-Screen::Screen() :
-    QObject(),
+Screen::Screen(QObject *parent) :
+    QObject(parent),
     d_ptr(new ScreenPrivate(this))
+{
+    if (!self) {
+        self = this;
+    }
+
+    this->connect(QApplication::desktop(), SIGNAL(resized(int)), this, SLOT(_q_onResized()));
+
+    QDBusConnection::systemBus().connect("",
+                                         "/com/nokia/mce/signal",
+                                         "com.nokia.mce.signal",
+                                         "tklock_mode_ind",
+                                         this,
+                                         SLOT(_q_onLockStateChanged(QString)));
+}
+
+Screen::Screen(ScreenPrivate &dd, QObject *parent) :
+    QObject(parent),
+    d_ptr(&dd)
 {
     if (!self) {
         self = this;

@@ -23,9 +23,18 @@
 
 WindowStack* WindowStack::self = 0;
 
-WindowStack::WindowStack() :
-    QObject(),
+WindowStack::WindowStack(QObject *parent) :
+    QObject(parent),
     d_ptr(new WindowStackPrivate(this))
+{
+    if (!self) {
+        self = this;
+    }
+}
+
+WindowStack::WindowStack(WindowStackPrivate &dd, QObject *parent) :
+    QObject(parent),
+    d_ptr(&dd)
 {
     if (!self) {
         self = this;

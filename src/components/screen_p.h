@@ -42,6 +42,7 @@ public:
         AutoOrientation = Qt::WA_Maemo5AutoOrientation
     };
 
+    explicit Screen(QObject *parent = 0);
     ~Screen();
 
     static Screen* instance();
@@ -64,7 +65,7 @@ signals:
     void coveredChanged(bool covered);
 
 private:
-    Screen();
+    Screen(ScreenPrivate &dd, QObject *parent = 0);
 
     static Screen *self;
 

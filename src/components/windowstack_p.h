@@ -33,6 +33,7 @@ class WindowStack : public QObject
     Q_PROPERTY(Window* currentWindow READ currentWindow NOTIFY currentWindowChanged)
 
 public:
+    explicit WindowStack(QObject *parent = 0);
     ~WindowStack();
 
     static WindowStack* instance();
@@ -56,7 +57,7 @@ signals:
     void currentWindowChanged();
     
 private:
-    WindowStack();
+    WindowStack(WindowStackPrivate &dd, QObject *parent = 0);
 
     static WindowStack *self;
 
