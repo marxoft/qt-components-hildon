@@ -24,7 +24,6 @@
 
 class QDeclarativeComponent;
 class QWidget;
-
 class LoaderPrivate;
 
 class Loader : public QObject, public QDeclarativeParserStatus
