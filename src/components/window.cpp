@@ -69,11 +69,15 @@ bool Window::inPortrait() const {
 }
 
 void Window::setFullScreen(bool fullScreen) {
-    if (fullScreen) {
-        this->showFullScreen();
-    }
-    else {
-        this->showMaximized();
+    if (this->isFullScreen() != fullScreen) {
+        if (fullScreen) {
+            this->showFullScreen();
+        }
+        else {
+            this->showMaximized();
+        }
+
+        emit fullScreenChanged();
     }
 }
 

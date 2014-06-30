@@ -32,7 +32,7 @@ class Window : public QMainWindow, public QDeclarativeParserStatus
 
     Q_PROPERTY(Screen::Orientation orientationLock READ orientationLock WRITE setOrientationLock NOTIFY orientationLockChanged)
     Q_PROPERTY(bool inPortrait READ inPortrait NOTIFY inPortraitChanged)
-    Q_PROPERTY(bool fullScreen READ isFullScreen WRITE setFullScreen)
+    Q_PROPERTY(bool fullScreen READ isFullScreen WRITE setFullScreen NOTIFY fullScreenChanged)
     Q_PROPERTY(bool showProgressIndicator READ showingProgressIndicator WRITE showProgressIndicator)
     Q_PROPERTY(QWidget* parent READ parentWidget WRITE setParent NOTIFY parentChanged)
     Q_PROPERTY(int x READ x WRITE setX NOTIFY xChanged)
@@ -95,6 +95,7 @@ signals:
     void visibleChanged();
     void orientationLockChanged();
     void inPortraitChanged();
+    void fullScreenChanged();
 
 private:
     Window(WindowPrivate &dd, QWidget *parent = 0);
