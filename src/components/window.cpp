@@ -139,7 +139,13 @@ void Window::showEvent(QShowEvent *event) {
         emit WindowStack::instance()->countChanged();
     }
 
+    emit visibleChanged();
     QMainWindow::showEvent(event);
+}
+
+void Window::hideEvent(QHideEvent *event) {
+    emit visibleChanged();
+    QMainWindow::hideEvent(event);
 }
 
 void Window::closeEvent(QCloseEvent *event) {

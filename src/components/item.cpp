@@ -120,6 +120,16 @@ void Item::resizeEvent(QResizeEvent *event) {
     QWidget::resizeEvent(event);
 }
 
+void Item::showEvent(QShowEvent *event) {
+    emit visibleChanged();
+    QWidget::showEvent(event);
+}
+
+void Item::hideEvent(QHideEvent *event) {
+    emit visibleChanged();
+    QWidget::hideEvent(event);
+}
+
 void Item::keyPressEvent(QKeyEvent *event) {
     Q_D(Item);
 

@@ -119,6 +119,16 @@ void ProgressBar::resizeEvent(QResizeEvent *event) {
     QProgressBar::resizeEvent(event);
 }
 
+void ProgressBar::showEvent(QShowEvent *event) {
+    emit visibleChanged();
+    QProgressBar::showEvent(event);
+}
+
+void ProgressBar::hideEvent(QHideEvent *event) {
+    emit visibleChanged();
+    QProgressBar::hideEvent(event);
+}
+
 void ProgressBar::classBegin() {}
 
 void ProgressBar::componentComplete() {

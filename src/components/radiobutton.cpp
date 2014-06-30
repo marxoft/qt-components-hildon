@@ -129,6 +129,16 @@ void RadioButton::resizeEvent(QResizeEvent *event) {
     QRadioButton::resizeEvent(event);
 }
 
+void RadioButton::showEvent(QShowEvent *event) {
+    emit visibleChanged();
+    QRadioButton::showEvent(event);
+}
+
+void RadioButton::hideEvent(QHideEvent *event) {
+    emit visibleChanged();
+    QRadioButton::hideEvent(event);
+}
+
 void RadioButton::classBegin() {}
 
 void RadioButton::componentComplete() {

@@ -121,6 +121,16 @@ void Dialog::resizeEvent(QResizeEvent *event) {
     QDialog::resizeEvent(event);
 }
 
+void Dialog::showEvent(QShowEvent *event) {
+    emit visibleChanged();
+    QDialog::showEvent(event);
+}
+
+void Dialog::hideEvent(QHideEvent *event) {
+    emit visibleChanged();
+    QDialog::hideEvent(event);
+}
+
 void Dialog::classBegin() {}
 
 void Dialog::componentComplete() {

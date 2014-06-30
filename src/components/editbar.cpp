@@ -120,6 +120,16 @@ void EditBar::resizeEvent(QResizeEvent *event) {
     QMaemo5EditBar::resizeEvent(event);
 }
 
+void EditBar::showEvent(QShowEvent *event) {
+    emit visibleChanged();
+    QMaemo5EditBar::showEvent(event);
+}
+
+void EditBar::hideEvent(QHideEvent *event) {
+    emit visibleChanged();
+    QMaemo5EditBar::hideEvent(event);
+}
+
 void EditBar::classBegin() {}
 
 void EditBar::componentComplete() {

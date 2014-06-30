@@ -44,7 +44,7 @@ class ToolButton : public QToolButton, public QDeclarativeParserStatus
     Q_PROPERTY(AnchorLine verticalCenter READ verticalCenter CONSTANT FINAL)
     Q_PRIVATE_PROPERTY(ToolButton::d_func(), QDeclarativeListProperty<QObject> data READ data)
     Q_PRIVATE_PROPERTY(ToolButton::d_func(), QDeclarativeListProperty<QObject> actions READ actions)
-    Q_PRIVATE_PROPERTY(ToolButton::d_func(), bool visible READ qmlVisible WRITE setQmlVisible)
+    Q_PRIVATE_PROPERTY(ToolButton::d_func(), bool visible READ qmlVisible WRITE setQmlVisible NOTIFY visibleChanged)
 
     Q_INTERFACES(QDeclarativeParserStatus)
 
@@ -73,6 +73,7 @@ signals:
     void yChanged();
     void widthChanged();
     void heightChanged();
+    void visibleChanged();
 
 private:
     ToolButton(ToolButtonPrivate &dd, QWidget *parent = 0);
@@ -80,6 +81,8 @@ private:
     void changeEvent(QEvent *event);
     void moveEvent(QMoveEvent *event);
     void resizeEvent(QResizeEvent *event);
+    void showEvent(QShowEvent *event);
+    void hideEvent(QHideEvent *event);
 
     void classBegin();
     void componentComplete();

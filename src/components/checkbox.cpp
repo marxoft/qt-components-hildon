@@ -129,6 +129,16 @@ void CheckBox::resizeEvent(QResizeEvent *event) {
     QCheckBox::resizeEvent(event);
 }
 
+void CheckBox::showEvent(QShowEvent *event) {
+    emit visibleChanged();
+    QCheckBox::showEvent(event);
+}
+
+void CheckBox::hideEvent(QHideEvent *event) {
+    emit visibleChanged();
+    QCheckBox::hideEvent(event);
+}
+
 void CheckBox::classBegin() {}
 
 void CheckBox::componentComplete() {

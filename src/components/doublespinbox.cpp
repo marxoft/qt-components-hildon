@@ -119,6 +119,16 @@ void DoubleSpinBox::resizeEvent(QResizeEvent *event) {
     QDoubleSpinBox::resizeEvent(event);
 }
 
+void DoubleSpinBox::showEvent(QShowEvent *event) {
+    emit visibleChanged();
+    QDoubleSpinBox::showEvent(event);
+}
+
+void DoubleSpinBox::hideEvent(QHideEvent *event) {
+    emit visibleChanged();
+    QDoubleSpinBox::hideEvent(event);
+}
+
 void DoubleSpinBox::classBegin() {}
 
 void DoubleSpinBox::componentComplete() {

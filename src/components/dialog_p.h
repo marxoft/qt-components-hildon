@@ -35,6 +35,7 @@ class Dialog : public QDialog, public QDeclarativeParserStatus
     Q_PROPERTY(bool showProgressIndicator READ showingProgressIndicator WRITE showProgressIndicator)
     Q_PROPERTY(int width READ width WRITE setFixedWidth NOTIFY widthChanged)
     Q_PROPERTY(int height READ height WRITE setFixedHeight NOTIFY heightChanged)
+    Q_PROPERTY(bool visible READ isVisible WRITE setVisible NOTIFY visibleChanged)
     Q_PROPERTY(AnchorLine left READ left CONSTANT FINAL)
     Q_PROPERTY(AnchorLine right READ right CONSTANT FINAL)
     Q_PROPERTY(AnchorLine top READ top CONSTANT FINAL)
@@ -70,6 +71,7 @@ signals:
     void yChanged();
     void widthChanged();
     void heightChanged();
+    void visibleChanged();
 
 protected:
     Dialog(DialogPrivate &dd, QWidget *parent = 0);
@@ -77,6 +79,8 @@ protected:
     virtual void changeEvent(QEvent *event);
     virtual void moveEvent(QMoveEvent *event);
     virtual void resizeEvent(QResizeEvent *event);
+    virtual void showEvent(QShowEvent *event);
+    virtual void hideEvent(QHideEvent *event);
 
     virtual void classBegin();
     virtual void componentComplete();

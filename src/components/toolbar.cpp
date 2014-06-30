@@ -122,6 +122,16 @@ void ToolBar::resizeEvent(QResizeEvent *event) {
     QToolBar::resizeEvent(event);
 }
 
+void ToolBar::showEvent(QShowEvent *event) {
+    emit visibleChanged();
+    QToolBar::showEvent(event);
+}
+
+void ToolBar::hideEvent(QHideEvent *event) {
+    emit visibleChanged();
+    QToolBar::hideEvent(event);
+}
+
 void ToolBar::classBegin() {}
 
 void ToolBar::componentComplete() {

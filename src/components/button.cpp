@@ -129,6 +129,16 @@ void Button::resizeEvent(QResizeEvent *event) {
     QPushButton::resizeEvent(event);
 }
 
+void Button::showEvent(QShowEvent *event) {
+    emit visibleChanged();
+    QPushButton::showEvent(event);
+}
+
+void Button::hideEvent(QHideEvent *event) {
+    emit visibleChanged();
+    QPushButton::hideEvent(event);
+}
+
 void Button::classBegin() {}
 
 void Button::componentComplete() {

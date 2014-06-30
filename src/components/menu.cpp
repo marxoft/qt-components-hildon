@@ -73,6 +73,16 @@ void Menu::changeEvent(QEvent *event) {
     QMenu::changeEvent(event);
 }
 
+void Menu::showEvent(QShowEvent *event) {
+    emit visibleChanged();
+    QMenu::showEvent(event);
+}
+
+void Menu::hideEvent(QHideEvent *event) {
+    emit visibleChanged();
+    QMenu::hideEvent(event);
+}
+
 void Menu::classBegin() {}
 
 void Menu::componentComplete() {

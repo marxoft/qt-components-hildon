@@ -52,6 +52,16 @@ void InformationBox::changeEvent(QEvent *event) {
     QMaemo5InformationBox::changeEvent(event);
 }
 
+void InformationBox::showEvent(QShowEvent *event) {
+    emit visibleChanged();
+    QMaemo5InformationBox::showEvent(event);
+}
+
+void InformationBox::hideEvent(QHideEvent *event) {
+    emit visibleChanged();
+    QMaemo5InformationBox::hideEvent(event);
+}
+
 void InformationBox::classBegin() {}
 
 void InformationBox::componentComplete() {

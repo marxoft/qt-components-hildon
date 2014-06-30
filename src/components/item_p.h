@@ -46,7 +46,7 @@ class Item : public QWidget, public QDeclarativeParserStatus
     Q_PRIVATE_PROPERTY(Item::d_func(), Keys* Keys READ attachedKeys CONSTANT FINAL)
     Q_PRIVATE_PROPERTY(Item::d_func(), QDeclarativeListProperty<QObject> data READ data)
     Q_PRIVATE_PROPERTY(Item::d_func(), QDeclarativeListProperty<QObject> actions READ actions)
-    Q_PRIVATE_PROPERTY(Item::d_func(), bool visible READ qmlVisible WRITE setQmlVisible)
+    Q_PRIVATE_PROPERTY(Item::d_func(), bool visible READ qmlVisible WRITE setQmlVisible NOTIFY visibleChanged)
 
     Q_INTERFACES(QDeclarativeParserStatus)
 
@@ -72,6 +72,8 @@ protected:
     virtual void changeEvent(QEvent *event);
     virtual void moveEvent(QMoveEvent *event);
     virtual void resizeEvent(QResizeEvent *event);
+    virtual void showEvent(QShowEvent *event);
+    virtual void hideEvent(QHideEvent *event);
     virtual void keyPressEvent(QKeyEvent *event);
     virtual void keyReleaseEvent(QKeyEvent *event);
 
@@ -88,6 +90,7 @@ signals:
     void yChanged();
     void widthChanged();
     void heightChanged();
+    void visibleChanged();
 
 private:
     Q_DISABLE_COPY(Item)

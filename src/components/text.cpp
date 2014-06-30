@@ -149,6 +149,16 @@ void Text::resizeEvent(QResizeEvent *event) {
     QLabel::resizeEvent(event);
 }
 
+void Text::showEvent(QShowEvent *event) {
+    emit visibleChanged();
+    QLabel::showEvent(event);
+}
+
+void Text::hideEvent(QHideEvent *event) {
+    emit visibleChanged();
+    QLabel::hideEvent(event);
+}
+
 void Text::classBegin() {}
 
 void Text::componentComplete() {

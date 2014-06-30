@@ -29,6 +29,7 @@ class InformationBox : public QMaemo5InformationBox, public QDeclarativeParserSt
     Q_OBJECT
 
     Q_PROPERTY(QWidget* parent READ parentWidget WRITE setParent NOTIFY parentChanged)
+    Q_PROPERTY(bool visible READ isVisible WRITE setVisible NOTIFY visibleChanged)
     Q_PRIVATE_PROPERTY(InformationBox::d_func(), QDeclarativeListProperty<QObject> data READ data)
     Q_PRIVATE_PROPERTY(InformationBox::d_func(), QDeclarativeListProperty<QObject> actions READ actions)
     Q_PRIVATE_PROPERTY(InformationBox::d_func(), QDeclarativeListProperty<QObject> content READ content)
@@ -50,9 +51,12 @@ public:
 
 signals:
     void parentChanged();
+    void visibleChanged();
 
 private:
     void changeEvent(QEvent *event);
+    void showEvent(QShowEvent *event);
+    void hideEvent(QHideEvent *event);
 
     void classBegin();
     void componentComplete();

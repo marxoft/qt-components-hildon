@@ -185,7 +185,7 @@ void Flickable::changeEvent(QEvent *event) {
         break;
     }
 
-    QWidget::changeEvent(event);
+    QScrollArea::changeEvent(event);
 }
 
 void Flickable::moveEvent(QMoveEvent *event) {
@@ -197,7 +197,7 @@ void Flickable::moveEvent(QMoveEvent *event) {
         emit yChanged();
     }
 
-    QWidget::moveEvent(event);
+    QScrollArea::moveEvent(event);
 }
 
 void Flickable::resizeEvent(QResizeEvent *event) {
@@ -209,7 +209,17 @@ void Flickable::resizeEvent(QResizeEvent *event) {
         emit heightChanged();
     }
 
-    QWidget::resizeEvent(event);
+    QScrollArea::resizeEvent(event);
+}
+
+void Flickable::showEvent(QShowEvent *event) {
+    emit visibleChanged();
+    QScrollArea::showEvent(event);
+}
+
+void Flickable::hideEvent(QHideEvent *event) {
+    emit visibleChanged();
+    QScrollArea::hideEvent(event);
 }
 
 void Flickable::classBegin() {}

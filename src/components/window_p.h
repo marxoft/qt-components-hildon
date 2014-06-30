@@ -39,6 +39,7 @@ class Window : public QMainWindow, public QDeclarativeParserStatus
     Q_PROPERTY(int y READ y WRITE setY NOTIFY yChanged)
     Q_PROPERTY(int width READ width WRITE setFixedWidth NOTIFY widthChanged)
     Q_PROPERTY(int height READ height WRITE setFixedHeight NOTIFY heightChanged)
+    Q_PROPERTY(bool visible READ isVisible WRITE setVisible NOTIFY visibleChanged)
     Q_PROPERTY(AnchorLine left READ left CONSTANT FINAL)
     Q_PROPERTY(AnchorLine right READ right CONSTANT FINAL)
     Q_PROPERTY(AnchorLine top READ top CONSTANT FINAL)
@@ -85,6 +86,7 @@ signals:
     void yChanged();
     void widthChanged();
     void heightChanged();
+    void visibleChanged();
     void orientationLockChanged();
     void inPortraitChanged();
 
@@ -92,6 +94,7 @@ private:
     Window(WindowPrivate &dd, QWidget *parent = 0);
 
     void showEvent(QShowEvent *event);
+    void hideEvent(QHideEvent *event);
     void closeEvent(QCloseEvent *event);
     void changeEvent(QEvent *event);
     void moveEvent(QMoveEvent *event);

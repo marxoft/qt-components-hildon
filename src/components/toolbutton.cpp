@@ -129,6 +129,16 @@ void ToolButton::resizeEvent(QResizeEvent *event) {
     QToolButton::resizeEvent(event);
 }
 
+void ToolButton::showEvent(QShowEvent *event) {
+    emit visibleChanged();
+    QToolButton::showEvent(event);
+}
+
+void ToolButton::hideEvent(QHideEvent *event) {
+    emit visibleChanged();
+    QToolButton::hideEvent(event);
+}
+
 void ToolButton::classBegin() {}
 
 void ToolButton::componentComplete() {

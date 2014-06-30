@@ -121,6 +121,16 @@ void TabGroup::resizeEvent(QResizeEvent *event) {
     QStackedWidget::resizeEvent(event);
 }
 
+void TabGroup::showEvent(QShowEvent *event) {
+    emit visibleChanged();
+    QStackedWidget::showEvent(event);
+}
+
+void TabGroup::hideEvent(QHideEvent *event) {
+    emit visibleChanged();
+    QStackedWidget::hideEvent(event);
+}
+
 void TabGroup::classBegin() {}
 
 void TabGroup::componentComplete() {

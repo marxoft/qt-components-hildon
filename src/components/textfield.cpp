@@ -92,7 +92,7 @@ void TextField::changeEvent(QEvent *event) {
         break;
     }
 
-    QWidget::changeEvent(event);
+    QLineEdit::changeEvent(event);
 }
 
 void TextField::moveEvent(QMoveEvent *event) {
@@ -104,7 +104,7 @@ void TextField::moveEvent(QMoveEvent *event) {
         emit yChanged();
     }
 
-    QWidget::moveEvent(event);
+    QLineEdit::moveEvent(event);
 }
 
 void TextField::resizeEvent(QResizeEvent *event) {
@@ -116,7 +116,17 @@ void TextField::resizeEvent(QResizeEvent *event) {
         emit heightChanged();
     }
 
-    QWidget::resizeEvent(event);
+    QLineEdit::resizeEvent(event);
+}
+
+void TextField::showEvent(QShowEvent *event) {
+    emit visibleChanged();
+    QLineEdit::showEvent(event);
+}
+
+void TextField::hideEvent(QHideEvent *event) {
+    emit visibleChanged();
+    QLineEdit::hideEvent(event);
 }
 
 void TextField::classBegin() {}

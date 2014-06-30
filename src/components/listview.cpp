@@ -236,6 +236,16 @@ void ListView::resizeEvent(QResizeEvent *event) {
     QListView::resizeEvent(event);
 }
 
+void ListView::showEvent(QShowEvent *event) {
+    emit visibleChanged();
+    QListView::showEvent(event);
+}
+
+void ListView::hideEvent(QHideEvent *event) {
+    emit visibleChanged();
+    QListView::hideEvent(event);
+}
+
 void ListView::rowsInserted(const QModelIndex &parent, int start, int end) {
     QListView::rowsInserted(parent, start, end);
 }

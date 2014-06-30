@@ -119,6 +119,16 @@ void Slider::resizeEvent(QResizeEvent *event) {
     QSlider::resizeEvent(event);
 }
 
+void Slider::showEvent(QShowEvent *event) {
+    emit visibleChanged();
+    QSlider::showEvent(event);
+}
+
+void Slider::hideEvent(QHideEvent *event) {
+    emit visibleChanged();
+    QSlider::hideEvent(event);
+}
+
 void Slider::classBegin() {}
 
 void Slider::componentComplete() {

@@ -33,6 +33,7 @@ class Menu : public QMenu, public QDeclarativeParserStatus
     Q_PROPERTY(int y READ y WRITE setY)
     Q_PROPERTY(int width READ width WRITE setFixedWidth)
     Q_PROPERTY(int height READ height WRITE setFixedHeight)
+    Q_PROPERTY(bool visible READ isVisible WRITE setVisible NOTIFY visibleChanged)
     Q_PROPERTY(QString icon READ iconSource WRITE setIconSource)
     Q_PRIVATE_PROPERTY(Menu::d_func(), QDeclarativeListProperty<QObject> data READ data)
 
@@ -57,11 +58,14 @@ public slots:
 
 signals:
     void parentChanged();
+    void visibleChanged();
 
 private:
     Menu(MenuPrivate &dd, QWidget *parent);
 
     void changeEvent(QEvent *event);
+    void showEvent(QShowEvent *event);
+    void hideEvent(QHideEvent *event);
 
     void classBegin();
     void componentComplete();

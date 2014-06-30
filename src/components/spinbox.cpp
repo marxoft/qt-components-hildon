@@ -119,6 +119,16 @@ void SpinBox::resizeEvent(QResizeEvent *event) {
     QSpinBox::resizeEvent(event);
 }
 
+void SpinBox::showEvent(QShowEvent *event) {
+    emit visibleChanged();
+    QSpinBox::showEvent(event);
+}
+
+void SpinBox::hideEvent(QHideEvent *event) {
+    emit visibleChanged();
+    QSpinBox::hideEvent(event);
+}
+
 void SpinBox::classBegin() {}
 
 void SpinBox::componentComplete() {

@@ -52,7 +52,7 @@ class ListView : public QListView, public QDeclarativeParserStatus
     Q_PROPERTY(int contentY READ contentY WRITE setContentY NOTIFY contentYChanged)
     Q_PRIVATE_PROPERTY(ListView::d_func(), QDeclarativeListProperty<QObject> data READ data)
     Q_PRIVATE_PROPERTY(ListView::d_func(), QDeclarativeListProperty<QObject> actions READ actions)
-    Q_PRIVATE_PROPERTY(ListView::d_func(), bool visible READ qmlVisible WRITE setQmlVisible)
+    Q_PRIVATE_PROPERTY(ListView::d_func(), bool visible READ qmlVisible WRITE setQmlVisible NOTIFY visibleChanged)
     Q_PRIVATE_PROPERTY(ListView::d_func(), QVariant model READ model WRITE setModel)
     Q_PRIVATE_PROPERTY(ListView::d_func(), QVariant rootIndex READ rootIndex WRITE setRootIndex)
     Q_PRIVATE_PROPERTY(ListView::d_func(), QVariant currentIndex READ currentIndex WRITE setCurrentIndex)
@@ -111,6 +111,7 @@ signals:
     void yChanged();
     void widthChanged();
     void heightChanged();
+    void visibleChanged();
     void interactiveChanged();
     void movingChanged();
     void contentXChanged();
@@ -128,6 +129,8 @@ protected:
     void changeEvent(QEvent *event);
     void moveEvent(QMoveEvent *event);
     void resizeEvent(QResizeEvent *event);
+    void showEvent(QShowEvent *event);
+    void hideEvent(QHideEvent *event);
 
     void classBegin();
     void componentComplete();

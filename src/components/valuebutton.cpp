@@ -143,6 +143,16 @@ void ValueButton::resizeEvent(QResizeEvent *event) {
     QMaemo5ValueButton::resizeEvent(event);
 }
 
+void ValueButton::showEvent(QShowEvent *event) {
+    emit visibleChanged();
+    QMaemo5ValueButton::showEvent(event);
+}
+
+void ValueButton::hideEvent(QHideEvent *event) {
+    emit visibleChanged();
+    QMaemo5ValueButton::hideEvent(event);
+}
+
 void ValueButton::classBegin() {}
 
 void ValueButton::componentComplete() {
