@@ -53,6 +53,7 @@ class Flickable : public QScrollArea, public QDeclarativeParserStatus
     Q_PROPERTY(qreal flickDeceleration READ flickDeceleration WRITE setFlickDeceleration NOTIFY flickDecelerationChanged)
     Q_PROPERTY(qreal maximumFlickVelocity READ maximumFlickVelocity WRITE setMaximumFlickVelocity NOTIFY maximumFlickVelocityChanged)
     Q_PRIVATE_PROPERTY(Flickable::d_func(), QDeclarativeListProperty<QObject> data READ data)
+    Q_PRIVATE_PROPERTY(Flickable::d_func(), QDeclarativeListProperty<QWidget> children READ children)
     Q_PRIVATE_PROPERTY(Flickable::d_func(), QDeclarativeListProperty<QObject> actions READ actions)
     Q_PRIVATE_PROPERTY(Flickable::d_func(), bool visible READ qmlVisible WRITE setQmlVisible NOTIFY visibleChanged)
 

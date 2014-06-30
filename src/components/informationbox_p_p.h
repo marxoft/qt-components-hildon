@@ -32,17 +32,21 @@ public:
 
     static void data_append(QDeclarativeListProperty<QObject> *list, QObject *obj);
 
+    static void children_append(QDeclarativeListProperty<QWidget> *list, QWidget *widget);
+
     static void actions_append(QDeclarativeListProperty<QObject> *list, QObject *obj);
 
-    static void content_append(QDeclarativeListProperty<QObject> *list, QObject *obj);
+    static void content_append(QDeclarativeListProperty<QWidget> *list, QWidget *widget);
 
     QDeclarativeListProperty<QObject> data();
 
+    QDeclarativeListProperty<QWidget> children();
+
     QDeclarativeListProperty<QObject> actions();
 
-    QDeclarativeListProperty<QObject> content();
+    QDeclarativeListProperty<QWidget> content();
 
-    QList<QObject*> contentList;
+    QList<QWidget*> contentList;
 
     Q_DECLARE_PUBLIC(InformationBox)
 };

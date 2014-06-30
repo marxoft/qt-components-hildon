@@ -38,9 +38,13 @@ public:
 
     static void data_append(QDeclarativeListProperty<QObject> *list, QObject *obj);
 
+    static void children_append(QDeclarativeListProperty<QWidget> *list, QWidget *widget);
+
     static void actions_append(QDeclarativeListProperty<QObject> *list, QObject *obj);
 
     QDeclarativeListProperty<QObject> data();
+
+    QDeclarativeListProperty<QWidget> children();
 
     QDeclarativeListProperty<QObject> actions();
 

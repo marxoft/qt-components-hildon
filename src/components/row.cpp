@@ -63,10 +63,8 @@ void Row::setSpacing(int spacing) {
 void Row::componentComplete() {
     Q_D(Row);
 
-    foreach(QObject *obj, d->dataList) {
-        if (QWidget *widget = qobject_cast<QWidget*>(obj)) {
-            d->hbox->addWidget(widget, 0);
-        }
+    foreach(QWidget *widget, d->childrenList) {
+        d->hbox->addWidget(widget, 0);
     }
 
     Item::componentComplete();
@@ -80,11 +78,26 @@ void RowPrivate::data_append(QDeclarativeListProperty<QObject> *list, QObject *o
     if (Row *row = qobject_cast<Row*>(list->object)) {
         row->d_func()->dataList.append(obj);
 
-        if (!row->d_func()->complete) {
-            return;
-        }
-
         if (QWidget *widget = qobject_cast<QWidget*>(obj)) {
+            row->d_func()->childrenList.append(widget);
+
+            if (row->d_func()->complete) {
+                row->d_func()->hbox->addWidget(widget);
+            }
+        }
+    }
+}
+
+void RowPrivate::children_append(QDeclarativeListProperty<QWidget> *list, QWidget *widget) {
+    if (!widget) {
+        return;
+    }
+
+    if (Row *row = qobject_cast<Row*>(list->object)) {
+        row->d_func()->childrenList.append(widget);
+        row->d_func()->dataList.append(widget);
+
+        if (row->d_func()->complete) {
             row->d_func()->hbox->addWidget(widget);
         }
     }
@@ -92,6 +105,10 @@ void RowPrivate::data_append(QDeclarativeListProperty<QObject> *list, QObject *o
 
 QDeclarativeListProperty<QObject> RowPrivate::data() {
     return QDeclarativeListProperty<QObject>(q_func(), 0, RowPrivate::data_append);
+}
+
+QDeclarativeListProperty<QWidget> RowPrivate::children() {
+    return QDeclarativeListProperty<QWidget>(q_func(), 0, RowPrivate::children_append);
 }
 
 #include "moc_row_p.cpp"

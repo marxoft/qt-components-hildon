@@ -44,6 +44,7 @@ class ToolBar : public QToolBar, public QDeclarativeParserStatus
     Q_PROPERTY(AnchorLine horizontalCenter READ horizontalCenter CONSTANT FINAL)
     Q_PROPERTY(AnchorLine verticalCenter READ verticalCenter CONSTANT FINAL)
     Q_PRIVATE_PROPERTY(ToolBar::d_func(), QDeclarativeListProperty<QObject> data READ data)
+    Q_PRIVATE_PROPERTY(ToolBar::d_func(), QDeclarativeListProperty<QWidget> children READ children)
     Q_PRIVATE_PROPERTY(ToolBar::d_func(), bool visible READ qmlVisible WRITE setQmlVisible NOTIFY visibleChanged)
 
     Q_INTERFACES(QDeclarativeParserStatus)

@@ -62,6 +62,10 @@ void ButtonRowPrivate::data_append(QDeclarativeListProperty<QObject> *list, QObj
     if (ButtonRow *row = qobject_cast<ButtonRow*>(list->object)) {
         row->d_func()->dataList.append(obj);
 
+        if (obj->isWidgetType()) {
+            row->d_func()->childrenList.append(qobject_cast<QWidget*>(obj));
+        }
+
         if (!row->d_func()->complete) {
             return;
         }
@@ -74,8 +78,33 @@ void ButtonRowPrivate::data_append(QDeclarativeListProperty<QObject> *list, QObj
     }
 }
 
+void ButtonRowPrivate::children_append(QDeclarativeListProperty<QWidget> *list, QWidget *widget) {
+    if (!widget) {
+        return;
+    }
+
+    if (ButtonRow *row = qobject_cast<ButtonRow*>(list->object)) {
+        row->d_func()->childrenList.append(widget);
+        row->d_func()->dataList.append(widget);
+
+        if (!row->d_func()->complete) {
+            return;
+        }
+
+        if (QAbstractButton *button = qobject_cast<QAbstractButton*>(widget)) {
+            row->layout()->addWidget(button);
+            row->d_func()->group->addButton(button);
+            row->d_func()->updateStyleSheets();
+        }
+    }
+}
+
 QDeclarativeListProperty<QObject> ButtonRowPrivate::data() {
     return QDeclarativeListProperty<QObject>(q_func(), 0, ButtonRowPrivate::data_append);
+}
+
+QDeclarativeListProperty<QWidget> ButtonRowPrivate::children() {
+    return QDeclarativeListProperty<QWidget>(q_func(), 0, ButtonRowPrivate::children_append);
 }
 
 void ButtonRowPrivate::updateStyleSheets() {
@@ -104,8 +133,8 @@ void ButtonRowPrivate::updateStyleSheets() {
 void ButtonRowPrivate::componentComplete() {
     Q_Q(ButtonRow);
 
-    foreach (QObject *obj, dataList) {
-        if (QAbstractButton *button = qobject_cast<QAbstractButton*>(obj)) {
+    foreach (QWidget *widget, childrenList) {
+        if (QAbstractButton *button = qobject_cast<QAbstractButton*>(widget)) {
             q->layout()->addWidget(button);
             group->addButton(button);
         }

@@ -189,6 +189,25 @@ void TabGroupPrivate::data_append(QDeclarativeListProperty<QObject> *list, QObje
         }
 
         if (QWidget *widget = qobject_cast<QWidget*>(obj)) {
+            stack->d_func()->childrenList.append(widget);
+
+            if (stack->d_func()->complete) {
+                stack->addWidget(widget);
+            }
+        }
+    }
+}
+
+void TabGroupPrivate::children_append(QDeclarativeListProperty<QWidget> *list, QWidget *widget) {
+    if (!widget) {
+        return;
+    }
+
+    if (TabGroup *stack = qobject_cast<TabGroup*>(list->object)) {
+        stack->d_func()->childrenList.append(widget);
+        stack->d_func()->dataList.append(widget);
+
+        if (stack->d_func()->complete) {
             stack->addWidget(widget);
         }
     }
@@ -201,6 +220,7 @@ void TabGroupPrivate::actions_append(QDeclarativeListProperty<QObject> *list, QO
 
     if (TabGroup *stack = qobject_cast<TabGroup*>(list->object)) {
         stack->d_func()->actionList.append(obj);
+        stack->d_func()->dataList.append(obj);
 
         if (!stack->d_func()->complete) {
             return;
@@ -217,6 +237,10 @@ void TabGroupPrivate::actions_append(QDeclarativeListProperty<QObject> *list, QO
 
 QDeclarativeListProperty<QObject> TabGroupPrivate::data() {
     return QDeclarativeListProperty<QObject>(q_func(), 0, TabGroupPrivate::data_append);
+}
+
+QDeclarativeListProperty<QWidget> TabGroupPrivate::children() {
+    return QDeclarativeListProperty<QWidget>(q_func(), 0, TabGroupPrivate::children_append);
 }
 
 QDeclarativeListProperty<QObject> TabGroupPrivate::actions() {

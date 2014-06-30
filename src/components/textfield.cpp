@@ -175,6 +175,21 @@ void TextFieldPrivate::data_append(QDeclarativeListProperty<QObject> *list, QObj
 
     if (TextField *field = qobject_cast<TextField*>(list->object)) {
         field->d_func()->dataList.append(obj);
+
+        if (obj->isWidgetType()) {
+            field->d_func()->childrenList.append(qobject_cast<QWidget*>(obj));
+        }
+    }
+}
+
+void TextFieldPrivate::children_append(QDeclarativeListProperty<QWidget> *list, QWidget *widget) {
+    if (!widget) {
+        return;
+    }
+
+    if (TextField *field = qobject_cast<TextField*>(list->object)) {
+        field->d_func()->childrenList.append(widget);
+        field->d_func()->dataList.append(widget);
     }
 }
 
@@ -185,6 +200,7 @@ void TextFieldPrivate::actions_append(QDeclarativeListProperty<QObject> *list, Q
 
     if (TextField *field = qobject_cast<TextField*>(list->object)) {
         field->d_func()->actionList.append(obj);
+        field->d_func()->dataList.append(obj);
 
         if (!field->d_func()->complete) {
             return;
@@ -201,6 +217,10 @@ void TextFieldPrivate::actions_append(QDeclarativeListProperty<QObject> *list, Q
 
 QDeclarativeListProperty<QObject> TextFieldPrivate::data() {
     return QDeclarativeListProperty<QObject>(q_func(), 0, TextFieldPrivate::data_append);
+}
+
+QDeclarativeListProperty<QWidget> TextFieldPrivate::children() {
+    return QDeclarativeListProperty<QWidget>(q_func(), 0, TextFieldPrivate::children_append);
 }
 
 QDeclarativeListProperty<QObject> TextFieldPrivate::actions() {

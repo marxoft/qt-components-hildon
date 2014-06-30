@@ -175,6 +175,21 @@ void SliderPrivate::data_append(QDeclarativeListProperty<QObject> *list, QObject
 
     if (Slider *slider = qobject_cast<Slider*>(list->object)) {
         slider->d_func()->dataList.append(obj);
+
+        if (obj->isWidgetType()) {
+            slider->d_func()->childrenList.append(qobject_cast<QWidget*>(obj));
+        }
+    }
+}
+
+void SliderPrivate::children_append(QDeclarativeListProperty<QWidget> *list, QWidget *widget) {
+    if (!widget) {
+        return;
+    }
+
+    if (Slider *slider = qobject_cast<Slider*>(list->object)) {
+        slider->d_func()->childrenList.append(widget);
+        slider->d_func()->dataList.append(widget);
     }
 }
 
@@ -185,6 +200,7 @@ void SliderPrivate::actions_append(QDeclarativeListProperty<QObject> *list, QObj
 
     if (Slider *slider = qobject_cast<Slider*>(list->object)) {
         slider->d_func()->actionList.append(obj);
+        slider->d_func()->dataList.append(obj);
 
         if (!slider->d_func()->complete) {
             return;
@@ -201,6 +217,10 @@ void SliderPrivate::actions_append(QDeclarativeListProperty<QObject> *list, QObj
 
 QDeclarativeListProperty<QObject> SliderPrivate::data() {
     return QDeclarativeListProperty<QObject>(q_func(), 0, SliderPrivate::data_append);
+}
+
+QDeclarativeListProperty<QWidget> SliderPrivate::children() {
+    return QDeclarativeListProperty<QWidget>(q_func(), 0, SliderPrivate::children_append);
 }
 
 QDeclarativeListProperty<QObject> SliderPrivate::actions() {

@@ -177,11 +177,38 @@ void EditBarPrivate::data_append(QDeclarativeListProperty<QObject> *list, QObjec
     if (EditBar *bar = qobject_cast<EditBar*>(list->object)) {
         bar->d_func()->dataList.append(obj);
 
+        if (obj->isWidgetType()) {
+            bar->d_func()->childrenList.append(qobject_cast<QWidget*>(obj));
+        }
+
         if (!bar->d_func()->complete) {
             return;
         }
 
         if (QAbstractButton *button = qobject_cast<QAbstractButton*>(obj)) {
+            button->setStyleSheet(":pressed { border-image: url(/etc/hildon/theme/images/StylusButtonPressed.png) 8 8 8 8 stretch stretch; border-width: 8px; }"
+                                  ":on { border-image: url(/etc/hildon/theme/images/StylusButtonPressed.png) 8 8 8 8 stretch stretch; border-width: 8px; }"
+                                  ":disabled { border-image: url(/etc/hildon/theme/images/StylusButtonDisabled.png) 8 8 8 8 stretch stretch; border-width: 8px; }"
+                                  ":!pressed:!on:!diabled { border-image: url(/etc/hildon/theme/images/StylusButtonNormal.png) 8 8 8 8 stretch stretch; border-width: 8px; }");
+            bar->addButton(button);
+        }
+    }
+}
+
+void EditBarPrivate::children_append(QDeclarativeListProperty<QWidget> *list, QWidget *widget) {
+    if (!widget) {
+        return;
+    }
+
+    if (EditBar *bar = qobject_cast<EditBar*>(list->object)) {
+        bar->d_func()->childrenList.append(widget);
+        bar->d_func()->dataList.append(widget);
+
+        if (!bar->d_func()->complete) {
+            return;
+        }
+
+        if (QAbstractButton *button = qobject_cast<QAbstractButton*>(widget)) {
             button->setStyleSheet(":pressed { border-image: url(/etc/hildon/theme/images/StylusButtonPressed.png) 8 8 8 8 stretch stretch; border-width: 8px; }"
                                   ":on { border-image: url(/etc/hildon/theme/images/StylusButtonPressed.png) 8 8 8 8 stretch stretch; border-width: 8px; }"
                                   ":disabled { border-image: url(/etc/hildon/theme/images/StylusButtonDisabled.png) 8 8 8 8 stretch stretch; border-width: 8px; }"
@@ -198,6 +225,7 @@ void EditBarPrivate::actions_append(QDeclarativeListProperty<QObject> *list, QOb
 
     if (EditBar *bar = qobject_cast<EditBar*>(list->object)) {
         bar->d_func()->actionList.append(obj);
+        bar->d_func()->dataList.append(obj);
 
         if (!bar->d_func()->complete) {
             return;
@@ -214,6 +242,10 @@ void EditBarPrivate::actions_append(QDeclarativeListProperty<QObject> *list, QOb
 
 QDeclarativeListProperty<QObject> EditBarPrivate::data() {
     return QDeclarativeListProperty<QObject>(q_func(), 0, EditBarPrivate::data_append);
+}
+
+QDeclarativeListProperty<QWidget> EditBarPrivate::children() {
+    return QDeclarativeListProperty<QWidget>(q_func(), 0, EditBarPrivate::children_append);
 }
 
 QDeclarativeListProperty<QObject> EditBarPrivate::actions() {

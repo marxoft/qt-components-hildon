@@ -44,6 +44,8 @@ public:
 
     static void data_append(QDeclarativeListProperty<QObject> *list, QObject *obj);
 
+    static void children_append(QDeclarativeListProperty<QWidget> *list, QWidget *widget);
+
     static void actions_append(QDeclarativeListProperty<QObject> *list, QObject *obj);
 
     Keys* attachedKeys();
@@ -51,6 +53,8 @@ public:
     Anchors* anchors();
 
     virtual QDeclarativeListProperty<QObject> data();
+
+    virtual QDeclarativeListProperty<QWidget> children();
 
     virtual QDeclarativeListProperty<QObject> actions();
 
@@ -77,6 +81,8 @@ public:
     bool qmlVis;
 
     QList<QObject*> dataList;
+
+    QList<QWidget*> childrenList;
 
     QList<QObject*> actionList;
 

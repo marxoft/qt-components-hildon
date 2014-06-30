@@ -44,6 +44,7 @@ class CheckBox : public QCheckBox, public QDeclarativeParserStatus
     Q_PROPERTY(AnchorLine horizontalCenter READ horizontalCenter CONSTANT FINAL)
     Q_PROPERTY(AnchorLine verticalCenter READ verticalCenter CONSTANT FINAL)
     Q_PRIVATE_PROPERTY(CheckBox::d_func(), QDeclarativeListProperty<QObject> data READ data)
+    Q_PRIVATE_PROPERTY(CheckBox::d_func(), QDeclarativeListProperty<QWidget> children READ children)
     Q_PRIVATE_PROPERTY(CheckBox::d_func(), QDeclarativeListProperty<QObject> actions READ actions)
     Q_PRIVATE_PROPERTY(CheckBox::d_func(), bool visible READ qmlVisible WRITE setQmlVisible NOTIFY visibleChanged)
 

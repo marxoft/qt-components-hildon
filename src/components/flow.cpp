@@ -63,14 +63,12 @@ void Flow::setSpacing(int spacing) {
 void Flow::componentComplete() {
     Q_D(Flow);
 
-    foreach(QObject *obj, d->dataList) {
-        if (QWidget *widget = qobject_cast<QWidget*>(obj)) {
-            if (widget->width() + d->grid->contentsRect().width() <= this->width()) {
-                d->grid->addWidget(widget, d->grid->rowCount() - 1, d->grid->columnCount() - 1);
-            }
-            else {
-                d->grid->addWidget(widget, d->grid->rowCount(), 0);
-            }
+    foreach(QWidget *widget, d->childrenList) {
+        if (widget->width() + d->grid->contentsRect().width() <= this->width()) {
+            d->grid->addWidget(widget, d->grid->rowCount() - 1, d->grid->columnCount() - 1);
+        }
+        else {
+            d->grid->addWidget(widget, d->grid->rowCount(), 0);
         }
     }
 
@@ -85,11 +83,13 @@ void FlowPrivate::data_append(QDeclarativeListProperty<QObject> *list, QObject *
     if (Flow *flow = qobject_cast<Flow*>(list->object)) {
         flow->d_func()->dataList.append(obj);
 
-        if (!flow->d_func()->complete) {
-            return;
-        }
-
         if (QWidget *widget = qobject_cast<QWidget*>(obj)) {
+            flow->d_func()->childrenList.append(widget);
+
+            if (!flow->d_func()->complete) {
+                return;
+            }
+
             if (widget->width() + flow->d_func()->grid->contentsRect().width() <= flow->width()) {
                 flow->d_func()->grid->addWidget(widget);
             }
@@ -100,8 +100,34 @@ void FlowPrivate::data_append(QDeclarativeListProperty<QObject> *list, QObject *
     }
 }
 
+void FlowPrivate::children_append(QDeclarativeListProperty<QWidget> *list, QWidget *widget) {
+    if (!widget) {
+        return;
+    }
+
+    if (Flow *flow = qobject_cast<Flow*>(list->object)) {
+        flow->d_func()->childrenList.append(widget);
+        flow->d_func()->dataList.append(widget);
+
+        if (!flow->d_func()->complete) {
+            return;
+        }
+
+        if (widget->width() + flow->d_func()->grid->contentsRect().width() <= flow->width()) {
+            flow->d_func()->grid->addWidget(widget);
+        }
+        else {
+            flow->d_func()->grid->addWidget(widget, flow->d_func()->grid->rowCount(), 0);
+        }
+    }
+}
+
 QDeclarativeListProperty<QObject> FlowPrivate::data() {
     return QDeclarativeListProperty<QObject>(q_func(), 0, FlowPrivate::data_append);
+}
+
+QDeclarativeListProperty<QWidget> FlowPrivate::children() {
+    return QDeclarativeListProperty<QWidget>(q_func(), 0, FlowPrivate::children_append);
 }
 
 #include "moc_flow_p.cpp"

@@ -199,6 +199,21 @@ void ValueButtonPrivate::data_append(QDeclarativeListProperty<QObject> *list, QO
 
     if (ValueButton *button = qobject_cast<ValueButton*>(list->object)) {
         button->d_func()->dataList.append(obj);
+
+        if (obj->isWidgetType()) {
+            button->d_func()->childrenList.append(qobject_cast<QWidget*>(obj));
+        }
+    }
+}
+
+void ValueButtonPrivate::children_append(QDeclarativeListProperty<QWidget> *list, QWidget *widget) {
+    if (!widget) {
+        return;
+    }
+
+    if (ValueButton *button = qobject_cast<ValueButton*>(list->object)) {
+        button->d_func()->childrenList.append(widget);
+        button->d_func()->dataList.append(widget);
     }
 }
 
@@ -225,6 +240,10 @@ void ValueButtonPrivate::actions_append(QDeclarativeListProperty<QObject> *list,
 
 QDeclarativeListProperty<QObject> ValueButtonPrivate::data() {
     return QDeclarativeListProperty<QObject>(q_func(), 0, ValueButtonPrivate::data_append);
+}
+
+QDeclarativeListProperty<QWidget> ValueButtonPrivate::children() {
+    return QDeclarativeListProperty<QWidget>(q_func(), 0, ValueButtonPrivate::children_append);
 }
 
 QDeclarativeListProperty<QObject> ValueButtonPrivate::actions() {

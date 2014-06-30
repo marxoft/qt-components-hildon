@@ -196,6 +196,21 @@ void WebViewPrivate::data_append(QDeclarativeListProperty<QObject> *list, QObjec
 
     if (WebView *view = qobject_cast<WebView*>(list->object)) {
         view->d_func()->dataList.append(obj);
+
+        if (obj->isWidgetType()) {
+            view->d_func()->childrenList.append(qobject_cast<QWidget*>(obj));
+        }
+    }
+}
+
+void WebViewPrivate::children_append(QDeclarativeListProperty<QWidget> *list, QWidget *widget) {
+    if (!widget) {
+        return;
+    }
+
+    if (WebView *view = qobject_cast<WebView*>(list->object)) {
+        view->d_func()->childrenList.append(widget);
+        view->d_func()->dataList.append(widget);
     }
 }
 
@@ -206,6 +221,7 @@ void WebViewPrivate::actions_append(QDeclarativeListProperty<QObject> *list, QOb
 
     if (WebView *view = qobject_cast<WebView*>(list->object)) {
         view->d_func()->actionList.append(obj);
+        view->d_func()->dataList.append(obj);
 
         if (!view->d_func()->complete) {
             return;
@@ -222,6 +238,10 @@ void WebViewPrivate::actions_append(QDeclarativeListProperty<QObject> *list, QOb
 
 QDeclarativeListProperty<QObject> WebViewPrivate::data() {
     return QDeclarativeListProperty<QObject>(q_func(), 0, WebViewPrivate::data_append);
+}
+
+QDeclarativeListProperty<QWidget> WebViewPrivate::children() {
+    return QDeclarativeListProperty<QWidget>(q_func(), 0, WebViewPrivate::children_append);
 }
 
 QDeclarativeListProperty<QObject> WebViewPrivate::actions() {

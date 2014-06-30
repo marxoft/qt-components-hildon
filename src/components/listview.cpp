@@ -300,6 +300,21 @@ void ListViewPrivate::data_append(QDeclarativeListProperty<QObject> *list, QObje
 
     if (ListView *view = qobject_cast<ListView*>(list->object)) {
         view->d_func()->dataList.append(obj);
+
+        if (obj->isWidgetType()) {
+            view->d_func()->childrenList.append(qobject_cast<QWidget*>(obj));
+        }
+    }
+}
+
+void ListViewPrivate::children_append(QDeclarativeListProperty<QWidget> *list, QWidget *widget) {
+    if (!widget) {
+        return;
+    }
+
+    if (ListView *view = qobject_cast<ListView*>(list->object)) {
+        view->d_func()->childrenList.append(widget);
+        view->d_func()->dataList.append(widget);
     }
 }
 
@@ -310,6 +325,7 @@ void ListViewPrivate::actions_append(QDeclarativeListProperty<QObject> *list, QO
 
     if (ListView *view = qobject_cast<ListView*>(list->object)) {
         view->d_func()->actionList.append(obj);
+        view->d_func()->dataList.append(obj);
 
         if (!view->d_func()->complete) {
             return;
@@ -326,6 +342,10 @@ void ListViewPrivate::actions_append(QDeclarativeListProperty<QObject> *list, QO
 
 QDeclarativeListProperty<QObject> ListViewPrivate::data() {
     return QDeclarativeListProperty<QObject>(q_func(), 0, ListViewPrivate::data_append);
+}
+
+QDeclarativeListProperty<QWidget> ListViewPrivate::children() {
+    return QDeclarativeListProperty<QWidget>(q_func(), 0, ListViewPrivate::children_append);
 }
 
 QDeclarativeListProperty<QObject> ListViewPrivate::actions() {

@@ -185,6 +185,21 @@ void ToolButtonPrivate::data_append(QDeclarativeListProperty<QObject> *list, QOb
 
     if (ToolButton *button = qobject_cast<ToolButton*>(list->object)) {
         button->d_func()->dataList.append(obj);
+
+        if (obj->isWidgetType()) {
+            button->d_func()->childrenList.append(qobject_cast<QWidget*>(obj));
+        }
+    }
+}
+
+void ToolButtonPrivate::children_append(QDeclarativeListProperty<QWidget> *list, QWidget *widget) {
+    if (!widget) {
+        return;
+    }
+
+    if (ToolButton *button = qobject_cast<ToolButton*>(list->object)) {
+        button->d_func()->childrenList.append(widget);
+        button->d_func()->dataList.append(widget);
     }
 }
 
@@ -195,6 +210,7 @@ void ToolButtonPrivate::actions_append(QDeclarativeListProperty<QObject> *list, 
 
     if (ToolButton *button = qobject_cast<ToolButton*>(list->object)) {
         button->d_func()->actionList.append(obj);
+        button->d_func()->dataList.append(obj);
 
         if (!button->d_func()->complete) {
             return;
@@ -211,6 +227,10 @@ void ToolButtonPrivate::actions_append(QDeclarativeListProperty<QObject> *list, 
 
 QDeclarativeListProperty<QObject> ToolButtonPrivate::data() {
     return QDeclarativeListProperty<QObject>(q_func(), 0, ToolButtonPrivate::data_append);
+}
+
+QDeclarativeListProperty<QWidget> ToolButtonPrivate::children() {
+    return QDeclarativeListProperty<QWidget>(q_func(), 0, ToolButtonPrivate::children_append);
 }
 
 QDeclarativeListProperty<QObject> ToolButtonPrivate::actions() {

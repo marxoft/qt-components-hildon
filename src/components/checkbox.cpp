@@ -185,6 +185,21 @@ void CheckBoxPrivate::data_append(QDeclarativeListProperty<QObject> *list, QObje
 
     if (CheckBox *checkbox = qobject_cast<CheckBox*>(list->object)) {
         checkbox->d_func()->dataList.append(obj);
+
+        if (obj->isWidgetType()) {
+            checkbox->d_func()->childrenList.append(qobject_cast<QWidget*>(obj));
+        }
+    }
+}
+
+void CheckBoxPrivate::children_append(QDeclarativeListProperty<QWidget> *list, QWidget *widget) {
+    if (!widget) {
+        return;
+    }
+
+    if (CheckBox *checkbox = qobject_cast<CheckBox*>(list->object)) {
+        checkbox->d_func()->childrenList.append(widget);
+        checkbox->d_func()->dataList.append(widget);
     }
 }
 
@@ -195,6 +210,7 @@ void CheckBoxPrivate::actions_append(QDeclarativeListProperty<QObject> *list, QO
 
     if (CheckBox *checkbox = qobject_cast<CheckBox*>(list->object)) {
         checkbox->d_func()->actionList.append(obj);
+        checkbox->d_func()->dataList.append(obj);
 
         if (!checkbox->d_func()->complete) {
             return;
@@ -211,6 +227,10 @@ void CheckBoxPrivate::actions_append(QDeclarativeListProperty<QObject> *list, QO
 
 QDeclarativeListProperty<QObject> CheckBoxPrivate::data() {
     return QDeclarativeListProperty<QObject>(q_func(), 0, CheckBoxPrivate::data_append);
+}
+
+QDeclarativeListProperty<QWidget> CheckBoxPrivate::children() {
+    return QDeclarativeListProperty<QWidget>(q_func(), 0, CheckBoxPrivate::children_append);
 }
 
 QDeclarativeListProperty<QObject> CheckBoxPrivate::actions() {

@@ -31,7 +31,11 @@ public:
 
     static void data_append(QDeclarativeListProperty<QObject> *list, QObject *obj);
 
+    static void children_append(QDeclarativeListProperty<QWidget> *list, QWidget *widget);
+
     QDeclarativeListProperty<QObject> data();
+
+    QDeclarativeListProperty<QWidget> children();
 
     void clearGrid();
     void loadGrid();

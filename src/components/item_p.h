@@ -46,6 +46,7 @@ class Item : public QWidget, public QDeclarativeParserStatus
     Q_PROPERTY(AnchorLine verticalCenter READ verticalCenter CONSTANT FINAL)
     Q_PRIVATE_PROPERTY(Item::d_func(), Keys* Keys READ attachedKeys CONSTANT FINAL)
     Q_PRIVATE_PROPERTY(Item::d_func(), QDeclarativeListProperty<QObject> data READ data)
+    Q_PRIVATE_PROPERTY(Item::d_func(), QDeclarativeListProperty<QWidget> children READ children)
     Q_PRIVATE_PROPERTY(Item::d_func(), QDeclarativeListProperty<QObject> actions READ actions)
     Q_PRIVATE_PROPERTY(Item::d_func(), bool visible READ qmlVisible WRITE setQmlVisible NOTIFY visibleChanged)
 

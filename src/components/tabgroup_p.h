@@ -44,6 +44,7 @@ class TabGroup : public QStackedWidget, public QDeclarativeParserStatus
     Q_PROPERTY(AnchorLine verticalCenter READ verticalCenter CONSTANT FINAL)
     Q_PROPERTY(QWidget* currentTab READ currentWidget WRITE setCurrentWidget NOTIFY currentTabChanged)
     Q_PRIVATE_PROPERTY(TabGroup::d_func(), QDeclarativeListProperty<QObject> data READ data)
+    Q_PRIVATE_PROPERTY(TabGroup::d_func(), QDeclarativeListProperty<QWidget> children READ children)
     Q_PRIVATE_PROPERTY(TabGroup::d_func(), QDeclarativeListProperty<QObject> actions READ actions)
     Q_PRIVATE_PROPERTY(TabGroup::d_func(), bool visible READ qmlVisible WRITE setQmlVisible NOTIFY visibleChanged)
 

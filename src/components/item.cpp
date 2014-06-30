@@ -210,6 +210,21 @@ void ItemPrivate::data_append(QDeclarativeListProperty<QObject> *list, QObject *
 
     if (Item *item = qobject_cast<Item*>(list->object)) {
         item->d_func()->dataList.append(obj);
+
+        if (obj->isWidgetType()) {
+            item->d_func()->childrenList.append(qobject_cast<QWidget*>(obj));
+        }
+    }
+}
+
+void ItemPrivate::children_append(QDeclarativeListProperty<QWidget> *list, QWidget *widget) {
+    if (!widget) {
+        return;
+    }
+
+    if (Item *item = qobject_cast<Item*>(list->object)) {
+        item->d_func()->childrenList.append(widget);
+        item->d_func()->dataList.append(widget);
     }
 }
 
@@ -220,6 +235,7 @@ void ItemPrivate::actions_append(QDeclarativeListProperty<QObject> *list, QObjec
 
     if (Item *item = qobject_cast<Item*>(list->object)) {
         item->d_func()->actionList.append(obj);
+        item->d_func()->dataList.append(obj);
 
         if (!item->d_func()->complete) {
             return;
@@ -256,6 +272,10 @@ Anchors* ItemPrivate::anchors() {
 
 QDeclarativeListProperty<QObject> ItemPrivate::data() {
     return QDeclarativeListProperty<QObject>(q_func(), 0, ItemPrivate::data_append);
+}
+
+QDeclarativeListProperty<QWidget> ItemPrivate::children() {
+    return QDeclarativeListProperty<QWidget>(q_func(), 0, ItemPrivate::children_append);
 }
 
 QDeclarativeListProperty<QObject> ItemPrivate::actions() {

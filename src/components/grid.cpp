@@ -125,11 +125,26 @@ void GridPrivate::data_append(QDeclarativeListProperty<QObject> *list, QObject *
     if (Grid *grid = qobject_cast<Grid*>(list->object)) {
         grid->d_func()->dataList.append(obj);
 
-        if (!grid->d_func()->complete) {
-            return;
-        }
-
         if (QWidget *widget = qobject_cast<QWidget*>(obj)) {
+            grid->d_func()->childrenList.append(widget);
+
+            if (grid->d_func()->complete) {
+                grid->d_func()->addWidgetToGrid(widget);
+            }
+        }
+    }
+}
+
+void GridPrivate::children_append(QDeclarativeListProperty<QWidget> *list, QWidget *widget) {
+    if (!widget) {
+        return;
+    }
+
+    if (Grid *grid = qobject_cast<Grid*>(list->object)) {
+        grid->d_func()->childrenList.append(widget);
+        grid->d_func()->dataList.append(widget);
+
+        if (grid->d_func()->complete) {
             grid->d_func()->addWidgetToGrid(widget);
         }
     }
@@ -139,11 +154,13 @@ QDeclarativeListProperty<QObject> GridPrivate::data() {
     return QDeclarativeListProperty<QObject>(q_func(), 0, GridPrivate::data_append);
 }
 
+QDeclarativeListProperty<QWidget> GridPrivate::children() {
+    return QDeclarativeListProperty<QWidget>(q_func(), 0, GridPrivate::children_append);
+}
+
 void GridPrivate::clearGrid() {
-    foreach (QObject *obj, dataList) {
-        if (QWidget *widget = qobject_cast<QWidget*>(obj)) {
-            grid->removeWidget(widget);
-        }
+    foreach (QWidget *widget, childrenList) {
+        grid->removeWidget(widget);
     }
 
     gridMap.clear();
@@ -155,29 +172,25 @@ void GridPrivate::loadGrid() {
     int maxCols = columns;
 
     if (maxCols > 1) {
-        foreach (QObject *obj, dataList) {
-            if (QWidget *widget = qobject_cast<QWidget*>(obj)) {
-                if (col < maxCols) {
-                    grid->addWidget(widget, row, col);
-                    gridMap[row] = col;
-                    col++;
-                }
-                else {
-                    grid->addWidget(widget);
-                    row++;
-                    col = 1;
-                    gridMap[row] = 1;
-                }
+        foreach (QWidget *widget, childrenList) {
+            if (col < maxCols) {
+                grid->addWidget(widget, row, col);
+                gridMap[row] = col;
+                col++;
+            }
+            else {
+                grid->addWidget(widget);
+                row++;
+                col = 1;
+                gridMap[row] = 1;
             }
         }
     }
     else {
-        foreach (QObject *obj, dataList) {
-            if (QWidget *widget = qobject_cast<QWidget*>(obj)) {
-                grid->addWidget(widget, row, 0);
-                gridMap[row] = 1;
-                row++;
-            }
+        foreach (QWidget *widget, childrenList) {
+            grid->addWidget(widget, row, 0);
+            gridMap[row] = 1;
+            row++;
         }
     }
 }

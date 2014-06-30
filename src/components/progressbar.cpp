@@ -175,6 +175,21 @@ void ProgressBarPrivate::data_append(QDeclarativeListProperty<QObject> *list, QO
 
     if (ProgressBar *bar = qobject_cast<ProgressBar*>(list->object)) {
         bar->d_func()->dataList.append(obj);
+
+        if (obj->isWidgetType()) {
+            bar->d_func()->childrenList.append(qobject_cast<QWidget*>(obj));
+        }
+    }
+}
+
+void ProgressBarPrivate::children_append(QDeclarativeListProperty<QWidget> *list, QWidget *widget) {
+    if (!widget) {
+        return;
+    }
+
+    if (ProgressBar *bar = qobject_cast<ProgressBar*>(list->object)) {
+        bar->d_func()->childrenList.append(widget);
+        bar->d_func()->dataList.append(widget);
     }
 }
 
@@ -185,6 +200,7 @@ void ProgressBarPrivate::actions_append(QDeclarativeListProperty<QObject> *list,
 
     if (ProgressBar *bar = qobject_cast<ProgressBar*>(list->object)) {
         bar->d_func()->actionList.append(obj);
+        bar->d_func()->dataList.append(obj);
 
         if (!bar->d_func()->complete) {
             return;
@@ -201,6 +217,10 @@ void ProgressBarPrivate::actions_append(QDeclarativeListProperty<QObject> *list,
 
 QDeclarativeListProperty<QObject> ProgressBarPrivate::data() {
     return QDeclarativeListProperty<QObject>(q_func(), 0, ProgressBarPrivate::data_append);
+}
+
+QDeclarativeListProperty<QWidget> ProgressBarPrivate::children() {
+    return QDeclarativeListProperty<QWidget>(q_func(), 0, ProgressBarPrivate::children_append);
 }
 
 QDeclarativeListProperty<QObject> ProgressBarPrivate::actions() {

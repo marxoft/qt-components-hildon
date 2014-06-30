@@ -185,6 +185,21 @@ void RadioButtonPrivate::data_append(QDeclarativeListProperty<QObject> *list, QO
 
     if (RadioButton *button = qobject_cast<RadioButton*>(list->object)) {
         button->d_func()->dataList.append(obj);
+
+        if (obj->isWidgetType()) {
+            button->d_func()->childrenList.append(qobject_cast<QWidget*>(obj));
+        }
+    }
+}
+
+void RadioButtonPrivate::children_append(QDeclarativeListProperty<QWidget> *list, QWidget *widget) {
+    if (!widget) {
+        return;
+    }
+
+    if (RadioButton *button = qobject_cast<RadioButton*>(list->object)) {
+        button->d_func()->childrenList.append(widget);
+        button->d_func()->dataList.append(widget);
     }
 }
 
@@ -195,6 +210,7 @@ void RadioButtonPrivate::actions_append(QDeclarativeListProperty<QObject> *list,
 
     if (RadioButton *button = qobject_cast<RadioButton*>(list->object)) {
         button->d_func()->actionList.append(obj);
+        button->d_func()->dataList.append(obj);
 
         if (!button->d_func()->complete) {
             return;
@@ -211,6 +227,10 @@ void RadioButtonPrivate::actions_append(QDeclarativeListProperty<QObject> *list,
 
 QDeclarativeListProperty<QObject> RadioButtonPrivate::data() {
     return QDeclarativeListProperty<QObject>(q_func(), 0, RadioButtonPrivate::data_append);
+}
+
+QDeclarativeListProperty<QWidget> RadioButtonPrivate::children() {
+    return QDeclarativeListProperty<QWidget>(q_func(), 0, RadioButtonPrivate::children_append);
 }
 
 QDeclarativeListProperty<QObject> RadioButtonPrivate::actions() {

@@ -52,6 +52,7 @@ class ListView : public QListView, public QDeclarativeParserStatus
     Q_PROPERTY(int contentX READ contentX WRITE setContentX NOTIFY contentXChanged)
     Q_PROPERTY(int contentY READ contentY WRITE setContentY NOTIFY contentYChanged)
     Q_PRIVATE_PROPERTY(ListView::d_func(), QDeclarativeListProperty<QObject> data READ data)
+    Q_PRIVATE_PROPERTY(ListView::d_func(), QDeclarativeListProperty<QWidget> children READ children)
     Q_PRIVATE_PROPERTY(ListView::d_func(), QDeclarativeListProperty<QObject> actions READ actions)
     Q_PRIVATE_PROPERTY(ListView::d_func(), bool visible READ qmlVisible WRITE setQmlVisible NOTIFY visibleChanged)
     Q_PRIVATE_PROPERTY(ListView::d_func(), QVariant model READ model WRITE setModel)

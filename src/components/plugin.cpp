@@ -96,6 +96,7 @@ void Plugin::registerTypes(const char *uri) {
     qRegisterMetaType<AnchorLine>("AnchorLine");
 
     qmlRegisterUncreatableType<QWidget>(uri, 1, 0, "Widget", "");
+    qmlRegisterUncreatableType<QAbstractButton>(uri, 1, 0, "AbstractButton", "");
 
     qmlRegisterType<Action>(uri, 1, 0, "Action");
     qmlRegisterType<ActionGroup>(uri, 1, 0, "ActionGroup");

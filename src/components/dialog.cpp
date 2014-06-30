@@ -17,7 +17,6 @@
 
 #include "dialog_p.h"
 #include "dialog_p_p.h"
-#include <QAbstractButton>
 #include <QActionGroup>
 #include <QMoveEvent>
 #include <QResizeEvent>
@@ -177,6 +176,21 @@ void DialogPrivate::data_append(QDeclarativeListProperty<QObject> *list, QObject
 
     if (Dialog *dialog = qobject_cast<Dialog*>(list->object)) {
         dialog->d_func()->dataList.append(obj);
+
+        if (obj->isWidgetType()) {
+            dialog->d_func()->childrenList.append(qobject_cast<QWidget*>(obj));
+        }
+    }
+}
+
+void DialogPrivate::children_append(QDeclarativeListProperty<QWidget> *list, QWidget *widget) {
+    if (!widget) {
+        return;
+    }
+
+    if (Dialog *dialog = qobject_cast<Dialog*>(list->object)) {
+        dialog->d_func()->childrenList.append(widget);
+        dialog->d_func()->dataList.append(widget);
     }
 }
 
@@ -187,6 +201,7 @@ void DialogPrivate::actions_append(QDeclarativeListProperty<QObject> *list, QObj
 
     if (Dialog *dialog = qobject_cast<Dialog*>(list->object)) {
         dialog->d_func()->actionList.append(obj);
+        dialog->d_func()->dataList.append(obj);
 
         if (!dialog->d_func()->complete) {
             return;
@@ -201,28 +216,27 @@ void DialogPrivate::actions_append(QDeclarativeListProperty<QObject> *list, QObj
     }
 }
 
-void DialogPrivate::content_append(QDeclarativeListProperty<QObject> *list, QObject *obj) {
-    if (!obj) {
+void DialogPrivate::content_append(QDeclarativeListProperty<QWidget> *list, QWidget *widget) {
+    if (!widget) {
         return;
     }
 
     if (Dialog *dialog = qobject_cast<Dialog*>(list->object)) {
-        dialog->d_func()->contentList.append(obj);
-        obj->setParent(dialog->d_func()->contentItem);
+        dialog->d_func()->contentList.append(widget);
+        dialog->d_func()->dataList.append(widget);
+        widget->setParent(dialog->d_func()->contentItem);
     }
 }
 
-void DialogPrivate::buttons_append(QDeclarativeListProperty<QObject> *list, QObject *obj) {
-    if (!obj) {
+void DialogPrivate::buttons_append(QDeclarativeListProperty<QAbstractButton> *list, QAbstractButton *button) {
+    if (!button) {
         return;
     }
 
     if (Dialog *dialog = qobject_cast<Dialog*>(list->object)) {
-        dialog->d_func()->buttonList.append(obj);
-
-        if (QAbstractButton *button = qobject_cast<QAbstractButton*>(obj)) {
-            dialog->d_func()->buttonBox->addButton(button, QDialogButtonBox::ActionRole);
-        }
+        dialog->d_func()->buttonList.append(button);
+        dialog->d_func()->dataList.append(button);
+        dialog->d_func()->buttonBox->addButton(button, QDialogButtonBox::ActionRole);
     }
 }
 
@@ -230,16 +244,20 @@ QDeclarativeListProperty<QObject> DialogPrivate::data() {
     return QDeclarativeListProperty<QObject>(q_func(), 0, DialogPrivate::data_append);
 }
 
+QDeclarativeListProperty<QWidget> DialogPrivate::children() {
+    return QDeclarativeListProperty<QWidget>(q_func(), 0, DialogPrivate::children_append);
+}
+
 QDeclarativeListProperty<QObject> DialogPrivate::actions() {
     return QDeclarativeListProperty<QObject>(q_func(), 0, DialogPrivate::actions_append);
 }
 
-QDeclarativeListProperty<QObject> DialogPrivate::content() {
-    return QDeclarativeListProperty<QObject>(q_func(), 0, DialogPrivate::content_append);
+QDeclarativeListProperty<QWidget> DialogPrivate::content() {
+    return QDeclarativeListProperty<QWidget>(q_func(), 0, DialogPrivate::content_append);
 }
 
-QDeclarativeListProperty<QObject> DialogPrivate::buttons() {
-    return QDeclarativeListProperty<QObject>(q_func(), 0, DialogPrivate::buttons_append);
+QDeclarativeListProperty<QAbstractButton> DialogPrivate::buttons() {
+    return QDeclarativeListProperty<QAbstractButton>(q_func(), 0, DialogPrivate::buttons_append);
 }
 
 void DialogPrivate::_q_onOrientationChanged(Screen::Orientation orientation) {

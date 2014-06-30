@@ -179,6 +179,10 @@ void ToolBarPrivate::data_append(QDeclarativeListProperty<QObject> *list, QObjec
     if (ToolBar *bar = qobject_cast<ToolBar*>(list->object)) {
         bar->d_func()->dataList.append(obj);
 
+        if (QWidget *widget = qobject_cast<QWidget*>(obj)) {
+            bar->d_func()->childrenList.append(widget);
+        }
+
         if (!bar->d_func()->complete) {
             return;
         }
@@ -198,8 +202,27 @@ void ToolBarPrivate::data_append(QDeclarativeListProperty<QObject> *list, QObjec
     }
 }
 
+void ToolBarPrivate::children_append(QDeclarativeListProperty<QWidget> *list, QWidget *widget) {
+    if (!widget) {
+        return;
+    }
+
+    if (ToolBar *bar = qobject_cast<ToolBar*>(list->object)) {
+        bar->d_func()->childrenList.append(widget);
+        bar->d_func()->dataList.append(widget);
+
+        if (bar->d_func()->complete) {
+            bar->addWidget(widget);
+        }
+    }
+}
+
 QDeclarativeListProperty<QObject> ToolBarPrivate::data() {
     return QDeclarativeListProperty<QObject>(q_func(), 0, ToolBarPrivate::data_append);
+}
+
+QDeclarativeListProperty<QWidget> ToolBarPrivate::children() {
+    return QDeclarativeListProperty<QWidget>(q_func(), 0, ToolBarPrivate::children_append);
 }
 
 void ToolBarPrivate::componentComplete() {

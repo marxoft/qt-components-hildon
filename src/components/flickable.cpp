@@ -268,10 +268,28 @@ void FlickablePrivate::data_append(QDeclarativeListProperty<QObject> *list, QObj
 
     if (Flickable *flickable = qobject_cast<Flickable*>(list->object)) {
         flickable->d_func()->dataList.append(obj);
-        obj->setParent(flickable);
 
-        if ((!flickable->widget()) && (obj->isWidgetType())) {
-            flickable->setWidget(qobject_cast<QWidget*>(obj));
+        if (QWidget *widget = qobject_cast<QWidget*>(obj)) {
+            flickable->d_func()->childrenList.append(widget);
+
+            if (!flickable->widget()) {
+                flickable->setWidget(widget);
+            }
+        }
+    }
+}
+
+void FlickablePrivate::children_append(QDeclarativeListProperty<QWidget> *list, QWidget *widget) {
+    if (!widget) {
+        return;
+    }
+
+    if (Flickable *flickable = qobject_cast<Flickable*>(list->object)) {
+        flickable->d_func()->childrenList.append(widget);
+        flickable->d_func()->dataList.append(widget);
+
+        if (!flickable->widget()) {
+            flickable->setWidget(widget);
         }
     }
 }
@@ -283,6 +301,7 @@ void FlickablePrivate::actions_append(QDeclarativeListProperty<QObject> *list, Q
 
     if (Flickable *flickable = qobject_cast<Flickable*>(list->object)) {
         flickable->d_func()->actionList.append(obj);
+        flickable->d_func()->dataList.append(obj);
 
         if (!flickable->d_func()->complete) {
             return;
@@ -299,6 +318,10 @@ void FlickablePrivate::actions_append(QDeclarativeListProperty<QObject> *list, Q
 
 QDeclarativeListProperty<QObject> FlickablePrivate::data() {
     return QDeclarativeListProperty<QObject>(q_func(), 0, FlickablePrivate::data_append);
+}
+
+QDeclarativeListProperty<QWidget> FlickablePrivate::children() {
+    return QDeclarativeListProperty<QWidget>(q_func(), 0, FlickablePrivate::children_append);
 }
 
 QDeclarativeListProperty<QObject> FlickablePrivate::actions() {

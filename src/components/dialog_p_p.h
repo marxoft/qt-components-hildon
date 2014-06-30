@@ -37,19 +37,23 @@ public:
 
     static void data_append(QDeclarativeListProperty<QObject> *list, QObject *obj);
 
+    static void children_append(QDeclarativeListProperty<QWidget> *list, QWidget *widget);
+
     static void actions_append(QDeclarativeListProperty<QObject> *list, QObject *obj);
 
-    static void content_append(QDeclarativeListProperty<QObject> *list, QObject *obj);
+    static void content_append(QDeclarativeListProperty<QWidget> *list, QWidget *obj);
 
-    static void buttons_append(QDeclarativeListProperty<QObject> *list, QObject *obj);
+    static void buttons_append(QDeclarativeListProperty<QAbstractButton> *list, QAbstractButton *obj);
 
     QDeclarativeListProperty<QObject> data();
 
+    QDeclarativeListProperty<QWidget> children();
+
     QDeclarativeListProperty<QObject> actions();
 
-    QDeclarativeListProperty<QObject> content();
+    QDeclarativeListProperty<QWidget> content();
 
-    QDeclarativeListProperty<QObject> buttons();
+    QDeclarativeListProperty<QAbstractButton> buttons();
 
     void _q_onOrientationChanged(Screen::Orientation orientation);
 
@@ -59,9 +63,9 @@ public:
 
     QDialogButtonBox *buttonBox;
 
-    QList<QObject*> contentList;
+    QList<QWidget*> contentList;
 
-    QList<QObject*> buttonList;
+    QList<QAbstractButton*> buttonList;
 
     Q_DECLARE_PUBLIC(Dialog)
 };

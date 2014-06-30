@@ -234,6 +234,21 @@ void WindowPrivate::data_append(QDeclarativeListProperty<QObject> *list, QObject
 
     if (Window *window = qobject_cast<Window*>(list->object)) {
         window->d_func()->dataList.append(obj);
+
+        if (obj->isWidgetType()) {
+            window->d_func()->childrenList.append(qobject_cast<QWidget*>(obj));
+        }
+    }
+}
+
+void WindowPrivate::children_append(QDeclarativeListProperty<QWidget> *list, QWidget *widget) {
+    if (!widget) {
+        return;
+    }
+
+    if (Window *window = qobject_cast<Window*>(list->object)) {
+        window->d_func()->childrenList.append(widget);
+        window->d_func()->dataList.append(widget);
     }
 }
 
@@ -244,6 +259,7 @@ void WindowPrivate::actions_append(QDeclarativeListProperty<QObject> *list, QObj
 
     if (Window *window = qobject_cast<Window*>(list->object)) {
         window->d_func()->actionList.append(obj);
+        window->d_func()->dataList.append(obj);
 
         if (!window->d_func()->complete) {
             return;
@@ -265,6 +281,7 @@ void WindowPrivate::tools_append(QDeclarativeListProperty<QObject> *list, QObjec
 
     if (Window *window = qobject_cast<Window*>(list->object)) {
         window->d_func()->toolList.append(obj);
+        window->d_func()->dataList.append(obj);
 
         if (!window->d_func()->complete) {
             return;
@@ -285,16 +302,20 @@ void WindowPrivate::tools_append(QDeclarativeListProperty<QObject> *list, QObjec
     }
 }
 
-QDeclarativeListProperty<QObject> WindowPrivate::tools() {
-    return QDeclarativeListProperty<QObject>(q_func(), 0, WindowPrivate::tools_append);
-}
-
 QDeclarativeListProperty<QObject> WindowPrivate::data() {
     return QDeclarativeListProperty<QObject>(q_func(), 0, WindowPrivate::data_append);
 }
 
+QDeclarativeListProperty<QWidget> WindowPrivate::children() {
+    return QDeclarativeListProperty<QWidget>(q_func(), 0, WindowPrivate::children_append);
+}
+
 QDeclarativeListProperty<QObject> WindowPrivate::actions() {
     return QDeclarativeListProperty<QObject>(q_func(), 0, WindowPrivate::actions_append);
+}
+
+QDeclarativeListProperty<QObject> WindowPrivate::tools() {
+    return QDeclarativeListProperty<QObject>(q_func(), 0, WindowPrivate::tools_append);
 }
 
 void WindowPrivate::componentComplete() {

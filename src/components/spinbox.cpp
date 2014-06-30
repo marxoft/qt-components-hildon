@@ -175,6 +175,21 @@ void SpinBoxPrivate::data_append(QDeclarativeListProperty<QObject> *list, QObjec
 
     if (SpinBox *spinbox = qobject_cast<SpinBox*>(list->object)) {
         spinbox->d_func()->dataList.append(obj);
+
+        if (obj->isWidgetType()) {
+            spinbox->d_func()->childrenList.append(qobject_cast<QWidget*>(obj));
+        }
+    }
+}
+
+void SpinBoxPrivate::children_append(QDeclarativeListProperty<QWidget> *list, QWidget *widget) {
+    if (!widget) {
+        return;
+    }
+
+    if (SpinBox *spinbox = qobject_cast<SpinBox*>(list->object)) {
+        spinbox->d_func()->childrenList.append(widget);
+        spinbox->d_func()->dataList.append(widget);
     }
 }
 
@@ -185,6 +200,7 @@ void SpinBoxPrivate::actions_append(QDeclarativeListProperty<QObject> *list, QOb
 
     if (SpinBox *spinbox = qobject_cast<SpinBox*>(list->object)) {
         spinbox->d_func()->actionList.append(obj);
+        spinbox->d_func()->dataList.append(obj);
 
         if (!spinbox->d_func()->complete) {
             return;
@@ -201,6 +217,10 @@ void SpinBoxPrivate::actions_append(QDeclarativeListProperty<QObject> *list, QOb
 
 QDeclarativeListProperty<QObject> SpinBoxPrivate::data() {
     return QDeclarativeListProperty<QObject>(q_func(), 0, SpinBoxPrivate::data_append);
+}
+
+QDeclarativeListProperty<QWidget> SpinBoxPrivate::children() {
+    return QDeclarativeListProperty<QWidget>(q_func(), 0, SpinBoxPrivate::children_append);
 }
 
 QDeclarativeListProperty<QObject> SpinBoxPrivate::actions() {

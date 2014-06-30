@@ -22,6 +22,7 @@
 #include "screen_p.h"
 #include <QDialog>
 #include <QIcon>
+#include <QAbstractButton>
 #include <QDeclarativeParserStatus>
 #include <qdeclarative.h>
 
@@ -44,9 +45,10 @@ class Dialog : public QDialog, public QDeclarativeParserStatus
     Q_PROPERTY(AnchorLine horizontalCenter READ horizontalCenter CONSTANT FINAL)
     Q_PROPERTY(AnchorLine verticalCenter READ verticalCenter CONSTANT FINAL)
     Q_PRIVATE_PROPERTY(Dialog::d_func(), QDeclarativeListProperty<QObject> data READ data)
+    Q_PRIVATE_PROPERTY(Dialog::d_func(), QDeclarativeListProperty<QWidget> children READ children)
     Q_PRIVATE_PROPERTY(Dialog::d_func(), QDeclarativeListProperty<QObject> actions READ actions)
-    Q_PRIVATE_PROPERTY(Dialog::d_func(), QDeclarativeListProperty<QObject> content READ content)
-    Q_PRIVATE_PROPERTY(Dialog::d_func(), QDeclarativeListProperty<QObject> buttons READ buttons)
+    Q_PRIVATE_PROPERTY(Dialog::d_func(), QDeclarativeListProperty<QWidget> content READ content)
+    Q_PRIVATE_PROPERTY(Dialog::d_func(), QDeclarativeListProperty<QAbstractButton> buttons READ buttons)
 
     Q_INTERFACES(QDeclarativeParserStatus)
 
@@ -98,6 +100,7 @@ protected:
     Q_PRIVATE_SLOT(d_func(), void _q_onOrientationChanged(Screen::Orientation))
 };
 
+QML_DECLARE_TYPE(QAbstractButton)
 QML_DECLARE_TYPE(Dialog)
 
 #endif // DIALOG_P_H

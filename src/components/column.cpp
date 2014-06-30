@@ -63,10 +63,8 @@ void Column::setSpacing(int spacing) {
 void Column::componentComplete() {
     Q_D(Column);
 
-    foreach(QObject *obj, d->dataList) {
-        if (QWidget *widget = qobject_cast<QWidget*>(obj)) {
-            d->vbox->addWidget(widget);
-        }
+    foreach(QWidget *widget, d->childrenList) {
+        d->vbox->addWidget(widget);
     }
 
     Item::componentComplete();
@@ -82,18 +80,37 @@ void ColumnPrivate::data_append(QDeclarativeListProperty<QObject> *list, QObject
     if (Column *column = qobject_cast<Column*>(list->object)) {
         column->d_func()->dataList.append(obj);
 
-        if (!column->d_func()->complete) {
-            return;
-        }
-
         if (QWidget *widget = qobject_cast<QWidget*>(obj)) {
-            column->d_func()->vbox->addWidget(widget);
+            column->d_func()->childrenList.append(widget);
+
+            if (column->d_func()->complete) {
+                column->d_func()->vbox->addWidget(widget);;
+            }
+        }
+    }
+}
+
+void ColumnPrivate::children_append(QDeclarativeListProperty<QWidget> *list, QWidget *widget) {
+    if (!widget) {
+        return;
+    }
+
+    if (Column *column = qobject_cast<Column*>(list->object)) {
+        column->d_func()->childrenList.append(widget);
+        column->d_func()->dataList.append(widget);
+
+        if (column->d_func()->complete) {
+            column->d_func()->vbox->addWidget(widget);;
         }
     }
 }
 
 QDeclarativeListProperty<QObject> ColumnPrivate::data() {
     return QDeclarativeListProperty<QObject>(q_func(), 0, ColumnPrivate::data_append);
+}
+
+QDeclarativeListProperty<QWidget> ColumnPrivate::children() {
+    return QDeclarativeListProperty<QWidget>(q_func(), 0, ColumnPrivate::children_append);
 }
 
 #include "moc_column_p.cpp"

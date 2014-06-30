@@ -44,6 +44,7 @@ class TextField : public QLineEdit, public QDeclarativeParserStatus
     Q_PROPERTY(AnchorLine horizontalCenter READ horizontalCenter CONSTANT FINAL)
     Q_PROPERTY(AnchorLine verticalCenter READ verticalCenter CONSTANT FINAL)
     Q_PRIVATE_PROPERTY(TextField::d_func(), QDeclarativeListProperty<QObject> data READ data)
+    Q_PRIVATE_PROPERTY(TextField::d_func(), QDeclarativeListProperty<QWidget> children READ children)
     Q_PRIVATE_PROPERTY(TextField::d_func(), QDeclarativeListProperty<QObject> actions READ actions)
     Q_PRIVATE_PROPERTY(TextField::d_func(), bool visible READ qmlVisible WRITE setQmlVisible NOTIFY visibleChanged)
     Q_PRIVATE_PROPERTY(TextField::d_func(), QValidator* validator READ validator WRITE setValidator)

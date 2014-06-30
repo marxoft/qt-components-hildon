@@ -104,6 +104,21 @@ void InformationBoxPrivate::data_append(QDeclarativeListProperty<QObject> *list,
 
     if (InformationBox *box = qobject_cast<InformationBox*>(list->object)) {
         box->d_func()->dataList.append(obj);
+
+        if (obj->isWidgetType()) {
+            box->d_func()->childrenList.append(qobject_cast<QWidget*>(obj));
+        }
+    }
+}
+
+void InformationBoxPrivate::children_append(QDeclarativeListProperty<QWidget> *list, QWidget *widget) {
+    if (!widget) {
+        return;
+    }
+
+    if (InformationBox *box = qobject_cast<InformationBox*>(list->object)) {
+        box->d_func()->childrenList.append(widget);
+        box->d_func()->dataList.append(widget);
     }
 }
 
@@ -128,14 +143,15 @@ void InformationBoxPrivate::actions_append(QDeclarativeListProperty<QObject> *li
     }
 }
 
-void InformationBoxPrivate::content_append(QDeclarativeListProperty<QObject> *list, QObject *obj) {
-    if (!obj) {
+void InformationBoxPrivate::content_append(QDeclarativeListProperty<QWidget> *list, QWidget *widget) {
+    if (!widget) {
         return;
     }
 
     if (InformationBox *box = qobject_cast<InformationBox*>(list->object)) {
-        box->d_func()->contentList.append(obj);
-        obj->setParent(box->widget());
+        box->d_func()->contentList.append(widget);
+        box->d_func()->childrenList.append(widget);
+        widget->setParent(box->widget());
     }
 }
 
@@ -143,12 +159,16 @@ QDeclarativeListProperty<QObject> InformationBoxPrivate::data() {
     return QDeclarativeListProperty<QObject>(q_func(), 0, InformationBoxPrivate::data_append);
 }
 
+QDeclarativeListProperty<QWidget> InformationBoxPrivate::children() {
+    return QDeclarativeListProperty<QWidget>(q_func(), 0, InformationBoxPrivate::children_append);
+}
+
 QDeclarativeListProperty<QObject> InformationBoxPrivate::actions() {
     return QDeclarativeListProperty<QObject>(q_func(), 0, InformationBoxPrivate::actions_append);
 }
 
-QDeclarativeListProperty<QObject> InformationBoxPrivate::content() {
-    return QDeclarativeListProperty<QObject>(q_func(), 0, InformationBoxPrivate::content_append);
+QDeclarativeListProperty<QWidget> InformationBoxPrivate::content() {
+    return QDeclarativeListProperty<QWidget>(q_func(), 0, InformationBoxPrivate::content_append);
 }
 
 #include "moc_informationbox_p.cpp"

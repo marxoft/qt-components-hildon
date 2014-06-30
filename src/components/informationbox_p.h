@@ -32,8 +32,9 @@ class InformationBox : public QMaemo5InformationBox, public QDeclarativeParserSt
     Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity NOTIFY opacityChanged)
     Q_PROPERTY(bool visible READ isVisible WRITE setVisible NOTIFY visibleChanged)
     Q_PRIVATE_PROPERTY(InformationBox::d_func(), QDeclarativeListProperty<QObject> data READ data)
+    Q_PRIVATE_PROPERTY(InformationBox::d_func(), QDeclarativeListProperty<QWidget> children READ children)
     Q_PRIVATE_PROPERTY(InformationBox::d_func(), QDeclarativeListProperty<QObject> actions READ actions)
-    Q_PRIVATE_PROPERTY(InformationBox::d_func(), QDeclarativeListProperty<QObject> content READ content)
+    Q_PRIVATE_PROPERTY(InformationBox::d_func(), QDeclarativeListProperty<QWidget> content READ content)
 
     Q_ENUMS(Timeout)
 
