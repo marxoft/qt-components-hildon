@@ -35,6 +35,7 @@ class ValueButton : public QMaemo5ValueButton, public QDeclarativeParserStatus
     Q_PROPERTY(int y READ y WRITE setY NOTIFY yChanged)
     Q_PROPERTY(int width READ width WRITE setFixedWidth NOTIFY widthChanged)
     Q_PROPERTY(int height READ height WRITE setFixedHeight NOTIFY heightChanged)
+    Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity NOTIFY opacityChanged)
     Q_PROPERTY(ValueSelector* selector READ selector WRITE setSelector)
     Q_PROPERTY(QString icon READ iconSource WRITE setIconSource)
     Q_PRIVATE_PROPERTY(ValueButton::d_func(), Anchors* anchors READ anchors CONSTANT FINAL)
@@ -59,6 +60,9 @@ public:
     void setX(int x);
     void setY(int y);
 
+    qreal opacity() const;
+    void setOpacity(qreal opacity);
+
     QString iconSource() const;
     void setIconSource(const QString &source);
 
@@ -78,6 +82,7 @@ signals:
     void yChanged();
     void widthChanged();
     void heightChanged();
+    void opacityChanged();
     void visibleChanged();
 
 private:

@@ -155,24 +155,6 @@ void Rectangle::setColor(const QColor &color) {
     }
 }
 
-qreal Rectangle::opacity() const {
-    Q_D(const Rectangle);
-
-    return d->opacity;
-}
-
-void Rectangle::setOpacity(qreal opacity) {
-    if (opacity != this->opacity()) {
-        Q_D(Rectangle);
-        d->opacity = opacity;
-        emit opacityChanged();
-
-        if (d->complete) {
-            this->update();
-        }
-    }
-}
-
 qreal Rectangle::radius() const {
     Q_D(const Rectangle);
 
@@ -214,7 +196,6 @@ void Rectangle::paintEvent(QPaintEvent *event) {
 
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing, this->smooth());
-    painter.setOpacity(this->opacity());
 
     if (d->rectBorder) {
         painter.setPen(d->rectBorder->pen());
@@ -242,7 +223,6 @@ RectanglePrivate::RectanglePrivate(Rectangle *parent) :
     rectBorder(0),
     rectGradient(0),
     color(Qt::white),
-    opacity(1.0),
     radius(0.0),
     smooth(false)
 {

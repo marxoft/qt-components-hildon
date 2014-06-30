@@ -28,7 +28,6 @@ class ImageBase : public Item
 
     Q_PROPERTY(QUrl source READ source WRITE setSource NOTIFY sourceChanged)
     Q_PROPERTY(QSize sourceSize READ sourceSize NOTIFY sourceSizeChanged)
-    Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity NOTIFY opacityChanged)
     Q_PROPERTY(bool cache READ cache WRITE setCache NOTIFY cacheChanged)
     Q_PROPERTY(bool mirror READ mirror WRITE setMirror NOTIFY mirrorChanged)
     Q_PROPERTY(bool smooth READ smooth WRITE setSmooth NOTIFY smoothChanged)
@@ -53,9 +52,6 @@ public:
 
     QSize sourceSize() const;
 
-    qreal opacity() const;
-    void setOpacity(qreal opacity);
-
     bool cache() const;
     void setCache(bool cache);
 
@@ -72,7 +68,6 @@ public:
 signals:
     void sourceChanged();
     void sourceSizeChanged();
-    void opacityChanged();
     void cacheChanged();
     void mirrorChanged();
     void smoothChanged();

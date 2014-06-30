@@ -34,8 +34,6 @@ public:
 
     QSize sourceSize;
 
-    qreal opacity;
-
     bool cache;
 
     bool mirror;

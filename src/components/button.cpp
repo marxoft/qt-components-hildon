@@ -20,6 +20,7 @@
 #include <QMoveEvent>
 #include <QResizeEvent>
 #include <QActionGroup>
+#include <QGraphicsOpacityEffect>
 
 Button::Button(QWidget *parent) :
     QPushButton(parent),
@@ -44,6 +45,28 @@ void Button::setX(int x) {
 void Button::setY(int y) {
     if (y != this->y()) {
         this->move(this->x(), y);
+    }
+}
+
+qreal Button::opacity() const {
+    if (QGraphicsOpacityEffect *effect = qobject_cast<QGraphicsOpacityEffect*>(this->graphicsEffect())) {
+        return effect->opacity();
+    }
+
+    return 1.0;
+}
+
+void Button::setOpacity(qreal opacity) {
+    QGraphicsOpacityEffect *effect = qobject_cast<QGraphicsOpacityEffect*>(this->graphicsEffect());
+
+    if (!effect) {
+        effect = new QGraphicsOpacityEffect(this);
+        this->setGraphicsEffect(effect);
+    }
+
+    if (opacity != effect->opacity()) {
+        effect->setOpacity(opacity);
+        emit opacityChanged();
     }
 }
 

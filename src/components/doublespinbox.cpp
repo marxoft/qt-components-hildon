@@ -20,6 +20,7 @@
 #include <QMoveEvent>
 #include <QResizeEvent>
 #include <QActionGroup>
+#include <QGraphicsOpacityEffect>
 
 DoubleSpinBox::DoubleSpinBox(QWidget *parent) :
     QDoubleSpinBox(parent),
@@ -44,6 +45,28 @@ void DoubleSpinBox::setX(int x) {
 void DoubleSpinBox::setY(int y) {
     if (y != this->y()) {
         this->move(this->x(), y);
+    }
+}
+
+qreal DoubleSpinBox::opacity() const {
+    if (QGraphicsOpacityEffect *effect = qobject_cast<QGraphicsOpacityEffect*>(this->graphicsEffect())) {
+        return effect->opacity();
+    }
+
+    return 1.0;
+}
+
+void DoubleSpinBox::setOpacity(qreal opacity) {
+    QGraphicsOpacityEffect *effect = qobject_cast<QGraphicsOpacityEffect*>(this->graphicsEffect());
+
+    if (!effect) {
+        effect = new QGraphicsOpacityEffect(this);
+        this->setGraphicsEffect(effect);
+    }
+
+    if (opacity != effect->opacity()) {
+        effect->setOpacity(opacity);
+        emit opacityChanged();
     }
 }
 

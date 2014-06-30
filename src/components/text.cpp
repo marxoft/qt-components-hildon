@@ -20,6 +20,7 @@
 #include <QActionGroup>
 #include <QMoveEvent>
 #include <QResizeEvent>
+#include <QGraphicsOpacityEffect>
 
 Text::Text(QWidget *parent) :
     QLabel(parent),
@@ -44,6 +45,28 @@ void Text::setX(int x) {
 void Text::setY(int y) {
     if (y != this->y()) {
         this->move(this->x(), y);
+    }
+}
+
+qreal Text::opacity() const {
+    if (QGraphicsOpacityEffect *effect = qobject_cast<QGraphicsOpacityEffect*>(this->graphicsEffect())) {
+        return effect->opacity();
+    }
+
+    return 1.0;
+}
+
+void Text::setOpacity(qreal opacity) {
+    QGraphicsOpacityEffect *effect = qobject_cast<QGraphicsOpacityEffect*>(this->graphicsEffect());
+
+    if (!effect) {
+        effect = new QGraphicsOpacityEffect(this);
+        this->setGraphicsEffect(effect);
+    }
+
+    if (opacity != effect->opacity()) {
+        effect->setOpacity(opacity);
+        emit opacityChanged();
     }
 }
 

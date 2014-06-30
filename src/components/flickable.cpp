@@ -21,6 +21,7 @@
 #include <QMoveEvent>
 #include <QResizeEvent>
 #include <QScrollBar>
+#include <QGraphicsOpacityEffect>
 
 Flickable::Flickable(QWidget *parent) :
     QScrollArea(parent),
@@ -51,6 +52,28 @@ void Flickable::setX(int x) {
 void Flickable::setY(int y) {
     if (y != this->y()) {
         this->move(this->x(), y);
+    }
+}
+
+qreal Flickable::opacity() const {
+    if (QGraphicsOpacityEffect *effect = qobject_cast<QGraphicsOpacityEffect*>(this->graphicsEffect())) {
+        return effect->opacity();
+    }
+
+    return 1.0;
+}
+
+void Flickable::setOpacity(qreal opacity) {
+    QGraphicsOpacityEffect *effect = qobject_cast<QGraphicsOpacityEffect*>(this->graphicsEffect());
+
+    if (!effect) {
+        effect = new QGraphicsOpacityEffect(this);
+        this->setGraphicsEffect(effect);
+    }
+
+    if (opacity != effect->opacity()) {
+        effect->setOpacity(opacity);
+        emit opacityChanged();
     }
 }
 

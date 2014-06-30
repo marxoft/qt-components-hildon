@@ -20,6 +20,7 @@
 #include <QMoveEvent>
 #include <QResizeEvent>
 #include <QActionGroup>
+#include <QGraphicsOpacityEffect>
 
 ToolButton::ToolButton(QWidget *parent) :
     QToolButton(parent),
@@ -44,6 +45,28 @@ void ToolButton::setX(int x) {
 void ToolButton::setY(int y) {
     if (y != this->y()) {
         this->move(this->x(), y);
+    }
+}
+
+qreal ToolButton::opacity() const {
+    if (QGraphicsOpacityEffect *effect = qobject_cast<QGraphicsOpacityEffect*>(this->graphicsEffect())) {
+        return effect->opacity();
+    }
+
+    return 1.0;
+}
+
+void ToolButton::setOpacity(qreal opacity) {
+    QGraphicsOpacityEffect *effect = qobject_cast<QGraphicsOpacityEffect*>(this->graphicsEffect());
+
+    if (!effect) {
+        effect = new QGraphicsOpacityEffect(this);
+        this->setGraphicsEffect(effect);
+    }
+
+    if (opacity != effect->opacity()) {
+        effect->setOpacity(opacity);
+        emit opacityChanged();
     }
 }
 

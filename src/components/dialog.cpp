@@ -21,6 +21,7 @@
 #include <QActionGroup>
 #include <QMoveEvent>
 #include <QResizeEvent>
+#include <QGraphicsOpacityEffect>
 
 Dialog::Dialog(QWidget *parent) :
     QDialog(parent),
@@ -40,6 +41,28 @@ Dialog::Dialog(DialogPrivate &dd, QWidget *parent) :
 }
 
 Dialog::~Dialog() {}
+
+qreal Dialog::opacity() const {
+    if (QGraphicsOpacityEffect *effect = qobject_cast<QGraphicsOpacityEffect*>(this->graphicsEffect())) {
+        return effect->opacity();
+    }
+
+    return 1.0;
+}
+
+void Dialog::setOpacity(qreal opacity) {
+    QGraphicsOpacityEffect *effect = qobject_cast<QGraphicsOpacityEffect*>(this->graphicsEffect());
+
+    if (!effect) {
+        effect = new QGraphicsOpacityEffect(this);
+        this->setGraphicsEffect(effect);
+    }
+
+    if (opacity != effect->opacity()) {
+        effect->setOpacity(opacity);
+        emit opacityChanged();
+    }
+}
 
 bool Dialog::showingProgressIndicator() const {
     return this->testAttribute(Qt::WA_Maemo5ShowProgressIndicator);

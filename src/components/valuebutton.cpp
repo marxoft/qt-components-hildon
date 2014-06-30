@@ -21,6 +21,7 @@
 #include <QActionGroup>
 #include <QMoveEvent>
 #include <QResizeEvent>
+#include <QGraphicsOpacityEffect>
 
 ValueButton::ValueButton(QWidget *parent) :
     QMaemo5ValueButton(parent),
@@ -45,6 +46,28 @@ void ValueButton::setX(int x) {
 void ValueButton::setY(int y) {
     if (y != this->y()) {
         this->move(this->x(), y);
+    }
+}
+
+qreal ValueButton::opacity() const {
+    if (QGraphicsOpacityEffect *effect = qobject_cast<QGraphicsOpacityEffect*>(this->graphicsEffect())) {
+        return effect->opacity();
+    }
+
+    return 1.0;
+}
+
+void ValueButton::setOpacity(qreal opacity) {
+    QGraphicsOpacityEffect *effect = qobject_cast<QGraphicsOpacityEffect*>(this->graphicsEffect());
+
+    if (!effect) {
+        effect = new QGraphicsOpacityEffect(this);
+        this->setGraphicsEffect(effect);
+    }
+
+    if (opacity != effect->opacity()) {
+        effect->setOpacity(opacity);
+        emit opacityChanged();
     }
 }
 

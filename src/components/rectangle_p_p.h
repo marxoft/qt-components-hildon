@@ -39,8 +39,6 @@ public:
 
     QColor color;
 
-    qreal opacity;
-
     qreal radius;
 
     bool smooth;

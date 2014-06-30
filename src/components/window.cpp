@@ -23,6 +23,7 @@
 #include <QToolBar>
 #include <QMoveEvent>
 #include <QResizeEvent>
+#include <QGraphicsOpacityEffect>
 
 Window::Window(QWidget *parent) :
     QMainWindow(!parent ? WindowStack::instance()->currentWindow() : parent),
@@ -93,6 +94,28 @@ void Window::setX(int x) {
 void Window::setY(int y) {
     if (y != this->y()) {
         this->move(this->x(), y);
+    }
+}
+
+qreal Window::opacity() const {
+    if (QGraphicsOpacityEffect *effect = qobject_cast<QGraphicsOpacityEffect*>(this->graphicsEffect())) {
+        return effect->opacity();
+    }
+
+    return 1.0;
+}
+
+void Window::setOpacity(qreal opacity) {
+    QGraphicsOpacityEffect *effect = qobject_cast<QGraphicsOpacityEffect*>(this->graphicsEffect());
+
+    if (!effect) {
+        effect = new QGraphicsOpacityEffect(this);
+        this->setGraphicsEffect(effect);
+    }
+
+    if (opacity != effect->opacity()) {
+        effect->setOpacity(opacity);
+        emit opacityChanged();
     }
 }
 

@@ -21,6 +21,7 @@
 #include <QResizeEvent>
 #include <QActionGroup>
 #include <QAbstractButton>
+#include <QGraphicsOpacityEffect>
 
 EditBar::EditBar(QWidget *parent) :
     QMaemo5EditBar(parent),
@@ -45,6 +46,28 @@ void EditBar::setX(int x) {
 void EditBar::setY(int y) {
     if (y != this->y()) {
         this->move(this->x(), y);
+    }
+}
+
+qreal EditBar::opacity() const {
+    if (QGraphicsOpacityEffect *effect = qobject_cast<QGraphicsOpacityEffect*>(this->graphicsEffect())) {
+        return effect->opacity();
+    }
+
+    return 1.0;
+}
+
+void EditBar::setOpacity(qreal opacity) {
+    QGraphicsOpacityEffect *effect = qobject_cast<QGraphicsOpacityEffect*>(this->graphicsEffect());
+
+    if (!effect) {
+        effect = new QGraphicsOpacityEffect(this);
+        this->setGraphicsEffect(effect);
+    }
+
+    if (opacity != effect->opacity()) {
+        effect->setOpacity(opacity);
+        emit opacityChanged();
     }
 }
 

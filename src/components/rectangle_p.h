@@ -114,7 +114,6 @@ class Rectangle : public Item
     Q_OBJECT
 
     Q_PROPERTY(QColor color READ color WRITE setColor NOTIFY colorChanged)
-    Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity NOTIFY opacityChanged)
     Q_PROPERTY(qreal radius READ radius WRITE setRadius NOTIFY radiusChanged)
     Q_PROPERTY(bool smooth READ smooth WRITE setSmooth NOTIFY smoothChanged)
     Q_PRIVATE_PROPERTY(Rectangle::d_func(), Border* border READ border CONSTANT FINAL)
@@ -127,9 +126,6 @@ public:
     QColor color() const;
     void setColor(const QColor &color);
 
-    qreal opacity() const;
-    void setOpacity(qreal opacity);
-
     qreal radius() const;
     void setRadius(qreal radius);
 
@@ -138,7 +134,6 @@ public:
 
 signals:
     void colorChanged();
-    void opacityChanged();
     void radiusChanged();
     void smoothChanged();
 

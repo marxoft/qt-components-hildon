@@ -20,6 +20,7 @@
 #include <QMoveEvent>
 #include <QResizeEvent>
 #include <QActionGroup>
+#include <QGraphicsOpacityEffect>
 
 CheckBox::CheckBox(QWidget *parent) :
     QCheckBox(parent),
@@ -44,6 +45,28 @@ void CheckBox::setX(int x) {
 void CheckBox::setY(int y) {
     if (y != this->y()) {
         this->move(this->x(), y);
+    }
+}
+
+qreal CheckBox::opacity() const {
+    if (QGraphicsOpacityEffect *effect = qobject_cast<QGraphicsOpacityEffect*>(this->graphicsEffect())) {
+        return effect->opacity();
+    }
+
+    return 1.0;
+}
+
+void CheckBox::setOpacity(qreal opacity) {
+    QGraphicsOpacityEffect *effect = qobject_cast<QGraphicsOpacityEffect*>(this->graphicsEffect());
+
+    if (!effect) {
+        effect = new QGraphicsOpacityEffect(this);
+        this->setGraphicsEffect(effect);
+    }
+
+    if (opacity != effect->opacity()) {
+        effect->setOpacity(opacity);
+        emit opacityChanged();
     }
 }
 

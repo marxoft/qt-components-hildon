@@ -34,6 +34,7 @@ class Button : public QPushButton, public QDeclarativeParserStatus
     Q_PROPERTY(int y READ y WRITE setY NOTIFY yChanged)
     Q_PROPERTY(int width READ width WRITE setFixedWidth NOTIFY widthChanged)
     Q_PROPERTY(int height READ height WRITE setFixedHeight NOTIFY heightChanged)
+    Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity NOTIFY opacityChanged)
     Q_PROPERTY(QString icon READ iconSource WRITE setIconSource)
     Q_PRIVATE_PROPERTY(Button::d_func(), Anchors* anchors READ anchors CONSTANT FINAL)
     Q_PROPERTY(AnchorLine left READ left CONSTANT FINAL)
@@ -57,6 +58,9 @@ public:
     void setX(int x);
     void setY(int y);
 
+    qreal opacity() const;
+    void setOpacity(qreal opacity);
+
     QString iconSource() const;
     void setIconSource(const QString &source);
 
@@ -73,6 +77,7 @@ signals:
     void yChanged();
     void widthChanged();
     void heightChanged();
+    void opacityChanged();
     void visibleChanged();
 
 private:

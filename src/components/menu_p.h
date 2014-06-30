@@ -33,6 +33,7 @@ class Menu : public QMenu, public QDeclarativeParserStatus
     Q_PROPERTY(int y READ y WRITE setY)
     Q_PROPERTY(int width READ width WRITE setFixedWidth)
     Q_PROPERTY(int height READ height WRITE setFixedHeight)
+    Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity NOTIFY opacityChanged)
     Q_PROPERTY(bool visible READ isVisible WRITE setVisible NOTIFY visibleChanged)
     Q_PROPERTY(QString icon READ iconSource WRITE setIconSource)
     Q_PRIVATE_PROPERTY(Menu::d_func(), QDeclarativeListProperty<QObject> data READ data)
@@ -48,6 +49,9 @@ public:
     void setX(int x);
     void setY(int y);
 
+    qreal opacity() const;
+    void setOpacity(qreal opacity);
+
     QString iconSource() const;
     void setIconSource(const QString &source);
 
@@ -58,6 +62,7 @@ public slots:
 
 signals:
     void parentChanged();
+    void opacityChanged();
     void visibleChanged();
 
 private:

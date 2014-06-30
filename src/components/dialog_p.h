@@ -35,6 +35,7 @@ class Dialog : public QDialog, public QDeclarativeParserStatus
     Q_PROPERTY(bool showProgressIndicator READ showingProgressIndicator WRITE showProgressIndicator)
     Q_PROPERTY(int width READ width WRITE setFixedWidth NOTIFY widthChanged)
     Q_PROPERTY(int height READ height WRITE setFixedHeight NOTIFY heightChanged)
+    Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity NOTIFY opacityChanged)
     Q_PROPERTY(bool visible READ isVisible WRITE setVisible NOTIFY visibleChanged)
     Q_PROPERTY(AnchorLine left READ left CONSTANT FINAL)
     Q_PROPERTY(AnchorLine right READ right CONSTANT FINAL)
@@ -55,6 +56,9 @@ public:
     explicit Dialog(QWidget *parent = 0);
     ~Dialog();
 
+    qreal opacity() const;
+    void setOpacity(qreal opacity);
+
     bool showingProgressIndicator() const;
     void showProgressIndicator(bool show);
 
@@ -71,6 +75,7 @@ signals:
     void yChanged();
     void widthChanged();
     void heightChanged();
+    void opacityChanged();
     void visibleChanged();
 
 protected:

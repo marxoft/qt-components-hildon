@@ -56,24 +56,6 @@ QSize ImageBase::sourceSize() const {
     return d->sourceSize;
 }
 
-qreal ImageBase::opacity() const {
-    Q_D(const ImageBase);
-
-    return d->opacity;
-}
-
-void ImageBase::setOpacity(qreal opacity) {
-    if (opacity != this->opacity()) {
-        Q_D(ImageBase);
-        d->opacity = opacity;
-        emit opacityChanged();
-
-        if (d->complete) {
-            this->update();
-        }
-    }
-}
-
 bool ImageBase::cache() const {
     Q_D(const ImageBase);
 
@@ -150,7 +132,6 @@ void ImageBase::paintEvent(QPaintEvent *event) {
     Q_D(ImageBase);
 
     QPainter painter(this);
-    painter.setOpacity(this->opacity());
     painter.drawImage(this->rect(), d->image);
 
     event->accept();
@@ -158,7 +139,6 @@ void ImageBase::paintEvent(QPaintEvent *event) {
 
 ImageBasePrivate::ImageBasePrivate(ImageBase *parent) :
     ItemPrivate(parent),
-    opacity(1.0),
     cache(true),
     mirror(false),
     smooth(false),

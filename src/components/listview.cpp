@@ -25,6 +25,7 @@
 #include <QDeclarativeEngine>
 #include <QDeclarativeComponent>
 #include <qdeclarative.h>
+#include <QGraphicsOpacityEffect>
 
 ListView::ListView(QWidget *parent) :
     QListView(parent),
@@ -53,6 +54,28 @@ void ListView::setX(int x) {
 void ListView::setY(int y) {
     if (y != this->y()) {
         this->move(this->x(), y);
+    }
+}
+
+qreal ListView::opacity() const {
+    if (QGraphicsOpacityEffect *effect = qobject_cast<QGraphicsOpacityEffect*>(this->graphicsEffect())) {
+        return effect->opacity();
+    }
+
+    return 1.0;
+}
+
+void ListView::setOpacity(qreal opacity) {
+    QGraphicsOpacityEffect *effect = qobject_cast<QGraphicsOpacityEffect*>(this->graphicsEffect());
+
+    if (!effect) {
+        effect = new QGraphicsOpacityEffect(this);
+        this->setGraphicsEffect(effect);
+    }
+
+    if (opacity != effect->opacity()) {
+        effect->setOpacity(opacity);
+        emit opacityChanged();
     }
 }
 

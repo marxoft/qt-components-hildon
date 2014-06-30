@@ -39,6 +39,7 @@ class Window : public QMainWindow, public QDeclarativeParserStatus
     Q_PROPERTY(int y READ y WRITE setY NOTIFY yChanged)
     Q_PROPERTY(int width READ width WRITE setFixedWidth NOTIFY widthChanged)
     Q_PROPERTY(int height READ height WRITE setFixedHeight NOTIFY heightChanged)
+    Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity NOTIFY opacityChanged)
     Q_PROPERTY(bool visible READ isVisible WRITE setVisible NOTIFY visibleChanged)
     Q_PROPERTY(AnchorLine left READ left CONSTANT FINAL)
     Q_PROPERTY(AnchorLine right READ right CONSTANT FINAL)
@@ -70,6 +71,9 @@ public:
     void setX(int x);
     void setY(int y);
 
+    qreal opacity() const;
+    void setOpacity(qreal opacity);
+
     AnchorLine left() const;
     AnchorLine right() const;
     AnchorLine top() const;
@@ -86,6 +90,7 @@ signals:
     void yChanged();
     void widthChanged();
     void heightChanged();
+    void opacityChanged();
     void visibleChanged();
     void orientationLockChanged();
     void inPortraitChanged();

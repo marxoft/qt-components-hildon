@@ -19,6 +19,7 @@
 #include "informationbox_p_p.h"
 #include <QActionGroup>
 #include <QEvent>
+#include <QGraphicsOpacityEffect>
 
 InformationBox::InformationBox(QWidget *parent) :
     QMaemo5InformationBox(parent),
@@ -39,6 +40,28 @@ InformationBox::InformationBox(InformationBoxPrivate &dd, QWidget *parent) :
 }
 
 InformationBox::~InformationBox() {}
+
+qreal InformationBox::opacity() const {
+    if (QGraphicsOpacityEffect *effect = qobject_cast<QGraphicsOpacityEffect*>(this->graphicsEffect())) {
+        return effect->opacity();
+    }
+
+    return 1.0;
+}
+
+void InformationBox::setOpacity(qreal opacity) {
+    QGraphicsOpacityEffect *effect = qobject_cast<QGraphicsOpacityEffect*>(this->graphicsEffect());
+
+    if (!effect) {
+        effect = new QGraphicsOpacityEffect(this);
+        this->setGraphicsEffect(effect);
+    }
+
+    if (opacity != effect->opacity()) {
+        effect->setOpacity(opacity);
+        emit opacityChanged();
+    }
+}
 
 void InformationBox::changeEvent(QEvent *event) {
     switch (event->type()) {
