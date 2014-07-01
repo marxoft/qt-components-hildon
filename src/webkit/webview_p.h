@@ -34,6 +34,8 @@ class WebView : public QWebView, public QDeclarativeParserStatus
     Q_PROPERTY(int y READ y WRITE setY NOTIFY yChanged)
     Q_PROPERTY(int width READ width WRITE setFixedWidth NOTIFY widthChanged)
     Q_PROPERTY(int height READ height WRITE setFixedHeight NOTIFY heightChanged)
+    Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity NOTIFY opacityChanged)
+    Q_PROPERTY(bool focus READ hasFocus WRITE setFocus NOTIFY focusChanged)
     Q_PRIVATE_PROPERTY(WebView::d_func(), Anchors* anchors READ anchors CONSTANT FINAL)
     Q_PROPERTY(AnchorLine left READ left CONSTANT FINAL)
     Q_PROPERTY(AnchorLine right READ right CONSTANT FINAL)
@@ -48,7 +50,7 @@ class WebView : public QWebView, public QDeclarativeParserStatus
     Q_PRIVATE_PROPERTY(WebView::d_func(), QDeclarativeListProperty<QObject> data READ data)
     Q_PRIVATE_PROPERTY(WebView::d_func(), QDeclarativeListProperty<QWidget> children READ children)
     Q_PRIVATE_PROPERTY(WebView::d_func(), QDeclarativeListProperty<QObject> actions READ actions)
-    Q_PRIVATE_PROPERTY(WebView::d_func(), bool visible READ qmlVisible WRITE setQmlVisible)
+    Q_PRIVATE_PROPERTY(WebView::d_func(), bool visible READ qmlVisible WRITE setQmlVisible NOTIFY visibleChanged)
 
     Q_ENUMS(Status)
 
@@ -69,6 +71,11 @@ public:
 
     void setX(int x);
     void setY(int y);
+
+    qreal opacity() const;
+    void setOpacity(qreal opacity);
+
+    void setFocus(bool focus);
 
     AnchorLine left() const;
     AnchorLine right() const;
@@ -92,6 +99,9 @@ signals:
     void yChanged();
     void widthChanged();
     void heightChanged();
+    void opacityChanged();
+    void visibleChanged();
+    void focusChanged();
     void textSelectionEnabledChanged();
     void progressChanged();
     void statusChanged();
@@ -102,6 +112,10 @@ private:
     void changeEvent(QEvent *event);
     void moveEvent(QMoveEvent *event);
     void resizeEvent(QResizeEvent *event);
+    void showEvent(QShowEvent *event);
+    void hideEvent(QHideEvent *event);
+    void focusInEvent(QFocusEvent *event);
+    void focusOutEvent(QFocusEvent *event);
 
     void classBegin();
     void componentComplete();

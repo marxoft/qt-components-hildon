@@ -70,6 +70,17 @@ void TextField::setOpacity(qreal opacity) {
     }
 }
 
+void TextField::setFocus(bool focus) {
+    if (focus != this->hasFocus()) {
+        if (focus) {
+            this->setFocus(Qt::OtherFocusReason);
+        }
+        else {
+            this->clearFocus();
+        }
+    }
+}
+
 AnchorLine TextField::left() const {
     Q_D(const TextField);
 
@@ -150,6 +161,16 @@ void TextField::showEvent(QShowEvent *event) {
 void TextField::hideEvent(QHideEvent *event) {
     emit visibleChanged();
     QLineEdit::hideEvent(event);
+}
+
+void TextField::focusInEvent(QFocusEvent *event) {
+    emit visibleChanged();
+    QLineEdit::focusInEvent(event);
+}
+
+void TextField::focusOutEvent(QFocusEvent *event) {
+    emit visibleChanged();
+    QLineEdit::focusOutEvent(event);
 }
 
 void TextField::classBegin() {}

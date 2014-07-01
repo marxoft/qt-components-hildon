@@ -123,6 +123,17 @@ void Window::setOpacity(qreal opacity) {
     }
 }
 
+void Window::setFocus(bool focus) {
+    if (focus != this->hasFocus()) {
+        if (focus) {
+            this->setFocus(Qt::OtherFocusReason);
+        }
+        else {
+            this->clearFocus();
+        }
+    }
+}
+
 AnchorLine Window::left() const {
     Q_D(const Window);
 
@@ -214,6 +225,16 @@ void Window::resizeEvent(QResizeEvent *event) {
     }
 
     QMainWindow::resizeEvent(event);
+}
+
+void Window::focusInEvent(QFocusEvent *event) {
+    emit focusChanged();
+    QMainWindow::focusInEvent(event);
+}
+
+void Window::focusOutEvent(QFocusEvent *event) {
+    emit focusChanged();
+    QMainWindow::focusOutEvent(event);
 }
 
 void Window::classBegin() {}

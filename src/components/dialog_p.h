@@ -38,6 +38,7 @@ class Dialog : public QDialog, public QDeclarativeParserStatus
     Q_PROPERTY(int height READ height WRITE setFixedHeight NOTIFY heightChanged)
     Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity NOTIFY opacityChanged)
     Q_PROPERTY(bool visible READ isVisible WRITE setVisible NOTIFY visibleChanged)
+    Q_PROPERTY(bool focus READ hasFocus WRITE setFocus NOTIFY focusChanged)
     Q_PROPERTY(AnchorLine left READ left CONSTANT FINAL)
     Q_PROPERTY(AnchorLine right READ right CONSTANT FINAL)
     Q_PROPERTY(AnchorLine top READ top CONSTANT FINAL)
@@ -61,6 +62,8 @@ public:
     qreal opacity() const;
     void setOpacity(qreal opacity);
 
+    void setFocus(bool focus);
+
     bool showingProgressIndicator() const;
     void showProgressIndicator(bool show);
 
@@ -79,6 +82,7 @@ signals:
     void heightChanged();
     void opacityChanged();
     void visibleChanged();
+    void focusChanged();
 
 protected:
     Dialog(DialogPrivate &dd, QWidget *parent = 0);
@@ -88,6 +92,8 @@ protected:
     virtual void resizeEvent(QResizeEvent *event);
     virtual void showEvent(QShowEvent *event);
     virtual void hideEvent(QHideEvent *event);
+    virtual void focusInEvent(QFocusEvent *event);
+    virtual void focusOutEvent(QFocusEvent *event);
 
     virtual void classBegin();
     virtual void componentComplete();

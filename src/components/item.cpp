@@ -71,6 +71,17 @@ void Item::setOpacity(qreal opacity) {
     }
 }
 
+void Item::setFocus(bool focus) {
+    if (focus != this->hasFocus()) {
+        if (focus) {
+            this->setFocus(Qt::OtherFocusReason);
+        }
+        else {
+            this->clearFocus();
+        }
+    }
+}
+
 AnchorLine Item::left() const {
     Q_D(const Item);
 
@@ -151,6 +162,16 @@ void Item::showEvent(QShowEvent *event) {
 void Item::hideEvent(QHideEvent *event) {
     emit visibleChanged();
     QWidget::hideEvent(event);
+}
+
+void Item::focusInEvent(QFocusEvent *event) {
+    emit focusChanged();
+    QWidget::focusInEvent(event);
+}
+
+void Item::focusOutEvent(QFocusEvent *event) {
+    emit focusChanged();
+    QWidget::focusOutEvent(event);
 }
 
 void Item::keyPressEvent(QKeyEvent *event) {

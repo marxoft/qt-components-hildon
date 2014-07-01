@@ -71,6 +71,17 @@ void ValueButton::setOpacity(qreal opacity) {
     }
 }
 
+void ValueButton::setFocus(bool focus) {
+    if (focus != this->hasFocus()) {
+        if (focus) {
+            this->setFocus(Qt::OtherFocusReason);
+        }
+        else {
+            this->clearFocus();
+        }
+    }
+}
+
 QString ValueButton::iconSource() const {
     return this->icon().name();
 }
@@ -174,6 +185,16 @@ void ValueButton::showEvent(QShowEvent *event) {
 void ValueButton::hideEvent(QHideEvent *event) {
     emit visibleChanged();
     QMaemo5ValueButton::hideEvent(event);
+}
+
+void ValueButton::focusInEvent(QFocusEvent *event) {
+    emit visibleChanged();
+    QMaemo5ValueButton::focusInEvent(event);
+}
+
+void ValueButton::focusOutEvent(QFocusEvent *event) {
+    emit visibleChanged();
+    QMaemo5ValueButton::focusOutEvent(event);
 }
 
 void ValueButton::classBegin() {}

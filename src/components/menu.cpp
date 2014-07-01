@@ -70,13 +70,24 @@ void Menu::setOpacity(qreal opacity) {
     }
 }
 
+void Menu::setFocus(bool focus) {
+    if (focus != this->hasFocus()) {
+        if (focus) {
+            this->setFocus(Qt::OtherFocusReason);
+        }
+        else {
+            this->clearFocus();
+        }
+    }
+}
+
 QString Menu::iconSource() const {
     return this->icon().name();
 }
 
 void Menu::setIconSource(const QString &source) {
     if (source != this->iconSource()) {
-        this->setIcon(QIcon(source));
+        this->setIcon(source.contains('/') ? QIcon(source) : QIcon::fromTheme(source));
     }
 }
 
@@ -104,6 +115,16 @@ void Menu::showEvent(QShowEvent *event) {
 void Menu::hideEvent(QHideEvent *event) {
     emit visibleChanged();
     QMenu::hideEvent(event);
+}
+
+void Menu::focusInEvent(QFocusEvent *event) {
+    emit focusChanged();
+    QMenu::focusInEvent(event);
+}
+
+void Menu::focusOutEvent(QFocusEvent *event) {
+    emit focusChanged();
+    QMenu::focusOutEvent(event);
 }
 
 void Menu::classBegin() {}

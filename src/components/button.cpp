@@ -70,6 +70,17 @@ void Button::setOpacity(qreal opacity) {
     }
 }
 
+void Button::setFocus(bool focus) {
+    if (focus != this->hasFocus()) {
+        if (focus) {
+            this->setFocus(Qt::OtherFocusReason);
+        }
+        else {
+            this->clearFocus();
+        }
+    }
+}
+
 QString Button::iconSource() const {
     return this->icon().name();
 }
@@ -160,6 +171,16 @@ void Button::showEvent(QShowEvent *event) {
 void Button::hideEvent(QHideEvent *event) {
     emit visibleChanged();
     QPushButton::hideEvent(event);
+}
+
+void Button::focusInEvent(QFocusEvent *event) {
+    emit focusChanged();
+    QPushButton::focusInEvent(event);
+}
+
+void Button::focusOutEvent(QFocusEvent *event) {
+    emit focusChanged();
+    QPushButton::focusOutEvent(event);
 }
 
 void Button::classBegin() {}

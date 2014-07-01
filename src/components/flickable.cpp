@@ -77,6 +77,17 @@ void Flickable::setOpacity(qreal opacity) {
     }
 }
 
+void Flickable::setFocus(bool focus) {
+    if (focus != this->hasFocus()) {
+        if (focus) {
+            this->setFocus(Qt::OtherFocusReason);
+        }
+        else {
+            this->clearFocus();
+        }
+    }
+}
+
 AnchorLine Flickable::left() const {
     Q_D(const Flickable);
 
@@ -243,6 +254,16 @@ void Flickable::showEvent(QShowEvent *event) {
 void Flickable::hideEvent(QHideEvent *event) {
     emit visibleChanged();
     QScrollArea::hideEvent(event);
+}
+
+void Flickable::focusInEvent(QFocusEvent *event) {
+    emit focusChanged();
+    QScrollArea::focusInEvent(event);
+}
+
+void Flickable::focusOutEvent(QFocusEvent *event) {
+    emit focusChanged();
+    QScrollArea::focusOutEvent(event);
 }
 
 void Flickable::classBegin() {}

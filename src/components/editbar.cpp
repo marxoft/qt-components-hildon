@@ -71,6 +71,17 @@ void EditBar::setOpacity(qreal opacity) {
     }
 }
 
+void EditBar::setFocus(bool focus) {
+    if (focus != this->hasFocus()) {
+        if (focus) {
+            this->setFocus(Qt::OtherFocusReason);
+        }
+        else {
+            this->clearFocus();
+        }
+    }
+}
+
 AnchorLine EditBar::left() const {
     Q_D(const EditBar);
 
@@ -151,6 +162,16 @@ void EditBar::showEvent(QShowEvent *event) {
 void EditBar::hideEvent(QHideEvent *event) {
     emit visibleChanged();
     QMaemo5EditBar::hideEvent(event);
+}
+
+void EditBar::focusInEvent(QFocusEvent *event) {
+    emit focusChanged();
+    QMaemo5EditBar::focusInEvent(event);
+}
+
+void EditBar::focusOutEvent(QFocusEvent *event) {
+    emit focusChanged();
+    QMaemo5EditBar::focusOutEvent(event);
 }
 
 void EditBar::classBegin() {}

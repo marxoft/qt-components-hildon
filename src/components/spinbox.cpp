@@ -70,6 +70,17 @@ void SpinBox::setOpacity(qreal opacity) {
     }
 }
 
+void SpinBox::setFocus(bool focus) {
+    if (focus != this->hasFocus()) {
+        if (focus) {
+            this->setFocus(Qt::OtherFocusReason);
+        }
+        else {
+            this->clearFocus();
+        }
+    }
+}
+
 AnchorLine SpinBox::left() const {
     Q_D(const SpinBox);
 
@@ -150,6 +161,16 @@ void SpinBox::showEvent(QShowEvent *event) {
 void SpinBox::hideEvent(QHideEvent *event) {
     emit visibleChanged();
     QSpinBox::hideEvent(event);
+}
+
+void SpinBox::focusInEvent(QFocusEvent *event) {
+    emit focusChanged();
+    QSpinBox::focusInEvent(event);
+}
+
+void SpinBox::focusOutEvent(QFocusEvent *event) {
+    emit focusChanged();
+    QSpinBox::focusOutEvent(event);
 }
 
 void SpinBox::classBegin() {}

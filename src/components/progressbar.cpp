@@ -70,6 +70,17 @@ void ProgressBar::setOpacity(qreal opacity) {
     }
 }
 
+void ProgressBar::setFocus(bool focus) {
+    if (focus != this->hasFocus()) {
+        if (focus) {
+            this->setFocus(Qt::OtherFocusReason);
+        }
+        else {
+            this->clearFocus();
+        }
+    }
+}
+
 AnchorLine ProgressBar::left() const {
     Q_D(const ProgressBar);
 
@@ -150,6 +161,16 @@ void ProgressBar::showEvent(QShowEvent *event) {
 void ProgressBar::hideEvent(QHideEvent *event) {
     emit visibleChanged();
     QProgressBar::hideEvent(event);
+}
+
+void ProgressBar::focusInEvent(QFocusEvent *event) {
+    emit focusChanged();
+    QProgressBar::focusInEvent(event);
+}
+
+void ProgressBar::focusOutEvent(QFocusEvent *event) {
+    emit focusChanged();
+    QProgressBar::focusOutEvent(event);
 }
 
 void ProgressBar::classBegin() {}

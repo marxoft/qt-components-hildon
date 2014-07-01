@@ -70,6 +70,17 @@ void RadioButton::setOpacity(qreal opacity) {
     }
 }
 
+void RadioButton::setFocus(bool focus) {
+    if (focus != this->hasFocus()) {
+        if (focus) {
+            this->setFocus(Qt::OtherFocusReason);
+        }
+        else {
+            this->clearFocus();
+        }
+    }
+}
+
 QString RadioButton::iconSource() const {
     return this->icon().name();
 }
@@ -160,6 +171,16 @@ void RadioButton::showEvent(QShowEvent *event) {
 void RadioButton::hideEvent(QHideEvent *event) {
     emit visibleChanged();
     QRadioButton::hideEvent(event);
+}
+
+void RadioButton::focusInEvent(QFocusEvent *event) {
+    emit focusChanged();
+    QRadioButton::focusInEvent(event);
+}
+
+void RadioButton::focusOutEvent(QFocusEvent *event) {
+    emit focusChanged();
+    QRadioButton::focusOutEvent(event);
 }
 
 void RadioButton::classBegin() {}

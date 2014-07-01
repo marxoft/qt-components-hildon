@@ -37,6 +37,7 @@ class Item : public QWidget, public QDeclarativeParserStatus
     Q_PROPERTY(int width READ width WRITE setFixedWidth NOTIFY widthChanged)
     Q_PROPERTY(int height READ height WRITE setFixedHeight NOTIFY heightChanged)
     Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity NOTIFY opacityChanged)
+    Q_PROPERTY(bool focus READ hasFocus WRITE setFocus NOTIFY focusChanged)
     Q_PRIVATE_PROPERTY(Item::d_func(), Anchors* anchors READ anchors CONSTANT FINAL)
     Q_PROPERTY(AnchorLine left READ left CONSTANT FINAL)
     Q_PROPERTY(AnchorLine right READ right CONSTANT FINAL)
@@ -64,6 +65,8 @@ public:
     qreal opacity() const;
     void setOpacity(qreal opacity);
 
+    void setFocus(bool focus);
+
     AnchorLine left() const;
     AnchorLine right() const;
     AnchorLine top() const;
@@ -79,6 +82,8 @@ protected:
     virtual void resizeEvent(QResizeEvent *event);
     virtual void showEvent(QShowEvent *event);
     virtual void hideEvent(QHideEvent *event);
+    virtual void focusInEvent(QFocusEvent *event);
+    virtual void focusOutEvent(QFocusEvent *event);
     virtual void keyPressEvent(QKeyEvent *event);
     virtual void keyReleaseEvent(QKeyEvent *event);
 
@@ -97,6 +102,7 @@ signals:
     void heightChanged();
     void opacityChanged();
     void visibleChanged();
+    void focusChanged();
 
 private:
     Q_DISABLE_COPY(Item)

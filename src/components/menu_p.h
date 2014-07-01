@@ -35,6 +35,7 @@ class Menu : public QMenu, public QDeclarativeParserStatus
     Q_PROPERTY(int height READ height WRITE setFixedHeight)
     Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity NOTIFY opacityChanged)
     Q_PROPERTY(bool visible READ isVisible WRITE setVisible NOTIFY visibleChanged)
+    Q_PROPERTY(bool focus READ hasFocus WRITE setFocus NOTIFY focusChanged)
     Q_PROPERTY(QString icon READ iconSource WRITE setIconSource)
     Q_PRIVATE_PROPERTY(Menu::d_func(), QDeclarativeListProperty<QObject> data READ data)
 
@@ -52,6 +53,8 @@ public:
     qreal opacity() const;
     void setOpacity(qreal opacity);
 
+    void setFocus(bool focus);
+
     QString iconSource() const;
     void setIconSource(const QString &source);
 
@@ -64,6 +67,7 @@ signals:
     void parentChanged();
     void opacityChanged();
     void visibleChanged();
+    void focusChanged();
 
 private:
     Menu(MenuPrivate &dd, QWidget *parent);
@@ -71,6 +75,8 @@ private:
     void changeEvent(QEvent *event);
     void showEvent(QShowEvent *event);
     void hideEvent(QHideEvent *event);
+    void focusInEvent(QFocusEvent *event);
+    void focusOutEvent(QFocusEvent *event);
 
     void classBegin();
     void componentComplete();

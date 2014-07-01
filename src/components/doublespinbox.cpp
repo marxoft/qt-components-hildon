@@ -70,6 +70,17 @@ void DoubleSpinBox::setOpacity(qreal opacity) {
     }
 }
 
+void DoubleSpinBox::setFocus(bool focus) {
+    if (focus != this->hasFocus()) {
+        if (focus) {
+            this->setFocus(Qt::OtherFocusReason);
+        }
+        else {
+            this->clearFocus();
+        }
+    }
+}
+
 AnchorLine DoubleSpinBox::left() const {
     Q_D(const DoubleSpinBox);
 
@@ -150,6 +161,11 @@ void DoubleSpinBox::showEvent(QShowEvent *event) {
 void DoubleSpinBox::hideEvent(QHideEvent *event) {
     emit visibleChanged();
     QDoubleSpinBox::hideEvent(event);
+}
+
+void DoubleSpinBox::focusInEvent(QFocusEvent *event) {
+    emit focusChanged();
+    QDoubleSpinBox::focusInEvent(event);
 }
 
 void DoubleSpinBox::classBegin() {}

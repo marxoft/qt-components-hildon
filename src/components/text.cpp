@@ -70,6 +70,17 @@ void Text::setOpacity(qreal opacity) {
     }
 }
 
+void Text::setFocus(bool focus) {
+    if (focus != this->hasFocus()) {
+        if (focus) {
+            this->setFocus(Qt::OtherFocusReason);
+        }
+        else {
+            this->clearFocus();
+        }
+    }
+}
+
 QString Text::text() const {
     Q_D(const Text);
 
@@ -180,6 +191,16 @@ void Text::showEvent(QShowEvent *event) {
 void Text::hideEvent(QHideEvent *event) {
     emit visibleChanged();
     QLabel::hideEvent(event);
+}
+
+void Text::focusInEvent(QFocusEvent *event) {
+    emit focusChanged();
+    QLabel::focusInEvent(event);
+}
+
+void Text::focusOutEvent(QFocusEvent *event) {
+    emit focusChanged();
+    QLabel::focusOutEvent(event);
 }
 
 void Text::classBegin() {}

@@ -36,6 +36,7 @@ class Text : public QLabel, public QDeclarativeParserStatus
     Q_PROPERTY(int width READ width WRITE setFixedWidth NOTIFY widthChanged)
     Q_PROPERTY(int height READ height WRITE setFixedHeight NOTIFY heightChanged)
     Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity NOTIFY opacityChanged)
+    Q_PROPERTY(bool focus READ hasFocus WRITE setFocus NOTIFY focusChanged)
     Q_PROPERTY(QString text READ text WRITE setText NOTIFY textChanged)
     Q_PROPERTY(QColor color READ color WRITE setColor NOTIFY colorChanged)
     Q_PRIVATE_PROPERTY(Text::d_func(), Anchors* anchors READ anchors CONSTANT FINAL)
@@ -64,6 +65,8 @@ public:
     qreal opacity() const;
     void setOpacity(qreal opacity);
 
+    void setFocus(bool focus);
+
     QString text() const;
     void setText(const QString &text);
 
@@ -85,6 +88,7 @@ signals:
     void heightChanged();
     void opacityChanged();
     void visibleChanged();
+    void focusChanged();
     void textChanged();
     void colorChanged();
 
@@ -96,6 +100,8 @@ private:
     void resizeEvent(QResizeEvent *event);
     void showEvent(QShowEvent *event);
     void hideEvent(QHideEvent *event);
+    void focusInEvent(QFocusEvent *event);
+    void focusOutEvent(QFocusEvent *event);
 
     void classBegin();
     void componentComplete();

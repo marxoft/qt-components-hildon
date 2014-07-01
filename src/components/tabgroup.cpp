@@ -72,6 +72,17 @@ void TabGroup::setOpacity(qreal opacity) {
     }
 }
 
+void TabGroup::setFocus(bool focus) {
+    if (focus != this->hasFocus()) {
+        if (focus) {
+            this->setFocus(Qt::OtherFocusReason);
+        }
+        else {
+            this->clearFocus();
+        }
+    }
+}
+
 AnchorLine TabGroup::left() const {
     Q_D(const TabGroup);
 
@@ -152,6 +163,16 @@ void TabGroup::showEvent(QShowEvent *event) {
 void TabGroup::hideEvent(QHideEvent *event) {
     emit visibleChanged();
     QStackedWidget::hideEvent(event);
+}
+
+void TabGroup::focusInEvent(QFocusEvent *event) {
+    emit focusChanged();
+    QStackedWidget::focusInEvent(event);
+}
+
+void TabGroup::focusOutEvent(QFocusEvent *event) {
+    emit focusChanged();
+    QStackedWidget::focusOutEvent(event);
 }
 
 void TabGroup::classBegin() {}

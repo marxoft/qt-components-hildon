@@ -70,6 +70,17 @@ void CheckBox::setOpacity(qreal opacity) {
     }
 }
 
+void CheckBox::setFocus(bool focus) {
+    if (focus != this->hasFocus()) {
+        if (focus) {
+            this->setFocus(Qt::OtherFocusReason);
+        }
+        else {
+            this->clearFocus();
+        }
+    }
+}
+
 QString CheckBox::iconSource() const {
     return this->icon().name();
 }
@@ -160,6 +171,16 @@ void CheckBox::showEvent(QShowEvent *event) {
 void CheckBox::hideEvent(QHideEvent *event) {
     emit visibleChanged();
     QCheckBox::hideEvent(event);
+}
+
+void CheckBox::focusInEvent(QFocusEvent *event) {
+    emit focusChanged();
+    QCheckBox::focusInEvent(event);
+}
+
+void CheckBox::focusOutEvent(QFocusEvent *event) {
+    emit focusChanged();
+    QCheckBox::focusOutEvent(event);
 }
 
 void CheckBox::classBegin() {}

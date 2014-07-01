@@ -21,6 +21,7 @@
 #include <QResizeEvent>
 #include <QActionGroup>
 #include <QAbstractKineticScroller>
+#include <QGraphicsOpacityEffect>
 
 WebView::WebView(QWidget *parent) :
     QWebView(parent),
@@ -57,6 +58,39 @@ void WebView::setX(int x) {
 void WebView::setY(int y) {
     if (y != this->y()) {
         this->move(this->x(), y);
+    }
+}
+
+qreal WebView::opacity() const {
+    if (QGraphicsOpacityEffect *effect = qobject_cast<QGraphicsOpacityEffect*>(this->graphicsEffect())) {
+        return effect->opacity();
+    }
+
+    return 1.0;
+}
+
+void WebView::setOpacity(qreal opacity) {
+    QGraphicsOpacityEffect *effect = qobject_cast<QGraphicsOpacityEffect*>(this->graphicsEffect());
+
+    if (!effect) {
+        effect = new QGraphicsOpacityEffect(this);
+        this->setGraphicsEffect(effect);
+    }
+
+    if (opacity != effect->opacity()) {
+        effect->setOpacity(opacity);
+        emit opacityChanged();
+    }
+}
+
+void WebView::setFocus(bool focus) {
+    if (focus != this->hasFocus()) {
+        if (focus) {
+            this->setFocus(Qt::OtherFocusReason);
+        }
+        else {
+            this->clearFocus();
+        }
     }
 }
 
@@ -171,6 +205,26 @@ void WebView::resizeEvent(QResizeEvent *event) {
     }
 
     QWebView::resizeEvent(event);
+}
+
+void WebView::showEvent(QShowEvent *event) {
+    emit visibleChanged();
+    QWebView::showEvent(event);
+}
+
+void WebView::hideEvent(QHideEvent *event) {
+    emit visibleChanged();
+    QWebView::hideEvent(event);
+}
+
+void WebView::focusInEvent(QFocusEvent *event) {
+    emit focusChanged();
+    QWebView::focusInEvent(event);
+}
+
+void WebView::focusOutEvent(QFocusEvent *event) {
+    emit focusChanged();
+    QWebView::focusOutEvent(event);
 }
 
 void WebView::classBegin() {}

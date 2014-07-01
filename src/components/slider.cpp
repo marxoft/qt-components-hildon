@@ -70,6 +70,17 @@ void Slider::setOpacity(qreal opacity) {
     }
 }
 
+void Slider::setFocus(bool focus) {
+    if (focus != this->hasFocus()) {
+        if (focus) {
+            this->setFocus(Qt::OtherFocusReason);
+        }
+        else {
+            this->clearFocus();
+        }
+    }
+}
+
 AnchorLine Slider::left() const {
     Q_D(const Slider);
 
@@ -150,6 +161,16 @@ void Slider::showEvent(QShowEvent *event) {
 void Slider::hideEvent(QHideEvent *event) {
     emit visibleChanged();
     QSlider::hideEvent(event);
+}
+
+void Slider::focusInEvent(QFocusEvent *event) {
+    emit focusChanged();
+    QSlider::focusInEvent(event);
+}
+
+void Slider::focusOutEvent(QFocusEvent *event) {
+    emit focusChanged();
+    QSlider::focusOutEvent(event);
 }
 
 void Slider::classBegin() {}

@@ -63,6 +63,17 @@ void InformationBox::setOpacity(qreal opacity) {
     }
 }
 
+void InformationBox::setFocus(bool focus) {
+    if (focus != this->hasFocus()) {
+        if (focus) {
+            this->setFocus(Qt::OtherFocusReason);
+        }
+        else {
+            this->clearFocus();
+        }
+    }
+}
+
 void InformationBox::changeEvent(QEvent *event) {
     switch (event->type()) {
     case QEvent::ParentChange:
@@ -83,6 +94,16 @@ void InformationBox::showEvent(QShowEvent *event) {
 void InformationBox::hideEvent(QHideEvent *event) {
     emit visibleChanged();
     QMaemo5InformationBox::hideEvent(event);
+}
+
+void InformationBox::focusInEvent(QFocusEvent *event) {
+    emit focusChanged();
+    QMaemo5InformationBox::focusInEvent(event);
+}
+
+void InformationBox::focusOutEvent(QFocusEvent *event) {
+    emit focusChanged();
+    QMaemo5InformationBox::focusOutEvent(event);
 }
 
 void InformationBox::classBegin() {}

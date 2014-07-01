@@ -70,6 +70,17 @@ void ToolButton::setOpacity(qreal opacity) {
     }
 }
 
+void ToolButton::setFocus(bool focus) {
+    if (focus != this->hasFocus()) {
+        if (focus) {
+            this->setFocus(Qt::OtherFocusReason);
+        }
+        else {
+            this->clearFocus();
+        }
+    }
+}
+
 QString ToolButton::iconSource() const {
     return this->icon().name();
 }
@@ -160,6 +171,16 @@ void ToolButton::showEvent(QShowEvent *event) {
 void ToolButton::hideEvent(QHideEvent *event) {
     emit visibleChanged();
     QToolButton::hideEvent(event);
+}
+
+void ToolButton::focusInEvent(QFocusEvent *event) {
+    emit focusChanged();
+    QToolButton::focusInEvent(event);
+}
+
+void ToolButton::focusOutEvent(QFocusEvent *event) {
+    emit focusChanged();
+    QToolButton::focusOutEvent(event);
 }
 
 void ToolButton::classBegin() {}

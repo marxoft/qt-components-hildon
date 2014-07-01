@@ -63,6 +63,17 @@ void Dialog::setOpacity(qreal opacity) {
     }
 }
 
+void Dialog::setFocus(bool focus) {
+    if (focus != this->hasFocus()) {
+        if (focus) {
+            this->setFocus(Qt::OtherFocusReason);
+        }
+        else {
+            this->clearFocus();
+        }
+    }
+}
+
 bool Dialog::showingProgressIndicator() const {
     return this->testAttribute(Qt::WA_Maemo5ShowProgressIndicator);
 }
@@ -151,6 +162,16 @@ void Dialog::showEvent(QShowEvent *event) {
 void Dialog::hideEvent(QHideEvent *event) {
     emit visibleChanged();
     QDialog::hideEvent(event);
+}
+
+void Dialog::focusInEvent(QFocusEvent *event) {
+    emit focusChanged();
+    QDialog::focusInEvent(event);
+}
+
+void Dialog::focusOutEvent(QFocusEvent *event) {
+    emit focusChanged();
+    QDialog::focusOutEvent(event);
 }
 
 void Dialog::classBegin() {}

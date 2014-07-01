@@ -79,6 +79,17 @@ void ListView::setOpacity(qreal opacity) {
     }
 }
 
+void ListView::setFocus(bool focus) {
+    if (focus != this->hasFocus()) {
+        if (focus) {
+            this->setFocus(Qt::OtherFocusReason);
+        }
+        else {
+            this->clearFocus();
+        }
+    }
+}
+
 AnchorLine ListView::left() const {
     Q_D(const ListView);
 
@@ -267,6 +278,16 @@ void ListView::showEvent(QShowEvent *event) {
 void ListView::hideEvent(QHideEvent *event) {
     emit visibleChanged();
     QListView::hideEvent(event);
+}
+
+void ListView::focusInEvent(QFocusEvent *event) {
+    emit focusChanged();
+    QListView::focusInEvent(event);
+}
+
+void ListView::focusOutEvent(QFocusEvent *event) {
+    emit focusChanged();
+    QListView::focusOutEvent(event);
 }
 
 void ListView::rowsInserted(const QModelIndex &parent, int start, int end) {

@@ -73,6 +73,17 @@ void ToolBar::setOpacity(qreal opacity) {
     }
 }
 
+void ToolBar::setFocus(bool focus) {
+    if (focus != this->hasFocus()) {
+        if (focus) {
+            this->setFocus(Qt::OtherFocusReason);
+        }
+        else {
+            this->clearFocus();
+        }
+    }
+}
+
 AnchorLine ToolBar::left() const {
     Q_D(const ToolBar);
 
@@ -153,6 +164,16 @@ void ToolBar::showEvent(QShowEvent *event) {
 void ToolBar::hideEvent(QHideEvent *event) {
     emit visibleChanged();
     QToolBar::hideEvent(event);
+}
+
+void ToolBar::focusInEvent(QFocusEvent *event) {
+    emit focusChanged();
+    QToolBar::focusInEvent(event);
+}
+
+void ToolBar::focusOutEvent(QFocusEvent *event) {
+    emit focusChanged();
+    QToolBar::focusOutEvent(event);
 }
 
 void ToolBar::classBegin() {}
