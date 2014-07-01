@@ -36,6 +36,7 @@ class WebView : public QWebView, public QDeclarativeParserStatus
     Q_PROPERTY(int height READ height WRITE setFixedHeight NOTIFY heightChanged)
     Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity NOTIFY opacityChanged)
     Q_PROPERTY(bool focus READ hasFocus WRITE setFocus NOTIFY focusChanged)
+    Q_PROPERTY(QUrl url READ url WRITE setUrl NOTIFY urlChanged)
     Q_PRIVATE_PROPERTY(WebView::d_func(), Anchors* anchors READ anchors CONSTANT FINAL)
     Q_PROPERTY(AnchorLine left READ left CONSTANT FINAL)
     Q_PROPERTY(AnchorLine right READ right CONSTANT FINAL)
@@ -62,7 +63,7 @@ public:
     enum Status {
         Null = 0,
         Loading,
-        Finished,
+        Ready,
         Error
     };
 
@@ -102,6 +103,7 @@ signals:
     void opacityChanged();
     void visibleChanged();
     void focusChanged();
+    void urlChanged();
     void textSelectionEnabledChanged();
     void progressChanged();
     void statusChanged();

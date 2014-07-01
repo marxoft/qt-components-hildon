@@ -307,13 +307,15 @@ void WebViewPrivate::_q_onLoadStarted() {
 
     status = WebView::Loading;
     emit q->statusChanged();
+    emit q->urlChanged();
 }
 
 void WebViewPrivate::_q_onLoadFinished(bool ok) {
     Q_Q(WebView);
 
-    status = ok ? WebView::Finished : WebView::Error;
+    status = ok ? WebView::Ready : WebView::Error;
     emit q->statusChanged();
+    emit q->urlChanged();
 }
 
 void WebViewPrivate::_q_onLoadProgress(int p) {
