@@ -168,6 +168,11 @@ void DoubleSpinBox::focusInEvent(QFocusEvent *event) {
     QDoubleSpinBox::focusInEvent(event);
 }
 
+void DoubleSpinBox::focusOutEvent(QFocusEvent *event) {
+    emit focusChanged();
+    QDoubleSpinBox::focusOutEvent(event);
+}
+
 void DoubleSpinBox::classBegin() {}
 
 void DoubleSpinBox::componentComplete() {
