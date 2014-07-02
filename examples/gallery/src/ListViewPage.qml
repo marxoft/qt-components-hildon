@@ -17,38 +17,15 @@
 
 import org.hildon.components 1.0
 
-Dialog {
+Page {
     id: root
 
-    property alias rejectButtonText: rejectButton.text
-    property alias acceptButtonText: acceptButton.text
-    property alias message: label.text
+    windowTitle: qsTr("ListView")
 
-    function open() {
-        return exec();
-    }
-
-    modal: true
-    content: Label {
-        id: label
+    ListView {
+        id: view
 
         anchors.fill: parent
-        wordWrap: true
+        model: qsTr("This is a model constructed from list of strings").split(" ")
     }
-
-    buttons: [
-        Button {
-            id: rejectButton
-
-            text: qsTr("No")
-            onClicked: root.reject()
-        },
-
-        Button {
-            id: acceptButton
-
-            text: qsTr("Yes")
-            onClicked: root.accept()
-        }
-    ]
 }

@@ -101,12 +101,11 @@ signals:
     void inPortraitChanged();
     void fullScreenChanged();
 
-private:
+protected:
     Window(WindowPrivate &dd, QWidget *parent = 0);
 
     void showEvent(QShowEvent *event);
     void hideEvent(QHideEvent *event);
-    void closeEvent(QCloseEvent *event);
     void changeEvent(QEvent *event);
     void moveEvent(QMoveEvent *event);
     void resizeEvent(QResizeEvent *event);
@@ -118,8 +117,10 @@ private:
 
     QScopedPointer<WindowPrivate> d_ptr;
 
-    Q_DISABLE_COPY(Window)
     Q_DECLARE_PRIVATE(Window)
+
+private:
+    Q_DISABLE_COPY(Window)
 };
 
 QML_DECLARE_TYPE(Window)

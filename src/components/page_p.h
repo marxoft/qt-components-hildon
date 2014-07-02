@@ -15,25 +15,28 @@
  * Inc., 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef DIALOG_P_H
-#define DIALOG_P_H
+#ifndef PAGE_P_H
+#define PAGE_P_H
 
 #include "anchors_p.h"
 #include "screen_p.h"
-#include <QDialog>
-#include <QIcon>
-#include <QAbstractButton>
+#include <QMainWindow>
 #include <QDeclarativeParserStatus>
 #include <qdeclarative.h>
 
-class DialogPrivate;
+class PagePrivate;
 
-class Dialog : public QDialog, public QDeclarativeParserStatus
+class Page : public QMainWindow, public QDeclarativeParserStatus
 {
     Q_OBJECT
 
-    Q_PROPERTY(QWidget* parent READ parentWidget WRITE setParent NOTIFY parentChanged)
+    Q_PROPERTY(Screen::Orientation orientationLock READ orientationLock WRITE setOrientationLock NOTIFY orientationLockChanged)
+    Q_PROPERTY(bool inPortrait READ inPortrait NOTIFY inPortraitChanged)
+    Q_PROPERTY(bool fullScreen READ isFullScreen WRITE setFullScreen NOTIFY fullScreenChanged)
     Q_PROPERTY(bool showProgressIndicator READ showingProgressIndicator WRITE showProgressIndicator)
+    Q_PROPERTY(QWidget* parent READ parentWidget WRITE setParent NOTIFY parentChanged)
+    Q_PROPERTY(int x READ x WRITE setX NOTIFY xChanged)
+    Q_PROPERTY(int y READ y WRITE setY NOTIFY yChanged)
     Q_PROPERTY(int width READ width WRITE setFixedWidth NOTIFY widthChanged)
     Q_PROPERTY(int height READ height WRITE setFixedHeight NOTIFY heightChanged)
     Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity NOTIFY opacityChanged)
@@ -45,27 +48,35 @@ class Dialog : public QDialog, public QDeclarativeParserStatus
     Q_PROPERTY(AnchorLine bottom READ bottom CONSTANT FINAL)
     Q_PROPERTY(AnchorLine horizontalCenter READ horizontalCenter CONSTANT FINAL)
     Q_PROPERTY(AnchorLine verticalCenter READ verticalCenter CONSTANT FINAL)
-    Q_PRIVATE_PROPERTY(Dialog::d_func(), QDeclarativeListProperty<QObject> data READ data)
-    Q_PRIVATE_PROPERTY(Dialog::d_func(), QDeclarativeListProperty<QWidget> children READ children)
-    Q_PRIVATE_PROPERTY(Dialog::d_func(), QDeclarativeListProperty<QObject> actions READ actions)
-    Q_PRIVATE_PROPERTY(Dialog::d_func(), QDeclarativeListProperty<QWidget> content READ content)
-    Q_PRIVATE_PROPERTY(Dialog::d_func(), QDeclarativeListProperty<QAbstractButton> buttons READ buttons)
+    Q_PRIVATE_PROPERTY(Page::d_func(), QDeclarativeListProperty<QObject> data READ data)
+    Q_PRIVATE_PROPERTY(Page::d_func(), QDeclarativeListProperty<QWidget> children READ children)
+    Q_PRIVATE_PROPERTY(Page::d_func(), QDeclarativeListProperty<QObject> tools READ tools)
+    Q_PRIVATE_PROPERTY(Page::d_func(), QDeclarativeListProperty<QObject> actions READ actions)
 
     Q_INTERFACES(QDeclarativeParserStatus)
 
     Q_CLASSINFO("DefaultProperty", "data")
 
 public:
-    explicit Dialog(QWidget *parent = 0);
-    ~Dialog();
+    explicit Page(QWidget *parent = 0);
+    ~Page();
+
+    Screen::Orientation orientationLock() const;
+
+    bool inPortrait() const;
+
+    void setFullScreen(bool fullScreen);
+
+    bool showingProgressIndicator() const;
+    void showProgressIndicator(bool show);
+
+    void setX(int x);
+    void setY(int y);
 
     qreal opacity() const;
     void setOpacity(qreal opacity);
 
     void setFocus(bool focus);
-
-    bool showingProgressIndicator() const;
-    void showProgressIndicator(bool show);
 
     AnchorLine left() const;
     AnchorLine right() const;
@@ -73,6 +84,9 @@ public:
     AnchorLine bottom() const;
     AnchorLine horizontalCenter() const;
     AnchorLine verticalCenter() const;
+
+public slots:
+    void setOrientationLock(Screen::Orientation orientation);
 
 signals:
     void parentChanged();
@@ -83,32 +97,31 @@ signals:
     void opacityChanged();
     void visibleChanged();
     void focusChanged();
-
-protected:
-    Dialog(DialogPrivate &dd, QWidget *parent = 0);
-
-    virtual void changeEvent(QEvent *event);
-    virtual void moveEvent(QMoveEvent *event);
-    virtual void resizeEvent(QResizeEvent *event);
-    virtual void showEvent(QShowEvent *event);
-    virtual void hideEvent(QHideEvent *event);
-    virtual void focusInEvent(QFocusEvent *event);
-    virtual void focusOutEvent(QFocusEvent *event);
-
-    virtual void classBegin();
-    virtual void componentComplete();
-
-    QScopedPointer<DialogPrivate> d_ptr;
-
-    Q_DECLARE_PRIVATE(Dialog)
-
-    Q_PRIVATE_SLOT(d_func(), void _q_onOrientationChanged(Screen::Orientation))
+    void orientationLockChanged();
+    void inPortraitChanged();
+    void fullScreenChanged();
 
 private:
-    Q_DISABLE_COPY(Dialog)
+    Page(PagePrivate &dd, QWidget *parent = 0);
+
+    void showEvent(QShowEvent *event);
+    void hideEvent(QHideEvent *event);
+    void closeEvent(QCloseEvent *event);
+    void changeEvent(QEvent *event);
+    void moveEvent(QMoveEvent *event);
+    void resizeEvent(QResizeEvent *event);
+    void focusInEvent(QFocusEvent *event);
+    void focusOutEvent(QFocusEvent *event);
+
+    void classBegin();
+    void componentComplete();
+
+    QScopedPointer<PagePrivate> d_ptr;
+
+    Q_DISABLE_COPY(Page)
+    Q_DECLARE_PRIVATE(Page)
 };
 
-QML_DECLARE_TYPE(QAbstractButton)
-QML_DECLARE_TYPE(Dialog)
+QML_DECLARE_TYPE(Page)
 
-#endif // DIALOG_P_H
+#endif // PAGE_P_H

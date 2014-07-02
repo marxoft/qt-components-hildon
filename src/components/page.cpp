@@ -15,8 +15,10 @@
  * Inc., 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include "window_p.h"
-#include "window_p_p.h"
+#include "page_p.h"
+#include "page_p_p.h"
+#include "pagestack_p_p.h"
+#include "applicationwindow_p.h"
 #include "separator_p.h"
 #include <QMenuBar>
 #include <QToolBar>
@@ -24,46 +26,48 @@
 #include <QResizeEvent>
 #include <QGraphicsOpacityEffect>
 
-Window::Window(QWidget *parent) :
-    QMainWindow(parent),
-    d_ptr(new WindowPrivate(this))
+Page::Page(QWidget *parent) :
+    QMainWindow(parent ? parent : PageStack::instance()->currentPage()),
+    d_ptr(new PagePrivate(this))
 {
+    this->setAttribute(Qt::WA_Maemo5StackedWindow, true);
     this->setOrientationLock(Screen::instance()->orientationLock());
     this->connect(Screen::instance(), SIGNAL(orientationLockChanged(Screen::Orientation)), this, SLOT(setOrientationLock(Screen::Orientation)));
     this->connect(Screen::instance(), SIGNAL(currentOrientationChanged(Screen::Orientation)), this, SIGNAL(inPortraitChanged()));
 }
 
-Window::Window(WindowPrivate &dd, QWidget *parent) :
-    QMainWindow(parent),
+Page::Page(PagePrivate &dd, QWidget *parent) :
+    QMainWindow(parent ? parent : PageStack::instance()->currentPage()),
     d_ptr(&dd)
 {
+    this->setAttribute(Qt::WA_Maemo5StackedWindow, true);
     this->setOrientationLock(Screen::instance()->orientationLock());
     this->connect(Screen::instance(), SIGNAL(orientationLockChanged(Screen::Orientation)), this, SLOT(setOrientationLock(Screen::Orientation)));
     this->connect(Screen::instance(), SIGNAL(currentOrientationChanged(Screen::Orientation)), this, SIGNAL(inPortraitChanged()));
 }
 
-Window::~Window() {}
+Page::~Page() {}
 
-Screen::Orientation Window::orientationLock() const {
-    Q_D(const Window);
+Screen::Orientation Page::orientationLock() const {
+    Q_D(const Page);
 
     return d->orientation;
 }
 
-void Window::setOrientationLock(Screen::Orientation orientation) {
+void Page::setOrientationLock(Screen::Orientation orientation) {
     if (orientation != this->orientationLock()) {
-        Q_D(Window);
+        Q_D(Page);
         d->orientation = orientation;
         this->setAttribute(Qt::WidgetAttribute(orientation), true);
         emit orientationLockChanged();
     }
 }
 
-bool Window::inPortrait() const {
+bool Page::inPortrait() const {
     return Screen::instance()->currentOrientation() == Screen::PortraitOrientation;
 }
 
-void Window::setFullScreen(bool fullScreen) {
+void Page::setFullScreen(bool fullScreen) {
     if (this->isFullScreen() != fullScreen) {
         if (fullScreen) {
             this->showFullScreen();
@@ -76,27 +80,27 @@ void Window::setFullScreen(bool fullScreen) {
     }
 }
 
-bool Window::showingProgressIndicator() const {
+bool Page::showingProgressIndicator() const {
     return this->testAttribute(Qt::WA_Maemo5ShowProgressIndicator);
 }
 
-void Window::showProgressIndicator(bool show) {
+void Page::showProgressIndicator(bool show) {
     this->setAttribute(Qt::WA_Maemo5ShowProgressIndicator, show);
 }
 
-void Window::setX(int x) {
+void Page::setX(int x) {
     if (x != this->x()) {
         this->move(x, this->y());
     }
 }
 
-void Window::setY(int y) {
+void Page::setY(int y) {
     if (y != this->y()) {
         this->move(this->x(), y);
     }
 }
 
-qreal Window::opacity() const {
+qreal Page::opacity() const {
     if (QGraphicsOpacityEffect *effect = qobject_cast<QGraphicsOpacityEffect*>(this->graphicsEffect())) {
         return effect->opacity();
     }
@@ -104,7 +108,7 @@ qreal Window::opacity() const {
     return 1.0;
 }
 
-void Window::setOpacity(qreal opacity) {
+void Page::setOpacity(qreal opacity) {
     QGraphicsOpacityEffect *effect = qobject_cast<QGraphicsOpacityEffect*>(this->graphicsEffect());
 
     if (!effect) {
@@ -118,7 +122,7 @@ void Window::setOpacity(qreal opacity) {
     }
 }
 
-void Window::setFocus(bool focus) {
+void Page::setFocus(bool focus) {
     if (focus != this->hasFocus()) {
         if (focus) {
             this->setFocus(Qt::OtherFocusReason);
@@ -129,53 +133,64 @@ void Window::setFocus(bool focus) {
     }
 }
 
-AnchorLine Window::left() const {
-    Q_D(const Window);
+AnchorLine Page::left() const {
+    Q_D(const Page);
 
     return d->left;
 }
 
-AnchorLine Window::right() const {
-    Q_D(const Window);
+AnchorLine Page::right() const {
+    Q_D(const Page);
 
     return d->right;
 }
 
-AnchorLine Window::top() const {
-    Q_D(const Window);
+AnchorLine Page::top() const {
+    Q_D(const Page);
 
     return d->top;
 }
 
-AnchorLine Window::bottom() const {
-    Q_D(const Window);
+AnchorLine Page::bottom() const {
+    Q_D(const Page);
 
     return d->bottom;
 }
 
-AnchorLine Window::horizontalCenter() const {
-    Q_D(const Window);
+AnchorLine Page::horizontalCenter() const {
+    Q_D(const Page);
 
     return d->horizontalCenter;
 }
 
-AnchorLine Window::verticalCenter() const {
-    Q_D(const Window);
+AnchorLine Page::verticalCenter() const {
+    Q_D(const Page);
 
     return d->verticalCenter;
 }
 
-void Window::showEvent(QShowEvent *event) {
+void Page::showEvent(QShowEvent *event) {
+    if (PageStack::instance()->currentPage() != this) {
+        PageStack::instance()->d_func()->stack.append(this);
+        emit PageStack::instance()->currentPageChanged();
+        emit PageStack::instance()->countChanged();
+    }
+
     emit visibleChanged();
     QMainWindow::showEvent(event);
 }
 
-void Window::hideEvent(QHideEvent *event) {
+void Page::hideEvent(QHideEvent *event) {
     emit visibleChanged();
     QMainWindow::hideEvent(event);
 }
 
-void Window::changeEvent(QEvent *event) {
+void Page::closeEvent(QCloseEvent *event) {
+    PageStack::instance()->d_func()->stack.removeOne(this);
+    QMainWindow::closeEvent(event);
+}
+
+void Page::changeEvent(QEvent *event) {
     switch (event->type()) {
     case QEvent::ParentChange:
         emit parentChanged();
@@ -187,7 +202,7 @@ void Window::changeEvent(QEvent *event) {
     QMainWindow::changeEvent(event);
 }
 
-void Window::moveEvent(QMoveEvent *event) {
+void Page::moveEvent(QMoveEvent *event) {
     if (event->pos().x() != event->oldPos().x()) {
         emit xChanged();
     }
@@ -199,7 +214,7 @@ void Window::moveEvent(QMoveEvent *event) {
     QMainWindow::moveEvent(event);
 }
 
-void Window::resizeEvent(QResizeEvent *event) {
+void Page::resizeEvent(QResizeEvent *event) {
     if (event->size().width() != event->oldSize().width()) {
         emit widthChanged();
     }
@@ -211,121 +226,121 @@ void Window::resizeEvent(QResizeEvent *event) {
     QMainWindow::resizeEvent(event);
 }
 
-void Window::focusInEvent(QFocusEvent *event) {
+void Page::focusInEvent(QFocusEvent *event) {
     emit focusChanged();
     QMainWindow::focusInEvent(event);
 }
 
-void Window::focusOutEvent(QFocusEvent *event) {
+void Page::focusOutEvent(QFocusEvent *event) {
     emit focusChanged();
     QMainWindow::focusOutEvent(event);
 }
 
-void Window::classBegin() {}
+void Page::classBegin() {}
 
-void Window::componentComplete() {
-    Q_D(Window);
+void Page::componentComplete() {
+    Q_D(Page);
 
     d->componentComplete();
 
     if (d->qmlVisible()) {
-        this->showMaximized();
+        this->show();
     }
 }
 
-void WindowPrivate::data_append(QDeclarativeListProperty<QObject> *list, QObject *obj) {
+void PagePrivate::data_append(QDeclarativeListProperty<QObject> *list, QObject *obj) {
     if (!obj) {
         return;
     }
 
-    if (Window *window = qobject_cast<Window*>(list->object)) {
-        window->d_func()->dataList.append(obj);
+    if (Page *page = qobject_cast<Page*>(list->object)) {
+        page->d_func()->dataList.append(obj);
 
         if (obj->isWidgetType()) {
-            window->d_func()->childrenList.append(qobject_cast<QWidget*>(obj));
+            page->d_func()->childrenList.append(qobject_cast<QWidget*>(obj));
         }
     }
 }
 
-void WindowPrivate::children_append(QDeclarativeListProperty<QWidget> *list, QWidget *widget) {
+void PagePrivate::children_append(QDeclarativeListProperty<QWidget> *list, QWidget *widget) {
     if (!widget) {
         return;
     }
 
-    if (Window *window = qobject_cast<Window*>(list->object)) {
-        window->d_func()->childrenList.append(widget);
-        window->d_func()->dataList.append(widget);
+    if (Page *page = qobject_cast<Page*>(list->object)) {
+        page->d_func()->childrenList.append(widget);
+        page->d_func()->dataList.append(widget);
     }
 }
 
-void WindowPrivate::actions_append(QDeclarativeListProperty<QObject> *list, QObject *obj) {
+void PagePrivate::actions_append(QDeclarativeListProperty<QObject> *list, QObject *obj) {
     if (!obj) {
         return;
     }
 
-    if (Window *window = qobject_cast<Window*>(list->object)) {
-        window->d_func()->actionList.append(obj);
-        window->d_func()->dataList.append(obj);
+    if (Page *page = qobject_cast<Page*>(list->object)) {
+        page->d_func()->actionList.append(obj);
+        page->d_func()->dataList.append(obj);
 
-        if (!window->d_func()->complete) {
+        if (!page->d_func()->complete) {
             return;
         }
 
         if (QAction *action = qobject_cast<QAction*>(obj)) {
-            window->addAction(action);
+            page->addAction(action);
         }
         else if (QActionGroup *group = qobject_cast<QActionGroup*>(obj)) {
-            window->addActions(group->actions());
+            page->addActions(group->actions());
         }
     }
 }
 
-void WindowPrivate::tools_append(QDeclarativeListProperty<QObject> *list, QObject *obj) {
+void PagePrivate::tools_append(QDeclarativeListProperty<QObject> *list, QObject *obj) {
     if (!obj) {
         return;
     }
 
-    if (Window *window = qobject_cast<Window*>(list->object)) {
-        window->d_func()->toolList.append(obj);
-        window->d_func()->dataList.append(obj);
+    if (Page *page = qobject_cast<Page*>(list->object)) {
+        page->d_func()->toolList.append(obj);
+        page->d_func()->dataList.append(obj);
 
-        if (!window->d_func()->complete) {
+        if (!page->d_func()->complete) {
             return;
         }
 
         if (QAction *action = qobject_cast<QAction*>(obj)) {
-            window->menuBar()->addAction(action);
+            page->menuBar()->addAction(action);
         }
         else if (QMenu *menu = qobject_cast<QMenu*>(obj)) {
-            window->menuBar()->addMenu(menu);
+            page->menuBar()->addMenu(menu);
         }
         else if (QToolBar *toolBar = qobject_cast<QToolBar*>(obj)) {
-            window->addToolBar(Qt::BottomToolBarArea, toolBar);
+            page->addToolBar(Qt::BottomToolBarArea, toolBar);
         }
         else if (QActionGroup *group = qobject_cast<QActionGroup*>(obj)) {
-            window->menuBar()->addActions(group->actions());
+            page->menuBar()->addActions(group->actions());
         }
     }
 }
 
-QDeclarativeListProperty<QObject> WindowPrivate::data() {
-    return QDeclarativeListProperty<QObject>(q_func(), 0, WindowPrivate::data_append);
+QDeclarativeListProperty<QObject> PagePrivate::data() {
+    return QDeclarativeListProperty<QObject>(q_func(), 0, PagePrivate::data_append);
 }
 
-QDeclarativeListProperty<QWidget> WindowPrivate::children() {
-    return QDeclarativeListProperty<QWidget>(q_func(), 0, WindowPrivate::children_append);
+QDeclarativeListProperty<QWidget> PagePrivate::children() {
+    return QDeclarativeListProperty<QWidget>(q_func(), 0, PagePrivate::children_append);
 }
 
-QDeclarativeListProperty<QObject> WindowPrivate::actions() {
-    return QDeclarativeListProperty<QObject>(q_func(), 0, WindowPrivate::actions_append);
+QDeclarativeListProperty<QObject> PagePrivate::actions() {
+    return QDeclarativeListProperty<QObject>(q_func(), 0, PagePrivate::actions_append);
 }
 
-QDeclarativeListProperty<QObject> WindowPrivate::tools() {
-    return QDeclarativeListProperty<QObject>(q_func(), 0, WindowPrivate::tools_append);
+QDeclarativeListProperty<QObject> PagePrivate::tools() {
+    return QDeclarativeListProperty<QObject>(q_func(), 0, PagePrivate::tools_append);
 }
 
-void WindowPrivate::componentComplete() {
-    Q_Q(Window);
+void PagePrivate::componentComplete() {
+    Q_Q(Page);
 
     foreach (QObject *obj, toolList) {
         if (QAction *action = qobject_cast<QAction*>(obj)) {
@@ -345,4 +360,4 @@ void WindowPrivate::componentComplete() {
     ItemPrivate::componentComplete();
 }
 
-#include "moc_window_p.cpp"
+#include "moc_page_p.cpp"

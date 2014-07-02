@@ -18,7 +18,7 @@
 import org.hildon.components 1.0
 import org.hildon.utils 1.0
 
-Window {
+ApplicationWindow {
     id: mainWindow
 
     windowTitle: qsTr("Gallery")
@@ -43,47 +43,47 @@ Window {
 
         Button {
             text: qsTr("Buttons")
-            onClicked: windowStack.push(Qt.resolvedUrl("ButtonsWindow.qml"), {})
+            onClicked: pageStack.push(Qt.resolvedUrl("ButtonsPage.qml"), {})
         }
 
         Button {
             text: qsTr("Text input")
-            onClicked: windowStack.push(Qt.resolvedUrl("TextInputWindow.qml"), {})
+            onClicked: pageStack.push(Qt.resolvedUrl("TextInputPage.qml"), {})
         }
 
         Button {
             text: qsTr("Files")
-            onClicked: windowStack.push(Qt.resolvedUrl("FilesWindow.qml"), {})
+            onClicked: pageStack.push(Qt.resolvedUrl("FilesPage.qml"), {})
         }
 
         Button {
             text: qsTr("Groups")
-            onClicked: windowStack.push(Qt.resolvedUrl("GroupsWindow.qml"), {})
+            onClicked: pageStack.push(Qt.resolvedUrl("GroupsPage.qml"), {})
         }
 
         Button {
             text: qsTr("ListView")
-            onClicked: windowStack.push(Qt.resolvedUrl("ListViewWindow.qml"), {})
+            onClicked: pageStack.push(Qt.resolvedUrl("ListViewPage.qml"), {})
         }
 
         Button {
             text: qsTr("Edit")
-            onClicked: windowStack.push(Qt.resolvedUrl("ListEditWindow.qml"), {})
+            onClicked: pageStack.push(Qt.resolvedUrl("ListEditPage.qml"), {})
         }
 
         Button {
             text: qsTr("MouseArea")
-            onClicked: windowStack.push(Qt.resolvedUrl("MouseAreaWindow.qml"), {})
+            onClicked: pageStack.push(Qt.resolvedUrl("MouseAreaPage.qml"), {})
         }
 
         Button {
             text: qsTr("Images")
-            onClicked: windowStack.push(Qt.resolvedUrl("ImagesWindow.qml"), {})
+            onClicked: pageStack.push(Qt.resolvedUrl("ImagesPage.qml"), {})
         }
 
         Button {
             text: qsTr("Rectangles")
-            onClicked: windowStack.push(Qt.resolvedUrl("RectanglesWindow.qml"), {})
+            onClicked: pageStack.push(Qt.resolvedUrl("RectanglesPage.qml"), {})
         }
     }
 

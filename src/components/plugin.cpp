@@ -20,6 +20,7 @@
 #include "actiongroup_p.h"
 #include "action_p.h"
 #include "anchors_p_p.h"
+#include "applicationwindow_p.h"
 #include "borderimage_p.h"
 #include "button_p.h"
 #include "buttonrow_p.h"
@@ -45,6 +46,8 @@
 #include "menu_p.h"
 #include "mousearea_p.h"
 #include "multilistselector_p.h"
+#include "page_p.h"
+#include "pagestack_p.h"
 #include "platformstyle_p.h"
 #include "progressbar_p.h"
 #include "radiobutton_p.h"
@@ -65,7 +68,6 @@
 #include "valuebutton_p.h"
 #include "valueselector_p.h"
 #include "window_p.h"
-#include "windowstack_p_p.h"
 #include <QDeclarativeEngine>
 #include <QDeclarativeContext>
 
@@ -77,16 +79,16 @@ void Plugin::initializeEngine(QDeclarativeEngine *engine, const char *uri) {
     if (engine->rootContext()->contextProperty("platformStyle").isNull()) {
         engine->rootContext()->setContextProperty("platformStyle", new PlatformStyle(engine));
         engine->rootContext()->setContextProperty("screen", new Screen(engine));
-        engine->rootContext()->setContextProperty("windowStack", new WindowStack(engine));
+        engine->rootContext()->setContextProperty("pageStack", new PageStack(engine));
 
         engine->addImageProvider("theme", new ThemeImageProvider);
 
         engine->setContextForObject(Screen::instance(), engine->rootContext());
-        engine->setContextForObject(WindowStack::instance(), engine->rootContext());
+        engine->setContextForObject(PageStack::instance(), engine->rootContext());
 
         qmlRegisterUncreatableType<PlatformStyle>(uri, 1, 0, "PlatformStyle", "");
         qmlRegisterUncreatableType<Screen>(uri, 1, 0, "Screen", "");
-        qmlRegisterUncreatableType<WindowStack>(uri, 1, 0, "WindowStack", "");
+        qmlRegisterUncreatableType<PageStack>(uri, 1, 0, "PageStack", "");
     }
 }
 
@@ -101,6 +103,7 @@ void Plugin::registerTypes(const char *uri) {
     qmlRegisterType<Action>(uri, 1, 0, "Action");
     qmlRegisterType<ActionGroup>(uri, 1, 0, "ActionGroup");
     qmlRegisterType<Anchors>(uri, 1, 0, "Anchors");
+    qmlRegisterType<ApplicationWindow>(uri, 1, 0, "ApplicationWindow");
     qmlRegisterType<Border>(uri, 1, 0, "Border");
     qmlRegisterType<BorderImage>(uri, 1, 0, "BorderImage");
     qmlRegisterType<Button>(uri, 1, 0, "Button");
@@ -130,6 +133,7 @@ void Plugin::registerTypes(const char *uri) {
     qmlRegisterType<MouseArea>(uri, 1, 0, "MouseArea");
     qmlRegisterType<MouseDrag>(uri, 1, 0, "Drag");
     qmlRegisterType<MultiListSelector>(uri, 1, 0, "MultiListSelector");
+    qmlRegisterType<Page>(uri, 1, 0, "Page");
     qmlRegisterType<ProgressBar>(uri, 1, 0, "ProgressBar");
 //    qmlRegisterType<QDeclarativeComponent>(uri, 1, 0, "Component");
     qmlRegisterType<QDoubleValidator>(uri, 1, 0, "DoubleValidator");

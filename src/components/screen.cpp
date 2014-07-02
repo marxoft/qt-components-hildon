@@ -62,7 +62,7 @@ Screen::Screen(ScreenPrivate &dd, QObject *parent) :
 Screen::~Screen() {}
 
 Screen* Screen::instance() {
-    return !self ? new Screen : self;
+    return self;
 }
 
 int Screen::width() const {

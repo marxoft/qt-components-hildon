@@ -15,40 +15,34 @@
  * Inc., 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-import org.hildon.components 1.0
+#ifndef PAGESTACK_P_P_H
+#define PAGESTACK_P_P_H
 
-Dialog {
-    id: root
+#include "pagestack_p.h"
 
-    property alias rejectButtonText: rejectButton.text
-    property alias acceptButtonText: acceptButton.text
-    property alias message: label.text
+class PageStackPrivate
+{
 
-    function open() {
-        return exec();
+public:
+    PageStackPrivate(PageStack *parent) :
+        q_ptr(parent),
+        component(0)
+    {
     }
 
-    modal: true
-    content: Label {
-        id: label
+    virtual ~PageStackPrivate() {}
 
-        anchors.fill: parent
-        wordWrap: true
-    }
+    void _q_onPageStatusChanged(QDeclarativeComponent::Status status);
 
-    buttons: [
-        Button {
-            id: rejectButton
+    PageStack *q_ptr;
 
-            text: qsTr("No")
-            onClicked: root.reject()
-        },
+    QDeclarativeComponent *component;
 
-        Button {
-            id: acceptButton
+    QVariantMap data;
 
-            text: qsTr("Yes")
-            onClicked: root.accept()
-        }
-    ]
-}
+    QList<QWidget*> stack;
+
+    Q_DECLARE_PUBLIC(PageStack)
+};
+
+#endif // PAGESTACK_P_P_H

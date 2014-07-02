@@ -11,6 +11,7 @@ HEADERS += \
     anchorline_p.h \
     anchors_p.h \
     anchors_p_p.h \
+    applicationwindow_p.h \
     borderimage_p.h \
     borderimage_p_p.h \
     button_p.h \
@@ -62,6 +63,10 @@ HEADERS += \
     mousearea_p_p.h \
     multilistselector_p.h \
     multilistselector_p_p.h \
+    page_p.h \
+    page_p_p.h \
+    pagestack_p.h \
+    pagestack_p_p.h \
     platformstyle_p.h \
     progressbar_p.h \
     progressbar_p_p.h \
@@ -101,14 +106,13 @@ HEADERS += \
     variantlistmodel_p_p.h \
     window_p.h \
     window_p_p.h \
-    windowstack_p.h \
-    windowstack_p_p.h \
     plugin_p.h
 
 SOURCES += \
     action.cpp \
     actiongroup.cpp \
     anchors.cpp \
+    applicationwindow.cpp \
     borderimage.cpp \
     button.cpp \
     buttonrow.cpp \
@@ -135,6 +139,8 @@ SOURCES += \
     menu.cpp \
     mousearea.cpp \
     multilistselector.cpp \
+    page.cpp \
+    pagestack.cpp \
     platformstyle.cpp \
     progressbar.cpp \
     radiobutton.cpp \
@@ -156,7 +162,6 @@ SOURCES += \
     valueselector.cpp \
     variantlistmodel.cpp \
     window.cpp \
-    windowstack.cpp \
     plugin.cpp
 
 qdeclarativesources.files += \
