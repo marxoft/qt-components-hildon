@@ -20,7 +20,6 @@
 #include "actiongroup_p.h"
 #include "action_p.h"
 #include "anchors_p_p.h"
-#include "applicationwindow_p.h"
 #include "borderimage_p.h"
 #include "button_p.h"
 #include "buttonrow_p.h"
@@ -79,12 +78,10 @@ void Plugin::initializeEngine(QDeclarativeEngine *engine, const char *uri) {
     if (engine->rootContext()->contextProperty("platformStyle").isNull()) {
         engine->rootContext()->setContextProperty("platformStyle", new PlatformStyle(engine));
         engine->rootContext()->setContextProperty("screen", new Screen(engine));
-        engine->rootContext()->setContextProperty("pageStack", new PageStack(engine));
 
         engine->addImageProvider("theme", new ThemeImageProvider);
 
         engine->setContextForObject(Screen::instance(), engine->rootContext());
-        engine->setContextForObject(PageStack::instance(), engine->rootContext());
 
         qmlRegisterUncreatableType<PlatformStyle>(uri, 1, 0, "PlatformStyle", "");
         qmlRegisterUncreatableType<Screen>(uri, 1, 0, "Screen", "");
@@ -103,7 +100,6 @@ void Plugin::registerTypes(const char *uri) {
     qmlRegisterType<Action>(uri, 1, 0, "Action");
     qmlRegisterType<ActionGroup>(uri, 1, 0, "ActionGroup");
     qmlRegisterType<Anchors>(uri, 1, 0, "Anchors");
-    qmlRegisterType<ApplicationWindow>(uri, 1, 0, "ApplicationWindow");
     qmlRegisterType<Border>(uri, 1, 0, "Border");
     qmlRegisterType<BorderImage>(uri, 1, 0, "BorderImage");
     qmlRegisterType<Button>(uri, 1, 0, "Button");
