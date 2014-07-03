@@ -20,6 +20,9 @@
 
 #include "item_p_p.h"
 #include "window_p.h"
+#include "pagestack_p.h"
+
+class PageStack;
 
 class WindowPrivate : ItemPrivate
 {
@@ -27,6 +30,7 @@ class WindowPrivate : ItemPrivate
 public:
     WindowPrivate(Window *parent) :
         ItemPrivate(parent),
+        pageStack(new PageStack(parent)),
         orientation(Screen::LandscapeOrientation)
     {
     }
@@ -48,6 +52,8 @@ public:
     QDeclarativeListProperty<QObject> tools();
 
     void componentComplete();
+
+    PageStack *pageStack;
 
     Screen::Orientation orientation;
 

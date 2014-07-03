@@ -18,6 +18,7 @@
 #include "window_p.h"
 #include "window_p_p.h"
 #include "separator_p.h"
+#include "pagestack_p_p.h"
 #include <QMenuBar>
 #include <QToolBar>
 #include <QMoveEvent>
@@ -28,6 +29,9 @@ Window::Window(QWidget *parent) :
     QMainWindow(parent),
     d_ptr(new WindowPrivate(this))
 {
+    Q_D(Window);
+    d->pageStack->d_func()->stack.append(this);
+    this->setAttribute(Qt::WA_Maemo5StackedWindow, true);
     this->setOrientationLock(Screen::instance()->orientationLock());
     this->connect(Screen::instance(), SIGNAL(orientationLockChanged(Screen::Orientation)), this, SLOT(setOrientationLock(Screen::Orientation)));
     this->connect(Screen::instance(), SIGNAL(currentOrientationChanged(Screen::Orientation)), this, SIGNAL(inPortraitChanged()));
@@ -37,6 +41,9 @@ Window::Window(WindowPrivate &dd, QWidget *parent) :
     QMainWindow(parent),
     d_ptr(&dd)
 {
+    Q_D(Window);
+    d->pageStack->d_func()->stack.append(this);
+    this->setAttribute(Qt::WA_Maemo5StackedWindow, true);
     this->setOrientationLock(Screen::instance()->orientationLock());
     this->connect(Screen::instance(), SIGNAL(orientationLockChanged(Screen::Orientation)), this, SLOT(setOrientationLock(Screen::Orientation)));
     this->connect(Screen::instance(), SIGNAL(currentOrientationChanged(Screen::Orientation)), this, SIGNAL(inPortraitChanged()));
