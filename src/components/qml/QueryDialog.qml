@@ -38,17 +38,17 @@ Dialog {
 
     buttons: [
         Button {
-            id: rejectButton
-
-            text: qsTr("No")
-            onClicked: root.reject()
-        },
-
-        Button {
             id: acceptButton
 
             text: qsTr("Yes")
             onClicked: root.accept()
+        },
+
+        Button {
+            id: rejectButton
+
+            text: qsTr("No")
+            onClicked: root.reject()
         }
     ]
 }
