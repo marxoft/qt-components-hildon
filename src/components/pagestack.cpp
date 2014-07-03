@@ -182,7 +182,7 @@ void PageStackPrivate::_q_onPageStatusChanged(QDeclarativeComponent::Status stat
 
     switch (status) {
     case QDeclarativeComponent::Ready:
-        if (QObject *obj = component->beginCreate(q->currentPage() ? qmlEngine(q)->contextForObject(q->currentPage()) : qmlEngine(q)->contextForObject(q))) {
+        if (QObject *obj = component->beginCreate(q->currentPage() ? qmlEngine(q->currentPage())->contextForObject(q->currentPage()) : qmlEngine(q)->contextForObject(q))) {
             if (!data.isEmpty()) {
                 foreach (QString key, data.keys()) {
                     obj->setProperty(key.toUtf8(), data.value(key));
