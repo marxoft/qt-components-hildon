@@ -71,7 +71,9 @@ void SpinBox::setOpacity(qreal opacity) {
 }
 
 void SpinBox::setFocus(bool focus) {
-    if (focus != this->hasFocus()) {
+    Q_D(const SpinBox);
+
+    if ((d->complete) && (focus != this->hasFocus())) {
         if (focus) {
             this->setFocus(Qt::OtherFocusReason);
         }

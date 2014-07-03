@@ -72,7 +72,9 @@ void Item::setOpacity(qreal opacity) {
 }
 
 void Item::setFocus(bool focus) {
-    if (focus != this->hasFocus()) {
+    Q_D(const Item);
+
+    if ((d->complete) && (focus != this->hasFocus())) {
         if (focus) {
             this->setFocus(Qt::OtherFocusReason);
         }

@@ -74,7 +74,9 @@ void ToolBar::setOpacity(qreal opacity) {
 }
 
 void ToolBar::setFocus(bool focus) {
-    if (focus != this->hasFocus()) {
+    Q_D(const ToolBar);
+
+    if ((d->complete) && (focus != this->hasFocus())) {
         if (focus) {
             this->setFocus(Qt::OtherFocusReason);
         }

@@ -71,7 +71,9 @@ void RadioButton::setOpacity(qreal opacity) {
 }
 
 void RadioButton::setFocus(bool focus) {
-    if (focus != this->hasFocus()) {
+    Q_D(const RadioButton);
+
+    if ((d->complete) && (focus != this->hasFocus())) {
         if (focus) {
             this->setFocus(Qt::OtherFocusReason);
         }

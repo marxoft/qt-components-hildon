@@ -80,7 +80,9 @@ void ListView::setOpacity(qreal opacity) {
 }
 
 void ListView::setFocus(bool focus) {
-    if (focus != this->hasFocus()) {
+    Q_D(const ListView);
+
+    if ((d->complete) && (focus != this->hasFocus())) {
         if (focus) {
             this->setFocus(Qt::OtherFocusReason);
         }

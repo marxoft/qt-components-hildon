@@ -71,7 +71,9 @@ void Menu::setOpacity(qreal opacity) {
 }
 
 void Menu::setFocus(bool focus) {
-    if (focus != this->hasFocus()) {
+    Q_D(const Menu);
+
+    if ((d->complete) && (focus != this->hasFocus())) {
         if (focus) {
             this->setFocus(Qt::OtherFocusReason);
         }

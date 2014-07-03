@@ -72,7 +72,9 @@ void ValueButton::setOpacity(qreal opacity) {
 }
 
 void ValueButton::setFocus(bool focus) {
-    if (focus != this->hasFocus()) {
+    Q_D(const ValueButton);
+
+    if ((d->complete) && (focus != this->hasFocus())) {
         if (focus) {
             this->setFocus(Qt::OtherFocusReason);
         }

@@ -71,7 +71,9 @@ void Text::setOpacity(qreal opacity) {
 }
 
 void Text::setFocus(bool focus) {
-    if (focus != this->hasFocus()) {
+    Q_D(const Text);
+
+    if ((d->complete) && (focus != this->hasFocus())) {
         if (focus) {
             this->setFocus(Qt::OtherFocusReason);
         }

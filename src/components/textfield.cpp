@@ -71,7 +71,9 @@ void TextField::setOpacity(qreal opacity) {
 }
 
 void TextField::setFocus(bool focus) {
-    if (focus != this->hasFocus()) {
+    Q_D(const TextField);
+
+    if ((d->complete) && (focus != this->hasFocus())) {
         if (focus) {
             this->setFocus(Qt::OtherFocusReason);
         }

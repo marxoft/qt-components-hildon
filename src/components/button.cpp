@@ -71,7 +71,9 @@ void Button::setOpacity(qreal opacity) {
 }
 
 void Button::setFocus(bool focus) {
-    if (focus != this->hasFocus()) {
+    Q_D(const Button);
+
+    if ((d->complete) && (focus != this->hasFocus())) {
         if (focus) {
             this->setFocus(Qt::OtherFocusReason);
         }

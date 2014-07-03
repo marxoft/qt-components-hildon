@@ -134,7 +134,9 @@ void Page::setOpacity(qreal opacity) {
 }
 
 void Page::setFocus(bool focus) {
-    if (focus != this->hasFocus()) {
+    Q_D(const Page);
+
+    if ((d->complete) && (focus != this->hasFocus())) {
         if (focus) {
             this->setFocus(Qt::OtherFocusReason);
         }
