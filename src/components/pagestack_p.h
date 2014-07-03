@@ -23,8 +23,6 @@
 #include <QDeclarativeComponent>
 
 class QWidget;
-class Page;
-class ApplicationWindow;
 class PageStackPrivate;
 
 class PageStack : public QObject
@@ -38,7 +36,7 @@ public:
     explicit PageStack(QObject *parent = 0);
     ~PageStack();
 
-    static PageStack* instance();
+    static PageStack* instance(QWidget *page);
 
     int depth() const;
 
@@ -61,17 +59,17 @@ signals:
 private:
     PageStack(PageStackPrivate &dd, QObject *parent = 0);
 
-    static PageStack *self;
-
     QScopedPointer<PageStackPrivate> d_ptr;
 
     friend class Page;
-    friend class ApplicationWindow;
+    friend class Window;
 
     Q_DISABLE_COPY(PageStack)
     Q_DECLARE_PRIVATE(PageStack)
 
     Q_PRIVATE_SLOT(d_func(), void _q_onPageStatusChanged(QDeclarativeComponent::Status))
 };
+
+Q_DECLARE_METATYPE(PageStack*)
 
 #endif // PAGESTACK_P_H

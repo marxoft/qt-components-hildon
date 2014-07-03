@@ -17,18 +17,25 @@
 
 #include "pagestack_p.h"
 #include "pagestack_p_p.h"
+#include "screen_p.h"
 #include <QWidget>
 #include <QDeclarativeEngine>
+#include <QDeclarativeContext>
 #include <QDeclarativeInfo>
-
-PageStack* PageStack::self = 0;
 
 PageStack::PageStack(QObject *parent) :
     QObject(parent),
     d_ptr(new PageStackPrivate(this))
 {
-    if (!self) {
-        self = this;
+    if (QDeclarativeEngine *engine = qmlEngine(Screen::instance())) {
+        QDeclarativeContext *context = engine->contextForObject(parent);
+
+        if (!context) {
+            context = engine->rootContext();
+        }
+
+        engine->setContextForObject(this, context);
+        context->setContextProperty("pageStack", this);
     }
 }
 
@@ -36,15 +43,36 @@ PageStack::PageStack(PageStackPrivate &dd, QObject *parent) :
     QObject(parent),
     d_ptr(&dd)
 {
-    if (!self) {
-        self = this;
+    if (QDeclarativeEngine *engine = qmlEngine(Screen::instance())) {
+        QDeclarativeContext *context = engine->contextForObject(parent);
+
+        if (!context) {
+            context = engine->rootContext();
+        }
+
+        engine->setContextForObject(this, context);
+        context->setContextProperty("pageStack", this);
     }
 }
 
 PageStack::~PageStack() {}
 
-PageStack*  PageStack::instance() {
-    return self;
+PageStack* PageStack::instance(QWidget *page) {
+    if (QDeclarativeEngine *engine = qmlEngine(Screen::instance())) {
+        QDeclarativeContext *context = engine->contextForObject(page);
+
+        if (!context) {
+            context = engine->rootContext();
+        }
+
+        if (QObject *obj = qvariant_cast<QObject*>(context->contextProperty("pageStack"))) {
+            if (PageStack* stack = qobject_cast<PageStack*>(obj)) {
+                return stack;
+            }
+        }
+    }
+
+    return 0;
 }
 
 int PageStack::depth() const {
@@ -83,7 +111,7 @@ void PageStack::push(const QUrl &url) {
     }
 
     d->data.clear();
-    d->component = this->currentPage() ? new QDeclarativeComponent(qmlEngine(this->currentPage())) : new QDeclarativeComponent(qmlEngine(this));
+    d->component = new QDeclarativeComponent(qmlEngine(this));
     this->connect(d->component, SIGNAL(statusChanged(QDeclarativeComponent::Status)), this, SLOT(_q_onPageStatusChanged(QDeclarativeComponent::Status)));
     d->component->loadUrl(url);
 }
@@ -96,7 +124,7 @@ void PageStack::push(const QUrl &url, const QVariantMap &data) {
     }
 
     d->data = data;
-    d->component = this->currentPage() ? new QDeclarativeComponent(qmlEngine(this->currentPage())) : new QDeclarativeComponent(qmlEngine(this));
+    d->component = new QDeclarativeComponent(qmlEngine(this));
     this->connect(d->component, SIGNAL(statusChanged(QDeclarativeComponent::Status)), this, SLOT(_q_onPageStatusChanged(QDeclarativeComponent::Status)));
     d->component->loadUrl(url);
 }
@@ -154,7 +182,7 @@ void PageStackPrivate::_q_onPageStatusChanged(QDeclarativeComponent::Status stat
 
     switch (status) {
     case QDeclarativeComponent::Ready:
-        if (QObject *obj = component->beginCreate(q->currentPage() ? qmlEngine(q->currentPage())->contextForObject(q->currentPage()) : qmlEngine(q)->contextForObject(q))) {
+        if (QObject *obj = component->beginCreate(q->currentPage() ? qmlEngine(q)->contextForObject(q->currentPage()) : qmlEngine(q)->contextForObject(q))) {
             if (!data.isEmpty()) {
                 foreach (QString key, data.keys()) {
                     obj->setProperty(key.toUtf8(), data.value(key));
