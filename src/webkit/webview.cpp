@@ -34,6 +34,8 @@ WebView::WebView(QWidget *parent) :
     d->suppressor = new WebViewSelectionSuppressor(this);
 
     this->setTextSelectionEnabled(false);
+    this->connect(this, SIGNAL(titleChanged(QString)), this, SIGNAL(titleChanged()));
+    this->connect(this, SIGNAL(urlChanged(QUrl)), this, SIGNAL(urlChanged()));
     this->connect(this, SIGNAL(loadStarted()), this, SLOT(_q_onLoadStarted()));
     this->connect(this, SIGNAL(loadFinished(bool)), this, SLOT(_q_onLoadFinished(bool)));
     this->connect(this, SIGNAL(loadProgress(int)), this, SLOT(_q_onLoadProgress(int)));
@@ -44,6 +46,8 @@ WebView::WebView(WebViewPrivate &dd, QWidget *parent) :
     d_ptr(&dd)
 {
     this->setTextSelectionEnabled(false);
+    this->connect(this, SIGNAL(titleChanged(QString)), this, SIGNAL(titleChanged()));
+    this->connect(this, SIGNAL(urlChanged(QUrl)), this, SIGNAL(urlChanged()));
     this->connect(this, SIGNAL(loadStarted()), this, SLOT(_q_onLoadStarted()));
     this->connect(this, SIGNAL(loadFinished(bool)), this, SLOT(_q_onLoadFinished(bool)));
     this->connect(this, SIGNAL(loadProgress(int)), this, SLOT(_q_onLoadProgress(int)));
@@ -86,7 +90,9 @@ void WebView::setOpacity(qreal opacity) {
 }
 
 void WebView::setFocus(bool focus) {
-    if (focus != this->hasFocus()) {
+    Q_D(const WebView);
+
+    if ((d->complete) && (focus != this->hasFocus())) {
         if (focus) {
             this->setFocus(Qt::OtherFocusReason);
         }
@@ -410,6 +416,7 @@ void WebViewPrivate::_q_onLoadStarted() {
     status = WebView::Loading;
     emit q->statusChanged();
     emit q->urlChanged();
+    emit q->titleChanged();
 }
 
 void WebViewPrivate::_q_onLoadFinished(bool ok) {
@@ -418,6 +425,7 @@ void WebViewPrivate::_q_onLoadFinished(bool ok) {
     status = ok ? WebView::Ready : WebView::Error;
     emit q->statusChanged();
     emit q->urlChanged();
+    emit q->titleChanged();
 }
 
 void WebViewPrivate::_q_onLoadProgress(int p) {
