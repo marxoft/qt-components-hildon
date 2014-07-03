@@ -45,7 +45,7 @@ class ListView : public QListView, public QDeclarativeParserStatus
     Q_PROPERTY(AnchorLine horizontalCenter READ horizontalCenter CONSTANT FINAL)
     Q_PROPERTY(AnchorLine verticalCenter READ verticalCenter CONSTANT FINAL)
     Q_PROPERTY(bool interactive READ interactive WRITE setInteractive NOTIFY interactiveChanged)
-    Q_PROPERTY(bool moving READ moving)
+    Q_PROPERTY(bool moving READ moving NOTIFY movingChanged)
     Q_PROPERTY(bool atXBeginning READ atXBeginning NOTIFY contentXChanged)
     Q_PROPERTY(bool atXEnd READ atXEnd NOTIFY contentXChanged)
     Q_PROPERTY(bool atYBeginning READ atYBeginning NOTIFY contentYChanged)
