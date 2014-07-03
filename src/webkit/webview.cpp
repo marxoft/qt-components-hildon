@@ -20,6 +20,8 @@
 #include <QMoveEvent>
 #include <QResizeEvent>
 #include <QActionGroup>
+#include <QWebFrame>
+#include <QScrollBar>
 #include <QAbstractKineticScroller>
 #include <QGraphicsOpacityEffect>
 
@@ -154,9 +156,109 @@ void WebView::setTextSelectionEnabled(bool enabled) {
         d->suppressor->enable();
     }
 
-    this->property("kineticScroller").value<QAbstractKineticScroller*>()->setEnabled(!enabled);
+    d->kineticScroller->setEnabled(!enabled);
 
     emit textSelectionEnabledChanged();
+}
+
+bool WebView::moving() const {
+    Q_D(const WebView);
+
+    switch (d->kineticScroller->state()) {
+    case QAbstractKineticScroller::Pushing:
+    case QAbstractKineticScroller::AutoScrolling:
+        return true;
+    default:
+        return false;
+    }
+}
+
+bool WebView::atXBeginning() const {
+    if (this->page()) {
+        return this->page()->mainFrame()->scrollBarValue(Qt::Horizontal) == this->page()->mainFrame()->scrollBarMinimum(Qt::Horizontal);
+    }
+
+    return false;
+}
+
+bool WebView::atXEnd() const {
+    if (this->page()) {
+        return this->page()->mainFrame()->scrollBarValue(Qt::Horizontal) == this->page()->mainFrame()->scrollBarMaximum(Qt::Horizontal);
+    }
+
+    return false;
+}
+
+bool WebView::atYBeginning() const {
+    if (this->page()) {
+        return this->page()->mainFrame()->scrollBarValue(Qt::Vertical) == this->page()->mainFrame()->scrollBarMinimum(Qt::Vertical);
+    }
+
+    return false;
+}
+
+bool WebView::atYEnd() const {
+    if (this->page()) {
+        return this->page()->mainFrame()->scrollBarValue(Qt::Vertical) == this->page()->mainFrame()->scrollBarMaximum(Qt::Vertical);
+    }
+
+    return false;
+}
+
+int WebView::contentX() const {
+    if (this->page()) {
+        return this->page()->mainFrame()->scrollBarValue(Qt::Horizontal);
+    }
+
+    return 0;
+}
+
+void WebView::setContentX(int x) {
+    if (this->page()) {
+        this->page()->mainFrame()->setScrollBarValue(Qt::Horizontal, x);
+    }
+}
+
+int WebView::contentY() const {
+    if (this->page()) {
+        return this->page()->mainFrame()->scrollBarValue(Qt::Vertical);
+    }
+
+    return 0;
+}
+
+void WebView::setContentY(int y) {
+    if (this->page()) {
+        this->page()->mainFrame()->setScrollBarValue(Qt::Vertical, y);
+    }
+}
+
+qreal WebView::flickDeceleration() const {
+    Q_D(const WebView);
+
+    return d->kineticScroller->decelerationFactor();
+}
+
+void WebView::setFlickDeceleration(qreal deceleration) {
+    if (deceleration != this->flickDeceleration()) {
+        Q_D(WebView);
+        d->kineticScroller->setDecelerationFactor(deceleration);
+        emit flickDecelerationChanged();
+    }
+}
+
+qreal WebView::maximumFlickVelocity() const {
+    Q_D(const WebView);
+
+    return d->kineticScroller->maximumVelocity();
+}
+
+void WebView::setMaximumFlickVelocity(qreal maximum) {
+    if (maximum != this->maximumFlickVelocity()) {
+        Q_D(WebView);
+        d->kineticScroller->setMaximumVelocity(maximum);
+        emit maximumFlickVelocityChanged();
+    }
 }
 
 int WebView::progress() const {

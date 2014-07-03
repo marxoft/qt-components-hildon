@@ -44,8 +44,15 @@ class WebView : public QWebView, public QDeclarativeParserStatus
     Q_PROPERTY(AnchorLine bottom READ bottom CONSTANT FINAL)
     Q_PROPERTY(AnchorLine horizontalCenter READ horizontalCenter CONSTANT FINAL)
     Q_PROPERTY(AnchorLine verticalCenter READ verticalCenter CONSTANT FINAL)
-    Q_PROPERTY(QString icon READ iconSource)
+    Q_PROPERTY(QString icon READ iconSource NOTIFY iconChanged)
     Q_PROPERTY(bool textSelectionEnabled READ textSelectionEnabled WRITE setTextSelectionEnabled NOTIFY textSelectionEnabledChanged)
+    Q_PROPERTY(bool moving READ moving NOTIFY movingChanged)
+    Q_PROPERTY(bool atXBeginning READ atXBeginning NOTIFY contentXChanged)
+    Q_PROPERTY(bool atXEnd READ atXEnd NOTIFY contentXChanged)
+    Q_PROPERTY(bool atYBeginning READ atYBeginning NOTIFY contentYChanged)
+    Q_PROPERTY(bool atYEnd READ atYEnd NOTIFY contentYChanged)
+    Q_PROPERTY(int contentX READ contentX WRITE setContentX NOTIFY contentXChanged)
+    Q_PROPERTY(int contentY READ contentY WRITE setContentY NOTIFY contentYChanged)
     Q_PROPERTY(int progress READ progress NOTIFY progressChanged)
     Q_PROPERTY(Status status READ status NOTIFY statusChanged)
     Q_PRIVATE_PROPERTY(WebView::d_func(), QDeclarativeListProperty<QObject> data READ data)
@@ -90,6 +97,26 @@ public:
     bool textSelectionEnabled() const;
     void setTextSelectionEnabled(bool enabled);
 
+    bool moving() const;
+
+    bool atXBeginning() const;
+    bool atXEnd() const;
+
+    bool atYBeginning() const;
+    bool atYEnd() const;
+
+    int contentX() const;
+    void setContentX(int x);
+
+    int contentY() const;
+    void setContentY(int y);
+
+    qreal flickDeceleration() const;
+    void setFlickDeceleration(qreal deceleration);
+
+    qreal maximumFlickVelocity() const;
+    void setMaximumFlickVelocity(qreal maximum);
+
     int progress() const;
 
     Status status() const;
@@ -105,6 +132,11 @@ signals:
     void focusChanged();
     void urlChanged();
     void textSelectionEnabledChanged();
+    void movingChanged();
+    void contentXChanged();
+    void contentYChanged();
+    void flickDecelerationChanged();
+    void maximumFlickVelocityChanged();
     void progressChanged();
     void statusChanged();
 

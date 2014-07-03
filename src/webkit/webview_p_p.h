@@ -21,6 +21,7 @@
 #include "item_p_p.h"
 #include "webview_p.h"
 #include <QMouseEvent>
+#include <QAbstractKineticScroller>
 
 class WebViewSelectionSuppressor : public QObject
 {
@@ -104,6 +105,7 @@ public:
     WebViewPrivate(WebView *parent) :
         ItemPrivate(parent),
         suppressor(0),
+        kineticScroller(parent->property("kineticScroller").value<QAbstractKineticScroller*>()),
         progress(0),
         status(WebView::Null)
     {
@@ -126,6 +128,8 @@ public:
     void _q_onLoadProgress(int p);
 
     WebViewSelectionSuppressor *suppressor;
+
+    QAbstractKineticScroller *kineticScroller;
 
     int progress;
 
