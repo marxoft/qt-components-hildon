@@ -33,3 +33,11 @@ void Action::setIconSource(const QString &source) {
         this->setIcon(source.contains('/') ? QIcon(source) : QIcon::fromTheme(source));
     }
 }
+
+QString Action::shortcutString() const {
+    return this->shortcut().toString();
+}
+
+void Action::setShortcutString(const QString &shortcut) {
+    this->setShortcut(QKeySequence(shortcut));
+}

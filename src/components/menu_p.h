@@ -36,7 +36,7 @@ class Menu : public QMenu, public QDeclarativeParserStatus
     Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity NOTIFY opacityChanged)
     Q_PROPERTY(bool visible READ isVisible WRITE setVisible NOTIFY visibleChanged)
     Q_PROPERTY(bool focus READ hasFocus WRITE setFocus NOTIFY focusChanged)
-    Q_PROPERTY(QString icon READ iconSource WRITE setIconSource)
+    Q_PROPERTY(QString icon READ iconSource WRITE setIconSource NOTIFY iconChanged)
     Q_PRIVATE_PROPERTY(Menu::d_func(), QDeclarativeListProperty<QObject> data READ data)
 
     Q_INTERFACES(QDeclarativeParserStatus)
@@ -68,6 +68,7 @@ signals:
     void opacityChanged();
     void visibleChanged();
     void focusChanged();
+    void iconChanged();
 
 private:
     Menu(MenuPrivate &dd, QWidget *parent);

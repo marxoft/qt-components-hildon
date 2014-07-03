@@ -88,6 +88,7 @@ QString Menu::iconSource() const {
 void Menu::setIconSource(const QString &source) {
     if (source != this->iconSource()) {
         this->setIcon(source.contains('/') ? QIcon(source) : QIcon::fromTheme(source));
+        emit iconChanged();
     }
 }
 

@@ -88,6 +88,18 @@ QString ToolButton::iconSource() const {
 void ToolButton::setIconSource(const QString &source) {
     if (source != this->icon().name()) {
         this->setIcon(source.contains('/') ? QIcon(source) : QIcon::fromTheme(source));
+        emit iconChanged();
+    }
+}
+
+QString ToolButton::shortcutString() const {
+    return this->shortcut().toString();
+}
+
+void ToolButton::setShortcutString(const QString &shortcut) {
+    if (shortcut != this->shortcutString()) {
+        this->setShortcut(QKeySequence(shortcut));
+        emit shortcutChanged();
     }
 }
 

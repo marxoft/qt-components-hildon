@@ -88,6 +88,18 @@ QString CheckBox::iconSource() const {
 void CheckBox::setIconSource(const QString &source) {
     if (source != this->icon().name()) {
         this->setIcon(source.contains('/') ? QIcon(source) : QIcon::fromTheme(source));
+        emit iconChanged();
+    }
+}
+
+QString CheckBox::shortcutString() const {
+    return this->shortcut().toString();
+}
+
+void CheckBox::setShortcutString(const QString &shortcut) {
+    if (shortcut != this->shortcutString()) {
+        this->setShortcut(QKeySequence(shortcut));
+        emit shortcutChanged();
     }
 }
 

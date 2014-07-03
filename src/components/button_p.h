@@ -36,7 +36,8 @@ class Button : public QPushButton, public QDeclarativeParserStatus
     Q_PROPERTY(int height READ height WRITE setFixedHeight NOTIFY heightChanged)
     Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity NOTIFY opacityChanged)
     Q_PROPERTY(bool focus READ hasFocus WRITE setFocus NOTIFY focusChanged)
-    Q_PROPERTY(QString icon READ iconSource WRITE setIconSource)
+    Q_PROPERTY(QString icon READ iconSource WRITE setIconSource NOTIFY iconChanged)
+    Q_PROPERTY(QString shortcut READ shortcutString WRITE setShortcutString NOTIFY shortcutChanged)
     Q_PRIVATE_PROPERTY(Button::d_func(), Anchors* anchors READ anchors CONSTANT FINAL)
     Q_PROPERTY(AnchorLine left READ left CONSTANT FINAL)
     Q_PROPERTY(AnchorLine right READ right CONSTANT FINAL)
@@ -68,6 +69,9 @@ public:
     QString iconSource() const;
     void setIconSource(const QString &source);
 
+    QString shortcutString() const;
+    void setShortcutString(const QString &shortcut);
+
     AnchorLine left() const;
     AnchorLine right() const;
     AnchorLine top() const;
@@ -84,6 +88,8 @@ signals:
     void opacityChanged();
     void visibleChanged();
     void focusChanged();
+    void iconChanged();
+    void shortcutChanged();
 
 private:
     Button(ButtonPrivate &dd, QWidget *parent = 0);
