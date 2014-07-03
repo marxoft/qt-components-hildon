@@ -18,7 +18,7 @@
 import org.hildon.components 1.0
 import org.hildon.utils 1.0
 
-ApplicationWindow {
+Window {
     id: mainWindow
 
     windowTitle: qsTr("ScreenShot")

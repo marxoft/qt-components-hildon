@@ -11,7 +11,6 @@ HEADERS += \
     anchorline_p.h \
     anchors_p.h \
     anchors_p_p.h \
-    applicationwindow_p.h \
     borderimage_p.h \
     borderimage_p_p.h \
     button_p.h \
@@ -112,7 +111,6 @@ SOURCES += \
     action.cpp \
     actiongroup.cpp \
     anchors.cpp \
-    applicationwindow.cpp \
     borderimage.cpp \
     button.cpp \
     buttonrow.cpp \
