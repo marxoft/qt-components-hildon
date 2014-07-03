@@ -1,3 +1,13 @@
+qt-components-hildon (0.3.0) unstable; urgency=low
+
+  * Added Page component.
+  * WindowStack is now PageStack (accessible via the 'pageStack' context property).
+  * It is now possible to create multiple top-level Window components, each with its own PageStack instance.
+  * Improvements to existing components.
+  * Don't install desktop files for the example applications.
+
+ -- Stuart Howarth <showarth@marxoft.co.uk>  Thu, 03 Jul 2014 14:34:16 +0100
+
 qt-components-hildon (0.2.0) unstable; urgency=low
 
   * Added DoubleSpinBox, Image, BorderImage, MultiListSelector, Rectangle and ScreenShot components (ScreenShot requires org.hildon.utils).
