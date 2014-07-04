@@ -30,41 +30,41 @@ Page {
         spacing: 20
 
         ValueButton {
+            id: fileSelector
+
             anchors {
                 left: parent.left
                 right: parent.right
             }
             text: qsTr("Select a file")
-            valueText: fileDialog.selectedFiles.length > 0 ? fileDialog.selectedFiles.join(", ") : qsTr("None chosen")
-            onClicked: {
-                fileDialog.caption = text;
-                fileDialog.getOpenFileName();
-            }
+            valueText: qsTr("None chosen")
+            onClicked: fileDialog.open()
         }
 
         ValueButton {
+            id: folderSelector
+
             anchors {
                 left: parent.left
                 right: parent.right
             }
             text: qsTr("Select a directory")
-            valueText: dirDialog.selectedFiles.length > 0 ? dirDialog.selectedFiles.join(", ") : qsTr("None chosen")
-            onClicked: {
-                dirDialog.caption = text;
-                dirDialog.getExistingDirectory();
-            }
+            valueText: qsTr("None chosen")
+            onClicked: folderDialog.open()
         }
     }
 
     FileDialog {
         id: fileDialog
 
-        directory: "/home/user/MyDocs/"
+        showHidden: true
+        onSelected: fileSelector.valueText = filePath
     }
 
-    FileDialog {
-        id: dirDialog
+    FolderDialog {
+        id: folderDialog
 
-        directory: "/home/user/MyDocs/"
+        showHidden: true
+        onSelected: folderSelector.valueText = folder
     }
 }

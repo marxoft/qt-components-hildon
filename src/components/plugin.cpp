@@ -29,7 +29,6 @@
 #include "dialog_p.h"
 #include "doublespinbox_p.h"
 #include "editbar_p.h"
-#include "filedialog_p.h"
 #include "flickable_p.h"
 #include "flow_p.h"
 #include "grid_p.h"
@@ -110,7 +109,6 @@ void Plugin::registerTypes(const char *uri) {
     qmlRegisterType<Dialog>(uri, 1, 0, "Dialog");
     qmlRegisterType<DoubleSpinBox>(uri, 1, 0, "DoubleSpinBox");
     qmlRegisterType<EditBar>(uri, 1, 0, "EditBar");
-    qmlRegisterType<FileDialog>(uri, 1, 0, "FileDialog");
     qmlRegisterType<Flickable>(uri, 1, 0, "Flickable");
     qmlRegisterType<Flow>(uri, 1, 0, "Flow");
     qmlRegisterType<Gradient>(uri, 1, 0, "Gradient");

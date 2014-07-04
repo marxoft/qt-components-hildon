@@ -28,8 +28,6 @@ HEADERS += \
     doublespinbox_p_p.h \
     editbar_p.h \
     editbar_p_p.h \
-    filedialog_p.h \
-    filedialog_p_p.h \
     flickable_p.h \
     flickable_p_p.h \
     flow_p.h \
@@ -120,7 +118,6 @@ SOURCES += \
     dialog.cpp \
     doublespinbox.cpp \
     editbar.cpp \
-    filedialog.cpp \
     flickable.cpp \
     flow.cpp \
     grid.cpp \
@@ -164,6 +161,8 @@ SOURCES += \
 
 qdeclarativesources.files += \
     qml/qmldir \
+    qml/FileDialog.qml \
+    qml/FolderDialog.qml \
     qml/ListItem.qml \
     qml/ProgressDialog.qml \
     qml/QueryDialog.qml
