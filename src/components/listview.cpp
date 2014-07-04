@@ -404,6 +404,8 @@ void ListViewPrivate::setModel(const QVariant &model) {
     if (oldModel) {
         delete oldModel;
     }
+
+    emit q->modelChanged();
 }
 
 QVariant ListViewPrivate::rootIndex() const {
@@ -413,9 +415,11 @@ QVariant ListViewPrivate::rootIndex() const {
 }
 
 void ListViewPrivate::setRootIndex(const QVariant &index) {
-    Q_Q(ListView);
-
-    q->setRootIndex(index.value<QModelIndex>());
+    if (index != this->rootIndex()) {
+        Q_Q(ListView);
+        q->setRootIndex(index.value<QModelIndex>());
+        emit q->rootIndexChanged();
+    }
 }
 
 QVariant ListViewPrivate::currentIndex() const {
@@ -425,9 +429,11 @@ QVariant ListViewPrivate::currentIndex() const {
 }
 
 void ListViewPrivate::setCurrentIndex(const QVariant &index) {
-    Q_Q(ListView);
-
-    q->setCurrentIndex(index.value<QModelIndex>());
+    if (index != this->currentIndex()) {
+        Q_Q(ListView);
+        q->setCurrentIndex(index.value<QModelIndex>());
+        emit q->currentIndexChanged();
+    }
 }
 
 QDeclarativeComponent* ListViewPrivate::delegate() const {
@@ -447,6 +453,8 @@ void ListViewPrivate::setDelegate(QDeclarativeComponent *delegate) {
         if (oldDelegate) {
             delete oldDelegate;
         }
+
+        emit q->delegateChanged();
     }
 }
 

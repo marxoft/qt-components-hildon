@@ -56,10 +56,10 @@ class ListView : public QListView, public QDeclarativeParserStatus
     Q_PRIVATE_PROPERTY(ListView::d_func(), QDeclarativeListProperty<QWidget> children READ children)
     Q_PRIVATE_PROPERTY(ListView::d_func(), QDeclarativeListProperty<QObject> actions READ actions)
     Q_PRIVATE_PROPERTY(ListView::d_func(), bool visible READ qmlVisible WRITE setQmlVisible NOTIFY visibleChanged)
-    Q_PRIVATE_PROPERTY(ListView::d_func(), QVariant model READ model WRITE setModel)
-    Q_PRIVATE_PROPERTY(ListView::d_func(), QVariant rootIndex READ rootIndex WRITE setRootIndex)
-    Q_PRIVATE_PROPERTY(ListView::d_func(), QVariant currentIndex READ currentIndex WRITE setCurrentIndex)
-    Q_PRIVATE_PROPERTY(ListView::d_func(), QDeclarativeComponent* delegate READ delegate WRITE setDelegate RESET resetDelegate)
+    Q_PRIVATE_PROPERTY(ListView::d_func(), QVariant model READ model WRITE setModel NOTIFY modelChanged)
+    Q_PRIVATE_PROPERTY(ListView::d_func(), QVariant rootIndex READ rootIndex WRITE setRootIndex NOTIFY rootIndexChanged)
+    Q_PRIVATE_PROPERTY(ListView::d_func(), QVariant currentIndex READ currentIndex WRITE setCurrentIndex NOTIFY currentIndexChanged)
+    Q_PRIVATE_PROPERTY(ListView::d_func(), QDeclarativeComponent* delegate READ delegate WRITE setDelegate RESET resetDelegate NOTIFY delegateChanged)
 
     Q_INTERFACES(QDeclarativeParserStatus)
 
@@ -128,6 +128,10 @@ signals:
     void contentYChanged();
     void flickDecelerationChanged();
     void maximumFlickVelocityChanged();
+    void modelChanged();
+    void rootIndexChanged();
+    void currentIndexChanged();
+    void delegateChanged();
 
 protected slots:
     void rowsInserted(const QModelIndex &parent, int start, int end);
