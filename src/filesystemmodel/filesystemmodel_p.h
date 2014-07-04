@@ -14,7 +14,9 @@ class FileSystemModel : public QSortFilterProxyModel
     Q_PROPERTY(int count READ count NOTIFY countChanged)
     Q_PROPERTY(bool showDirs READ showDirs WRITE setShowDirs NOTIFY dirFilterChanged)
     Q_PROPERTY(bool showFiles READ showFiles WRITE setShowFiles NOTIFY dirFilterChanged)
+    Q_PROPERTY(bool showHidden READ showHidden WRITE setShowHidden NOTIFY dirFilterChanged)
     Q_PROPERTY(bool showDotAndDotDot READ showDotAndDotDot WRITE setShowDotAndDotDot NOTIFY dirFilterChanged)
+    Q_PROPERTY(bool showSymlinks READ showSymlinks WRITE setShowSymlinks NOTIFY showSymlinksChanged)
     Q_PROPERTY(bool resolveSymlinks READ resolveSymlinks WRITE setResolveSymlinks NOTIFY resolveSymlinksChanged)
     Q_PROPERTY(bool readOnly READ isReadOnly WRITE setReadOnly NOTIFY readOnlyChanged)
     Q_PROPERTY(bool nameFilterDisables READ nameFilterDisables WRITE setNameFilterDisables NOTIFY nameFilterDisablesChanged)
@@ -44,8 +46,14 @@ public:
     bool showFiles() const;
     void setShowFiles(bool show);
 
+    bool showHidden() const;
+    void setShowHidden(bool show);
+
     bool showDotAndDotDot() const;
     void setShowDotAndDotDot(bool show);
+
+    bool showSymlinks() const;
+    void setShowSymlinks(bool show);
 
     bool resolveSymlinks() const;
     void setResolveSymlinks(bool resolve);

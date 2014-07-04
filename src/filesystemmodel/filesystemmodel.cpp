@@ -78,7 +78,7 @@ bool FileSystemModel::showDirs() const {
 void FileSystemModel::setShowDirs(bool show) {
     if (show != this->showDirs()) {
         Q_D(FileSystemModel);
-        d->model->setFilter(d->model->filter() |= QDir::Dirs);
+        d->model->setFilter(show ? d->model->filter() |= QDir::Dirs : d->model->filter() &= ~QDir::Dirs);
         emit dirFilterChanged();
     }
 }
@@ -92,8 +92,21 @@ bool FileSystemModel::showFiles() const {
 void FileSystemModel::setShowFiles(bool show) {
     if (show != this->showFiles()) {
         Q_D(FileSystemModel);
-        d->model->setFilter(d->model->filter() |= QDir::Files);
+        d->model->setFilter(show ? d->model->filter() |= QDir::Files : d->model->filter() &= ~QDir::Files);
         emit dirFilterChanged();
+    }
+}
+
+bool FileSystemModel::showHidden() const {
+    Q_D(const FileSystemModel);
+
+    return d->model->filter().testFlag(QDir::Hidden);
+}
+
+void FileSystemModel::setShowHidden(bool show) {
+    if (show != this->showHidden()) {
+        Q_D(FileSystemModel);
+        d->model->setFilter(show ? d->model->filter() |= QDir::Hidden : d->model->filter() &= ~QDir::Hidden);
     }
 }
 
@@ -107,6 +120,20 @@ void FileSystemModel::setShowDotAndDotDot(bool show) {
     if (show != this->showDotAndDotDot()) {
         Q_D(FileSystemModel);
         d->model->setFilter(show ? d->model->filter() &= ~QDir::NoDotAndDotDot : d->model->filter() |= QDir::NoDotAndDotDot);
+        emit dirFilterChanged();
+    }
+}
+
+bool FileSystemModel::showSymlinks() const {
+    Q_D(const FileSystemModel);
+
+    return !d->model->filter().testFlag(QDir::NoSymLinks);
+}
+
+void FileSystemModel::setShowSymlinks(bool show) {
+    if (show != this->showSymlinks()) {
+        Q_D(FileSystemModel);
+        d->model->setFilter(show ? d->model->filter() &= ~QDir::NoSymLinks : d->model->filter() |= QDir::NoSymLinks);
         emit dirFilterChanged();
     }
 }
