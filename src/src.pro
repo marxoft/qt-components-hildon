@@ -3,4 +3,5 @@ SUBDIRS = \
     network \
     utils \
     webkit \
+    filesystemmodel \
     components
