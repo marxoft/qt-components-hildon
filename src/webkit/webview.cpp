@@ -24,6 +24,7 @@
 #include <QScrollBar>
 #include <QAbstractKineticScroller>
 #include <QGraphicsOpacityEffect>
+#include <QDeclarativeEngine>
 
 WebView::WebView(QWidget *parent) :
     QWebView(parent),
@@ -32,6 +33,10 @@ WebView::WebView(QWidget *parent) :
     Q_D(WebView);
 
     d->suppressor = new WebViewSelectionSuppressor(this);
+
+    if (QDeclarativeEngine *engine = qmlEngine(this)) {
+        this->page()->setNetworkAccessManager(engine->networkAccessManager());
+    }
 
     this->setTextSelectionEnabled(false);
     this->connect(this, SIGNAL(titleChanged(QString)), this, SIGNAL(titleChanged()));
@@ -45,6 +50,10 @@ WebView::WebView(WebViewPrivate &dd, QWidget *parent) :
     QWebView(parent),
     d_ptr(&dd)
 {
+    if (QDeclarativeEngine *engine = qmlEngine(this)) {
+        this->page()->setNetworkAccessManager(engine->networkAccessManager());
+    }
+
     this->setTextSelectionEnabled(false);
     this->connect(this, SIGNAL(titleChanged(QString)), this, SIGNAL(titleChanged()));
     this->connect(this, SIGNAL(urlChanged(QUrl)), this, SIGNAL(urlChanged()));
