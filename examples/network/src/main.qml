@@ -101,7 +101,7 @@ Window {
 
                 text: qsTr("Local file")
                 valueText: qsTr("None chosen")
-                onClicked: fileDialog.getOpenFileName()
+                onClicked: fileDialog.open()
             }
 
             ValueButton {
@@ -125,19 +125,19 @@ Window {
                         request.get();
                         return;
                     case 1:
-                        request.getFile(fileDialog.selectedFiles[0]);
+                        request.getFile(fileSelector.valueText);
                         return;
                     case 2:
                         request.put(dataEdit.text);
                         return;
                     case 3:
-                        request.putFile(fileDialog.selectedFiles[0]);
+                        request.putFile(fileSelector.valueText);
                         return;
                     case 4:
                         request.post(dataEdit.text);
                         return;
                     case 5:
-                        request.postFile(fileDialog.selectedFiles[0]);
+                        request.postFile(fileSelector.valueText);
                         return;
                     default:
                         return;
@@ -150,7 +150,7 @@ Window {
     FileDialog {
         id: fileDialog
 
-        onAccepted: fileSelector.valueText = selectedFiles[0]
+        onSelected: fileSelector.valueText = filePath
     }
 
     Dialog {
