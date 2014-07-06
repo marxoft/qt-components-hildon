@@ -33,6 +33,8 @@ MultiListSelector::MultiListSelector(QObject *parent) :
 
     d->dialog = new MultiListPickDialog;
     d->selector = new MultiListPickSelector(d->dialog, this);
+    this->connect(d->selector, SIGNAL(selected(QString)), this, SIGNAL(selected(QString)));
+    this->connect(d->selector, SIGNAL(selected(QString)), this, SIGNAL(currentIndexesChanged()));
 }
 
 MultiListSelector::MultiListSelector(MultiListSelectorPrivate &dd, QObject *parent) :
@@ -74,6 +76,8 @@ void MultiListSelector::setModel(const QVariant &model) {
     if (oldModel) {
         delete oldModel;
     }
+
+    emit modelChanged();
 }
 
 int MultiListSelector::modelColumn() const {
@@ -85,12 +89,14 @@ int MultiListSelector::modelColumn() const {
 }
 
 void MultiListSelector::setModelColumn(int column) {
-    Q_D(MultiListSelector);
+    if (column != this->modelColumn()) {
+        Q_D(MultiListSelector);
+        d->modelColumn = column;
+        emit modelColumnChanged();
 
-    d->modelColumn = column;
-
-    if (QMaemo5ListPickSelector *selector = qobject_cast<QMaemo5ListPickSelector*>(d->selector)) {
-        selector->setModelColumn(column);
+        if (QMaemo5ListPickSelector *selector = qobject_cast<QMaemo5ListPickSelector*>(d->selector)) {
+            selector->setModelColumn(column);
+        }
     }
 }
 
@@ -112,6 +118,8 @@ void MultiListSelector::setCurrentIndexes(const QVariantList &rows) {
     foreach (QVariant row, rows) {
         d->dialog->view()->selectionModel()->select(d->dialog->view()->model()->index(row.toInt(), 0), QItemSelectionModel::Select);
     }
+
+    emit currentIndexesChanged();
 }
 
 QString MultiListSelector::currentValueText() const {

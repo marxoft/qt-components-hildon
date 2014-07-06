@@ -31,6 +31,7 @@ ListSelector::ListSelector(QObject *parent) :
 
     d->selector = new QMaemo5ListPickSelector(this);
     this->connect(d->selector, SIGNAL(selected(QString)), this, SIGNAL(selected(QString)));
+    this->connect(d->selector, SIGNAL(selected(QString)), this, SIGNAL(currentIndexChanged()));
 }
 
 ListSelector::ListSelector(ListSelectorPrivate &dd, QObject *parent) :
@@ -79,6 +80,8 @@ void ListSelector::setModel(const QVariant &model) {
     if (oldModel) {
         delete oldModel;
     }
+
+    emit modelChanged();
 }
 
 int ListSelector::modelColumn() const {
@@ -90,12 +93,14 @@ int ListSelector::modelColumn() const {
 }
 
 void ListSelector::setModelColumn(int column) {
-    Q_D(ListSelector);
+    if (column != this->modelColumn()) {
+        Q_D(ListSelector);
+        d->modelColumn = column;
+        emit modelColumnChanged();
 
-    d->modelColumn = column;
-
-    if (QMaemo5ListPickSelector *selector = qobject_cast<QMaemo5ListPickSelector*>(d->selector)) {
-        selector->setModelColumn(column);
+        if (QMaemo5ListPickSelector *selector = qobject_cast<QMaemo5ListPickSelector*>(d->selector)) {
+            selector->setModelColumn(column);
+        }
     }
 }
 
@@ -108,12 +113,14 @@ int ListSelector::currentIndex() const {
 }
 
 void ListSelector::setCurrentIndex(int index) {
-    Q_D(ListSelector);
+    if (index != this->currentIndex()) {
+        Q_D(ListSelector);
+        d->currentIndex = index;
+        emit currentIndexChanged();
 
-    d->currentIndex = index;
-
-    if (QMaemo5ListPickSelector *selector = qobject_cast<QMaemo5ListPickSelector*>(d->selector)) {
-        selector->setCurrentIndex(index);
+        if (QMaemo5ListPickSelector *selector = qobject_cast<QMaemo5ListPickSelector*>(d->selector)) {
+            selector->setCurrentIndex(index);
+        }
     }
 }
 

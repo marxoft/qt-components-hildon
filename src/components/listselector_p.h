@@ -27,9 +27,9 @@ class ListSelector : public ValueSelector
 {
     Q_OBJECT
 
-    Q_PROPERTY(QVariant model READ model WRITE setModel)
-    Q_PROPERTY(int modelColumn READ modelColumn WRITE setModelColumn)
-    Q_PROPERTY(int currentIndex READ currentIndex WRITE setCurrentIndex)
+    Q_PROPERTY(QVariant model READ model WRITE setModel NOTIFY modelChanged)
+    Q_PROPERTY(int modelColumn READ modelColumn WRITE setModelColumn NOTIFY modelColumnChanged)
+    Q_PROPERTY(int currentIndex READ currentIndex WRITE setCurrentIndex NOTIFY currentIndexChanged)
     Q_PROPERTY(QString currentValueText READ currentValueText NOTIFY selected)
 
 public:
@@ -48,6 +48,9 @@ public:
     QString currentValueText() const;
 
 signals:
+    void modelChanged();
+    void modelColumnChanged();
+    void currentIndexChanged();
     void selected(const QString &text);
 
 private:
