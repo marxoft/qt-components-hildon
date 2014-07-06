@@ -83,5 +83,5 @@ Dialog {
         }
     }
 
-    onAccepted: selected(fileModel.filePath(view.rootIndex))
+    onAccepted: selected(fileModel.filePath(view.currentIndex))
 }

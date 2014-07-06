@@ -58,7 +58,7 @@ Dialog {
                 icon: !fileModel.fileIcon(view.rootIndex) ? "general_folder" : fileModel.fileIcon(view.rootIndex)
                 iconSize: "24x24"
                 text: fileModel.fileName(view.rootIndex)
-                valueText: fileModel.filePath(view.rootIndex)
+                valueText: fileModel.filePath(view.rootIndex).substring(0, fileModel.filePath(view.rootIndex).lastIndexOf("/"))
                 onClicked: root.accept();
             }
         }
