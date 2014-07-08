@@ -123,6 +123,8 @@ public:
 
     QDeclarativeListProperty<QObject> actions();
 
+    WebSettings* settings();
+
     void _q_onLoadStarted();
     void _q_onLoadFinished(bool ok);
     void _q_onLoadProgress(int p);
@@ -130,6 +132,8 @@ public:
     WebViewSelectionSuppressor *suppressor;
 
     QAbstractKineticScroller *kineticScroller;
+
+    WebSettings *webSettings;
 
     int progress;
 

@@ -12,6 +12,7 @@ HEADERS += \
     ../components/anchors_p_p.h \
     ../components/item_p.h \
     ../components/item_p_p.h \
+    websettings_p.h \
     webview_p.h \
     webview_p_p.h \
     plugin_p.h
@@ -19,6 +20,7 @@ HEADERS += \
 SOURCES += \
     ../components/anchors.cpp \
     ../components/item.cpp \
+    websettings.cpp \
     webview.cpp \
     plugin.cpp
 

@@ -17,6 +17,21 @@
 
 #include "plugin_p.h"
 #include "webview_p.h"
+#include "websettings_p.h"
+#include <QDeclarativeEngine>
+#include <QDeclarativeContext>
+
+void Plugin::initializeEngine(QDeclarativeEngine *engine, const char *uri) {
+    Q_ASSERT(uri == QLatin1String("org.hildon.webkit"));
+
+    QDeclarativeExtensionPlugin::initializeEngine(engine, uri);
+
+    if (engine->rootContext()->contextProperty("webSettings").isNull()) {
+        engine->rootContext()->setContextProperty("webSettings", new WebSettings(engine));
+
+        qmlRegisterUncreatableType<WebSettings>(uri, 1, 0, "WebSettings", "");
+    }
+}
 
 void Plugin::registerTypes(const char *uri) {
     Q_ASSERT(uri == QLatin1String("org.hildon.webkit"));

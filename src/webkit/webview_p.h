@@ -23,6 +23,7 @@
 #include <QDeclarativeParserStatus>
 #include <qdeclarative.h>
 
+class WebSettings;
 class WebViewPrivate;
 
 class WebView : public QWebView, public QDeclarativeParserStatus
@@ -56,6 +57,7 @@ class WebView : public QWebView, public QDeclarativeParserStatus
     Q_PROPERTY(int contentY READ contentY WRITE setContentY NOTIFY contentYChanged)
     Q_PROPERTY(int progress READ progress NOTIFY progressChanged)
     Q_PROPERTY(Status status READ status NOTIFY statusChanged)
+    Q_PRIVATE_PROPERTY(WebView::d_func(), WebSettings* settings READ settings CONSTANT FINAL)
     Q_PRIVATE_PROPERTY(WebView::d_func(), QDeclarativeListProperty<QObject> data READ data)
     Q_PRIVATE_PROPERTY(WebView::d_func(), QDeclarativeListProperty<QWidget> children READ children)
     Q_PRIVATE_PROPERTY(WebView::d_func(), QDeclarativeListProperty<QObject> actions READ actions)
