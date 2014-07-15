@@ -332,7 +332,7 @@ void ItemPrivate::componentComplete() {
     }
 
     if (anc) {
-        anc->d_func()->onWidgetCompleted();
+        anc->d_func()->onItemCompleted();
     }
 }
 
