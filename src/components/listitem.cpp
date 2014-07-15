@@ -21,7 +21,6 @@
 #include <QEvent>
 #include <QPainter>
 #include <QHashIterator>
-#include <QDebug>
 
 class ListItemPrivate
 {
@@ -348,18 +347,13 @@ void ListItem::paint(QPainter *painter, const QStyleOptionViewItem &option, cons
 }
 
 bool ListItem::editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index) {
-    qDebug() << "Editor event at" << index.row();
-
     Q_D(const ListItem);
 
     foreach (ListItemContent *content, d->contentList) {
         if (content->editorEvent(event, option.rect)) {
-            qDebug() << "Event processed by" << content;
             return true;
         }
     }
-
-    qDebug() << "Event not processed";
 
     return QStyledItemDelegate::editorEvent(event, model, option, index);
 }
