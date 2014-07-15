@@ -21,6 +21,7 @@
 #include <QObject>
 #include <QVariantMap>
 #include <QDeclarativeComponent>
+#include <qdeclarative.h>
 
 class QWidget;
 class PageStackPrivate;
@@ -70,6 +71,6 @@ private:
     Q_PRIVATE_SLOT(d_func(), void _q_onPageStatusChanged(QDeclarativeComponent::Status))
 };
 
-Q_DECLARE_METATYPE(PageStack*)
+QML_DECLARE_TYPE(PageStack)
 
 #endif // PAGESTACK_P_H
