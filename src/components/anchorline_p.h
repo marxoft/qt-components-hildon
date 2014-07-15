@@ -18,7 +18,7 @@
 #ifndef ANCHORLINE_P_H
 #define ANCHORLINE_P_H
 
-class QWidget;
+class QObject;
 
 class AnchorLine
 {
@@ -37,18 +37,18 @@ public:
     };
 
     AnchorLine() :
-        widget(0),
+        item(0),
         line(Invalid)
     {
     }
 
-    AnchorLine(QWidget *w, Line l) :
-        widget(w),
+    AnchorLine(QObject *i, Line l) :
+        item(i),
         line(l)
     {
     }
 
-    QWidget *widget;
+    QObject *item;
 
     Line line;
 };

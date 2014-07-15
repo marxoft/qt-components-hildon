@@ -17,29 +17,31 @@
 
 #include "anchors_p.h"
 #include "anchors_p_p.h"
+#include <QPoint>
+#include <QSize>
 #include <qdeclarativeinfo.h>
 
-static int position(QWidget *widget, AnchorLine::Line line) {
+static int position(QObject *item, AnchorLine::Line line) {
     int ret = 0;
 
     switch (line) {
     case AnchorLine::Left:
-        ret = widget->x();
+        ret = item->property("x").toInt();
         break;
     case AnchorLine::Right:
-        ret = widget->x() + widget->width();
+        ret = item->property("x").toInt() + item->property("width").toInt();
         break;
     case AnchorLine::Top:
-        ret = widget->y();
+        ret = item->property("y").toInt();
         break;
     case AnchorLine::Bottom:
-        ret = widget->y() + widget->height();
+        ret = item->property("y").toInt() + item->property("height").toInt();
         break;
     case AnchorLine::HCenter:
-        ret = widget->x() + widget->width() / 2;
+        ret = item->property("x").toInt() + item->property("width").toInt() / 2;
         break;
     case AnchorLine::VCenter:
-        ret = widget->y() + widget->height() / 2;
+        ret = item->property("y").toInt() + item->property("height").toInt() / 2;
         break;
     default:
         break;
@@ -49,7 +51,7 @@ static int position(QWidget *widget, AnchorLine::Line line) {
 }
 
 //position when origin is 0,0
-static int adjustedPosition(QWidget *widget, AnchorLine::Line line) {
+static int adjustedPosition(QObject *item, AnchorLine::Line line) {
     int ret = 0;
 
     switch (line) {
@@ -57,19 +59,19 @@ static int adjustedPosition(QWidget *widget, AnchorLine::Line line) {
         ret = 0;
         break;
     case AnchorLine::Right:
-        ret = widget->width();
+        ret = item->property("width").toInt();
         break;
     case AnchorLine::Top:
         ret = 0;
         break;
     case AnchorLine::Bottom:
-        ret = widget->height();
+        ret = item->property("height").toInt();
         break;
     case AnchorLine::HCenter:
-        ret = widget->width() / 2;
+        ret = item->property("width").toInt() / 2;
         break;
     case AnchorLine::VCenter:
-        ret = widget->height() / 2;
+        ret = item->property("height").toInt() / 2;
         break;
     default:
         break;
@@ -78,9 +80,9 @@ static int adjustedPosition(QWidget *widget, AnchorLine::Line line) {
     return ret;
 }
 
-Anchors::Anchors(QWidget *widget, QObject *parent) :
+Anchors::Anchors(QObject *item, QObject *parent) :
     QObject(parent),
-    d_ptr(new AnchorsPrivate(widget, this))
+    d_ptr(new AnchorsPrivate(item, this))
 {
 }
 
@@ -96,12 +98,12 @@ Anchors::~Anchors() {
     d->inDestructor = true;
     d->remDepend(d->fill);
     d->remDepend(d->centerIn);
-    d->remDepend(d->left.widget);
-    d->remDepend(d->right.widget);
-    d->remDepend(d->top.widget);
-    d->remDepend(d->bottom.widget);
-    d->remDepend(d->horizontalCenter.widget);
-    d->remDepend(d->verticalCenter.widget);
+    d->remDepend(d->left.item);
+    d->remDepend(d->right.item);
+    d->remDepend(d->top.item);
+    d->remDepend(d->bottom.item);
+    d->remDepend(d->horizontalCenter.item);
+    d->remDepend(d->verticalCenter.item);
 }
 
 AnchorLine Anchors::left() const {
@@ -124,11 +126,11 @@ void Anchors::setLeft(const AnchorLine &edge) {
         return;
     }
 
-    QWidget *oldLeft = d->left.widget;
+    QObject *oldLeft = d->left.item;
 
     d->left = edge;
     d->remDepend(oldLeft);
-    d->addDepend(d->left.widget);
+    d->addDepend(d->left.item);
     emit leftChanged();
     d->_q_updateHorizontalAnchors();
 }
@@ -137,7 +139,7 @@ void Anchors::resetLeft() {
     Q_D(Anchors);
 
     d->usedAnchors &= ~LeftAnchor;
-    d->remDepend(d->left.widget);
+    d->remDepend(d->left.item);
     d->left = AnchorLine();
     emit leftChanged();
     d->_q_updateHorizontalAnchors();
@@ -211,10 +213,10 @@ void Anchors::setRight(const AnchorLine &edge) {
         return;
     }
 
-    QWidget *oldRight = d->right.widget;
+    QObject *oldRight = d->right.item;
     d->right = edge;
     d->remDepend(oldRight);
-    d->addDepend(d->right.widget);
+    d->addDepend(d->right.item);
     emit rightChanged();
     d->_q_updateHorizontalAnchors();
 }
@@ -223,7 +225,7 @@ void Anchors::resetRight() {
     Q_D(Anchors);
 
     d->usedAnchors &= ~RightAnchor;
-    d->remDepend(d->right.widget);
+    d->remDepend(d->right.item);
     d->right = AnchorLine();
     emit rightChanged();
     d->_q_updateHorizontalAnchors();
@@ -297,10 +299,10 @@ void Anchors::setTop(const AnchorLine &edge) {
         return;
     }
 
-    QWidget *oldTop = d->top.widget;
+    QObject *oldTop = d->top.item;
     d->top = edge;
     d->remDepend(oldTop);
-    d->addDepend(d->top.widget);
+    d->addDepend(d->top.item);
     emit topChanged();
     d->_q_updateVerticalAnchors();
 }
@@ -309,7 +311,7 @@ void Anchors::resetTop() {
     Q_D(Anchors);
 
     d->usedAnchors &= ~TopAnchor;
-    d->remDepend(d->top.widget);
+    d->remDepend(d->top.item);
     d->top = AnchorLine();
     emit topChanged();
     d->_q_updateVerticalAnchors();
@@ -383,10 +385,10 @@ void Anchors::setBottom(const AnchorLine &edge) {
         return;
     }
 
-    QWidget *oldBottom = d->bottom.widget;
+    QObject *oldBottom = d->bottom.item;
     d->bottom = edge;
     d->remDepend(oldBottom);
-    d->addDepend(d->bottom.widget);
+    d->addDepend(d->bottom.item);
     emit bottomChanged();
     d->_q_updateVerticalAnchors();
 }
@@ -395,7 +397,7 @@ void Anchors::resetBottom() {
     Q_D(Anchors);
 
     d->usedAnchors &= ~BottomAnchor;
-    d->remDepend(d->bottom.widget);
+    d->remDepend(d->bottom.item);
     d->bottom = AnchorLine();
     emit bottomChanged();
     d->_q_updateVerticalAnchors();
@@ -528,10 +530,10 @@ void Anchors::setHorizontalCenter(const AnchorLine &edge) {
         return;
     }
 
-    QWidget *oldHCenter = d->horizontalCenter.widget;
+    QObject *oldHCenter = d->horizontalCenter.item;
     d->horizontalCenter = edge;
     d->remDepend(oldHCenter);
-    d->addDepend(d->horizontalCenter.widget);
+    d->addDepend(d->horizontalCenter.item);
     emit horizontalCenterChanged();
     d->_q_updateHorizontalAnchors();
 }
@@ -540,7 +542,7 @@ void Anchors::resetHorizontalCenter() {
     Q_D(Anchors);
 
     d->usedAnchors &= ~HCenterAnchor;
-    d->remDepend(d->horizontalCenter.widget);
+    d->remDepend(d->horizontalCenter.item);
     d->horizontalCenter = AnchorLine();
     emit horizontalCenterChanged();
     d->_q_updateHorizontalAnchors();
@@ -591,10 +593,10 @@ void Anchors::setVerticalCenter(const AnchorLine &edge) {
         return;
     }
 
-    QWidget *oldverticalCenter = d->verticalCenter.widget;
+    QObject *oldverticalCenter = d->verticalCenter.item;
     d->verticalCenter = edge;
     d->remDepend(oldverticalCenter);
-    d->addDepend(d->verticalCenter.widget);
+    d->addDepend(d->verticalCenter.item);
     emit verticalCenterChanged();
     d->_q_updateVerticalAnchors();
 }
@@ -603,7 +605,7 @@ void Anchors::resetVerticalCenter() {
     Q_D(Anchors);
 
     d->usedAnchors &= ~VCenterAnchor;
-    d->remDepend(d->verticalCenter.widget);
+    d->remDepend(d->verticalCenter.item);
     d->verticalCenter = AnchorLine();
     emit verticalCenterChanged();
     d->_q_updateVerticalAnchors();
@@ -643,26 +645,26 @@ QObject* Anchors::centerIn() const {
 void Anchors::setCenterIn(QObject *obj) {
     Q_D(Anchors);
 
-    QWidget *c = qobject_cast<QWidget*>(obj);
+    QObject *c = qobject_cast<QObject*>(obj);
 
     if (d->centerIn == c) {
         return;
     }
 
     if (!c) {
-        QWidget *oldCI = d->centerIn;
+        QObject *oldCI = d->centerIn;
         d->centerIn = c;
         d->remDepend(oldCI);
         emit centerInChanged();
         return;
     }
 
-    if ((c != d->widget->parentWidget()) && (c->parentWidget() != d->widget->parentWidget())) {
-        qmlInfo(d->widget) << tr("Cannot anchor to an widget that isn't a parent or sibling.");
+    if ((c != d->item->parent()) && (c->parent() != d->item->parent())) {
+        qmlInfo(d->item) << tr("Cannot anchor to an item that isn't a parent or sibling.");
         return;
     }
 
-    QWidget *oldCI = d->centerIn;
+    QObject *oldCI = d->centerIn;
     d->centerIn = c;
     d->remDepend(oldCI);
     d->addDepend(d->centerIn);
@@ -683,26 +685,26 @@ QObject* Anchors::fill() const {
 void Anchors::setFill(QObject *obj) {
     Q_D(Anchors);
 
-    QWidget *f = qobject_cast<QWidget*>(obj);
+    QObject *f = qobject_cast<QObject*>(obj);
 
     if (d->fill == f) {
         return;
     }
 
     if (!f) {
-        QWidget *oldFill = d->fill;
+        QObject *oldFill = d->fill;
         d->fill = f;
         d->remDepend(oldFill);
         emit fillChanged();
         return;
     }
 
-    if ((f != d->widget->parentWidget()) && (f->parentWidget() != d->widget->parentWidget())) {
-        qmlInfo(d->widget) << tr("Cannot anchor to an widget that isn't a parent or sibling.");
+    if ((f != d->item->parent()) && (f->parent() != d->item->parent())) {
+        qmlInfo(d->item) << tr("Cannot anchor to an item that isn't a parent or sibling.");
         return;
     }
 
-    QWidget *oldFill = d->fill;
+    QObject *oldFill = d->fill;
     d->fill = f;
     d->remDepend(oldFill);
     d->addDepend(d->fill);
@@ -721,188 +723,190 @@ Anchors::AnchorFlags Anchors::usedAnchors() const {
 }
 
 void AnchorsPrivate::fillChanged() {
-    if ((!fill) || (!this->isWidgetComplete())) {
+    if ((!fill) || (!this->isItemComplete())) {
         return;
     }
 
     if (updatingFill < 2) {
         ++updatingFill;
 
-        if (fill == widget->parentWidget()) { //child-parent
-            this->setWidgetPos(QPoint(leftMargin, topMargin));
+        if (fill == item->parent()) { //child-parent
+            this->setItemPos(QPoint(leftMargin, topMargin));
         }
-        else if (fill->parentWidget() == widget->parentWidget()) { //siblings
-            this->setWidgetPos(QPoint(fill->x() + leftMargin, fill->y() + topMargin));
+        else if (fill->parent() == item->parent()) { //siblings
+            this->setItemPos(QPoint(fill->property("x").toInt() + leftMargin, fill->property("y").toInt() + topMargin));
         }
 
-        this->setWidgetSize(QSize(fill->width() -leftMargin - rightMargin, fill->height() - topMargin - bottomMargin));
+        this->setItemSize(QSize(fill->property("width").toInt() -leftMargin - rightMargin, fill->property("height").toInt() - topMargin - bottomMargin));
         --updatingFill;
     }
     else {
         // ### Make this certain :)
-        qmlInfo(widget) << Anchors::tr("Possible anchor loop detected on fill.");
+        qmlInfo(item) << Anchors::tr("Possible anchor loop detected on fill.");
     }
 }
 
 void AnchorsPrivate::centerInChanged() {
-    if ((!centerIn) || (fill) || (!this->isWidgetComplete())) {
+    if ((!centerIn) || (fill) || (!this->isItemComplete())) {
         return;
     }
 
     if (updatingCenterIn < 2) {
         ++updatingCenterIn;
 
-        if (centerIn == widget->parentWidget()) {
-            QPoint p(widget->parentWidget()->width() / 2 - widget->width() / 2 + horizontalCenterOffset,
-                     widget->parentWidget()->height() / 2 - widget->height() / 2 + verticalCenterOffset);
-            this->setWidgetPos(p);
+        if (centerIn == item->parent()) {
+            QPoint p(item->parent()->property("width").toInt() / 2 - item->property("width").toInt() / 2 + horizontalCenterOffset,
+                     item->parent()->property("height").toInt() / 2 - item->property("height").toInt() / 2 + verticalCenterOffset);
+            this->setItemPos(p);
         }
-        else if (centerIn->parentWidget() == widget->parentWidget()) {
-            QPoint p(centerIn->x() + centerIn->width() / 2 - widget->width() / 2 + horizontalCenterOffset,
-                     centerIn->y() + centerIn->height() / 2 - widget->height() / 2 + verticalCenterOffset);
-            this->setWidgetPos(p);
+        else if (centerIn->parent() == item->parent()) {
+            QPoint p(centerIn->property("x").toInt() + centerIn->property("width").toInt() / 2 - item->property("width").toInt() / 2 + horizontalCenterOffset,
+                     centerIn->property("y").toInt() + centerIn->property("height").toInt() / 2 - item->property("height").toInt() / 2 + verticalCenterOffset);
+            this->setItemPos(p);
         }
 
         --updatingCenterIn;
     }
     else {
         // ### Make this certain :)
-        qmlInfo(widget) << Anchors::tr("Possible anchor loop detected on centerIn.");
+        qmlInfo(item) << Anchors::tr("Possible anchor loop detected on centerIn.");
     }
 }
 
-void AnchorsPrivate::clearWidget(QWidget *w) {
-    if (!w) {
+void AnchorsPrivate::clearItem(QObject *i) {
+    if (!i) {
         return;
     }
 
-    if (fill == w) {
+    if (fill == i) {
         fill = 0;
     }
 
-    if (centerIn == w) {
+    if (centerIn == i) {
         centerIn = 0;
     }
 
-    if (left.widget == w) {
-        left.widget = 0;
+    if (left.item == i) {
+        left.item = 0;
         usedAnchors &= ~Anchors::LeftAnchor;
     }
 
-    if (right.widget == w) {
-        right.widget = 0;
+    if (right.item == i) {
+        right.item = 0;
         usedAnchors &= ~Anchors::RightAnchor;
     }
 
-    if (top.widget == w) {
-        top.widget = 0;
+    if (top.item == i) {
+        top.item = 0;
         usedAnchors &= ~Anchors::TopAnchor;
     }
 
-    if (bottom.widget == w) {
-        bottom.widget = 0;
+    if (bottom.item == i) {
+        bottom.item = 0;
         usedAnchors &= ~Anchors::BottomAnchor;
     }
 
-    if (horizontalCenter.widget == w) {
-        horizontalCenter.widget = 0;
+    if (horizontalCenter.item == i) {
+        horizontalCenter.item = 0;
         usedAnchors &= ~Anchors::HCenterAnchor;
     }
 
-    if (verticalCenter.widget == w) {
-        verticalCenter.widget = 0;
+    if (verticalCenter.item == i) {
+        verticalCenter.item = 0;
         usedAnchors &= ~Anchors::VCenterAnchor;
     }
 }
 
-void AnchorsPrivate::addDepend(QWidget *w) {
-    if ((!w) || (inDestructor)) {
+void AnchorsPrivate::addDepend(QObject *i) {
+    if ((!i) || (inDestructor)) {
         return;
     }
 
     Q_Q(Anchors);
 
-    //TODO: Install event filter instead of connecting to signals.
+    //TODO: Install event filter or use interface instead of connecting to signals.
 
     if (centerIn) {
-        q->connect(widget, SIGNAL(parentChanged()), q, SLOT(centerInChanged()));
-        q->connect(w, SIGNAL(xChanged()), q, SLOT(centerInChanged()));
-        q->connect(w, SIGNAL(widthChanged()), q, SLOT(centerInChanged()));
-        q->connect(w, SIGNAL(yChanged()), q, SLOT(centerInChanged()));
-        q->connect(w, SIGNAL(heightChanged()), q, SLOT(centerInChanged()));
+        q->connect(item, SIGNAL(parentChanged()), q, SLOT(centerInChanged()));
+        q->connect(i, SIGNAL(xChanged()), q, SLOT(centerInChanged()));
+        q->connect(i, SIGNAL(widthChanged()), q, SLOT(centerInChanged()));
+        q->connect(i, SIGNAL(yChanged()), q, SLOT(centerInChanged()));
+        q->connect(i, SIGNAL(heightChanged()), q, SLOT(centerInChanged()));
     }
     else if (fill) {
-        q->connect(widget, SIGNAL(parentChanged()), q, SLOT(fillChanged()));
-        q->connect(w, SIGNAL(xChanged()), q, SLOT(fillChanged()));
-        q->connect(w, SIGNAL(widthChanged()), q, SLOT(fillChanged()));
-        q->connect(w, SIGNAL(yChanged()), q, SLOT(fillChanged()));
-        q->connect(w, SIGNAL(heightChanged()), q, SLOT(fillChanged()));
+        q->connect(item, SIGNAL(parentChanged()), q, SLOT(fillChanged()));
+        q->connect(i, SIGNAL(xChanged()), q, SLOT(fillChanged()));
+        q->connect(i, SIGNAL(widthChanged()), q, SLOT(fillChanged()));
+        q->connect(i, SIGNAL(yChanged()), q, SLOT(fillChanged()));
+        q->connect(i, SIGNAL(heightChanged()), q, SLOT(fillChanged()));
     }
     else {
         if ((usedAnchors & Anchors::LeftAnchor) || (usedAnchors & Anchors::RightAnchor) || (usedAnchors & Anchors::HCenterAnchor)) {
-            q->connect(widget, SIGNAL(parentChanged()), q, SLOT(_q_updateHorizontalAnchors()));
-            q->connect(w, SIGNAL(xChanged()), q, SLOT(_q_updateHorizontalAnchors()));
-            q->connect(w, SIGNAL(widthChanged()), q, SLOT(_q_updateHorizontalAnchors()));
+            q->connect(item, SIGNAL(parentChanged()), q, SLOT(_q_updateHorizontalAnchors()));
+            q->connect(i, SIGNAL(xChanged()), q, SLOT(_q_updateHorizontalAnchors()));
+            q->connect(i, SIGNAL(widthChanged()), q, SLOT(_q_updateHorizontalAnchors()));
         }
 
         if ((usedAnchors & Anchors::TopAnchor) || (usedAnchors & Anchors::BottomAnchor) || (usedAnchors & Anchors::VCenterAnchor)) {
-            q->connect(widget, SIGNAL(parentChanged()), q, SLOT(_q_updateVerticalAnchors()));
-            q->connect(w, SIGNAL(yChanged()), q, SLOT(_q_updateVerticalAnchors()));
-            q->connect(w, SIGNAL(heightChanged()), q, SLOT(_q_updateVerticalAnchors()));
+            q->connect(item, SIGNAL(parentChanged()), q, SLOT(_q_updateVerticalAnchors()));
+            q->connect(i, SIGNAL(yChanged()), q, SLOT(_q_updateVerticalAnchors()));
+            q->connect(i, SIGNAL(heightChanged()), q, SLOT(_q_updateVerticalAnchors()));
         }
     }
 }
 
-void AnchorsPrivate::remDepend(QWidget *w) {
-    if ((!w) || (inDestructor)) {
+void AnchorsPrivate::remDepend(QObject *i) {
+    if ((!i) || (inDestructor)) {
         return;
     }
 
     Q_Q(Anchors);
 
-    q->disconnect(w, SIGNAL(xChanged()), q, SLOT(_q_updateHorizontalAnchors()));
-    q->disconnect(w, SIGNAL(widthChanged()), q, SLOT(_q_updateHorizontalAnchors()));
-    q->disconnect(w, SIGNAL(yChanged()), q, SLOT(_q_updateVerticalAnchors()));
-    q->disconnect(w, SIGNAL(heightChanged()), q, SLOT(_q_updateVerticalAnchors()));
+    q->disconnect(i, SIGNAL(xChanged()), q, SLOT(_q_updateHorizontalAnchors()));
+    q->disconnect(i, SIGNAL(widthChanged()), q, SLOT(_q_updateHorizontalAnchors()));
+    q->disconnect(i, SIGNAL(yChanged()), q, SLOT(_q_updateVerticalAnchors()));
+    q->disconnect(i, SIGNAL(heightChanged()), q, SLOT(_q_updateVerticalAnchors()));
 }
 
-bool AnchorsPrivate::isWidgetComplete() const {
-    return widgetComplete;
+bool AnchorsPrivate::isItemComplete() const {
+    return itemComplete;
 }
 
-void AnchorsPrivate::setWidgetX(int x) {
+void AnchorsPrivate::setItemX(int x) {
     updatingMe = true;
-    widget->move(x, widget->y());
+    item->setProperty("x", x);
     updatingMe = false;
 }
 
-void AnchorsPrivate::setWidgetY(int y) {
+void AnchorsPrivate::setItemY(int y) {
     updatingMe = true;
-    widget->move(widget->x(), y);
+    item->setProperty("y", y);
     updatingMe = false;
 }
 
-void AnchorsPrivate::setWidgetPos(const QPoint &pos) {
+void AnchorsPrivate::setItemPos(const QPoint &pos) {
     updatingMe = true;
-    widget->move(pos);
+    item->setProperty("x", pos.x());
+    item->setProperty("y", pos.y());
     updatingMe = false;
 }
 
-void AnchorsPrivate::setWidgetWidth(int width) {
+void AnchorsPrivate::setItemWidth(int width) {
     updatingMe = true;
-    widget->setFixedWidth(width);
+    item->setProperty("width", width);
     updatingMe = false;
 }
 
-void AnchorsPrivate::setWidgetHeight(int height) {
+void AnchorsPrivate::setItemHeight(int height) {
     updatingMe = true;
-    widget->setFixedHeight(height);
+    item->setProperty("height", height);
     updatingMe = false;
 }
 
-void AnchorsPrivate::setWidgetSize(const QSize &size) {
+void AnchorsPrivate::setItemSize(const QSize &size) {
     updatingMe = true;
-    widget->setFixedSize(size);
+    item->setProperty("width", size.width());
+    item->setProperty("height", size.height());
     updatingMe = false;
 }
 
@@ -911,7 +915,7 @@ bool AnchorsPrivate::checkHValid() const {
             (usedAnchors & Anchors::RightAnchor) &&
             (usedAnchors & Anchors::HCenterAnchor)) {
 
-        qmlInfo(widget) << Anchors::tr("Cannot specify left, right, and horizontalCenter anchors at the same time.");
+        qmlInfo(item) << Anchors::tr("Cannot specify left, right, and horizontalCenter anchors at the same time.");
         return false;
     }
 
@@ -923,7 +927,7 @@ bool AnchorsPrivate::checkVValid() const {
             usedAnchors & Anchors::BottomAnchor &&
             usedAnchors & Anchors::VCenterAnchor) {
 
-        qmlInfo(widget) << Anchors::tr("Cannot specify top, bottom, and verticalCenter anchors at the same time.");
+        qmlInfo(item) << Anchors::tr("Cannot specify top, bottom, and verticalCenter anchors at the same time.");
         return false;
 
     }
@@ -932,20 +936,20 @@ bool AnchorsPrivate::checkVValid() const {
 }
 
 bool AnchorsPrivate::checkHAnchorValid(AnchorLine anchor) const {
-    if (!anchor.widget) {
-        qmlInfo(widget) << Anchors::tr("Cannot anchor to a null item.");
+    if (!anchor.item) {
+        qmlInfo(item) << Anchors::tr("Cannot anchor to a null item.");
         return false;
     }
     else if (anchor.line & AnchorLine::Vertical_Mask) {
-        qmlInfo(widget) << Anchors::tr("Cannot anchor a horizontal edge to a vertical edge.");
+        qmlInfo(item) << Anchors::tr("Cannot anchor a horizontal edge to a vertical edge.");
         return false;
     }
-    else if (anchor.widget != widget->parentWidget() && anchor.widget->parentWidget() != widget->parentWidget()){
-        qmlInfo(widget) << Anchors::tr("Cannot anchor to an item that isn't a parent or sibling.");
+    else if (anchor.item != item->parent() && anchor.item->parent() != item->parent()){
+        qmlInfo(item) << Anchors::tr("Cannot anchor to an item that isn't a parent or sibling.");
         return false;
     }
-    else if (anchor.widget == widget) {
-        qmlInfo(widget) << Anchors::tr("Cannot anchor item to self.");
+    else if (anchor.item == item) {
+        qmlInfo(item) << Anchors::tr("Cannot anchor item to self.");
         return false;
     }
 
@@ -953,20 +957,20 @@ bool AnchorsPrivate::checkHAnchorValid(AnchorLine anchor) const {
 }
 
 bool AnchorsPrivate::checkVAnchorValid(AnchorLine anchor) const {
-    if (!anchor.widget) {
-        qmlInfo(widget) << Anchors::tr("Cannot anchor to a null item.");
+    if (!anchor.item) {
+        qmlInfo(item) << Anchors::tr("Cannot anchor to a null item.");
         return false;
     }
     else if (anchor.line & AnchorLine::Horizontal_Mask) {
-        qmlInfo(widget) << Anchors::tr("Cannot anchor a vertical edge to a horizontal edge.");
+        qmlInfo(item) << Anchors::tr("Cannot anchor a vertical edge to a horizontal edge.");
         return false;
     }
-    else if (anchor.widget != widget->parentWidget() && anchor.widget->parentWidget() != widget->parentWidget()){
-        qmlInfo(widget) << Anchors::tr("Cannot anchor to an item that isn't a parent or sibling.");
+    else if (anchor.item != item->parent() && anchor.item->parent() != item->parent()){
+        qmlInfo(item) << Anchors::tr("Cannot anchor to an item that isn't a parent or sibling.");
         return false;
     }
-    else if (anchor.widget == widget){
-        qmlInfo(widget) << Anchors::tr("Cannot anchor item to self.");
+    else if (anchor.item == item){
+        qmlInfo(item) << Anchors::tr("Cannot anchor item to self.");
         return false;
     }
 
@@ -980,24 +984,24 @@ bool AnchorsPrivate::calcStretch(const AnchorLine &edge1,
                                  AnchorLine::Line line,
                                  int &stretch) {
 
-    bool edge1IsParent = (edge1.widget == widget->parentWidget());
-    bool edge2IsParent = (edge2.widget == widget->parentWidget());
-    bool edge1IsSibling = (edge1.widget->parentWidget() == widget->parentWidget());
-    bool edge2IsSibling = (edge2.widget->parentWidget() == widget->parentWidget());
+    bool edge1IsParent = (edge1.item == item->parent());
+    bool edge2IsParent = (edge2.item == item->parent());
+    bool edge1IsSibling = (edge1.item->parent() == item->parent());
+    bool edge2IsSibling = (edge2.item->parent() == item->parent());
     bool invalid = false;
 
     if ((edge2IsParent && edge1IsParent) || (edge2IsSibling && edge1IsSibling)) {
-        stretch = (position(edge2.widget, edge2.line) + offset2)
-                - (position(edge1.widget, edge1.line) + offset1);
+        stretch = (position(edge2.item, edge2.line) + offset2)
+                - (position(edge1.item, edge1.line) + offset1);
     }
     else if (edge2IsParent && edge1IsSibling) {
-        stretch = (position(edge2.widget, edge2.line) + offset2)
-                - (position(widget->parentWidget(), line)
-                   + position(edge1.widget, edge1.line) + offset1);
+        stretch = (position(edge2.item, edge2.line) + offset2)
+                - (position(item->parent(), line)
+                   + position(edge1.item, edge1.line) + offset1);
     }
     else if (edge2IsSibling && edge1IsParent) {
-        stretch = (position(widget->parentWidget(), line) + position(edge2.widget, edge2.line) + offset2)
-                - (position(edge1.widget, edge1.line) + offset1);
+        stretch = (position(item->parent(), line) + position(edge2.item, edge2.line) + offset2)
+                - (position(edge1.item, edge1.line) + offset1);
     }
     else {
         invalid = true;
@@ -1006,8 +1010,8 @@ bool AnchorsPrivate::calcStretch(const AnchorLine &edge1,
     return invalid;
 }
 
-void AnchorsPrivate::onWidgetCompleted() {
-    widgetComplete = true;
+void AnchorsPrivate::onItemCompleted() {
+    itemComplete = true;
     this->update();
 }
 
@@ -1025,7 +1029,7 @@ void AnchorsPrivate::update() {
 }
 
 void AnchorsPrivate::_q_updateVerticalAnchors() {
-    if ((fill) || (centerIn) || (!this->isWidgetComplete())) {
+    if ((fill) || (centerIn) || (!this->isItemComplete())) {
         return;
     }
 
@@ -1046,15 +1050,15 @@ void AnchorsPrivate::_q_updateVerticalAnchors() {
             }
 
             if (!invalid) {
-                this->setWidgetHeight(height);
+                this->setItemHeight(height);
             }
 
             //Handle top
-            if (top.widget == widget->parentWidget()) {
-                this->setWidgetY(adjustedPosition(top.widget, top.line) + topMargin);
+            if (top.item == item->parent()) {
+                this->setItemY(adjustedPosition(top.item, top.line) + topMargin);
             }
-            else if (top.widget->parentWidget() == widget->parentWidget()) {
-                this->setWidgetY(position(top.widget, top.line) + topMargin);
+            else if (top.item->parent() == item->parent()) {
+                this->setItemY(position(top.item, top.line) + topMargin);
             }
         }
         else if (usedAnchors & Anchors::BottomAnchor) {
@@ -1064,27 +1068,27 @@ void AnchorsPrivate::_q_updateVerticalAnchors() {
                 bool invalid = this->calcStretch(verticalCenter, bottom, verticalCenterOffset, -bottomMargin,
                                                  AnchorLine::Top, height);
                 if (!invalid) {
-                    this->setWidgetHeight(height * 2);
+                    this->setItemHeight(height * 2);
                 }
             }
 
             //Handle bottom
-            if (bottom.widget == widget->parentWidget()) {
-                this->setWidgetY(adjustedPosition(bottom.widget, bottom.line) - widget->height() - bottomMargin);
+            if (bottom.item == item->parent()) {
+                this->setItemY(adjustedPosition(bottom.item, bottom.line) - item->property("height").toInt() - bottomMargin);
             }
-            else if (bottom.widget->parentWidget() == widget->parentWidget()) {
-                this->setWidgetY(position(bottom.widget, bottom.line) - widget->height() - bottomMargin);
+            else if (bottom.item->parent() == item->parent()) {
+                this->setItemY(position(bottom.item, bottom.line) - item->property("height").toInt() - bottomMargin);
             }
         }
         else if (usedAnchors & Anchors::VCenterAnchor) {
             //(stetching handled above)
             //Handle verticalCenter
-            if (verticalCenter.widget == widget->parentWidget()) {
-                this->setWidgetY(adjustedPosition(verticalCenter.widget, verticalCenter.line)
-                                 - widget->height() / 2 + verticalCenterOffset);
+            if (verticalCenter.item == item->parent()) {
+                this->setItemY(adjustedPosition(verticalCenter.item, verticalCenter.line)
+                                 - item->property("height").toInt() / 2 + verticalCenterOffset);
             }
-            else if (verticalCenter.widget->parentWidget() == widget->parentWidget()) {
-                this->setWidgetY(position(verticalCenter.widget, verticalCenter.line) - widget->height() / 2 + verticalCenterOffset);
+            else if (verticalCenter.item->parent() == item->parent()) {
+                this->setItemY(position(verticalCenter.item, verticalCenter.line) - item->property("height").toInt() / 2 + verticalCenterOffset);
             }
         }
 
@@ -1092,7 +1096,7 @@ void AnchorsPrivate::_q_updateVerticalAnchors() {
     }
     else {
         // ### Make this certain :)
-        qmlInfo(widget) << Anchors::tr("Possible anchor loop detected on vertical anchor.");
+        qmlInfo(item) << Anchors::tr("Possible anchor loop detected on vertical anchor.");
     }
 }
 
@@ -1109,7 +1113,7 @@ inline AnchorLine::Line reverseAnchorLine(AnchorLine::Line line) {
 }
 
 void AnchorsPrivate::_q_updateHorizontalAnchors() {
-    if ((fill) || (centerIn) || (!this->isWidgetComplete())) {
+    if ((fill) || (centerIn) || (!this->isItemComplete())) {
         return;
     }
 
@@ -1143,15 +1147,15 @@ void AnchorsPrivate::_q_updateHorizontalAnchors() {
             }
 
             if (!invalid) {
-                this->setWidgetWidth(width);
+                this->setItemWidth(width);
             }
 
             //Handle left
-            if (effectiveLeft.widget == widget->parentWidget()) {
-                this->setWidgetX(adjustedPosition(effectiveLeft.widget, effectiveLeft.line) + effectiveLeftMargin);
+            if (effectiveLeft.item == item->parent()) {
+                this->setItemX(adjustedPosition(effectiveLeft.item, effectiveLeft.line) + effectiveLeftMargin);
             }
-            else if (effectiveLeft.widget->parentWidget() == widget->parentWidget()) {
-                this->setWidgetX(position(effectiveLeft.widget, effectiveLeft.line) + effectiveLeftMargin);
+            else if (effectiveLeft.item->parent() == item->parent()) {
+                this->setItemX(position(effectiveLeft.item, effectiveLeft.line) + effectiveLeftMargin);
             }
         }
         else if (usedAnchors & effectiveRightAnchor) {
@@ -1161,25 +1165,25 @@ void AnchorsPrivate::_q_updateHorizontalAnchors() {
                 bool invalid = this->calcStretch(effectiveHorizontalCenter, effectiveRight, effectiveHorizontalCenterOffset, -effectiveRightMargin,
                                                  AnchorLine::Left, width);
                 if (!invalid) {
-                    this->setWidgetWidth(width * 2);
+                    this->setItemWidth(width * 2);
                 }
             }
 
             //Handle right
-            if (effectiveRight.widget == widget->parentWidget()) {
-                this->setWidgetX(adjustedPosition(effectiveRight.widget, effectiveRight.line) - widget->width() - effectiveRightMargin);
+            if (effectiveRight.item == item->parent()) {
+                this->setItemX(adjustedPosition(effectiveRight.item, effectiveRight.line) - item->property("width").toInt() - effectiveRightMargin);
             }
-            else if (effectiveRight.widget->parentWidget() == widget->parentWidget()) {
-                this->setWidgetX(position(effectiveRight.widget, effectiveRight.line) - widget->width() - effectiveRightMargin);
+            else if (effectiveRight.item->parent() == item->parent()) {
+                this->setItemX(position(effectiveRight.item, effectiveRight.line) - item->property("width").toInt() - effectiveRightMargin);
             }
         }
         else if (usedAnchors & Anchors::HCenterAnchor) {
             //Handle hCenter
-            if (effectiveHorizontalCenter.widget == widget->parentWidget()) {
-                this->setWidgetX(adjustedPosition(effectiveHorizontalCenter.widget, effectiveHorizontalCenter.line) - widget->width() / 2 + effectiveHorizontalCenterOffset);
+            if (effectiveHorizontalCenter.item == item->parent()) {
+                this->setItemX(adjustedPosition(effectiveHorizontalCenter.item, effectiveHorizontalCenter.line) - item->property("width").toInt() / 2 + effectiveHorizontalCenterOffset);
             }
-            else if (effectiveHorizontalCenter.widget->parentWidget() == widget->parentWidget()) {
-                this->setWidgetX(position(effectiveHorizontalCenter.widget, effectiveHorizontalCenter.line) - widget->width() / 2 + effectiveHorizontalCenterOffset);
+            else if (effectiveHorizontalCenter.item->parent() == item->parent()) {
+                this->setItemX(position(effectiveHorizontalCenter.item, effectiveHorizontalCenter.line) - item->property("width").toInt() / 2 + effectiveHorizontalCenterOffset);
             }
         }
 
@@ -1187,7 +1191,7 @@ void AnchorsPrivate::_q_updateHorizontalAnchors() {
     }
     else {
         // ### Make this certain :)
-        qmlInfo(widget) << Anchors::tr("Possible anchor loop detected on horizontal anchor.");
+        qmlInfo(item) << Anchors::tr("Possible anchor loop detected on horizontal anchor.");
     }
 }
 

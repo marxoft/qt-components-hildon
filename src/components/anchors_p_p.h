@@ -19,21 +19,20 @@
 #define ANCHORS_P_P_H
 
 #include "anchors_p.h"
-#include <QWidget>
 
 inline bool operator==(const AnchorLine& a, const AnchorLine& b) {
-    return (a.widget == b.widget) && (a.line == b.line);
+    return (a.item == b.item) && (a.line == b.line);
 }
 
 inline bool operator!=(const AnchorLine& a, const AnchorLine& b) {
-    return (a.widget != b.widget) || (a.line != b.line);
+    return (a.item != b.item) || (a.line != b.line);
 }
 
 class AnchorsPrivate
 {
 
 public:
-    AnchorsPrivate(QWidget *w, Anchors *parent) :
+    AnchorsPrivate(QObject *i, Anchors *parent) :
         q_ptr(parent),
         leftMargin(0),
         rightMargin(0),
@@ -42,7 +41,7 @@ public:
         margins(0),
         horizontalCenterOffset(0),
         verticalCenterOffset(0),
-        widgetComplete(false),
+        itemComplete(false),
         updatingMe(false),
         inDestructor(false),
         leftMarginExplicit(false),
@@ -53,7 +52,7 @@ public:
         updatingVerticalAnchor(0),
         updatingCenterIn(0),
         updatingFill(0),
-        widget(w),
+        item(i),
         centerIn(0),
         fill(0)
     {
@@ -61,21 +60,21 @@ public:
 
     virtual ~AnchorsPrivate() {}
 
-    void clearWidget(QWidget *w);
+    void clearItem(QObject *i);
 
-    int calculateDependency(QWidget *w);
-    void addDepend(QWidget *w);
-    void remDepend(QWidget *w);
-    bool isWidgetComplete() const;
+    int calculateDependency(QObject *i);
+    void addDepend(QObject *i);
+    void remDepend(QObject *i);
+    bool isItemComplete() const;
 
-    void setWidgetX(int x);
-    void setWidgetY(int y);
-    void setWidgetPos(const QPoint &pos);
-    void setWidgetWidth(int width);
-    void setWidgetHeight(int height);
-    void setWidgetSize(const QSize &size);
+    void setItemX(int x);
+    void setItemY(int y);
+    void setItemPos(const QPoint &pos);
+    void setItemWidth(int width);
+    void setItemHeight(int height);
+    void setItemSize(const QSize &size);
 
-    void onWidgetCompleted();
+    void onItemCompleted();
     void update();
 
     bool checkHValid() const;
@@ -106,7 +105,7 @@ public:
     int horizontalCenterOffset;
     int verticalCenterOffset;
 
-    bool widgetComplete;
+    bool itemComplete;
     bool updatingMe;
     bool inDestructor;
     bool leftMarginExplicit;
@@ -120,9 +119,9 @@ public:
 
     Anchors::AnchorFlags usedAnchors;
 
-    QWidget *widget;
-    QWidget *centerIn;
-    QWidget *fill;
+    QObject *item;
+    QObject *centerIn;
+    QObject *fill;
 
     Q_DECLARE_PUBLIC(Anchors)
 };

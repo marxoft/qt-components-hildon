@@ -58,7 +58,7 @@ public:
 
     Q_DECLARE_FLAGS(AnchorFlags, Anchor)
 
-    explicit Anchors(QWidget *widget = 0, QObject *parent = 0);
+    explicit Anchors(QObject *item = 0, QObject *parent = 0);
     ~Anchors();
 
     AnchorLine left() const;
@@ -143,6 +143,8 @@ private:
     QScopedPointer<AnchorsPrivate> d_ptr;
 
     friend class ItemPrivate;
+    friend class ListItemPrivate;
+    friend class ListItemContentPrivate;
 
     Q_DISABLE_COPY(Anchors)
     Q_DECLARE_PRIVATE(Anchors)
