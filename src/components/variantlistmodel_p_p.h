@@ -31,9 +31,11 @@ public:
 
     virtual ~VariantListModelPrivate() {}
 
+    void updateRoleNames();
+
     VariantListModel *q_ptr;
 
-    QVariant variant;
+    QVariant modelVariant;
 
     QVariantList variantList;
 

@@ -17,6 +17,7 @@
 
 #include "variantlistmodel_p.h"
 #include "variantlistmodel_p_p.h"
+#include <QMetaProperty>
 
 VariantListModel::VariantListModel(QObject *parent) :
     QAbstractListModel(parent),
@@ -35,15 +36,19 @@ VariantListModel::~VariantListModel() {}
 QVariant VariantListModel::variant() const {
     Q_D(const VariantListModel);
 
-    return d->variant;
+    return d->modelVariant;
 }
 
 void VariantListModel::setVariant(const QVariant &variant) {
     Q_D(VariantListModel);
 
+    if (variant == d->modelVariant) {
+        return;
+    }
+
     this->clear();
 
-    d->variant = variant;
+    d->modelVariant = variant;
 
     if (variant.isNull()) {
         return;
@@ -55,7 +60,7 @@ void VariantListModel::setVariant(const QVariant &variant) {
         this->beginResetModel();
         d->variantList = variant.toList();
         this->endResetModel();
-        return;
+        break;
     case QVariant::Int:
         if (variant.toInt() > 0) {
             this->beginInsertRows(QModelIndex(), 0, variant.toInt() - 1);
@@ -67,7 +72,7 @@ void VariantListModel::setVariant(const QVariant &variant) {
             this->endInsertRows();
         }
 
-        return;
+        break;
     case QVariant::String:
     {
         QString string = variant.toString();
@@ -79,11 +84,14 @@ void VariantListModel::setVariant(const QVariant &variant) {
         }
 
         this->endInsertRows();
-        return;
+        break;
     }
     default:
-        return;
+        d->variantList.append(variant);
+        break;
     }
+
+    d->updateRoleNames();
 }
 
 QVariant VariantListModel::get(const QModelIndex &index) const {
@@ -109,19 +117,80 @@ void VariantListModel::clear() {
 }
 
 int VariantListModel::rowCount(const QModelIndex &parent) const {
-    Q_UNUSED(parent);
     Q_D(const VariantListModel);
 
     return d->variantList.size();
 }
 
 QVariant VariantListModel::data(const QModelIndex &index, int role) const {
-    switch (role) {
-    case Qt::DisplayRole:
-        return this->get(index);
-    default:
-        return QVariant();
+    QByteArray roleName = this->roleNames().value(role);
+    return roleName.isEmpty() ? QVariant() : this->data(index, roleName);
+}
+
+QVariant VariantListModel::data(const QModelIndex &index, const QByteArray &roleName) const {
+    QVariant variant = this->get(index);
+
+    if (roleName == "modelData") {
+        return variant;
     }
+
+    switch (variant.type()) {
+    case QVariant::Map:
+        return variant.toMap().value(roleName);
+    default:
+        if (QObject *obj = qvariant_cast<QObject*>(variant)) {
+            return obj->property(roleName);
+        }
+
+        break;
+    }
+
+    return variant;
+}
+
+void VariantListModelPrivate::updateRoleNames() {
+    Q_Q(VariantListModel);
+
+    if (variantList.isEmpty()) {
+        return;
+    }
+
+    QHash<int, QByteArray> roles;
+    roles[Qt::DisplayRole] = "display";
+    roles[Qt::DecorationRole] = "decoration";
+    roles[Qt::UserRole + 1] = "modelData";
+
+    QVariant variant = variantList.first();
+
+    switch (variant.type()) {
+    case QVariant::Map:
+    {
+        int role = Qt::UserRole + 2;
+
+        foreach (QString key, variant.toMap().keys()) {
+            roles[role] = key.toUtf8();
+            role++;
+        }
+
+        break;
+    }
+    default:
+        if (QObject *obj = qvariant_cast<QObject*>(variant)) {
+            const QMetaObject *metaObject = obj->metaObject();
+            const int offset = metaObject->propertyOffset();
+            const int count = metaObject->propertyCount();
+            int role = Qt::UserRole + 2;
+
+            for (int i = offset; i < count; i++) {
+                roles[role] = metaObject->property(i).name();
+                role++;
+            }
+        }
+
+        break;
+    }
+
+    q->setRoleNames(roles);
 }
 
 #include "moc_variantlistmodel_p.cpp"
