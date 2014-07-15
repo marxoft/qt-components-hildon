@@ -2,6 +2,5 @@ plugin hildoncomponents
 
 FileDialog 1.0 FileDialog.qml
 FolderDialog 1.0 FolderDialog.qml
-ListItem 1.0 ListItem.qml
 ProgressDialog 1.0 ProgressDialog.qml
 QueryDialog 1.0 QueryDialog.qml
