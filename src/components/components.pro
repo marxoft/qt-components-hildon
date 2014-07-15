@@ -48,6 +48,16 @@ HEADERS += \
     keys_p.h \
     keys_p_p.h \
     label_p.h \
+    listitem_p.h \
+    listitemcontent_p.h \
+    listitemcontent_p_p.h \
+    listitemimage_p.h \
+    listitemimagebase_p.h \
+    listitemimagebase_p_p.h \
+    listitemmousearea_p.h \
+    listitemprogressbar_p.h \
+    listitemrectangle_p.h \
+    listitemtext_p.h \
     listselector_p.h \
     listselector_p_p.h \
     listview_p.h \
@@ -71,6 +81,7 @@ HEADERS += \
     radiobutton_p_p.h \
     rectangle_p.h \
     rectangle_p_p.h \
+    rectangleproperties_p.h \
     row_p.h \
     row_p_p.h \
     screen_p.h \
@@ -103,7 +114,8 @@ HEADERS += \
     variantlistmodel_p_p.h \
     window_p.h \
     window_p_p.h \
-    plugin_p.h
+    plugin_p.h \
+    rectangleproperties_p.h
 
 SOURCES += \
     action.cpp \
@@ -128,6 +140,14 @@ SOURCES += \
     informationbox.cpp \
     item.cpp \
     keys.cpp \
+    listitem.cpp \
+    listitemcontent.cpp \
+    listitemimage.cpp \
+    listitemimagebase.cpp \
+    listitemmousearea.cpp \
+    listitemprogressbar.cpp \
+    listitemrectangle.cpp \
+    listitemtext.cpp \
     listselector.cpp \
     listview.cpp \
     loader.cpp \
@@ -140,6 +160,7 @@ SOURCES += \
     progressbar.cpp \
     radiobutton.cpp \
     rectangle.cpp \
+    rectangleproperties.cpp \
     row.cpp \
     screen.cpp \
     separator.cpp \
@@ -163,7 +184,6 @@ qdeclarativesources.files += \
     qml/qmldir \
     qml/FileDialog.qml \
     qml/FolderDialog.qml \
-    qml/ListItem.qml \
     qml/ProgressDialog.qml \
     qml/QueryDialog.qml
 

@@ -38,6 +38,12 @@
 #include "item_p.h"
 #include "keys_p.h"
 #include "label_p.h"
+#include "listitem_p.h"
+#include "listitemimage_p.h"
+#include "listitemmousearea_p.h"
+#include "listitemprogressbar_p.h"
+#include "listitemrectangle_p.h"
+#include "listitemtext_p.h"
 #include "listselector_p.h"
 #include "listview_p.h"
 #include "loader_p.h"
@@ -120,6 +126,12 @@ void Plugin::registerTypes(const char *uri) {
     qmlRegisterType<Item>(uri, 1, 0, "Item");
 //    qmlRegisterType<Keys>(uri, 1, 0, "Keys");
     qmlRegisterType<Label>(uri, 1, 0, "Label");
+    qmlRegisterType<ListItem>(uri, 1, 0, "ListItem");
+    qmlRegisterType<ListItemImage>(uri, 1, 0, "ListItemImage");
+    qmlRegisterType<ListItemMouseArea>(uri, 1, 0, "ListItemMouseArea");
+    qmlRegisterType<ListItemProgressBar>(uri, 1, 0, "ListItemProgressBar");
+    qmlRegisterType<ListItemRectangle>(uri, 1, 0, "ListItemRectangle");
+    qmlRegisterType<ListItemText>(uri, 1, 0, "ListItemText");
     qmlRegisterType<ListSelector>(uri, 1, 0, "ListSelector");
     qmlRegisterType<ListView>(uri, 1, 0, "ListView");
     qmlRegisterType<Loader>(uri, 1, 0, "Loader");
