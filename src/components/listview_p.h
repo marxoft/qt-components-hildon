@@ -59,7 +59,7 @@ class ListView : public QListView, public QDeclarativeParserStatus
     Q_PRIVATE_PROPERTY(ListView::d_func(), QVariant model READ model WRITE setModel NOTIFY modelChanged)
     Q_PRIVATE_PROPERTY(ListView::d_func(), QVariant rootIndex READ rootIndex WRITE setRootIndex NOTIFY rootIndexChanged)
     Q_PRIVATE_PROPERTY(ListView::d_func(), QVariant currentIndex READ currentIndex WRITE setCurrentIndex NOTIFY currentIndexChanged)
-    Q_PRIVATE_PROPERTY(ListView::d_func(), QDeclarativeComponent* delegate READ delegate WRITE setDelegate RESET resetDelegate NOTIFY delegateChanged)
+    Q_PRIVATE_PROPERTY(ListView::d_func(), QDeclarativeComponent* delegate READ delegate WRITE setDelegate NOTIFY delegateChanged)
 
     Q_INTERFACES(QDeclarativeParserStatus)
 
@@ -133,10 +133,6 @@ signals:
     void currentIndexChanged();
     void delegateChanged();
 
-protected slots:
-    void rowsInserted(const QModelIndex &parent, int start, int end);
-    void dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
-
 protected:
     ListView(ListViewPrivate &dd, QWidget *parent = 0);
 
@@ -158,6 +154,5 @@ protected:
 };
 
 QML_DECLARE_TYPE(ListView)
-Q_DECLARE_METATYPE(QModelIndex)
 
 #endif // LISTVIEW_P_H

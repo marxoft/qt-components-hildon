@@ -61,8 +61,6 @@ public:
     void setDelegate(QDeclarativeComponent *delegate);
     void resetDelegate();
 
-    void createDelegate(const QModelIndex &index);
-
     QVariant modelVariant;
 
     QAbstractKineticScroller *kineticScroller;

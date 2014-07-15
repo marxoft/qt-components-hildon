@@ -17,12 +17,14 @@
 
 #include "listview_p.h"
 #include "listview_p_p.h"
+#include "listitem_p.h"
 #include "variantlistmodel_p.h"
 #include <QMoveEvent>
 #include <QResizeEvent>
 #include <QActionGroup>
 #include <QScrollBar>
 #include <QDeclarativeEngine>
+#include <QDeclarativeContext>
 #include <QDeclarativeComponent>
 #include <qdeclarative.h>
 #include <QGraphicsOpacityEffect>
@@ -292,14 +294,6 @@ void ListView::focusOutEvent(QFocusEvent *event) {
     QListView::focusOutEvent(event);
 }
 
-void ListView::rowsInserted(const QModelIndex &parent, int start, int end) {
-    QListView::rowsInserted(parent, start, end);
-}
-
-void ListView::dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight) {
-    QListView::dataChanged(topLeft, bottomRight);
-}
-
 void ListView::classBegin() {}
 
 void ListView::componentComplete() {
@@ -448,6 +442,24 @@ void ListViewPrivate::setDelegate(QDeclarativeComponent *delegate) {
 
         if (delegateComponent) {
             delegateComponent->setParent(q);
+
+            QDeclarativeContext *creationContext = delegateComponent->creationContext();
+            QDeclarativeContext *context = new QDeclarativeContext(creationContext ? creationContext : qmlContext(q));
+
+            if (QObject *obj = delegateComponent->create(context)) {
+                if (QStyledItemDelegate *delegate = qobject_cast<QStyledItemDelegate*>(obj)) {
+                    context->setParent(delegate);
+                    context->setContextProperty("view", q);
+                    q->setItemDelegate(delegate);
+                }
+                else {
+                    delete obj;
+                    delete context;
+                }
+            }
+            else {
+                delete context;
+            }
         }
 
         if (oldDelegate) {
@@ -455,25 +467,6 @@ void ListViewPrivate::setDelegate(QDeclarativeComponent *delegate) {
         }
 
         emit q->delegateChanged();
-    }
-}
-
-void ListViewPrivate::resetDelegate() {
-    this->setDelegate(0);
-}
-
-void ListViewPrivate::createDelegate(const QModelIndex &index) {
-    if (delegateComponent) {
-        Q_Q(ListView);
-
-        QObject *delegate = delegateComponent->beginCreate(qmlEngine(q)->contextForObject(q));
-
-        if ((delegate) && (delegate->isWidgetType())) {
-            delegateComponent->completeCreate();
-            QWidget *widget = qobject_cast<QWidget*>(delegate);
-            widget->setAutoFillBackground(true);
-            q->setIndexWidget(index, widget);
-        }
     }
 }
 
