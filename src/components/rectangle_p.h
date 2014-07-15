@@ -19,95 +19,10 @@
 #define RECTANGLE_P_H
 
 #include "item_p.h"
-#include <QPen>
+#include "rectangleproperties_p.h"
 
 class Rectangle;
 class RectanglePrivate;
-
-class Border : public QObject
-{
-    Q_OBJECT
-
-    Q_PROPERTY(QColor color READ color WRITE setColor NOTIFY colorChanged)
-    Q_PROPERTY(int width READ width WRITE setWidth RESET resetWidth NOTIFY widthChanged)
-
-public:
-    explicit Border(QObject *parent = 0);
-    ~Border();
-
-    QColor color() const;
-    void setColor(const QColor &color);
-
-    int width() const;
-    void setWidth(int width);
-    void resetWidth();
-
-    QPen pen() const;
-
-signals:
-    void colorChanged();
-    void widthChanged();
-
-private:
-    QPen m_pen;
-
-    Q_DISABLE_COPY(Border)
-};
-
-class GradientStop : public QObject
-{
-    Q_OBJECT
-
-    Q_PROPERTY(QColor color READ color WRITE setColor NOTIFY colorChanged)
-    Q_PROPERTY(qreal position READ position WRITE setPosition NOTIFY positionChanged)
-
-public:
-    explicit GradientStop(QObject *parent = 0);
-    ~GradientStop();
-
-    QColor color() const;
-    void setColor(const QColor &color);
-
-    qreal position() const;
-    void setPosition(qreal pos);
-
-    QGradientStop stop() const;
-
-signals:
-    void colorChanged();
-    void positionChanged();
-
-private:
-    QGradientStop m_stop;
-
-    Q_DISABLE_COPY(GradientStop)
-};
-
-class Gradient : public QObject
-{
-    Q_OBJECT
-
-    Q_PROPERTY(QDeclarativeListProperty<GradientStop> stops READ qmlStops)
-
-    Q_CLASSINFO("DefaultProperty", "stops")
-
-public:
-    explicit Gradient(QObject *parent = 0);
-    ~Gradient();
-
-    QGradientStops stops() const;
-    QDeclarativeListProperty<GradientStop> qmlStops();
-
-    static void stops_append(QDeclarativeListProperty<GradientStop> *list, GradientStop *stop);
-
-signals:
-    void stopsChanged();
-
-private:
-    QList<GradientStop*> m_stops;
-
-    Q_DISABLE_COPY(Gradient)
-};
 
 class Rectangle : public Item
 {
@@ -146,9 +61,6 @@ private:
     Q_DECLARE_PRIVATE(Rectangle)
 };
 
-QML_DECLARE_TYPE(Border)
-QML_DECLARE_TYPE(Gradient)
-QML_DECLARE_TYPE(GradientStop)
 QML_DECLARE_TYPE(Rectangle)
 
 #endif // RECTANGLE_P_H
