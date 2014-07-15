@@ -17,6 +17,8 @@
 
 #include "imageloader_p.h"
 #include "imageloader_p_p.h"
+#include "image_p.h"
+#include "borderimage_p.h"
 #include "screen_p.h"
 #include <qdeclarative.h>
 #include <QDeclarativeEngine>
@@ -68,7 +70,7 @@ QImage ImageLoader::image() const {
 void ImageLoader::loadImage(const QUrl &url,
                             const QSize &size,
                             const QSize &sourceSize,
-                            Image::FillMode fillMode,
+                            int fillMode,
                             Qt::TransformationMode transformMode,
                             bool mirror,
                             bool cache) {
@@ -93,8 +95,8 @@ void ImageLoader::loadBorderImage(const QUrl &url,
                                   int rightBorder,
                                   int leftBorder,
                                   int bottomBorder,
-                                  BorderImage::TileMode horizontalTileMode,
-                                  BorderImage::TileMode verticalTileMode,
+                                  int horizontalTileMode,
+                                  int verticalTileMode,
                                   Qt::TransformationMode transformMode,
                                   bool mirror,
                                   bool cache) {

@@ -60,10 +60,10 @@ public:
 
     QSize sourceSize;
 
-    Image::FillMode fillMode;
+    int fillMode;
 
-    BorderImage::TileMode horizontalTileMode;
-    BorderImage::TileMode verticalTileMode;
+    int horizontalTileMode;
+    int verticalTileMode;
 
     Qt::TransformationMode transformMode;
 

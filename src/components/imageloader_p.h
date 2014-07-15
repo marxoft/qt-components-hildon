@@ -18,8 +18,6 @@
 #ifndef IMAGELOADER_P_H
 #define IMAGELOADER_P_H
 
-#include "image_p.h"
-#include "borderimage_p.h"
 #include <QObject>
 #include <QUrl>
 #include <QSize>
@@ -43,7 +41,7 @@ public slots:
     void loadImage(const QUrl &url,
               const QSize &size,
               const QSize &sourceSize,
-              Image::FillMode fillMode,
+              int fillMode,
               Qt::TransformationMode transformMode,
               bool mirror,
               bool cache);
@@ -54,8 +52,8 @@ public slots:
                          int rightBorder,
                          int leftBorder,
                          int bottomBorder,
-                         BorderImage::TileMode horizontalTileMode,
-                         BorderImage::TileMode verticalTileMode,
+                         int horizontalTileMode,
+                         int verticalTileMode,
                          Qt::TransformationMode transformMode,
                          bool mirror,
                          bool cache);
