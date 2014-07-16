@@ -19,6 +19,71 @@
 #include "variantlistmodel_p_p.h"
 #include <QMetaProperty>
 
+class VariantListModelPrivate
+{
+
+public:
+    VariantListModelPrivate(VariantListModel *parent) :
+        q_ptr(parent)
+    {
+    }
+
+    virtual ~VariantListModelPrivate() {}
+
+    void updateRoleNames() {
+        Q_Q(VariantListModel);
+
+        if (variantList.isEmpty()) {
+            return;
+        }
+
+        QHash<int, QByteArray> roles;
+        roles[Qt::DisplayRole] = "display";
+        roles[Qt::DecorationRole] = "decoration";
+        roles[Qt::UserRole + 1] = "modelData";
+
+        QVariant variant = variantList.first();
+
+        switch (variant.type()) {
+        case QVariant::Map:
+        {
+            int role = Qt::UserRole + 2;
+
+            foreach (QString key, variant.toMap().keys()) {
+                roles[role] = key.toUtf8();
+                role++;
+            }
+
+            break;
+        }
+        default:
+            if (QObject *obj = qvariant_cast<QObject*>(variant)) {
+                const QMetaObject *metaObject = obj->metaObject();
+                const int offset = metaObject->propertyOffset();
+                const int count = metaObject->propertyCount();
+                int role = Qt::UserRole + 2;
+
+                for (int i = offset; i < count; i++) {
+                    roles[role] = metaObject->property(i).name();
+                    role++;
+                }
+            }
+
+            break;
+        }
+
+        q->setRoleNames(roles);
+    }
+
+    VariantListModel *q_ptr;
+
+    QVariant modelVariant;
+
+    QVariantList variantList;
+
+    Q_DECLARE_PUBLIC(VariantListModel)
+};
+
 VariantListModel::VariantListModel(QObject *parent) :
     QAbstractListModel(parent),
     d_ptr(new VariantListModelPrivate(this))
@@ -146,51 +211,6 @@ QVariant VariantListModel::data(const QModelIndex &index, const QByteArray &role
     }
 
     return variant;
-}
-
-void VariantListModelPrivate::updateRoleNames() {
-    Q_Q(VariantListModel);
-
-    if (variantList.isEmpty()) {
-        return;
-    }
-
-    QHash<int, QByteArray> roles;
-    roles[Qt::DisplayRole] = "display";
-    roles[Qt::DecorationRole] = "decoration";
-    roles[Qt::UserRole + 1] = "modelData";
-
-    QVariant variant = variantList.first();
-
-    switch (variant.type()) {
-    case QVariant::Map:
-    {
-        int role = Qt::UserRole + 2;
-
-        foreach (QString key, variant.toMap().keys()) {
-            roles[role] = key.toUtf8();
-            role++;
-        }
-
-        break;
-    }
-    default:
-        if (QObject *obj = qvariant_cast<QObject*>(variant)) {
-            const QMetaObject *metaObject = obj->metaObject();
-            const int offset = metaObject->propertyOffset();
-            const int count = metaObject->propertyCount();
-            int role = Qt::UserRole + 2;
-
-            for (int i = offset; i < count; i++) {
-                roles[role] = metaObject->property(i).name();
-                role++;
-            }
-        }
-
-        break;
-    }
-
-    q->setRoleNames(roles);
 }
 
 #include "moc_variantlistmodel_p.cpp"
