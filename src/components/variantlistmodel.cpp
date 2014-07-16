@@ -16,7 +16,6 @@
  */
 
 #include "variantlistmodel_p.h"
-#include "variantlistmodel_p_p.h"
 #include <QMetaProperty>
 
 class VariantListModelPrivate
