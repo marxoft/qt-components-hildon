@@ -34,6 +34,8 @@ HEADERS += \
     flow_p_p.h \
     grid_p.h \
     grid_p_p.h \
+    headerview_p.h \
+    headerview_p_p.h \
     image_p.h \
     image_p_p.h \
     imagebase_p.h \
@@ -66,6 +68,7 @@ HEADERS += \
     loader_p_p.h \
     menu_p.h \
     menu_p_p.h \
+    modelindex_p.h \
     mousearea_p.h \
     mousearea_p_p.h \
     multilistselector_p.h \
@@ -82,6 +85,7 @@ HEADERS += \
     rectangle_p.h \
     rectangle_p_p.h \
     rectangleproperties_p.h \
+    repeater_p.h \
     row_p.h \
     row_p_p.h \
     screen_p.h \
@@ -93,6 +97,8 @@ HEADERS += \
     spinbox_p_p.h \
     tabgroup_p.h \
     tabgroup_p_p.h \
+    tableview_p.h \
+    tableview_p_p.h \
     text_p.h \
     text_p_p.h \
     textedit_p.h \
@@ -111,11 +117,12 @@ HEADERS += \
     valueselector_p.h \
     valueselector_p_p.h \
     variantlistmodel_p.h \
-    variantlistmodel_p_p.h \
+    varianttablemodel_p.h \
     window_p.h \
     window_p_p.h \
     plugin_p.h \
-    rectangleproperties_p.h
+    rectangleproperties_p.h \
+    tableview_p_p.h
 
 SOURCES += \
     action.cpp \
@@ -133,6 +140,7 @@ SOURCES += \
     flickable.cpp \
     flow.cpp \
     grid.cpp \
+    headerview.cpp \
     image.cpp \
     imagebase.cpp \
     imageloader.cpp \
@@ -161,12 +169,14 @@ SOURCES += \
     radiobutton.cpp \
     rectangle.cpp \
     rectangleproperties.cpp \
+    repeater.cpp \
     row.cpp \
     screen.cpp \
     separator.cpp \
     slider.cpp \
     spinbox.cpp \
     tabgroup.cpp \
+    tableview.cpp \
     text.cpp \
     textedit.cpp \
     textfield.cpp \
@@ -177,6 +187,7 @@ SOURCES += \
     valuebutton.cpp \
     valueselector.cpp \
     variantlistmodel.cpp \
+    varianttablemodel.cpp \
     window.cpp \
     plugin.cpp
 

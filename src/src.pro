@@ -4,4 +4,5 @@ SUBDIRS = \
     utils \
     webkit \
     filesystemmodel \
+    dbus \
     components

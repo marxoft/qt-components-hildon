@@ -32,6 +32,7 @@
 #include "flickable_p.h"
 #include "flow_p.h"
 #include "grid_p.h"
+#include "headerview_p.h"
 #include "image_p.h"
 #include "imageproviders_p.h"
 #include "informationbox_p.h"
@@ -48,6 +49,7 @@
 #include "listview_p.h"
 #include "loader_p.h"
 #include "menu_p.h"
+#include "modelindex_p.h"
 #include "mousearea_p.h"
 #include "multilistselector_p.h"
 #include "page_p.h"
@@ -56,12 +58,14 @@
 #include "progressbar_p.h"
 #include "radiobutton_p.h"
 #include "rectangle_p.h"
+#include "repeater_p.h"
 #include "row_p.h"
 #include "screen_p.h"
 #include "separator_p.h"
 #include "slider_p.h"
 #include "spinbox_p.h"
 #include "tabgroup_p.h"
+#include "tableview_p.h"
 #include "text_p.h"
 #include "textedit_p.h"
 #include "textfield_p.h"
@@ -83,6 +87,7 @@ void Plugin::initializeEngine(QDeclarativeEngine *engine, const char *uri) {
     if (engine->rootContext()->contextProperty("platformStyle").isNull()) {
         engine->rootContext()->setContextProperty("platformStyle", new PlatformStyle(engine));
         engine->rootContext()->setContextProperty("screen", new Screen(engine));
+        engine->rootContext()->setContextProperty("QModelIndex", new ModelIndex(engine));
 
         engine->addImageProvider("theme", new ThemeImageProvider);
 
@@ -101,6 +106,7 @@ void Plugin::registerTypes(const char *uri) {
 
     qmlRegisterUncreatableType<QWidget>(uri, 1, 0, "Widget", "");
     qmlRegisterUncreatableType<QAbstractButton>(uri, 1, 0, "AbstractButton", "");
+    qmlRegisterUncreatableType<QHeaderView>(uri, 1, 0, "QHeaderView", "");
 
     qmlRegisterType<Action>(uri, 1, 0, "Action");
     qmlRegisterType<ActionGroup>(uri, 1, 0, "ActionGroup");
@@ -120,6 +126,7 @@ void Plugin::registerTypes(const char *uri) {
     qmlRegisterType<Gradient>(uri, 1, 0, "Gradient");
     qmlRegisterType<GradientStop>(uri, 1, 0, "GradientStop");
     qmlRegisterType<Grid>(uri, 1, 0, "Grid");
+    qmlRegisterType<HeaderView>(uri, 1, 0, "HeaderView");
     qmlRegisterType<Image>(uri, 1, 0, "Image");
     qmlRegisterType<ImageBorder>(uri, 1, 0, "ImageBorder");
     qmlRegisterType<InformationBox>(uri, 1, 0, "InformationBox");
@@ -148,11 +155,13 @@ void Plugin::registerTypes(const char *uri) {
     qmlRegisterType<QObject>(uri, 1, 0, "QtObject");
     qmlRegisterType<RadioButton>(uri, 1, 0, "RadioButton");
     qmlRegisterType<Rectangle>(uri, 1, 0, "Rectangle");
+    qmlRegisterType<Repeater>(uri, 1, 0, "Repeater");
     qmlRegisterType<Row>(uri, 1, 0, "Row");
     qmlRegisterType<Separator>(uri, 1, 0, "Separator");
     qmlRegisterType<Slider>(uri, 1, 0, "Slider");
     qmlRegisterType<SpinBox>(uri, 1, 0, "SpinBox");
     qmlRegisterType<TabGroup>(uri, 1, 0, "TabGroup");
+    qmlRegisterType<TableView>(uri, 1, 0, "TableView");
     qmlRegisterType<Text>(uri, 1, 0, "Text");
     qmlRegisterType<TextEdit>(uri, 1, 0, "TextEdit");
     qmlRegisterType<TextField>(uri, 1, 0, "TextField");
