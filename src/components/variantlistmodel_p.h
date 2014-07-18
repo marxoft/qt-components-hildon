@@ -50,6 +50,8 @@ private:
 
     Q_DISABLE_COPY(VariantListModel)
     Q_DECLARE_PRIVATE(VariantListModel)
+
+    Q_PRIVATE_SLOT(d_func(), void _q_onObjectPropertyChanged())
 };
 
 #endif // VARIANTLISTMODEL_P_H

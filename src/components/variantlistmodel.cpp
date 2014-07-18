@@ -39,14 +39,14 @@ public:
         QHash<int, QByteArray> roles;
         roles[Qt::DisplayRole] = "display";
         roles[Qt::DecorationRole] = "decoration";
-        roles[Qt::UserRole + 1] = "modelData";
+        roles[Qt::UserRole] = "modelData";
 
         QVariant variant = variantList.first();
 
         switch (variant.type()) {
         case QVariant::Map:
         {
-            int role = Qt::UserRole + 2;
+            int role = Qt::UserRole + 1;
 
             foreach (QString key, variant.toMap().keys()) {
                 roles[role] = key.toUtf8();
@@ -60,10 +60,11 @@ public:
                 const QMetaObject *metaObject = obj->metaObject();
                 const int offset = metaObject->propertyOffset();
                 const int count = metaObject->propertyCount();
-                int role = Qt::UserRole + 2;
+                int role = Qt::UserRole + 1;
 
                 for (int i = offset; i < count; i++) {
-                    roles[role] = metaObject->property(i).name();
+                    QMetaProperty property = metaObject->property(i);
+                    roles[role] = property.name();
                     role++;
                 }
             }
@@ -72,6 +73,18 @@ public:
         }
 
         q->setRoleNames(roles);
+    }
+
+    void _q_onObjectPropertyChanged() {
+        Q_Q(VariantListModel);
+
+        if (QObject *obj = q->sender()) {
+            const int i = variantList.indexOf(QVariant::fromValue(obj));
+
+            if (i != -1) {
+                emit q->dataChanged(q->index(i), q->index(i));
+            }
+        }
     }
 
     VariantListModel *q_ptr;
@@ -126,6 +139,7 @@ void VariantListModel::setVariant(const QVariant &variant) {
         this->endResetModel();
         break;
     case QVariant::Int:
+    case QVariant::Double:
         if (variant.toInt() > 0) {
             this->beginInsertRows(QModelIndex(), 0, variant.toInt() - 1);
 
@@ -181,6 +195,7 @@ void VariantListModel::clear() {
 }
 
 int VariantListModel::rowCount(const QModelIndex &parent) const {
+    Q_UNUSED(parent);
     Q_D(const VariantListModel);
 
     return d->variantList.size();
