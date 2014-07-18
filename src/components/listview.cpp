@@ -17,7 +17,6 @@
 
 #include "listview_p.h"
 #include "listview_p_p.h"
-#include "listitem_p.h"
 #include "variantlistmodel_p.h"
 #include <QMoveEvent>
 #include <QResizeEvent>
@@ -26,7 +25,7 @@
 #include <QDeclarativeEngine>
 #include <QDeclarativeContext>
 #include <QDeclarativeComponent>
-#include <qdeclarative.h>
+#include <QDeclarativeInfo>
 #include <QGraphicsOpacityEffect>
 
 ListView::ListView(QWidget *parent) :
@@ -447,12 +446,13 @@ void ListViewPrivate::setDelegate(QDeclarativeComponent *delegate) {
             QDeclarativeContext *context = new QDeclarativeContext(creationContext ? creationContext : qmlContext(q));
 
             if (QObject *obj = delegateComponent->create(context)) {
-                if (QStyledItemDelegate *delegate = qobject_cast<QStyledItemDelegate*>(obj)) {
+                if (QAbstractItemDelegate *delegate = qobject_cast<QAbstractItemDelegate*>(obj)) {
                     context->setParent(delegate);
                     context->setContextProperty("view", q);
                     q->setItemDelegate(delegate);
                 }
                 else {
+                    qmlInfo(q) << ListView::tr("Component is not a valid item delegate.");
                     delete obj;
                     delete context;
                 }

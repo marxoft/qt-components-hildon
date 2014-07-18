@@ -30,6 +30,7 @@ class Loader : public QObject, public QDeclarativeParserStatus
 {
     Q_OBJECT
 
+    Q_PROPERTY(QObject* parent READ parent WRITE setParent NOTIFY parentChanged)
     Q_PROPERTY(QUrl source READ source WRITE setSource NOTIFY sourceChanged)
     Q_PROPERTY(QDeclarativeComponent* sourceComponent READ sourceComponent WRITE setSourceComponent RESET resetSourceComponent NOTIFY sourceChanged)
     Q_PROPERTY(QWidget* item READ item NOTIFY itemChanged)
@@ -65,6 +66,7 @@ public:
     QWidget* item() const;
 
 signals:
+    void parentChanged();
     void itemChanged();
     void sourceChanged();
     void statusChanged();
@@ -76,6 +78,8 @@ private:
 
     void classBegin();
     void componentComplete();
+
+    bool event(QEvent *event);
 
     QScopedPointer<LoaderPrivate> d_ptr;
 

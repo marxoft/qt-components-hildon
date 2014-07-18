@@ -21,6 +21,7 @@
 #include <QDeclarativeInfo>
 #include <QDeclarativeContext>
 #include <QWidget>
+#include <QEvent>
 
 Loader::Loader(QObject *parent) :
     QObject(parent),
@@ -147,6 +148,18 @@ void Loader::componentComplete() {
     d->load();
 }
 
+bool Loader::event(QEvent *event) {
+    switch (event->type()) {
+    case QEvent::ParentChange:
+        emit parentChanged();
+        break;
+    default:
+        break;
+    }
+
+    return QObject::event(event);
+}
+
 void LoaderPrivate::clear() {
     if (ownComponent) {
         component->deleteLater();
@@ -231,6 +244,7 @@ void LoaderPrivate::_q_sourceLoaded() {
             item = qobject_cast<QWidget*>(obj);
 
             if (item) {
+                context->setParent(item);
                 item->setParent(this->parentWidget());
             }
             else {

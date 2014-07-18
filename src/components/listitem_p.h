@@ -19,10 +19,10 @@
 #define LISTITEM_P_H
 
 #include "anchors_p.h"
+#include "modelindex_p.h"
 #include <QStyledItemDelegate>
 #include <QDeclarativeParserStatus>
 #include <qdeclarative.h>
-
 
 class ListItemContent;
 class ListItemPrivate;
@@ -109,8 +109,6 @@ signals:
     void visibleChanged();
     void indexChanged() const;
     void modelDataChanged() const;
-    void clicked();
-    void pressAndHold();
 
 protected:
     ListItem(ListItemPrivate &dd, QObject *parent = 0);    
@@ -127,6 +125,5 @@ private:
 };
 
 QML_DECLARE_TYPE(ListItem)
-Q_DECLARE_METATYPE(QModelIndex)
 
 #endif // LISTITEM_P_H

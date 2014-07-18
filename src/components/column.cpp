@@ -84,7 +84,7 @@ void ColumnPrivate::data_append(QDeclarativeListProperty<QObject> *list, QObject
             column->d_func()->childrenList.append(widget);
 
             if (column->d_func()->complete) {
-                column->d_func()->vbox->addWidget(widget);;
+                column->d_func()->vbox->addWidget(widget);
             }
         }
     }
@@ -100,7 +100,7 @@ void ColumnPrivate::children_append(QDeclarativeListProperty<QWidget> *list, QWi
         column->d_func()->dataList.append(widget);
 
         if (column->d_func()->complete) {
-            column->d_func()->vbox->addWidget(widget);;
+            column->d_func()->vbox->addWidget(widget);
         }
     }
 }

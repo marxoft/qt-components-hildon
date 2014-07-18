@@ -81,5 +81,6 @@ private:
 };
 
 QML_DECLARE_TYPE(ModelIndex)
+Q_DECLARE_METATYPE(QModelIndex)
 
 #endif // MODELINDEX_P_H

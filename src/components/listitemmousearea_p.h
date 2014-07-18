@@ -68,10 +68,10 @@ signals:
 protected:
     ListItemMouseArea(ListItemMouseAreaPrivate &dd, QObject *parent = 0);
 
-    bool mousePressEvent(QMouseEvent *event);
-    bool mouseReleaseEvent(QMouseEvent *event);
-    bool mouseMoveEvent(QMouseEvent *event);
-    bool mouseDoubleClickEvent(QMouseEvent *event);
+    virtual bool mousePressEvent(QMouseEvent *event);
+    virtual bool mouseReleaseEvent(QMouseEvent *event);
+    virtual bool mouseMoveEvent(QMouseEvent *event);
+    virtual bool mouseDoubleClickEvent(QMouseEvent *event);
 
     void timerEvent(QTimerEvent *event);
 

@@ -59,7 +59,6 @@ public:
 
     QDeclarativeComponent* delegate() const;
     void setDelegate(QDeclarativeComponent *delegate);
-    void resetDelegate();
 
     QVariant modelVariant;
 

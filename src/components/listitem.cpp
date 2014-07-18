@@ -22,6 +22,8 @@
 #include <QPainter>
 #include <QHashIterator>
 
+static const int PRESS_AND_HOLD_DURATION = 800;
+
 class ListItemPrivate
 {
 
@@ -332,13 +334,6 @@ void ListItem::paint(QPainter *painter, const QStyleOptionViewItem &option, cons
     emit indexChanged();
     emit modelDataChanged();
 
-    if (this->isCurrentItem()) {
-        painter->drawImage(option.rect, QImage("/etc/hildon/theme/images/TouchListBackgroundPressed.png"));
-    }
-    else {
-        painter->drawImage(option.rect, QImage("/etc/hildon/theme/images/TouchListBackgroundNormal.png"));
-    }
-
     foreach (ListItemContent *content, d->contentList) {
         if (content->isVisible()) {
             content->paint(painter, option.rect);
@@ -347,7 +342,7 @@ void ListItem::paint(QPainter *painter, const QStyleOptionViewItem &option, cons
 }
 
 bool ListItem::editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index) {
-    Q_D(const ListItem);
+    Q_D(ListItem);
 
     foreach (ListItemContent *content, d->contentList) {
         if (content->editorEvent(event, option.rect)) {
