@@ -17,6 +17,7 @@
 
 #include "webview_p.h"
 #include "webview_p_p.h"
+#include "webhistory_p.h"
 #include "websettings_p.h"
 #include <QMoveEvent>
 #include <QResizeEvent>
@@ -418,6 +419,16 @@ QDeclarativeListProperty<QWidget> WebViewPrivate::children() {
 
 QDeclarativeListProperty<QObject> WebViewPrivate::actions() {
     return QDeclarativeListProperty<QObject>(q_func(), 0, WebViewPrivate::actions_append);
+}
+
+WebHistory* WebViewPrivate::history() {
+    Q_Q(WebView);
+
+    if (!webHistory) {
+        webHistory = new WebHistory(q->history(), q);
+    }
+
+    return webHistory;
 }
 
 WebSettings* WebViewPrivate::settings() {

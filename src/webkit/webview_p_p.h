@@ -106,6 +106,8 @@ public:
         ItemPrivate(parent),
         suppressor(0),
         kineticScroller(parent->property("kineticScroller").value<QAbstractKineticScroller*>()),
+        webHistory(0),
+        webSettings(0),
         progress(0),
         status(WebView::Null)
     {
@@ -123,6 +125,8 @@ public:
 
     QDeclarativeListProperty<QObject> actions();
 
+    WebHistory* history();
+
     WebSettings* settings();
 
     void _q_onLoadStarted();
@@ -132,6 +136,8 @@ public:
     WebViewSelectionSuppressor *suppressor;
 
     QAbstractKineticScroller *kineticScroller;
+
+    WebHistory *webHistory;
 
     WebSettings *webSettings;
 
