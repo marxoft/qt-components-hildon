@@ -17,6 +17,8 @@
 
 #include "plugin_p.h"
 #include "webview_p.h"
+#include "webhistory_p.h"
+#include "webhistoryinterface_p.h"
 #include "websettings_p.h"
 #include <QDeclarativeEngine>
 #include <QDeclarativeContext>
@@ -26,9 +28,12 @@ void Plugin::initializeEngine(QDeclarativeEngine *engine, const char *uri) {
 
     QDeclarativeExtensionPlugin::initializeEngine(engine, uri);
 
-    if (engine->rootContext()->contextProperty("webSettings").isNull()) {
+    if (engine->rootContext()->contextProperty("webHistory").isNull()) {
+        engine->rootContext()->setContextProperty("webHistory", new WebHistoryInterface(engine));
         engine->rootContext()->setContextProperty("webSettings", new WebSettings(engine));
 
+        qmlRegisterUncreatableType<WebHistory>(uri, 1, 0, "WebHistory", "");
+        qmlRegisterUncreatableType<WebHistoryInterface>(uri, 1, 0, "WebHistoryInterface", "");
         qmlRegisterUncreatableType<WebSettings>(uri, 1, 0, "WebSettings", "");
     }
 }
