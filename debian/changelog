@@ -1,3 +1,16 @@
+qt-components-hildon (0.4.0) unstable; urgency=low
+
+  * Added org.hildon.filesystemmodel module with FileSystemModel component.
+  * Added org.hildon.dbus module with DBusAdaptor and DBusMessage components.
+  * Added global 'webSettings' and 'webHistory' properties to the org.hildon.webkit module.
+  * Added 'settings' and 'history' properties to the WebView component.
+  * Added Repeater, TableView and HeaderView components to the org.hildon.components module.
+  * Added QModelIndex global property to the org.hildon.components module, to allow access to functions of QModelIndex (e.g var row = QModelIndex.row(view.currentIndex))
+  * Added support for custom delegates in item views (ListItem* components).
+  * Improvements and bug-fixes for existing components.
+
+ -- Stuart Howarth <showarth@marxoft.co.uk>  Sat, 19 Jul 2014 20:47:23 +0100
+
 qt-components-hildon (0.3.0) unstable; urgency=low
 
   * Added Page component.
