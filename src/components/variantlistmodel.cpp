@@ -38,7 +38,6 @@ public:
 
         QHash<int, QByteArray> roles;
         roles[Qt::DisplayRole] = "display";
-        roles[Qt::DecorationRole] = "decoration";
         roles[Qt::UserRole] = "modelData";
 
         QVariant variant = variantList.first();
