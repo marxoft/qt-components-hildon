@@ -69,28 +69,6 @@ Page {
 
             ValueButton {
                 width: parent.width
-                text: qsTr("Screen orientation")
-                selector: ListSelector {
-                    model: [ qsTr("Landscape"), qsTr("Portrait"), qsTr("Automatic") ]
-                    currentIndex: screen.orientationLock === Screen.AutoOrientation ? 2 : screen.orientationLock === Screen.PortraitOrientation ? 1 : 0
-                    onSelected: {
-                        switch (currentIndex) {
-                        case 1:
-                            screen.orientationLock = Screen.PortraitOrientation;
-                            return;
-                        case 2:
-                            screen.orientationLock = Screen.AutoOrientation;
-                            return;
-                        default:
-                            screen.orientationLock = Screen.LandscapeOrientation;
-                            return;
-                        }
-                    }
-                }
-            }
-
-            ValueButton {
-                width: parent.width
                 text: qsTr("Select values")
                 valueText: qsTr("None chosen")
                 selector: MultiListSelector {
@@ -111,23 +89,6 @@ Page {
                 valueText: qsTr("None chosen")
                 selector: TimeSelector {}
             }
-        }
-    }
-
-    InformationBox {
-        id: infobox
-
-        function showMessage(message) {
-            label.text = message;
-            open();
-        }
-
-        content: Label {
-            id: label
-
-            anchors.fill: parent
-            alignment: Qt.AlignCenter
-            color: platformStyle.notificationTextColor
         }
     }
 }

@@ -22,16 +22,23 @@ Window {
     id: mainWindow
 
     windowTitle: qsTr("Gallery")
-    tools: Action {
-        text: qsTr("About")
-        onTriggered: {
-            loader.source = Qt.resolvedUrl("AboutDialog.qml");
+    tools: [
+        Action {
+            text: mainWindow.inPortrait ? qsTr("Landscape") : qsTr("Portrait")
+            onTriggered: screen.orientationLock = checked ? Screen.PortraitOrientation : Screen.LandscapeOrientation
+        },
 
-            if (loader.item) {
-                loader.item.open();
+        Action {
+            text: qsTr("About")
+            onTriggered: {
+                loader.source = Qt.resolvedUrl("AboutDialog.qml");
+
+                if (loader.item) {
+                    loader.item.open();
+                }
             }
         }
-    }
+    ]
 
     Grid {
         anchors {
@@ -67,8 +74,13 @@ Window {
         }
 
         Button {
-            text: qsTr("Edit")
-            onClicked: pageStack.push(Qt.resolvedUrl("ListEditPage.qml"), {})
+            text: qsTr("TableView")
+            onClicked: pageStack.push(Qt.resolvedUrl("TableViewPage.qml"), {})
+        }
+
+        Button {
+            text: qsTr("Repeater")
+            onClicked: pageStack.push(Qt.resolvedUrl("RepeaterPage.qml"), {})
         }
 
         Button {
@@ -84,6 +96,23 @@ Window {
         Button {
             text: qsTr("Rectangles")
             onClicked: pageStack.push(Qt.resolvedUrl("RectanglesPage.qml"), {})
+        }
+    }
+
+    InformationBox {
+        id: infobox
+
+        function showMessage(message) {
+            label.text = message;
+            open();
+        }
+
+        content: Label {
+            id: label
+
+            anchors.fill: parent
+            alignment: Qt.AlignCenter
+            color: platformStyle.notificationTextColor
         }
     }
 

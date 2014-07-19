@@ -11,5 +11,7 @@
         <file>FilesPage.qml</file>
 	<file>MouseAreaPage.qml</file>
 	<file>RectanglesPage.qml</file>
+	<file>RepeaterPage.qml</file>
+	<file>TableViewPage.qml</file>
     </qresource>
 </RCC>
