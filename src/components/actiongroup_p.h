@@ -28,6 +28,7 @@ class ActionGroup : public QActionGroup, public QDeclarativeParserStatus
 {
     Q_OBJECT
 
+    Q_PROPERTY(bool enabled READ isEnabled WRITE setEnabled NOTIFY enabledChanged)
     Q_PRIVATE_PROPERTY(ActionGroup::d_func(), QDeclarativeListProperty<QObject> data READ data)
 
     Q_INTERFACES(QDeclarativeParserStatus)
@@ -38,16 +39,23 @@ public:
     explicit ActionGroup(QObject *parent = 0);
     ~ActionGroup();
 
-private:
+signals:
+    void enabledChanged();
+
+protected:
     ActionGroup(ActionGroupPrivate &dd, QObject *parent = 0);
 
-    void classBegin();
-    void componentComplete();
+    virtual void classBegin();
+    virtual void componentComplete();
+
+    virtual bool event(QEvent *event);
 
     QScopedPointer<ActionGroupPrivate> d_ptr;
 
-    Q_DISABLE_COPY(ActionGroup)
     Q_DECLARE_PRIVATE(ActionGroup)
+
+private:
+    Q_DISABLE_COPY(ActionGroup)
 };
 
 QML_DECLARE_TYPE(ActionGroup)

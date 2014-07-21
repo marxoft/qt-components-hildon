@@ -31,6 +31,7 @@ class InformationBox : public QMaemo5InformationBox, public QDeclarativeParserSt
     Q_PROPERTY(QWidget* parent READ parentWidget WRITE setParent NOTIFY parentChanged)
     Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity NOTIFY opacityChanged)
     Q_PROPERTY(bool visible READ isVisible WRITE setVisible NOTIFY visibleChanged)
+    Q_PROPERTY(bool enabled READ isEnabled WRITE setEnabled NOTIFY enabledChanged)
     Q_PROPERTY(bool focus READ hasFocus WRITE setFocus NOTIFY focusChanged)
     Q_PRIVATE_PROPERTY(InformationBox::d_func(), QDeclarativeListProperty<QObject> data READ data)
     Q_PRIVATE_PROPERTY(InformationBox::d_func(), QDeclarativeListProperty<QWidget> children READ children)
@@ -61,24 +62,27 @@ signals:
     void parentChanged();
     void opacityChanged();
     void visibleChanged();
+    void enabledChanged();
     void focusChanged();
 
-private:
-    void changeEvent(QEvent *event);
-    void showEvent(QShowEvent *event);
-    void hideEvent(QHideEvent *event);
-    void focusInEvent(QFocusEvent *event);
-    void focusOutEvent(QFocusEvent *event);
+protected:
+    virtual void changeEvent(QEvent *event);
+    virtual void showEvent(QShowEvent *event);
+    virtual void hideEvent(QHideEvent *event);
+    virtual void focusInEvent(QFocusEvent *event);
+    virtual void focusOutEvent(QFocusEvent *event);
 
-    void classBegin();
-    void componentComplete();
+    virtual void classBegin();
+    virtual void componentComplete();
 
     InformationBox(InformationBoxPrivate &dd, QWidget *parent = 0);
 
     QScopedPointer<InformationBoxPrivate> d_ptr;
 
-    Q_DISABLE_COPY(InformationBox)
     Q_DECLARE_PRIVATE(InformationBox)
+
+private:
+    Q_DISABLE_COPY(InformationBox)
 };
 
 QML_DECLARE_TYPE(InformationBox)

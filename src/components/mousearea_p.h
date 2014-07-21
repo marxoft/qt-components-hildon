@@ -146,15 +146,17 @@ signals:
 protected:
     MouseArea(MouseAreaPrivate &dd, QWidget *parent = 0);
 
-    void mousePressEvent(QMouseEvent *event);
-    void mouseReleaseEvent(QMouseEvent *event);
-    void mouseMoveEvent(QMouseEvent *event);
-    void mouseDoubleClickEvent(QMouseEvent *event);
+    virtual void mousePressEvent(QMouseEvent *event);
+    virtual void mouseReleaseEvent(QMouseEvent *event);
+    virtual void mouseMoveEvent(QMouseEvent *event);
+    virtual void mouseDoubleClickEvent(QMouseEvent *event);
 
-    void timerEvent(QTimerEvent *event);
+    virtual void timerEvent(QTimerEvent *event);
 
-    Q_DISABLE_COPY(MouseArea)
     Q_DECLARE_PRIVATE(MouseArea)
+
+private:
+    Q_DISABLE_COPY(MouseArea)
 };
 
 QML_DECLARE_TYPE(MouseDrag)

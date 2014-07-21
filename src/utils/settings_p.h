@@ -62,10 +62,10 @@ public:
     void setCategory(const QString &category);
 
 protected:
-    void timerEvent(QTimerEvent *event);
+    virtual void timerEvent(QTimerEvent *event);
 
-    void classBegin();
-    void componentComplete();
+    virtual void classBegin();
+    virtual void componentComplete();
 
 private:
     QScopedPointer<SettingsPrivate> d_ptr;

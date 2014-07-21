@@ -41,15 +41,17 @@ public:
 protected:
     ValueSelector(ValueSelectorPrivate &dd, QObject *parent = 0);
 
-    void classBegin();
-    void componentComplete();
+    virtual void classBegin();
+    virtual void componentComplete();
 
     QScopedPointer<ValueSelectorPrivate> d_ptr;
 
+    Q_DECLARE_PRIVATE(ValueSelector)
+
+private:
     friend class ValueButton;
 
     Q_DISABLE_COPY(ValueSelector)
-    Q_DECLARE_PRIVATE(ValueSelector)
 };
 
 QML_DECLARE_TYPE(ValueSelector)

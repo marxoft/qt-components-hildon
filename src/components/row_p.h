@@ -38,13 +38,15 @@ public:
 signals:
     void spacingChanged();
 
-private:
+protected:
     Row(RowPrivate &dd, QWidget *parent = 0);
 
-    void componentComplete();
+    virtual void componentComplete();
 
-    Q_DISABLE_COPY(Row)
     Q_DECLARE_PRIVATE(Row)
+
+private:
+    Q_DISABLE_COPY(Row)
 };
 
 QML_DECLARE_TYPE(Row)

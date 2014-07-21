@@ -47,9 +47,11 @@ bool ButtonRow::exclusive() const {
 }
 
 void ButtonRow::setExclusive(bool exclusive) {
-    Q_D(ButtonRow);
-
-    d->group->setExclusive(exclusive);
+    if (exclusive != this->exclusive()) {
+        Q_D(ButtonRow);
+        d->group->setExclusive(exclusive);
+        emit exclusiveChanged();
+    }
 }
 
 void ButtonRowPrivate::data_append(QDeclarativeListProperty<QObject> *list, QObject *obj) {

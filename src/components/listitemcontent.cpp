@@ -118,6 +118,20 @@ void ListItemContent::setVisible(bool visible) {
     }
 }
 
+bool ListItemContent::isEnabled() const {
+    Q_D(const ListItemContent);
+
+    return d->enabled;
+}
+
+void ListItemContent::setEnabled(bool enabled) {
+    if (enabled != this->isEnabled()) {
+        Q_D(ListItemContent);
+        d->enabled = enabled;
+        emit enabledChanged();
+    }
+}
+
 bool ListItemContent::smooth() const {
     Q_D(const ListItemContent);
 

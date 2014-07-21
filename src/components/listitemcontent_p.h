@@ -37,6 +37,7 @@ class ListItemContent : public QObject, public QDeclarativeParserStatus
     Q_PROPERTY(int height READ height WRITE setHeight NOTIFY heightChanged)
     Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity NOTIFY opacityChanged)
     Q_PROPERTY(bool visible READ isVisible WRITE setVisible NOTIFY visibleChanged)
+    Q_PROPERTY(bool enabled READ isEnabled WRITE setEnabled NOTIFY enabledChanged)
     Q_PROPERTY(bool smooth READ smooth WRITE setSmooth NOTIFY smoothChanged)
     Q_PRIVATE_PROPERTY(ListItemContent::d_func(), Anchors* anchors READ anchors CONSTANT FINAL)
     Q_PROPERTY(AnchorLine left READ left CONSTANT FINAL)
@@ -74,6 +75,9 @@ public:
     bool isVisible() const;
     void setVisible(bool visible);
 
+    bool isEnabled() const;
+    void setEnabled(bool enabled);
+
     bool smooth() const;
     void setSmooth(bool smooth);
 
@@ -96,6 +100,7 @@ signals:
     void heightChanged();
     void opacityChanged();
     void visibleChanged();
+    void enabledChanged();
     void smoothChanged();
 
 protected:

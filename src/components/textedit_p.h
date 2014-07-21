@@ -117,11 +117,13 @@ signals:
     void selectionChanged();
     void cursorPositionChanged();
 
-private:
+protected:
     TextEdit(TextEditPrivate &dd, QWidget *parent = 0);
 
-    Q_DISABLE_COPY(TextEdit)
     Q_DECLARE_PRIVATE(TextEdit)
+
+private:
+    Q_DISABLE_COPY(TextEdit)
 };
 
 QML_DECLARE_TYPE(TextEdit)

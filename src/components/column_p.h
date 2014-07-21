@@ -38,13 +38,15 @@ public:
 signals:
     void spacingChanged();
 
-private:
+protected:
     Column(ColumnPrivate &dd, QWidget *parent = 0);
 
-    void componentComplete();
+    virtual void componentComplete();
 
-    Q_DISABLE_COPY(Column)
     Q_DECLARE_PRIVATE(Column)
+
+private:
+    Q_DISABLE_COPY(Column)
 };
 
 QML_DECLARE_TYPE(Column)

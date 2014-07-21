@@ -91,15 +91,17 @@ signals:
     void typeChanged();
     void statusChanged();
 
-private:
+protected:
     DBusMessage(DBusMessagePrivate &dd, QObject *parent = 0);
 
     QScopedPointer<DBusMessagePrivate> d_ptr;
 
     Q_DECLARE_PRIVATE(DBusMessage)
-    Q_DISABLE_COPY(DBusMessage)
 
     Q_PRIVATE_SLOT(d_func(), void _q_onReplyFinished(QDBusPendingCallWatcher*))
+
+private:
+    Q_DISABLE_COPY(DBusMessage)
 };
 
 QML_DECLARE_TYPE(DBusMessage)

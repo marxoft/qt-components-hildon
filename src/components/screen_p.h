@@ -64,18 +64,20 @@ signals:
     void currentOrientationChanged(Screen::Orientation current);
     void coveredChanged(bool covered);
 
-private:
+protected:
     Screen(ScreenPrivate &dd, QObject *parent = 0);
 
     static Screen *self;
 
     QScopedPointer<ScreenPrivate> d_ptr;
 
-    Q_DISABLE_COPY(Screen)
     Q_DECLARE_PRIVATE(Screen)
 
     Q_PRIVATE_SLOT(d_func(), void _q_onResized())
     Q_PRIVATE_SLOT(d_func(), void _q_onLockStateChanged(QString))
+
+private:
+    Q_DISABLE_COPY(Screen)
 };
 
 QML_DECLARE_TYPE(Screen)

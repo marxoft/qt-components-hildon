@@ -35,6 +35,7 @@ class Menu : public QMenu, public QDeclarativeParserStatus
     Q_PROPERTY(int height READ height WRITE setFixedHeight)
     Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity NOTIFY opacityChanged)
     Q_PROPERTY(bool visible READ isVisible WRITE setVisible NOTIFY visibleChanged)
+    Q_PROPERTY(bool enabled READ isEnabled WRITE setEnabled NOTIFY enabledChanged)
     Q_PROPERTY(bool focus READ hasFocus WRITE setFocus NOTIFY focusChanged)
     Q_PROPERTY(QString icon READ iconSource WRITE setIconSource NOTIFY iconChanged)
     Q_PRIVATE_PROPERTY(Menu::d_func(), QDeclarativeListProperty<QObject> data READ data)
@@ -67,25 +68,28 @@ signals:
     void parentChanged();
     void opacityChanged();
     void visibleChanged();
+    void enabledChanged();
     void focusChanged();
     void iconChanged();
 
-private:
+protected:
     Menu(MenuPrivate &dd, QWidget *parent);
 
-    void changeEvent(QEvent *event);
-    void showEvent(QShowEvent *event);
-    void hideEvent(QHideEvent *event);
-    void focusInEvent(QFocusEvent *event);
-    void focusOutEvent(QFocusEvent *event);
+    virtual void changeEvent(QEvent *event);
+    virtual void showEvent(QShowEvent *event);
+    virtual void hideEvent(QHideEvent *event);
+    virtual void focusInEvent(QFocusEvent *event);
+    virtual void focusOutEvent(QFocusEvent *event);
 
-    void classBegin();
-    void componentComplete();
+    virtual void classBegin();
+    virtual void componentComplete();
 
     QScopedPointer<MenuPrivate> d_ptr;
 
-    Q_DISABLE_COPY(Menu)
     Q_DECLARE_PRIVATE(Menu)
+
+private:
+    Q_DISABLE_COPY(Menu)
 };
 
 QML_DECLARE_TYPE(Menu)

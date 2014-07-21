@@ -98,15 +98,17 @@ signals:
     void horizontalTileModeChanged();
     void verticalTileModeChanged();
 
-private:
+protected:
     BorderImage(BorderImagePrivate &dd, QWidget *parent = 0);
 
-    Q_DISABLE_COPY(BorderImage)
     Q_DECLARE_PRIVATE(BorderImage)
 
     Q_PRIVATE_SLOT(d_func(), void _q_onLoaderFinished(ImageLoader*))
     Q_PRIVATE_SLOT(d_func(), void _q_onLoaderCanceled(ImageLoader*))
     Q_PRIVATE_SLOT(d_func(), void _q_onLoaderProgressChanged(qreal))
+
+private:
+    Q_DISABLE_COPY(BorderImage)
 };
 
 QML_DECLARE_TYPE(BorderImage)

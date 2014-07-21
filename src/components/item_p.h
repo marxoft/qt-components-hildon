@@ -37,6 +37,7 @@ class Item : public QWidget, public QDeclarativeParserStatus
     Q_PROPERTY(int width READ width WRITE setFixedWidth NOTIFY widthChanged)
     Q_PROPERTY(int height READ height WRITE setFixedHeight NOTIFY heightChanged)
     Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity NOTIFY opacityChanged)
+    Q_PROPERTY(bool enabled READ isEnabled WRITE setEnabled NOTIFY enabledChanged)
     Q_PROPERTY(bool focus READ hasFocus WRITE setFocus NOTIFY focusChanged)
     Q_PRIVATE_PROPERTY(Item::d_func(), Anchors* anchors READ anchors CONSTANT FINAL)
     Q_PROPERTY(AnchorLine left READ left CONSTANT FINAL)
@@ -74,6 +75,17 @@ public:
     AnchorLine horizontalCenter() const;
     AnchorLine verticalCenter() const;
 
+signals:
+    void parentChanged();
+    void xChanged();
+    void yChanged();
+    void widthChanged();
+    void heightChanged();
+    void opacityChanged();
+    void visibleChanged();
+    void enabledChanged();
+    void focusChanged();
+
 protected:
     Item(ItemPrivate &dd, QWidget *parent = 0);
 
@@ -93,16 +105,6 @@ protected:
     QScopedPointer<ItemPrivate> d_ptr;
 
     Q_DECLARE_PRIVATE(Item)
-
-signals:
-    void parentChanged();
-    void xChanged();
-    void yChanged();
-    void widthChanged();
-    void heightChanged();
-    void opacityChanged();
-    void visibleChanged();
-    void focusChanged();
 
 private:
     Q_DISABLE_COPY(Item)

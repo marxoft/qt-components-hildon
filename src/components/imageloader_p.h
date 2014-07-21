@@ -65,7 +65,7 @@ signals:
     void canceled(ImageLoader *loader);
     void progressChanged(qreal progress);
 
-private:
+protected:
     ImageLoader(ImageLoaderPrivate &dd);
 
     static QThread *loadingThread;
@@ -74,7 +74,6 @@ private:
 
     QScopedPointer<ImageLoaderPrivate> d_ptr;
 
-    Q_DISABLE_COPY(ImageLoader)
     Q_DECLARE_PRIVATE(ImageLoader)
 
     Q_PRIVATE_SLOT(d_func(), void _q_onProgressChanged(qint64,qint64))
@@ -83,6 +82,9 @@ private:
     Q_PRIVATE_SLOT(d_func(), void _q_loadImageFromCache(QUrl))
     Q_PRIVATE_SLOT(d_func(), void _q_loadImageFromLocalFile(QString))
     Q_PRIVATE_SLOT(d_func(), void _q_loadImageFromData(QByteArray))
+
+private:
+    Q_DISABLE_COPY(ImageLoader)
 };
 
 #endif // IMAGELOADER_P_H

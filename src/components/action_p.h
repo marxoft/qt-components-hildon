@@ -26,8 +26,9 @@ class Action : public QAction
 
     Q_OBJECT
 
-    Q_PROPERTY(QString icon READ iconSource WRITE setIconSource NOTIFY changed)
-    Q_PROPERTY(QString shortcut READ shortcutString WRITE setShortcutString NOTIFY changed)
+    Q_PROPERTY(bool enabled READ isEnabled WRITE setEnabled NOTIFY enabledChanged)
+    Q_PROPERTY(QString icon READ iconSource WRITE setIconSource NOTIFY iconChanged)
+    Q_PROPERTY(QString shortcut READ shortcutString WRITE setShortcutString NOTIFY shortcutChanged)
 
 public:
     explicit Action(QObject *parent = 0);
@@ -38,6 +39,14 @@ public:
 
     QString shortcutString() const;
     void setShortcutString(const QString &shortcut);
+
+signals:
+    void enabledChanged();
+    void iconChanged();
+    void shortcutChanged();
+
+protected:
+    virtual bool event(QEvent *event);
 
 private:
     Q_DISABLE_COPY(Action)

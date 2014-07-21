@@ -52,13 +52,15 @@ signals:
     void radiusChanged();
     void smoothChanged();
 
-private:
+protected:
     Rectangle(RectanglePrivate &dd, QWidget *parent = 0);
 
-    void paintEvent(QPaintEvent *event);
+    virtual void paintEvent(QPaintEvent *event);
 
-    Q_DISABLE_COPY(Rectangle)
     Q_DECLARE_PRIVATE(Rectangle)
+
+private:
+    Q_DISABLE_COPY(Rectangle)
 };
 
 QML_DECLARE_TYPE(Rectangle)

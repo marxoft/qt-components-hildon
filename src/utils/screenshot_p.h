@@ -97,13 +97,15 @@ signals:
     void targetWidthChanged();
     void targetHeightChanged();
 
-private:
+protected:
     ScreenShot(ScreenShotPrivate &dd, QObject *parent = 0);
 
     QScopedPointer<ScreenShotPrivate> d_ptr;
 
-    Q_DISABLE_COPY(ScreenShot)
     Q_DECLARE_PRIVATE(ScreenShot)
+
+private:
+    Q_DISABLE_COPY(ScreenShot)
 };
 
 QML_DECLARE_TYPE(ScreenShot)

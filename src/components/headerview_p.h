@@ -37,6 +37,7 @@ class HeaderView : public QHeaderView, public QDeclarativeParserStatus
     Q_PROPERTY(int width READ width WRITE setFixedWidth NOTIFY widthChanged)
     Q_PROPERTY(int height READ height WRITE setFixedHeight NOTIFY heightChanged)
     Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity NOTIFY opacityChanged)
+    Q_PROPERTY(bool enabled READ isEnabled WRITE setEnabled NOTIFY enabledChanged)
     Q_PROPERTY(bool focus READ hasFocus WRITE setFocus NOTIFY focusChanged)
     Q_PROPERTY(QStringList labels READ labels WRITE setLabels NOTIFY labelsChanged)
     Q_PRIVATE_PROPERTY(HeaderView::d_func(), Anchors* anchors READ anchors CONSTANT FINAL)
@@ -94,6 +95,7 @@ signals:
     void heightChanged();
     void opacityChanged();
     void visibleChanged();
+    void enabledChanged();
     void focusChanged();
     void labelsChanged();
     void currentIndexChanged();
@@ -109,21 +111,23 @@ signals:
 protected:
     HeaderView(HeaderViewPrivate &dd, QWidget *parent = 0);
 
-    void changeEvent(QEvent *event);
-    void moveEvent(QMoveEvent *event);
-    void resizeEvent(QResizeEvent *event);
-    void showEvent(QShowEvent *event);
-    void hideEvent(QHideEvent *event);
-    void focusInEvent(QFocusEvent *event);
-    void focusOutEvent(QFocusEvent *event);
+    virtual void changeEvent(QEvent *event);
+    virtual void moveEvent(QMoveEvent *event);
+    virtual void resizeEvent(QResizeEvent *event);
+    virtual void showEvent(QShowEvent *event);
+    virtual void hideEvent(QHideEvent *event);
+    virtual void focusInEvent(QFocusEvent *event);
+    virtual void focusOutEvent(QFocusEvent *event);
 
-    void classBegin();
-    void componentComplete();
+    virtual void classBegin();
+    virtual void componentComplete();
 
     QScopedPointer<HeaderViewPrivate> d_ptr;
 
-    Q_DISABLE_COPY(HeaderView)
     Q_DECLARE_PRIVATE(HeaderView)
+
+private:
+    Q_DISABLE_COPY(HeaderView)
 };
 
 class HeaderLabelModel : public QStringListModel

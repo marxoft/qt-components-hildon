@@ -132,13 +132,15 @@ signals:
     void standardOutputFileChanged();
     void standardOutputProcessChanged();
 
-private:
+protected:
     Process(ProcessPrivate &dd, QObject *parent = 0);
 
     QScopedPointer<ProcessPrivate> d_ptr;
 
-    Q_DISABLE_COPY(Process)
     Q_DECLARE_PRIVATE(Process)
+
+private:
+    Q_DISABLE_COPY(Process)
 };
 
 QML_DECLARE_TYPE(Process)

@@ -51,15 +51,17 @@ public:
 signals:
     void targetChanged();
 
-private:
+protected:
     DBusAdaptor(DBusAdaptorPrivate &dd, QObject *parent = 0);
 
-    void classBegin();
-    void componentComplete();
+    virtual void classBegin();
+    virtual void componentComplete();
 
     QScopedPointer<DBusAdaptorPrivate> d_ptr;
 
     Q_DECLARE_PRIVATE(DBusAdaptor)
+
+private:
     Q_DISABLE_COPY(DBusAdaptor)
 };
 

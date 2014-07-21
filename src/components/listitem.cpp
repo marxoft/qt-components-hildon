@@ -37,6 +37,7 @@ public:
         height(70),
         opacity(1.0),
         visible(true),
+        enabled(true),
         left(AnchorLine(parent, AnchorLine::Left)),
         right(AnchorLine(parent, AnchorLine::Right)),
         top(AnchorLine(parent, AnchorLine::Top)),
@@ -112,6 +113,7 @@ public:
     qreal opacity;
 
     bool visible;
+    bool enabled;
 
     AnchorLine left;
     AnchorLine right;
@@ -230,6 +232,20 @@ void ListItem::setVisible(bool visible) {
         Q_D(ListItem);
         d->visible = visible;
         emit visibleChanged();
+    }
+}
+
+bool ListItem::isEnabled() const {
+    Q_D(const ListItem);
+
+    return d->enabled;
+}
+
+void ListItem::setEnabled(bool enabled) {
+    if (enabled != this->isEnabled()) {
+        Q_D(ListItem);
+        d->enabled = enabled;
+        emit enabledChanged();
     }
 }
 

@@ -35,6 +35,7 @@ class ToolButton : public QToolButton, public QDeclarativeParserStatus
     Q_PROPERTY(int width READ width WRITE setFixedWidth NOTIFY widthChanged)
     Q_PROPERTY(int height READ height WRITE setFixedHeight NOTIFY heightChanged)
     Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity NOTIFY opacityChanged)
+    Q_PROPERTY(bool enabled READ isEnabled WRITE setEnabled NOTIFY enabledChanged)
     Q_PROPERTY(bool focus READ hasFocus WRITE setFocus NOTIFY focusChanged)
     Q_PROPERTY(QString icon READ iconSource WRITE setIconSource NOTIFY iconChanged)
     Q_PROPERTY(QString shortcut READ shortcutString WRITE setShortcutString NOTIFY shortcutChanged)
@@ -87,28 +88,31 @@ signals:
     void heightChanged();
     void opacityChanged();
     void visibleChanged();
+    void enabledChanged();
     void focusChanged();
     void iconChanged();
     void shortcutChanged();
 
-private:
+protected:
     ToolButton(ToolButtonPrivate &dd, QWidget *parent = 0);
 
-    void changeEvent(QEvent *event);
-    void moveEvent(QMoveEvent *event);
-    void resizeEvent(QResizeEvent *event);
-    void showEvent(QShowEvent *event);
-    void hideEvent(QHideEvent *event);
-    void focusInEvent(QFocusEvent *event);
-    void focusOutEvent(QFocusEvent *event);
+    virtual void changeEvent(QEvent *event);
+    virtual void moveEvent(QMoveEvent *event);
+    virtual void resizeEvent(QResizeEvent *event);
+    virtual void showEvent(QShowEvent *event);
+    virtual void hideEvent(QHideEvent *event);
+    virtual void focusInEvent(QFocusEvent *event);
+    virtual void focusOutEvent(QFocusEvent *event);
 
-    void classBegin();
-    void componentComplete();
+    virtual void classBegin();
+    virtual void componentComplete();
 
     QScopedPointer<ToolButtonPrivate> d_ptr;
 
-    Q_DISABLE_COPY(ToolButton)
     Q_DECLARE_PRIVATE(ToolButton)
+
+private:
+    Q_DISABLE_COPY(ToolButton)
 };
 
 QML_DECLARE_TYPE(ToolButton)

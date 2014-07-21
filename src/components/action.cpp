@@ -16,6 +16,7 @@
  */
 
 #include "action_p.h"
+#include <QEvent>
 
 Action::Action(QObject *parent) :
     QAction(parent)
@@ -31,6 +32,7 @@ QString Action::iconSource() const {
 void Action::setIconSource(const QString &source) {
     if (source != this->icon().name()) {
         this->setIcon(source.contains('/') ? QIcon(source) : QIcon::fromTheme(source));
+        emit iconChanged();
     }
 }
 
@@ -39,5 +41,20 @@ QString Action::shortcutString() const {
 }
 
 void Action::setShortcutString(const QString &shortcut) {
-    this->setShortcut(QKeySequence(shortcut));
+    if (shortcut != this->shortcutString()) {
+        this->setShortcut(QKeySequence(shortcut));
+        emit shortcutChanged();
+    }
+}
+
+bool Action::event(QEvent *event) {
+    switch (event->type()) {
+    case QEvent::EnabledChange:
+        emit enabledChanged();
+        break;
+    default:
+        break;
+    }
+
+    return QAction::event(event);
 }

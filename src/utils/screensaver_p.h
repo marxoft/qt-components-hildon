@@ -36,13 +36,15 @@ public:
     bool screenSaverInhibited() const;
     void setScreenSaverInhibited(bool inhibited);
 
-private:
+protected:
     ScreenSaver(ScreenSaverPrivate &dd, QObject *parent = 0);
 
     QScopedPointer<ScreenSaverPrivate> d_ptr;
 
-    Q_DISABLE_COPY(ScreenSaver)
     Q_DECLARE_PRIVATE(ScreenSaver)
+
+private:
+    Q_DISABLE_COPY(ScreenSaver)
 };
 
 QML_DECLARE_TYPE(ScreenSaver)

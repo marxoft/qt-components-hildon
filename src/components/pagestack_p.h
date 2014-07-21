@@ -57,18 +57,20 @@ signals:
     void countChanged();
     void currentPageChanged();
     
-private:
+protected:
     PageStack(PageStackPrivate &dd, QObject *parent = 0);
 
     QScopedPointer<PageStackPrivate> d_ptr;
 
+    Q_DECLARE_PRIVATE(PageStack)
+
+    Q_PRIVATE_SLOT(d_func(), void _q_onPageStatusChanged(QDeclarativeComponent::Status))
+
+private:
     friend class Page;
     friend class Window;
 
     Q_DISABLE_COPY(PageStack)
-    Q_DECLARE_PRIVATE(PageStack)
-
-    Q_PRIVATE_SLOT(d_func(), void _q_onPageStatusChanged(QDeclarativeComponent::Status))
 };
 
 QML_DECLARE_TYPE(PageStack)

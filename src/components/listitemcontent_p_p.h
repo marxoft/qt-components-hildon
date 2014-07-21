@@ -34,6 +34,7 @@ public:
         height(0),
         opacity(1.0),
         visible(true),
+        enabled(true),
         smooth(false),
         left(AnchorLine(parent, AnchorLine::Left)),
         right(AnchorLine(parent, AnchorLine::Right)),
@@ -109,6 +110,7 @@ public:
     qreal opacity;
 
     bool visible;
+    bool enabled;
 
     bool smooth;
 

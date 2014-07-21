@@ -53,13 +53,15 @@ signals:
     void currentIndexChanged();
     void selected(const QString &text);
 
-private:
+protected:
     ListSelector(ListSelectorPrivate &dd, QObject *parent = 0);
 
-    void componentComplete();
+    virtual void componentComplete();
 
-    Q_DISABLE_COPY(ListSelector)
     Q_DECLARE_PRIVATE(ListSelector)
+
+private:
+    Q_DISABLE_COPY(ListSelector)
 };
 
 class ListPickDelegate : public QStyledItemDelegate

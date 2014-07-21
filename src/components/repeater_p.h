@@ -62,23 +62,25 @@ signals:
     void itemAdded(int index, QWidget *item);
     void itemRemoved(int index, QWidget *item);
 
-private:
+protected:
     Repeater(RepeaterPrivate &dd, QObject *parent = 0);
 
-    void classBegin();
-    void componentComplete();
+    virtual void classBegin();
+    virtual void componentComplete();
 
-    bool event(QEvent *event);
+    virtual bool event(QEvent *event);
 
     QScopedPointer<RepeaterPrivate> d_ptr;
 
-    Q_DISABLE_COPY(Repeater)
     Q_DECLARE_PRIVATE(Repeater)
 
     Q_PRIVATE_SLOT(d_func(), void _q_onRowsInserted(QModelIndex,int,int))
     Q_PRIVATE_SLOT(d_func(), void _q_onRowsRemoved(QModelIndex,int,int))
     Q_PRIVATE_SLOT(d_func(), void _q_onRowsMoved(QModelIndex,int,int,QModelIndex,int))
     Q_PRIVATE_SLOT(d_func(), void _q_onDataChanged(QModelIndex,QModelIndex))
+
+private:
+    Q_DISABLE_COPY(Repeater)
 };
 
 QML_DECLARE_TYPE(Repeater)

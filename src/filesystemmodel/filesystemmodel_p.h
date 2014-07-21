@@ -111,12 +111,14 @@ signals:
     void nameFiltersChanged();
     void dirFilterChanged();
 
-private:
+protected:
     FileSystemModel(FileSystemModelPrivate &dd, QObject *parent = 0);
 
     QScopedPointer<FileSystemModelPrivate> d_ptr;
 
     Q_DECLARE_PRIVATE(FileSystemModel)
+
+private:
     Q_DISABLE_COPY(FileSystemModel)
 };
 

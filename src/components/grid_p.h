@@ -53,13 +53,15 @@ signals:
     void horizontalSpacingChanged();
     void verticalSpacingChanged();
 
-private:
+protected:
     Grid(GridPrivate &dd, QWidget *parent = 0);
 
-    void componentComplete();
+    virtual void componentComplete();
 
-    Q_DISABLE_COPY(Grid)
     Q_DECLARE_PRIVATE(Grid)
+
+private:
+    Q_DISABLE_COPY(Grid)
 };
 
 QML_DECLARE_TYPE(Grid)

@@ -63,18 +63,20 @@ signals:
     void triggeredOnStartChanged();
     void triggered();
 
-private:
+protected:
     Timer(TimerPrivate &dd, QObject *parent = 0);
 
-    void classBegin();
-    void componentComplete();
+    virtual void classBegin();
+    virtual void componentComplete();
 
-    void timerEvent(QTimerEvent *event);
+    virtual void timerEvent(QTimerEvent *event);
 
     QScopedPointer<TimerPrivate> d_ptr;
 
-    Q_DISABLE_COPY(Timer)
     Q_DECLARE_PRIVATE(Timer)
+
+private:
+    Q_DISABLE_COPY(Timer)
 };
 
 QML_DECLARE_TYPE(Timer)

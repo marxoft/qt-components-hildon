@@ -189,6 +189,9 @@ void Window::changeEvent(QEvent *event) {
     case QEvent::ParentChange:
         emit parentChanged();
         break;
+    case QEvent::EnabledChange:
+        emit enabledChanged();
+        break;
     default:
         break;
     }

@@ -26,7 +26,7 @@ class ButtonRow : public Item
 {
     Q_OBJECT
 
-    Q_PROPERTY(bool exclusive READ exclusive WRITE setExclusive)
+    Q_PROPERTY(bool exclusive READ exclusive WRITE setExclusive NOTIFY exclusiveChanged)
 
 public:
     explicit ButtonRow(QWidget *parent = 0);
@@ -35,11 +35,16 @@ public:
     bool exclusive() const;
     void setExclusive(bool exclusive);
 
-private:
+signals:
+    void exclusiveChanged();
+
+protected:
     ButtonRow(ButtonRowPrivate &dd, QWidget *parent = 0);
 
-    Q_DISABLE_COPY(ButtonRow)
     Q_DECLARE_PRIVATE(ButtonRow)
+
+private:
+    Q_DISABLE_COPY(ButtonRow)
 };
 
 QML_DECLARE_TYPE(ButtonRow)

@@ -73,19 +73,22 @@ signals:
     void progressChanged();
     void loaded();
 
-private:
+protected:
     Loader(LoaderPrivate &dd, QObject *parent = 0);
 
-    void classBegin();
-    void componentComplete();
+    virtual void classBegin();
+    virtual void componentComplete();
 
-    bool event(QEvent *event);
+    virtual bool event(QEvent *event);
 
     QScopedPointer<LoaderPrivate> d_ptr;
 
-    Q_DISABLE_COPY(Loader)
     Q_DECLARE_PRIVATE(Loader)
+
     Q_PRIVATE_SLOT(d_func(), void _q_sourceLoaded())
+
+private:
+    Q_DISABLE_COPY(Loader)
 };
 
 QML_DECLARE_TYPE(Loader)

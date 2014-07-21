@@ -17,6 +17,7 @@
 
 #include "actiongroup_p.h"
 #include "actiongroup_p_p.h"
+#include <QEvent>
 
 ActionGroup::ActionGroup(QObject *parent) :
     QActionGroup(parent),
@@ -38,6 +39,18 @@ void ActionGroup::componentComplete() {
     Q_D(ActionGroup);
 
     d->componentComplete();
+}
+
+bool ActionGroup::event(QEvent *event) {
+    switch (event->type()) {
+    case QEvent::EnabledChange:
+        emit enabledChanged();
+        break;
+    default:
+        break;
+    }
+
+    return QActionGroup::event(event);
 }
 
 void ActionGroupPrivate::data_append(QDeclarativeListProperty<QObject> *list, QObject *obj) {

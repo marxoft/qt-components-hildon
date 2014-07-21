@@ -60,11 +60,13 @@ signals:
     void currentIndexesChanged();
     void selected(const QString &text);
 
-private:
+protected:
     MultiListSelector(MultiListSelectorPrivate &dd, QObject *parent = 0);
 
-    Q_DISABLE_COPY(MultiListSelector)
     Q_DECLARE_PRIVATE(MultiListSelector)
+
+private:
+    Q_DISABLE_COPY(MultiListSelector)
 };
 
 class MultiListPickDialog : public QDialog

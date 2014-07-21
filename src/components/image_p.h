@@ -55,15 +55,17 @@ public:
 signals:
     void fillModeChanged();
 
-private:
+protected:
     Image(ImagePrivate &dd, QWidget *parent = 0);
 
-    Q_DISABLE_COPY(Image)
     Q_DECLARE_PRIVATE(Image)
 
     Q_PRIVATE_SLOT(d_func(), void _q_onLoaderFinished(ImageLoader*))
     Q_PRIVATE_SLOT(d_func(), void _q_onLoaderCanceled(ImageLoader*))
     Q_PRIVATE_SLOT(d_func(), void _q_onLoaderProgressChanged(qreal))
+
+private:
+    Q_DISABLE_COPY(Image)
 };
 
 QML_DECLARE_TYPE(Image)

@@ -38,13 +38,15 @@ public:
 signals:
     void spacingChanged();
 
-private:
+protected:
     Flow(FlowPrivate &dd, QWidget *parent = 0);
 
-    void componentComplete();
+    virtual void componentComplete();
 
-    Q_DISABLE_COPY(Flow)
     Q_DECLARE_PRIVATE(Flow)
+
+private:
+    Q_DISABLE_COPY(Flow)
 };
 
 QML_DECLARE_TYPE(Flow)
