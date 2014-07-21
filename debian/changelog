@@ -1,6 +1,7 @@
 qt-components-hildon (0.4.1) unstable; urgency=low
 
   * Added Directory component to the org.hildon.utils module.
+  * Make 'enabled' property NOTIFY-able.
   * Fixed focus handling in TextField and ValueButton components.
 
  -- Stuart Howarth <showarth@marxoft.co.uk>  Mon, 21 Jul 2014 12:40:31 +0100
