@@ -53,7 +53,7 @@ Page {
                     margins: 10
                 }
                 alignment: Qt.AlignLeft | Qt.AlignVCenter
-                text: modelData.title + "\n\n" + modelData.subTitle
+                text: modelData.title + "\n" + modelData.subTitle
             }
 
             ListItemProgressBar {
