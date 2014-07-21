@@ -27,48 +27,42 @@ PageStack::PageStack(QObject *parent) :
     QObject(parent),
     d_ptr(new PageStackPrivate(this))
 {
-    if (QDeclarativeEngine *engine = qmlEngine(Screen::instance())) {
-        QDeclarativeContext *context = engine->contextForObject(parent);
+    QDeclarativeContext *context = qmlContext(parent);
 
-        if (!context) {
-            context = engine->rootContext();
-        }
-
-        engine->setContextForObject(this, context);
-        context->setContextProperty("pageStack", this);
+    if (!context) {
+        context = qmlContext(Screen::instance());
     }
+
+    context->setContextProperty("pageStack", this);
+    QDeclarativeEngine::setContextForObject(this, context);
 }
 
 PageStack::PageStack(PageStackPrivate &dd, QObject *parent) :
     QObject(parent),
     d_ptr(&dd)
 {
-    if (QDeclarativeEngine *engine = qmlEngine(Screen::instance())) {
-        QDeclarativeContext *context = engine->contextForObject(parent);
+    QDeclarativeContext *context = qmlContext(parent);
 
-        if (!context) {
-            context = engine->rootContext();
-        }
-
-        engine->setContextForObject(this, context);
-        context->setContextProperty("pageStack", this);
+    if (!context) {
+        context = qmlContext(Screen::instance());
     }
+
+    context->setContextProperty("pageStack", this);
+    QDeclarativeEngine::setContextForObject(this, context);
 }
 
 PageStack::~PageStack() {}
 
 PageStack* PageStack::instance(QWidget *page) {
-    if (QDeclarativeEngine *engine = qmlEngine(Screen::instance())) {
-        QDeclarativeContext *context = engine->contextForObject(page);
+    QDeclarativeContext *context = qmlContext(page);
 
-        if (!context) {
-            context = engine->rootContext();
-        }
+    if (!context) {
+        context = qmlContext(Screen::instance());
+    }
 
-        if (QObject *obj = qvariant_cast<QObject*>(context->contextProperty("pageStack"))) {
-            if (PageStack* stack = qobject_cast<PageStack*>(obj)) {
-                return stack;
-            }
+    if (QObject *obj = qvariant_cast<QObject*>(context->contextProperty("pageStack"))) {
+        if (PageStack* stack = qobject_cast<PageStack*>(obj)) {
+            return stack;
         }
     }
 
@@ -111,8 +105,12 @@ void PageStack::push(const QUrl &url) {
     }
 
     d->data.clear();
-    d->component = new QDeclarativeComponent(qmlEngine(this));
-    this->connect(d->component, SIGNAL(statusChanged(QDeclarativeComponent::Status)), this, SLOT(_q_onPageStatusChanged(QDeclarativeComponent::Status)));
+
+    if (!d->component) {
+        d->component = new QDeclarativeComponent(qmlEngine(this), this);
+        this->connect(d->component, SIGNAL(statusChanged(QDeclarativeComponent::Status)), this, SLOT(_q_onPageStatusChanged(QDeclarativeComponent::Status)));
+    }
+
     d->component->loadUrl(url);
 }
 
@@ -124,8 +122,12 @@ void PageStack::push(const QUrl &url, const QVariantMap &data) {
     }
 
     d->data = data;
-    d->component = new QDeclarativeComponent(qmlEngine(this));
-    this->connect(d->component, SIGNAL(statusChanged(QDeclarativeComponent::Status)), this, SLOT(_q_onPageStatusChanged(QDeclarativeComponent::Status)));
+
+    if (!d->component) {
+        d->component = new QDeclarativeComponent(qmlEngine(this), this);
+        this->connect(d->component, SIGNAL(statusChanged(QDeclarativeComponent::Status)), this, SLOT(_q_onPageStatusChanged(QDeclarativeComponent::Status)));
+    }
+
     d->component->loadUrl(url);
 }
 
@@ -182,7 +184,7 @@ void PageStackPrivate::_q_onPageStatusChanged(QDeclarativeComponent::Status stat
 
     switch (status) {
     case QDeclarativeComponent::Ready:
-        if (QObject *obj = component->beginCreate(q->currentPage() ? qmlEngine(q->currentPage())->contextForObject(q->currentPage()) : qmlEngine(q)->contextForObject(q))) {
+        if (QObject *obj = component->beginCreate(q->currentPage() ? qmlContext(q->currentPage()) : qmlContext(q))) {
             if (!data.isEmpty()) {
                 foreach (QString key, data.keys()) {
                     obj->setProperty(key.toUtf8(), data.value(key));
