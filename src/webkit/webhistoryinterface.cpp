@@ -41,6 +41,10 @@ QStringList WebHistoryInterface::urls() const {
     return m_urls;
 }
 
+int WebHistoryInterface::count() const {
+    return m_urls.size();
+}
+
 QString WebHistoryInterface::storageFileName() const {
     return m_fileName;
 }

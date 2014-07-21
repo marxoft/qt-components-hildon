@@ -27,6 +27,7 @@ class WebHistoryInterface : public QWebHistoryInterface
     Q_OBJECT
 
     Q_PROPERTY(QStringList urls READ urls NOTIFY urlsChanged)
+    Q_PROPERTY(int count READ count NOTIFY urlsChanged)
     Q_PROPERTY(QString storageFileName READ storageFileName WRITE setStorageFileName NOTIFY storageFileNameChanged)
 
 public:
@@ -38,6 +39,8 @@ public:
     bool historyContains(const QString &url) const;
 
     QStringList urls() const;
+
+    int count() const;
 
     QString storageFileName() const;
     void setStorageFileName(const QString &fileName);
