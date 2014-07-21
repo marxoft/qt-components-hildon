@@ -38,6 +38,10 @@ class TextField : public QLineEdit, public QDeclarativeParserStatus
     Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity NOTIFY opacityChanged)
     Q_PROPERTY(bool enabled READ isEnabled WRITE setEnabled NOTIFY enabledChanged)
     Q_PROPERTY(bool focus READ hasFocus WRITE setFocus NOTIFY focusChanged)
+    Q_PROPERTY(int leftMargin READ leftMargin WRITE setLeftMargin NOTIFY marginsChanged)
+    Q_PROPERTY(int topMargin READ topMargin WRITE setTopMargin NOTIFY marginsChanged)
+    Q_PROPERTY(int rightMargin READ rightMargin WRITE setRightMargin NOTIFY marginsChanged)
+    Q_PROPERTY(int bottomMargin READ bottomMargin WRITE setBottomMargin NOTIFY marginsChanged)
     Q_PRIVATE_PROPERTY(TextField::d_func(), Anchors* anchors READ anchors CONSTANT FINAL)
     Q_PROPERTY(AnchorLine left READ left CONSTANT FINAL)
     Q_PROPERTY(AnchorLine right READ right CONSTANT FINAL)
@@ -67,6 +71,15 @@ public:
 
     void setFocus(bool focus);
 
+    int leftMargin() const;
+    void setLeftMargin(int margin);
+    int topMargin() const;
+    void setTopMargin(int margin);
+    int rightMargin() const;
+    void setRightMargin(int margin);
+    int bottomMargin() const;
+    void setBottomMargin(int margin);
+
     AnchorLine left() const;
     AnchorLine right() const;
     AnchorLine top() const;
@@ -84,6 +97,7 @@ signals:
     void visibleChanged();
     void enabledChanged();
     void focusChanged();
+    void marginsChanged();
 
 protected:
     TextField(TextFieldPrivate &dd, QWidget *parent = 0);

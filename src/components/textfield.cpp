@@ -83,6 +83,50 @@ void TextField::setFocus(bool focus) {
     }
 }
 
+int TextField::leftMargin() const {
+    return this->textMargins().left();
+}
+
+void TextField::setLeftMargin(int margin) {
+    if (margin != this->leftMargin()) {
+        this->setTextMargins(margin, this->topMargin(), this->rightMargin(), this->bottomMargin());
+        emit marginsChanged();
+    }
+}
+
+int TextField::topMargin() const {
+    return this->textMargins().top();
+}
+
+void TextField::setTopMargin(int margin) {
+    if (margin != this->topMargin()) {
+        this->setTextMargins(this->leftMargin(), margin, this->rightMargin(), this->bottomMargin());
+        emit marginsChanged();
+    }
+}
+
+int TextField::rightMargin() const {
+    return this->textMargins().right();
+}
+
+void TextField::setRightMargin(int margin) {
+    if (margin != this->rightMargin()) {
+        this->setTextMargins(this->leftMargin(), this->topMargin(), margin, this->bottomMargin());
+        emit marginsChanged();
+    }
+}
+
+int TextField::bottomMargin() const {
+    return this->textMargins().bottom();
+}
+
+void TextField::setBottomMargin(int margin) {
+    if (margin != this->bottomMargin()) {
+        this->setTextMargins(this->leftMargin(), this->topMargin(), this->rightMargin(), margin);
+        emit marginsChanged();
+    }
+}
+
 AnchorLine TextField::left() const {
     Q_D(const TextField);
 
