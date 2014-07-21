@@ -166,12 +166,12 @@ void TextField::hideEvent(QHideEvent *event) {
 }
 
 void TextField::focusInEvent(QFocusEvent *event) {
-    emit visibleChanged();
+    emit focusChanged();
     QLineEdit::focusInEvent(event);
 }
 
 void TextField::focusOutEvent(QFocusEvent *event) {
-    emit visibleChanged();
+    emit focusChanged();
     QLineEdit::focusOutEvent(event);
 }
 

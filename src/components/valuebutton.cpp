@@ -202,12 +202,12 @@ void ValueButton::hideEvent(QHideEvent *event) {
 }
 
 void ValueButton::focusInEvent(QFocusEvent *event) {
-    emit visibleChanged();
+    emit focusChanged();
     QMaemo5ValueButton::focusInEvent(event);
 }
 
 void ValueButton::focusOutEvent(QFocusEvent *event) {
-    emit visibleChanged();
+    emit focusChanged();
     QMaemo5ValueButton::focusOutEvent(event);
 }
 
