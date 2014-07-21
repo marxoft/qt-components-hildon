@@ -37,7 +37,6 @@ class TextField : public QLineEdit, public QDeclarativeParserStatus
     Q_PROPERTY(int height READ height WRITE setFixedHeight NOTIFY heightChanged)
     Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity NOTIFY opacityChanged)
     Q_PROPERTY(bool enabled READ isEnabled WRITE setEnabled NOTIFY enabledChanged)
-    Q_PROPERTY(bool focus READ hasFocus WRITE setFocus NOTIFY focusChanged)
     Q_PROPERTY(int leftMargin READ leftMargin WRITE setLeftMargin NOTIFY marginsChanged)
     Q_PROPERTY(int topMargin READ topMargin WRITE setTopMargin NOTIFY marginsChanged)
     Q_PROPERTY(int rightMargin READ rightMargin WRITE setRightMargin NOTIFY marginsChanged)
@@ -53,6 +52,7 @@ class TextField : public QLineEdit, public QDeclarativeParserStatus
     Q_PRIVATE_PROPERTY(TextField::d_func(), QDeclarativeListProperty<QWidget> children READ children)
     Q_PRIVATE_PROPERTY(TextField::d_func(), QDeclarativeListProperty<QObject> actions READ actions)
     Q_PRIVATE_PROPERTY(TextField::d_func(), bool visible READ qmlVisible WRITE setQmlVisible NOTIFY visibleChanged)
+    Q_PRIVATE_PROPERTY(TextField::d_func(), bool focus READ hasFocus WRITE setFocus NOTIFY focusChanged)
     Q_PRIVATE_PROPERTY(TextField::d_func(), QValidator* validator READ validator WRITE setValidator)
 
     Q_INTERFACES(QDeclarativeParserStatus)
@@ -68,8 +68,6 @@ public:
 
     qreal opacity() const;
     void setOpacity(qreal opacity);
-
-    void setFocus(bool focus);
 
     int leftMargin() const;
     void setLeftMargin(int margin);

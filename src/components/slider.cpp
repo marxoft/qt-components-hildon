@@ -70,19 +70,6 @@ void Slider::setOpacity(qreal opacity) {
     }
 }
 
-void Slider::setFocus(bool focus) {
-    Q_D(const Slider);
-
-    if ((d->complete) && (focus != this->hasFocus())) {
-        if (focus) {
-            this->setFocus(Qt::OtherFocusReason);
-        }
-        else {
-            this->clearFocus();
-        }
-    }
-}
-
 AnchorLine Slider::left() const {
     Q_D(const Slider);
 

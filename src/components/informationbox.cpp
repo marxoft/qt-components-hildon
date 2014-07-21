@@ -63,19 +63,6 @@ void InformationBox::setOpacity(qreal opacity) {
     }
 }
 
-void InformationBox::setFocus(bool focus) {
-    Q_D(const InformationBox);
-
-    if ((d->complete) && (focus != this->hasFocus())) {
-        if (focus) {
-            this->setFocus(Qt::OtherFocusReason);
-        }
-        else {
-            this->clearFocus();
-        }
-    }
-}
-
 void InformationBox::changeEvent(QEvent *event) {
     switch (event->type()) {
     case QEvent::ParentChange:

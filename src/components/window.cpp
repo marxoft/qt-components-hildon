@@ -125,19 +125,6 @@ void Window::setOpacity(qreal opacity) {
     }
 }
 
-void Window::setFocus(bool focus) {
-    Q_D(const Window);
-
-    if ((d->complete) && (focus != this->hasFocus())) {
-        if (focus) {
-            this->setFocus(Qt::OtherFocusReason);
-        }
-        else {
-            this->clearFocus();
-        }
-    }
-}
-
 AnchorLine Window::left() const {
     Q_D(const Window);
 

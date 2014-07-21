@@ -133,19 +133,6 @@ void Page::setOpacity(qreal opacity) {
     }
 }
 
-void Page::setFocus(bool focus) {
-    Q_D(const Page);
-
-    if ((d->complete) && (focus != this->hasFocus())) {
-        if (focus) {
-            this->setFocus(Qt::OtherFocusReason);
-        }
-        else {
-            this->clearFocus();
-        }
-    }
-}
-
 AnchorLine Page::left() const {
     Q_D(const Page);
 

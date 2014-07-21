@@ -61,6 +61,9 @@ public:
     bool qmlVisible() const;
     void setQmlVisible(bool visible);
 
+    bool hasFocus() const;
+    void setFocus(bool focus);
+
     virtual void componentComplete();
 
     QWidget *q_ptr;

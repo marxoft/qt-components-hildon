@@ -70,19 +70,6 @@ void ProgressBar::setOpacity(qreal opacity) {
     }
 }
 
-void ProgressBar::setFocus(bool focus) {
-    Q_D(const ProgressBar);
-
-    if ((d->complete) && (focus != this->hasFocus())) {
-        if (focus) {
-            this->setFocus(Qt::OtherFocusReason);
-        }
-        else {
-            this->clearFocus();
-        }
-    }
-}
-
 AnchorLine ProgressBar::left() const {
     Q_D(const ProgressBar);
 

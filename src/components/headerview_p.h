@@ -38,7 +38,6 @@ class HeaderView : public QHeaderView, public QDeclarativeParserStatus
     Q_PROPERTY(int height READ height WRITE setFixedHeight NOTIFY heightChanged)
     Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity NOTIFY opacityChanged)
     Q_PROPERTY(bool enabled READ isEnabled WRITE setEnabled NOTIFY enabledChanged)
-    Q_PROPERTY(bool focus READ hasFocus WRITE setFocus NOTIFY focusChanged)
     Q_PROPERTY(QStringList labels READ labels WRITE setLabels NOTIFY labelsChanged)
     Q_PRIVATE_PROPERTY(HeaderView::d_func(), Anchors* anchors READ anchors CONSTANT FINAL)
     Q_PROPERTY(AnchorLine left READ left CONSTANT FINAL)
@@ -51,6 +50,7 @@ class HeaderView : public QHeaderView, public QDeclarativeParserStatus
     Q_PRIVATE_PROPERTY(HeaderView::d_func(), QDeclarativeListProperty<QWidget> children READ children)
     Q_PRIVATE_PROPERTY(HeaderView::d_func(), QDeclarativeListProperty<QObject> actions READ actions)
     Q_PRIVATE_PROPERTY(HeaderView::d_func(), bool visible READ qmlVisible WRITE setQmlVisible NOTIFY visibleChanged)
+    Q_PRIVATE_PROPERTY(HeaderView::d_func(), bool focus READ hasFocus WRITE setFocus NOTIFY focusChanged)
     Q_PRIVATE_PROPERTY(HeaderView::d_func(), bool clickable READ isClickable WRITE setClickable NOTIFY clickableChanged)
     Q_PRIVATE_PROPERTY(HeaderView::d_func(), bool showSortIndicator READ isSortIndicatorShown WRITE setSortIndicatorShown NOTIFY showSortIndicatorChanged)
     Q_PRIVATE_PROPERTY(HeaderView::d_func(), bool highlightSections READ highlightSections WRITE setHighlightSections NOTIFY highlightSectionsChanged)
@@ -74,8 +74,6 @@ public:
 
     qreal opacity() const;
     void setOpacity(qreal opacity);
-
-    void setFocus(bool focus);
 
     AnchorLine left() const;
     AnchorLine right() const;

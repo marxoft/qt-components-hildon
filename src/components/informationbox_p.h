@@ -32,11 +32,11 @@ class InformationBox : public QMaemo5InformationBox, public QDeclarativeParserSt
     Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity NOTIFY opacityChanged)
     Q_PROPERTY(bool visible READ isVisible WRITE setVisible NOTIFY visibleChanged)
     Q_PROPERTY(bool enabled READ isEnabled WRITE setEnabled NOTIFY enabledChanged)
-    Q_PROPERTY(bool focus READ hasFocus WRITE setFocus NOTIFY focusChanged)
     Q_PRIVATE_PROPERTY(InformationBox::d_func(), QDeclarativeListProperty<QObject> data READ data)
     Q_PRIVATE_PROPERTY(InformationBox::d_func(), QDeclarativeListProperty<QWidget> children READ children)
     Q_PRIVATE_PROPERTY(InformationBox::d_func(), QDeclarativeListProperty<QObject> actions READ actions)
     Q_PRIVATE_PROPERTY(InformationBox::d_func(), QDeclarativeListProperty<QWidget> content READ content)
+    Q_PRIVATE_PROPERTY(InformationBox::d_func(), bool focus READ hasFocus WRITE setFocus NOTIFY focusChanged)
 
     Q_ENUMS(Timeout)
 
@@ -55,8 +55,6 @@ public:
 
     qreal opacity() const;
     void setOpacity(qreal opacity);
-
-    void setFocus(bool focus);
 
 signals:
     void parentChanged();

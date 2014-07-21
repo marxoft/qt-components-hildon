@@ -70,19 +70,6 @@ void TextField::setOpacity(qreal opacity) {
     }
 }
 
-void TextField::setFocus(bool focus) {
-    Q_D(const TextField);
-
-    if ((d->complete) && (focus != this->hasFocus())) {
-        if (focus) {
-            this->setFocus(Qt::OtherFocusReason);
-        }
-        else {
-            this->clearFocus();
-        }
-    }
-}
-
 int TextField::leftMargin() const {
     return this->textMargins().left();
 }

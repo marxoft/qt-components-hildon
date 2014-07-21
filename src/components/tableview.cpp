@@ -82,19 +82,6 @@ void TableView::setOpacity(qreal opacity) {
     }
 }
 
-void TableView::setFocus(bool focus) {
-    Q_D(const TableView);
-
-    if ((d->complete) && (focus != this->hasFocus())) {
-        if (focus) {
-            this->setFocus(Qt::OtherFocusReason);
-        }
-        else {
-            this->clearFocus();
-        }
-    }
-}
-
 AnchorLine TableView::left() const {
     Q_D(const TableView);
 

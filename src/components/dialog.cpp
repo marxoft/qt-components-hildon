@@ -63,19 +63,6 @@ void Dialog::setOpacity(qreal opacity) {
     }
 }
 
-void Dialog::setFocus(bool focus) {
-    Q_D(const Dialog);
-
-    if ((d->complete) && (focus != this->hasFocus())) {
-        if (focus) {
-            this->setFocus(Qt::OtherFocusReason);
-        }
-        else {
-            this->clearFocus();
-        }
-    }
-}
-
 bool Dialog::showingProgressIndicator() const {
     return this->testAttribute(Qt::WA_Maemo5ShowProgressIndicator);
 }

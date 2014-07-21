@@ -70,19 +70,6 @@ void Menu::setOpacity(qreal opacity) {
     }
 }
 
-void Menu::setFocus(bool focus) {
-    Q_D(const Menu);
-
-    if ((d->complete) && (focus != this->hasFocus())) {
-        if (focus) {
-            this->setFocus(Qt::OtherFocusReason);
-        }
-        else {
-            this->clearFocus();
-        }
-    }
-}
-
 QString Menu::iconSource() const {
     return this->icon().name();
 }
@@ -171,6 +158,25 @@ void MenuPrivate::data_append(QDeclarativeListProperty<QObject> *list, QObject *
 
 QDeclarativeListProperty<QObject> MenuPrivate::data() {
     return QDeclarativeListProperty<QObject>(q_func(), 0, MenuPrivate::data_append);
+}
+
+bool MenuPrivate::hasFocus() const {
+    Q_Q(const Menu);
+
+    return q->hasFocus();
+}
+
+void MenuPrivate::setFocus(bool focus) {
+    if (focus != this->hasFocus()) {
+        Q_Q(Menu);
+
+        if (focus) {
+            q->setFocus(Qt::OtherFocusReason);
+        }
+        else {
+            q->clearFocus();
+        }
+    }
 }
 
 void MenuPrivate::componentComplete() {

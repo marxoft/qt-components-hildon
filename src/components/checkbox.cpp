@@ -70,19 +70,6 @@ void CheckBox::setOpacity(qreal opacity) {
     }
 }
 
-void CheckBox::setFocus(bool focus) {
-    Q_D(const CheckBox);
-
-    if ((d->complete) && (focus != this->hasFocus())) {
-        if (focus) {
-            this->setFocus(Qt::OtherFocusReason);
-        }
-        else {
-            this->clearFocus();
-        }
-    }
-}
-
 QString CheckBox::iconSource() const {
     return this->icon().name();
 }

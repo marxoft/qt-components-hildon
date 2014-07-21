@@ -35,6 +35,9 @@ public:
 
     QDeclarativeListProperty<QObject> data();
 
+    bool hasFocus() const;
+    void setFocus(bool focus);
+
     void componentComplete();
 
     Menu *q_ptr;

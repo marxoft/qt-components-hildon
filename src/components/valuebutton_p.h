@@ -37,7 +37,6 @@ class ValueButton : public QMaemo5ValueButton, public QDeclarativeParserStatus
     Q_PROPERTY(int height READ height WRITE setFixedHeight NOTIFY heightChanged)
     Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity NOTIFY opacityChanged)
     Q_PROPERTY(bool enabled READ isEnabled WRITE setEnabled NOTIFY enabledChanged)
-    Q_PROPERTY(bool focus READ hasFocus WRITE setFocus NOTIFY focusChanged)
     Q_PROPERTY(ValueSelector* selector READ selector WRITE setSelector)
     Q_PROPERTY(QString icon READ iconSource WRITE setIconSource NOTIFY iconChanged)
     Q_PROPERTY(QString shortcut READ shortcutString WRITE setShortcutString NOTIFY shorcutChanged)
@@ -52,6 +51,7 @@ class ValueButton : public QMaemo5ValueButton, public QDeclarativeParserStatus
     Q_PRIVATE_PROPERTY(ValueButton::d_func(), QDeclarativeListProperty<QWidget> children READ children)
     Q_PRIVATE_PROPERTY(ValueButton::d_func(), QDeclarativeListProperty<QObject> actions READ actions)
     Q_PRIVATE_PROPERTY(ValueButton::d_func(), bool visible READ qmlVisible WRITE setQmlVisible NOTIFY visibleChanged)
+    Q_PRIVATE_PROPERTY(ValueButton::d_func(), bool focus READ hasFocus WRITE setFocus NOTIFY focusChanged)
 
     Q_INTERFACES(QDeclarativeParserStatus)
 
@@ -66,8 +66,6 @@ public:
 
     qreal opacity() const;
     void setOpacity(qreal opacity);
-
-    void setFocus(bool focus);
 
     QString iconSource() const;
     void setIconSource(const QString &source);

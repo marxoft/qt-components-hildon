@@ -70,19 +70,6 @@ void RadioButton::setOpacity(qreal opacity) {
     }
 }
 
-void RadioButton::setFocus(bool focus) {
-    Q_D(const RadioButton);
-
-    if ((d->complete) && (focus != this->hasFocus())) {
-        if (focus) {
-            this->setFocus(Qt::OtherFocusReason);
-        }
-        else {
-            this->clearFocus();
-        }
-    }
-}
-
 QString RadioButton::iconSource() const {
     return this->icon().name();
 }

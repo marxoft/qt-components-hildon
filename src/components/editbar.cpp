@@ -71,19 +71,6 @@ void EditBar::setOpacity(qreal opacity) {
     }
 }
 
-void EditBar::setFocus(bool focus) {
-    Q_D(const EditBar);
-
-    if ((d->complete) && (focus != this->hasFocus())) {
-        if (focus) {
-            this->setFocus(Qt::OtherFocusReason);
-        }
-        else {
-            this->clearFocus();
-        }
-    }
-}
-
 AnchorLine EditBar::left() const {
     Q_D(const EditBar);
 

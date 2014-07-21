@@ -100,19 +100,6 @@ void WebView::setOpacity(qreal opacity) {
     }
 }
 
-void WebView::setFocus(bool focus) {
-    Q_D(const WebView);
-
-    if ((d->complete) && (focus != this->hasFocus())) {
-        if (focus) {
-            this->setFocus(Qt::OtherFocusReason);
-        }
-        else {
-            this->clearFocus();
-        }
-    }
-}
-
 AnchorLine WebView::left() const {
     Q_D(const WebView);
 

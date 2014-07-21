@@ -74,19 +74,6 @@ void HeaderView::setOpacity(qreal opacity) {
     }
 }
 
-void HeaderView::setFocus(bool focus) {
-    Q_D(const HeaderView);
-
-    if ((d->complete) && (focus != this->hasFocus())) {
-        if (focus) {
-            this->setFocus(Qt::OtherFocusReason);
-        }
-        else {
-            this->clearFocus();
-        }
-    }
-}
-
 AnchorLine HeaderView::left() const {
     Q_D(const HeaderView);
 

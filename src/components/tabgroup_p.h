@@ -36,7 +36,6 @@ class TabGroup : public QStackedWidget, public QDeclarativeParserStatus
     Q_PROPERTY(int height READ height WRITE setFixedHeight NOTIFY heightChanged)
     Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity NOTIFY opacityChanged)
     Q_PROPERTY(bool enabled READ isEnabled WRITE setEnabled NOTIFY enabledChanged)
-    Q_PROPERTY(bool focus READ hasFocus WRITE setFocus NOTIFY focusChanged)
     Q_PRIVATE_PROPERTY(TabGroup::d_func(), Anchors* anchors READ anchors CONSTANT FINAL)
     Q_PROPERTY(AnchorLine left READ left CONSTANT FINAL)
     Q_PROPERTY(AnchorLine right READ right CONSTANT FINAL)
@@ -49,6 +48,7 @@ class TabGroup : public QStackedWidget, public QDeclarativeParserStatus
     Q_PRIVATE_PROPERTY(TabGroup::d_func(), QDeclarativeListProperty<QWidget> children READ children)
     Q_PRIVATE_PROPERTY(TabGroup::d_func(), QDeclarativeListProperty<QObject> actions READ actions)
     Q_PRIVATE_PROPERTY(TabGroup::d_func(), bool visible READ qmlVisible WRITE setQmlVisible NOTIFY visibleChanged)
+    Q_PRIVATE_PROPERTY(TabGroup::d_func(), bool focus READ hasFocus WRITE setFocus NOTIFY focusChanged)
 
     Q_INTERFACES(QDeclarativeParserStatus)
 
@@ -63,8 +63,6 @@ public:
 
     qreal opacity() const;
     void setOpacity(qreal opacity);
-
-    void setFocus(bool focus);
 
     AnchorLine left() const;
     AnchorLine right() const;

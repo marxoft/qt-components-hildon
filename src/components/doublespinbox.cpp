@@ -70,19 +70,6 @@ void DoubleSpinBox::setOpacity(qreal opacity) {
     }
 }
 
-void DoubleSpinBox::setFocus(bool focus) {
-    Q_D(const DoubleSpinBox);
-
-    if ((d->complete) && (focus != this->hasFocus())) {
-        if (focus) {
-            this->setFocus(Qt::OtherFocusReason);
-        }
-        else {
-            this->clearFocus();
-        }
-    }
-}
-
 AnchorLine DoubleSpinBox::left() const {
     Q_D(const DoubleSpinBox);
 

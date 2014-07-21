@@ -71,19 +71,6 @@ void Item::setOpacity(qreal opacity) {
     }
 }
 
-void Item::setFocus(bool focus) {
-    Q_D(const Item);
-
-    if ((d->complete) && (focus != this->hasFocus())) {
-        if (focus) {
-            this->setFocus(Qt::OtherFocusReason);
-        }
-        else {
-            this->clearFocus();
-        }
-    }
-}
-
 AnchorLine Item::left() const {
     Q_D(const Item);
 
@@ -317,6 +304,25 @@ void ItemPrivate::setQmlVisible(bool visible) {
         Q_Q(Item);
         qmlVis = visible;
         q->setVisible(visible);
+    }
+}
+
+bool ItemPrivate::hasFocus() const {
+    Q_Q(const Item);
+
+    return q->hasFocus();
+}
+
+void ItemPrivate::setFocus(bool focus) {
+    if (focus != this->hasFocus()) {
+        Q_Q(Item);
+
+        if (focus) {
+            q->setFocus(Qt::OtherFocusReason);
+        }
+        else {
+            q->clearFocus();
+        }
     }
 }
 

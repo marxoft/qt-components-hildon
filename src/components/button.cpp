@@ -70,19 +70,6 @@ void Button::setOpacity(qreal opacity) {
     }
 }
 
-void Button::setFocus(bool focus) {
-    Q_D(const Button);
-
-    if ((d->complete) && (focus != this->hasFocus())) {
-        if (focus) {
-            this->setFocus(Qt::OtherFocusReason);
-        }
-        else {
-            this->clearFocus();
-        }
-    }
-}
-
 QString Button::iconSource() const {
     return this->icon().name();
 }

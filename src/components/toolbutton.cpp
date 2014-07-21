@@ -70,19 +70,6 @@ void ToolButton::setOpacity(qreal opacity) {
     }
 }
 
-void ToolButton::setFocus(bool focus) {
-    Q_D(const ToolButton);
-
-    if ((d->complete) && (focus != this->hasFocus())) {
-        if (focus) {
-            this->setFocus(Qt::OtherFocusReason);
-        }
-        else {
-            this->clearFocus();
-        }
-    }
-}
-
 QString ToolButton::iconSource() const {
     return this->icon().name();
 }

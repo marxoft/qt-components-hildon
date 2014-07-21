@@ -71,19 +71,6 @@ void ValueButton::setOpacity(qreal opacity) {
     }
 }
 
-void ValueButton::setFocus(bool focus) {
-    Q_D(const ValueButton);
-
-    if ((d->complete) && (focus != this->hasFocus())) {
-        if (focus) {
-            this->setFocus(Qt::OtherFocusReason);
-        }
-        else {
-            this->clearFocus();
-        }
-    }
-}
-
 QString ValueButton::iconSource() const {
     return this->icon().name();
 }

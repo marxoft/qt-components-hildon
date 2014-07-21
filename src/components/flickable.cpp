@@ -77,19 +77,6 @@ void Flickable::setOpacity(qreal opacity) {
     }
 }
 
-void Flickable::setFocus(bool focus) {
-    Q_D(const Flickable);
-
-    if ((d->complete) && (focus != this->hasFocus())) {
-        if (focus) {
-            this->setFocus(Qt::OtherFocusReason);
-        }
-        else {
-            this->clearFocus();
-        }
-    }
-}
-
 AnchorLine Flickable::left() const {
     Q_D(const Flickable);
 
