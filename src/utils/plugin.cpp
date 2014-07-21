@@ -16,6 +16,7 @@
  */
 
 #include "plugin_p.h"
+#include "directory_p.h"
 #include "process_p.h"
 #include "screensaver_p.h"
 #include "screenshot_p.h"
@@ -24,6 +25,7 @@
 void Plugin::registerTypes(const char *uri) {
     Q_ASSERT(uri == QLatin1String("org.hildon.utils"));
 
+    qmlRegisterType<Directory>(uri, 1, 0, "Directory");
     qmlRegisterType<Process>(uri, 1, 0, "Process");
     qmlRegisterType<ScreenSaver>(uri, 1, 0, "ScreenSaver");
     qmlRegisterType<ScreenShot>(uri, 1, 0, "ScreenShot");
