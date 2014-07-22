@@ -95,6 +95,8 @@ HEADERS += \
     slider_p_p.h \
     spinbox_p.h \
     spinbox_p_p.h \
+    tabbar_p.h \
+    tabbar_p_p.h \
     tabgroup_p.h \
     tabgroup_p_p.h \
     tableview_p.h \
@@ -175,6 +177,7 @@ SOURCES += \
     separator.cpp \
     slider.cpp \
     spinbox.cpp \
+    tabbar.cpp \
     tabgroup.cpp \
     tableview.cpp \
     text.cpp \

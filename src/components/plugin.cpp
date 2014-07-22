@@ -64,6 +64,7 @@
 #include "separator_p.h"
 #include "slider_p.h"
 #include "spinbox_p.h"
+#include "tabbar_p.h"
 #include "tabgroup_p.h"
 #include "tableview_p.h"
 #include "text_p.h"
@@ -160,6 +161,8 @@ void Plugin::registerTypes(const char *uri) {
     qmlRegisterType<Separator>(uri, 1, 0, "Separator");
     qmlRegisterType<Slider>(uri, 1, 0, "Slider");
     qmlRegisterType<SpinBox>(uri, 1, 0, "SpinBox");
+    qmlRegisterType<TabBar>(uri, 1, 0, "TabBar");
+    qmlRegisterType<TabButton>(uri, 1, 0, "TabButton");
     qmlRegisterType<TabGroup>(uri, 1, 0, "TabGroup");
     qmlRegisterType<TableView>(uri, 1, 0, "TableView");
     qmlRegisterType<Text>(uri, 1, 0, "Text");
