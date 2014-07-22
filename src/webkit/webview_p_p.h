@@ -133,6 +133,8 @@ public:
     void _q_onLoadFinished(bool ok);
     void _q_onLoadProgress(int p);
 
+    void _q_onStatusBarMessage(const QString &message);
+
     WebViewSelectionSuppressor *suppressor;
 
     QAbstractKineticScroller *kineticScroller;
@@ -144,6 +146,8 @@ public:
     int progress;
 
     WebView::Status status;
+
+    QString statusText;
 
     Q_DECLARE_PUBLIC(WebView)
 };

@@ -47,6 +47,7 @@ WebView::WebView(QWidget *parent) :
     this->connect(this, SIGNAL(loadStarted()), this, SLOT(_q_onLoadStarted()));
     this->connect(this, SIGNAL(loadFinished(bool)), this, SLOT(_q_onLoadFinished(bool)));
     this->connect(this, SIGNAL(loadProgress(int)), this, SLOT(_q_onLoadProgress(int)));
+    this->connect(this, SIGNAL(statusBarMessage(QString)), this, SLOT(_q_onStatusBarMessage(QString)));
 }
 
 WebView::WebView(WebViewPrivate &dd, QWidget *parent) :
@@ -64,6 +65,7 @@ WebView::WebView(WebViewPrivate &dd, QWidget *parent) :
     this->connect(this, SIGNAL(loadStarted()), this, SLOT(_q_onLoadStarted()));
     this->connect(this, SIGNAL(loadFinished(bool)), this, SLOT(_q_onLoadFinished(bool)));
     this->connect(this, SIGNAL(loadProgress(int)), this, SLOT(_q_onLoadProgress(int)));
+    this->connect(this, SIGNAL(statusBarMessage(QString)), this, SLOT(_q_onStatusBarMessage(QString)));
 }
 
 WebView::~WebView() {}
@@ -290,6 +292,12 @@ WebView::Status WebView::status() const {
     return d->status;
 }
 
+QString WebView::statusText() const {
+    Q_D(const WebView);
+
+    return d->statusText;
+}
+
 void WebView::changeEvent(QEvent *event) {
     switch (event->type()) {
     case QEvent::ParentChange:
@@ -467,6 +475,14 @@ void WebViewPrivate::_q_onLoadProgress(int p) {
 
     progress = p;
     emit q->progressChanged();
+}
+
+void WebViewPrivate::_q_onStatusBarMessage(const QString &message) {
+    if (message != statusText) {
+        statusText = message;
+        Q_Q(WebView);
+        emit q->statusTextChanged();
+    }
 }
 
 #include "moc_webview_p.cpp"

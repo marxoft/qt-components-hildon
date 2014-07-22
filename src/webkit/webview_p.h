@@ -62,6 +62,7 @@ class WebView : public QWebView, public QDeclarativeParserStatus
     Q_PROPERTY(qreal maximumFlickVelocity READ maximumFlickVelocity WRITE setMaximumFlickVelocity NOTIFY maximumFlickVelocityChanged)
     Q_PROPERTY(int progress READ progress NOTIFY progressChanged)
     Q_PROPERTY(Status status READ status NOTIFY statusChanged)
+    Q_PROPERTY(QString statusText READ statusText NOTIFY statusTextChanged)
     Q_PRIVATE_PROPERTY(WebView::d_func(), WebHistory* history READ history CONSTANT FINAL)
     Q_PRIVATE_PROPERTY(WebView::d_func(), WebSettings* settings READ settings CONSTANT FINAL)
     Q_PRIVATE_PROPERTY(WebView::d_func(), QDeclarativeListProperty<QObject> data READ data)
@@ -132,6 +133,8 @@ public:
 
     Status status() const;
 
+    QString statusText() const;
+
 signals:
     void parentChanged();
     void xChanged();
@@ -153,6 +156,7 @@ signals:
     void maximumFlickVelocityChanged();
     void progressChanged();
     void statusChanged();
+    void statusTextChanged();
     void linkClicked(const QUrl &link);
 
 protected:
@@ -176,6 +180,7 @@ protected:
     Q_PRIVATE_SLOT(d_func(), void _q_onLoadStarted())
     Q_PRIVATE_SLOT(d_func(), void _q_onLoadFinished(bool))
     Q_PRIVATE_SLOT(d_func(), void _q_onLoadProgress(int))
+    Q_PRIVATE_SLOT(d_func(), void _q_onStatusBarMessage(QString))
 
 private:
     Q_DISABLE_COPY(WebView)
