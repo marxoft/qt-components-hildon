@@ -178,10 +178,8 @@ void TabGroup::componentComplete() {
         this->setWindowFlags(Qt::Widget);
     }
 
-    foreach (QObject *obj, d->dataList) {
-        if (QWidget *widget = qobject_cast<QWidget*>(obj)) {
-            this->addWidget(widget);
-        }
+    foreach (QWidget *widget, d->childrenList) {
+        this->addWidget(widget);
     }
 
     if (d->qmlVisible()) {
@@ -196,10 +194,6 @@ void TabGroupPrivate::data_append(QDeclarativeListProperty<QObject> *list, QObje
 
     if (TabGroup *stack = qobject_cast<TabGroup*>(list->object)) {
         stack->d_func()->dataList.append(obj);
-
-        if (!stack->d_func()->complete) {
-            return;
-        }
 
         if (QWidget *widget = qobject_cast<QWidget*>(obj)) {
             stack->d_func()->childrenList.append(widget);

@@ -20,7 +20,6 @@
 
 #include "anchors_p.h"
 #include <QLabel>
-#include <QIcon>
 #include <QDeclarativeParserStatus>
 #include <qdeclarative.h>
 
