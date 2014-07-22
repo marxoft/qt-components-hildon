@@ -20,6 +20,7 @@
 
 #include "anchors_p.h"
 #include <QWebView>
+#include <QWebPage>
 #include <QDeclarativeParserStatus>
 #include <qdeclarative.h>
 
@@ -49,6 +50,7 @@ class WebView : public QWebView, public QDeclarativeParserStatus
     Q_PROPERTY(AnchorLine verticalCenter READ verticalCenter CONSTANT FINAL)
     Q_PROPERTY(QString icon READ iconSource NOTIFY iconChanged)
     Q_PROPERTY(bool textSelectionEnabled READ textSelectionEnabled WRITE setTextSelectionEnabled NOTIFY textSelectionEnabledChanged)
+    Q_PROPERTY(QWebPage::LinkDelegationPolicy linkDelegationPolicy READ linkDelegationPolicy WRITE setLinkDelegationPolicy NOTIFY linkDelegationPolicyChanged)
     Q_PROPERTY(bool moving READ moving NOTIFY movingChanged)
     Q_PROPERTY(bool atXBeginning READ atXBeginning NOTIFY contentXChanged)
     Q_PROPERTY(bool atXEnd READ atXEnd NOTIFY contentXChanged)
@@ -56,6 +58,8 @@ class WebView : public QWebView, public QDeclarativeParserStatus
     Q_PROPERTY(bool atYEnd READ atYEnd NOTIFY contentYChanged)
     Q_PROPERTY(int contentX READ contentX WRITE setContentX NOTIFY contentXChanged)
     Q_PROPERTY(int contentY READ contentY WRITE setContentY NOTIFY contentYChanged)
+    Q_PROPERTY(qreal flickDeceleration READ flickDeceleration WRITE setFlickDeceleration NOTIFY flickDecelerationChanged)
+    Q_PROPERTY(qreal maximumFlickVelocity READ maximumFlickVelocity WRITE setMaximumFlickVelocity NOTIFY maximumFlickVelocityChanged)
     Q_PROPERTY(int progress READ progress NOTIFY progressChanged)
     Q_PROPERTY(Status status READ status NOTIFY statusChanged)
     Q_PRIVATE_PROPERTY(WebView::d_func(), WebHistory* history READ history CONSTANT FINAL)
@@ -66,7 +70,7 @@ class WebView : public QWebView, public QDeclarativeParserStatus
     Q_PRIVATE_PROPERTY(WebView::d_func(), bool visible READ qmlVisible WRITE setQmlVisible NOTIFY visibleChanged)
     Q_PRIVATE_PROPERTY(WebView::d_func(), bool focus READ hasFocus WRITE setFocus NOTIFY focusChanged)
 
-    Q_ENUMS(Status)
+    Q_ENUMS(Status QWebPage::LinkDelegationPolicy)
 
     Q_INTERFACES(QDeclarativeParserStatus)
 
@@ -100,6 +104,9 @@ public:
 
     bool textSelectionEnabled() const;
     void setTextSelectionEnabled(bool enabled);
+
+    QWebPage::LinkDelegationPolicy linkDelegationPolicy() const;
+    void setLinkDelegationPolicy(QWebPage::LinkDelegationPolicy policy);
 
     bool moving() const;
 
@@ -138,6 +145,7 @@ signals:
     void titleChanged();
     void urlChanged();
     void textSelectionEnabledChanged();
+    void linkDelegationPolicyChanged();
     void movingChanged();
     void contentXChanged();
     void contentYChanged();
@@ -145,6 +153,7 @@ signals:
     void maximumFlickVelocityChanged();
     void progressChanged();
     void statusChanged();
+    void linkClicked(const QUrl &link);
 
 protected:
     WebView(WebViewPrivate &dd, QWidget *parent = 0);

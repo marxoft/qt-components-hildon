@@ -41,6 +41,7 @@ WebView::WebView(QWidget *parent) :
     }
 
     this->setTextSelectionEnabled(false);
+    this->connect(this->page(), SIGNAL(linkClicked(QUrl)), this, SIGNAL(linkClicked(QUrl)));
     this->connect(this, SIGNAL(titleChanged(QString)), this, SIGNAL(titleChanged()));
     this->connect(this, SIGNAL(urlChanged(QUrl)), this, SIGNAL(urlChanged()));
     this->connect(this, SIGNAL(loadStarted()), this, SLOT(_q_onLoadStarted()));
@@ -57,6 +58,7 @@ WebView::WebView(WebViewPrivate &dd, QWidget *parent) :
     }
 
     this->setTextSelectionEnabled(false);
+    this->connect(this->page(), SIGNAL(linkClicked(QUrl)), this, SIGNAL(linkClicked(QUrl)));
     this->connect(this, SIGNAL(titleChanged(QString)), this, SIGNAL(titleChanged()));
     this->connect(this, SIGNAL(urlChanged(QUrl)), this, SIGNAL(urlChanged()));
     this->connect(this, SIGNAL(loadStarted()), this, SLOT(_q_onLoadStarted()));
@@ -163,6 +165,17 @@ void WebView::setTextSelectionEnabled(bool enabled) {
     d->kineticScroller->setEnabled(!enabled);
 
     emit textSelectionEnabledChanged();
+}
+
+QWebPage::LinkDelegationPolicy WebView::linkDelegationPolicy() const {
+    return this->page() ? this->page()->linkDelegationPolicy() : QWebPage::DontDelegateLinks;
+}
+
+void WebView::setLinkDelegationPolicy(QWebPage::LinkDelegationPolicy policy) {
+    if ((policy != this->linkDelegationPolicy()) && (this->page())) {
+        this->page()->setLinkDelegationPolicy(policy);
+        emit linkDelegationPolicyChanged();
+    }
 }
 
 bool WebView::moving() const {
