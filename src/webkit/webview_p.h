@@ -39,8 +39,6 @@ class WebView : public QWebView, public QDeclarativeParserStatus
     Q_PROPERTY(int height READ height WRITE setFixedHeight NOTIFY heightChanged)
     Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity NOTIFY opacityChanged)
     Q_PROPERTY(bool enabled READ isEnabled WRITE setEnabled NOTIFY enabledChanged)
-    Q_PROPERTY(QString title READ title NOTIFY titleChanged)
-    Q_PROPERTY(QUrl url READ url WRITE setUrl NOTIFY urlChanged)
     Q_PRIVATE_PROPERTY(WebView::d_func(), Anchors* anchors READ anchors CONSTANT FINAL)
     Q_PROPERTY(AnchorLine left READ left CONSTANT FINAL)
     Q_PROPERTY(AnchorLine right READ right CONSTANT FINAL)
@@ -48,6 +46,8 @@ class WebView : public QWebView, public QDeclarativeParserStatus
     Q_PROPERTY(AnchorLine bottom READ bottom CONSTANT FINAL)
     Q_PROPERTY(AnchorLine horizontalCenter READ horizontalCenter CONSTANT FINAL)
     Q_PROPERTY(AnchorLine verticalCenter READ verticalCenter CONSTANT FINAL)
+    Q_PROPERTY(QString title READ title NOTIFY titleChanged)
+    Q_PROPERTY(QUrl url READ url WRITE setUrl NOTIFY urlChanged)
     Q_PROPERTY(QString icon READ iconSource NOTIFY iconChanged)
     Q_PROPERTY(bool textSelectionEnabled READ textSelectionEnabled WRITE setTextSelectionEnabled NOTIFY textSelectionEnabledChanged)
     Q_PROPERTY(QWebPage::LinkDelegationPolicy linkDelegationPolicy READ linkDelegationPolicy WRITE setLinkDelegationPolicy NOTIFY linkDelegationPolicyChanged)
@@ -68,6 +68,7 @@ class WebView : public QWebView, public QDeclarativeParserStatus
     Q_PRIVATE_PROPERTY(WebView::d_func(), QDeclarativeListProperty<QObject> data READ data)
     Q_PRIVATE_PROPERTY(WebView::d_func(), QDeclarativeListProperty<QWidget> children READ children)
     Q_PRIVATE_PROPERTY(WebView::d_func(), QDeclarativeListProperty<QObject> actions READ actions)
+    Q_PRIVATE_PROPERTY(WebView::d_func(), QDeclarativeListProperty<QObject> javaScriptWindowObjects READ jsObjects)
     Q_PRIVATE_PROPERTY(WebView::d_func(), bool visible READ qmlVisible WRITE setQmlVisible NOTIFY visibleChanged)
     Q_PRIVATE_PROPERTY(WebView::d_func(), bool focus READ hasFocus WRITE setFocus NOTIFY focusChanged)
 
@@ -181,6 +182,7 @@ protected:
     Q_PRIVATE_SLOT(d_func(), void _q_onLoadFinished(bool))
     Q_PRIVATE_SLOT(d_func(), void _q_onLoadProgress(int))
     Q_PRIVATE_SLOT(d_func(), void _q_onStatusBarMessage(QString))
+    Q_PRIVATE_SLOT(d_func(), void _q_onJavaScriptWindowObjectCleared())
 
 private:
     Q_DISABLE_COPY(WebView)

@@ -42,6 +42,7 @@ WebView::WebView(QWidget *parent) :
 
     this->setTextSelectionEnabled(false);
     this->connect(this->page(), SIGNAL(linkClicked(QUrl)), this, SIGNAL(linkClicked(QUrl)));
+    this->connect(this->page()->mainFrame(), SIGNAL(javaScriptWindowObjectCleared()), this, SLOT(_q_onJavaScriptWindowObjectCleared()));
     this->connect(this, SIGNAL(titleChanged(QString)), this, SIGNAL(titleChanged()));
     this->connect(this, SIGNAL(urlChanged(QUrl)), this, SIGNAL(urlChanged()));
     this->connect(this, SIGNAL(loadStarted()), this, SLOT(_q_onLoadStarted()));
@@ -60,6 +61,7 @@ WebView::WebView(WebViewPrivate &dd, QWidget *parent) :
 
     this->setTextSelectionEnabled(false);
     this->connect(this->page(), SIGNAL(linkClicked(QUrl)), this, SIGNAL(linkClicked(QUrl)));
+    this->connect(this->page()->mainFrame(), SIGNAL(javaScriptWindowObjectCleared()), this, SLOT(_q_onJavaScriptWindowObjectCleared()));
     this->connect(this, SIGNAL(titleChanged(QString)), this, SIGNAL(titleChanged()));
     this->connect(this, SIGNAL(urlChanged(QUrl)), this, SIGNAL(urlChanged()));
     this->connect(this, SIGNAL(loadStarted()), this, SLOT(_q_onLoadStarted()));
@@ -371,6 +373,10 @@ void WebView::componentComplete() {
     if (d->qmlVisible()) {
         this->show();
     }
+
+    foreach (QObject *obj, d->jsObjectList) {
+        this->page()->mainFrame()->addToJavaScriptWindowObject(obj->objectName(), obj);
+    }
 }
 
 void WebViewPrivate::data_append(QDeclarativeListProperty<QObject> *list, QObject *obj) {
@@ -420,6 +426,21 @@ void WebViewPrivate::actions_append(QDeclarativeListProperty<QObject> *list, QOb
     }
 }
 
+void WebViewPrivate::jsobjects_append(QDeclarativeListProperty<QObject> *list, QObject *obj) {
+    if (!obj) {
+        return;
+    }
+
+    if (WebView *view = qobject_cast<WebView*>(list->object)) {
+        view->d_func()->jsObjectList.append(obj);
+        view->d_func()->dataList.append(obj);
+
+        if (view->d_func()->complete) {
+            view->page()->mainFrame()->addToJavaScriptWindowObject(obj->objectName(), obj);
+        }
+    }
+}
+
 QDeclarativeListProperty<QObject> WebViewPrivate::data() {
     return QDeclarativeListProperty<QObject>(q_func(), 0, WebViewPrivate::data_append);
 }
@@ -430,6 +451,10 @@ QDeclarativeListProperty<QWidget> WebViewPrivate::children() {
 
 QDeclarativeListProperty<QObject> WebViewPrivate::actions() {
     return QDeclarativeListProperty<QObject>(q_func(), 0, WebViewPrivate::actions_append);
+}
+
+QDeclarativeListProperty<QObject> WebViewPrivate::jsObjects() {
+    return QDeclarativeListProperty<QObject>(q_func(), 0, WebViewPrivate::jsobjects_append);
 }
 
 WebHistory* WebViewPrivate::history() {
@@ -482,6 +507,14 @@ void WebViewPrivate::_q_onStatusBarMessage(const QString &message) {
         statusText = message;
         Q_Q(WebView);
         emit q->statusTextChanged();
+    }
+}
+
+void WebViewPrivate::_q_onJavaScriptWindowObjectCleared() {
+    Q_Q(WebView);
+
+    foreach (QObject *obj, jsObjectList) {
+        q->page()->mainFrame()->addToJavaScriptWindowObject(obj->objectName(), obj);
     }
 }
 

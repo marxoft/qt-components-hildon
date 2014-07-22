@@ -119,11 +119,15 @@ public:
 
     static void actions_append(QDeclarativeListProperty<QObject> *list, QObject *obj);
 
+    static void jsobjects_append(QDeclarativeListProperty<QObject> *list, QObject *obj);
+
     QDeclarativeListProperty<QObject> data();
 
     QDeclarativeListProperty<QWidget> children();
 
     QDeclarativeListProperty<QObject> actions();
+
+    QDeclarativeListProperty<QObject> jsObjects();
 
     WebHistory* history();
 
@@ -134,6 +138,8 @@ public:
     void _q_onLoadProgress(int p);
 
     void _q_onStatusBarMessage(const QString &message);
+
+    void _q_onJavaScriptWindowObjectCleared();
 
     WebViewSelectionSuppressor *suppressor;
 
@@ -148,6 +154,8 @@ public:
     WebView::Status status;
 
     QString statusText;
+
+    QList<QObject*> jsObjectList;
 
     Q_DECLARE_PUBLIC(WebView)
 };
