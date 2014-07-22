@@ -54,6 +54,8 @@ private:
 
     friend class TabBar;
     friend class TabBarPrivate;
+
+    Q_DISABLE_COPY(TabButton)
 };
 
 class TabBar : public QTabBar, public QDeclarativeParserStatus
