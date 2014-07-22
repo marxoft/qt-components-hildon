@@ -27,6 +27,9 @@
 #include <QAbstractKineticScroller>
 #include <QGraphicsOpacityEffect>
 #include <QDeclarativeEngine>
+#include <QDeclarativeContext>
+#include <QDeclarativeComponent>
+#include <QDeclarativeInfo>
 
 WebView::WebView(QWidget *parent) :
     QWebView(parent),
@@ -298,6 +301,82 @@ QString WebView::statusText() const {
     Q_D(const WebView);
 
     return d->statusText;
+}
+
+QDeclarativeComponent* WebView::newWindowComponent() const {
+    Q_D(const WebView);
+
+    return d->windowComponent;
+}
+
+void WebView::setNewWindowComponent(QDeclarativeComponent *component) {
+    if (component != this->newWindowComponent()) {
+        Q_D(WebView);
+        d->windowComponent = component;
+        emit newWindowComponentChanged();
+    }
+}
+
+QWidget* WebView::newWindowParent() const {
+    Q_D(const WebView);
+
+    return d->windowParent;
+}
+
+void WebView::setNewWindowParent(QWidget *parent) {
+    if (parent != this->newWindowParent()) {
+        Q_D(WebView);
+        d->windowParent = parent;
+        emit newWindowParentChanged();
+    }
+}
+
+QWebView* WebView::createWindow(QWebPage::WebWindowType type) {
+    Q_UNUSED(type);
+    Q_D(WebView);
+
+    if (!d->windowComponent) {
+        return 0;
+    }
+
+    QWebView *view = 0;
+    QDeclarativeContext *creationContext = d->windowComponent->creationContext();
+    QDeclarativeContext *context = new QDeclarativeContext(creationContext ? creationContext : qmlContext(this));
+
+    if (QObject *obj = d->windowComponent->create(context)) {
+        if (QWidget *widget = qobject_cast<QWidget*>(obj)) {
+            view = qobject_cast<QWebView*>(widget);
+
+            if (!view) {
+                foreach (QObject *ch, widget->children()) {
+                    view = qobject_cast<QWebView*>(ch);
+
+                    if (view) {
+                        break;
+                    }
+                }
+            }
+
+            if (view) {
+                widget->setParent(d->windowParent);
+            }
+            else {
+                qmlInfo(this) << tr("No WebView found in window component");
+                delete widget;
+                delete context;
+            }
+        }
+        else {
+            qmlInfo(this) << tr("Window component is not a visual item");
+            delete obj;
+            delete context;
+        }
+    }
+    else {
+        delete context;
+    }
+
+    return view;
 }
 
 void WebView::changeEvent(QEvent *event) {

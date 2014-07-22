@@ -108,6 +108,8 @@ public:
         kineticScroller(parent->property("kineticScroller").value<QAbstractKineticScroller*>()),
         webHistory(0),
         webSettings(0),
+        windowComponent(0),
+        windowParent(0),
         progress(0),
         status(WebView::Null)
     {
@@ -148,6 +150,10 @@ public:
     WebHistory *webHistory;
 
     WebSettings *webSettings;
+
+    QDeclarativeComponent *windowComponent;
+
+    QWidget *windowParent;
 
     int progress;
 

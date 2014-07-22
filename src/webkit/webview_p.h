@@ -24,6 +24,7 @@
 #include <QDeclarativeParserStatus>
 #include <qdeclarative.h>
 
+class QDeclarativeComponent;
 class WebHistory;
 class WebSettings;
 class WebViewPrivate;
@@ -63,6 +64,8 @@ class WebView : public QWebView, public QDeclarativeParserStatus
     Q_PROPERTY(int progress READ progress NOTIFY progressChanged)
     Q_PROPERTY(Status status READ status NOTIFY statusChanged)
     Q_PROPERTY(QString statusText READ statusText NOTIFY statusTextChanged)
+    Q_PROPERTY(QDeclarativeComponent* newWindowComponent READ newWindowComponent WRITE setNewWindowComponent NOTIFY newWindowComponentChanged)
+    Q_PROPERTY(QWidget* newWindowParent READ newWindowParent WRITE setNewWindowParent NOTIFY newWindowParentChanged)
     Q_PRIVATE_PROPERTY(WebView::d_func(), WebHistory* history READ history CONSTANT FINAL)
     Q_PRIVATE_PROPERTY(WebView::d_func(), WebSettings* settings READ settings CONSTANT FINAL)
     Q_PRIVATE_PROPERTY(WebView::d_func(), QDeclarativeListProperty<QObject> data READ data)
@@ -136,6 +139,12 @@ public:
 
     QString statusText() const;
 
+    QDeclarativeComponent* newWindowComponent() const;
+    void setNewWindowComponent(QDeclarativeComponent *component);
+
+    QWidget* newWindowParent() const;
+    void setNewWindowParent(QWidget *parent);
+
 signals:
     void parentChanged();
     void xChanged();
@@ -158,10 +167,14 @@ signals:
     void progressChanged();
     void statusChanged();
     void statusTextChanged();
+    void newWindowComponentChanged();
+    void newWindowParentChanged();
     void linkClicked(const QUrl &link);
 
 protected:
     WebView(WebViewPrivate &dd, QWidget *parent = 0);
+
+    virtual QWebView* createWindow(QWebPage::WebWindowType type);
 
     virtual void changeEvent(QEvent *event);
     virtual void moveEvent(QMoveEvent *event);
