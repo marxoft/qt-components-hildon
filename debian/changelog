@@ -2,6 +2,7 @@ qt-components-hildon (0.5.0) unstable; urgency=low
 
   * Added TabBar and TabButton components to the org.hildon.components module (see example in Gallery).
   * Added Directory component to the org.hildon.utils module.
+  * Added 'linkDelegationPolicy', 'newWindowComponent', 'newWindowParent' and 'javaScriptWindowObjects' properties to WebView.
   * Added text margins properties to TextField.
   * Make 'enabled' property NOTIFY-able.
   * Fixed focus handling in TextField and ValueButton components.
