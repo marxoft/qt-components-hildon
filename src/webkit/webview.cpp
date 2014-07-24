@@ -454,6 +454,22 @@ void WebView::keyPressEvent(QKeyEvent *event) {
         }
 
         break;
+    case Qt::Key_X:
+        if (event->modifiers() & Qt::ControlModifier) {
+            this->triggerPageAction(QWebPage::Cut);
+            event->accept();
+            return;
+        }
+
+        break;
+    case Qt::Key_V:
+        if (event->modifiers() & Qt::ControlModifier) {
+            this->triggerPageAction(QWebPage::Paste);
+            event->accept();
+            return;
+        }
+
+        break;
     default:
         break;
     }
