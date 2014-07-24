@@ -50,6 +50,7 @@ class WebView : public QWebView, public QDeclarativeParserStatus
     Q_PROPERTY(QString title READ title NOTIFY titleChanged)
     Q_PROPERTY(QUrl url READ url WRITE setUrl NOTIFY urlChanged)
     Q_PROPERTY(QString icon READ iconSource NOTIFY iconChanged)
+    Q_PROPERTY(bool interactive READ interactive WRITE setInteractive NOTIFY interactiveChanged)
     Q_PROPERTY(bool textSelectionEnabled READ textSelectionEnabled WRITE setTextSelectionEnabled NOTIFY textSelectionEnabledChanged)
     Q_PROPERTY(QWebPage::LinkDelegationPolicy linkDelegationPolicy READ linkDelegationPolicy WRITE setLinkDelegationPolicy NOTIFY linkDelegationPolicyChanged)
     Q_PROPERTY(bool moving READ moving NOTIFY movingChanged)
@@ -107,6 +108,9 @@ public:
 
     QString iconSource() const;
 
+    bool interactive() const;
+    void setInteractive(bool interactive);
+
     bool textSelectionEnabled() const;
     void setTextSelectionEnabled(bool enabled);
 
@@ -159,6 +163,7 @@ signals:
     void focusChanged();
     void titleChanged();
     void urlChanged();
+    void interactiveChanged();
     void textSelectionEnabledChanged();
     void linkDelegationPolicyChanged();
     void movingChanged();

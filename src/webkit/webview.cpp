@@ -151,6 +151,20 @@ QString WebView::iconSource() const {
     return this->icon().name();
 }
 
+bool WebView::interactive() const {
+    Q_D(const WebView);
+
+    return d->kineticScroller->isEnabled();
+}
+
+void WebView::setInteractive(bool interactive) {
+    if (interactive != this->interactive()) {
+        Q_D(WebView);
+        d->kineticScroller->setEnabled(interactive);
+        emit interactiveChanged();
+    }
+}
+
 bool WebView::textSelectionEnabled() const {
     Q_D(const WebView);
 
