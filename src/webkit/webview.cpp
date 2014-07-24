@@ -43,7 +43,6 @@ WebView::WebView(QWidget *parent) :
         this->page()->setNetworkAccessManager(engine->networkAccessManager());
     }
 
-    this->setTextSelectionEnabled(false);
     this->connect(this->page(), SIGNAL(linkClicked(QUrl)), this, SIGNAL(linkClicked(QUrl)));
     this->connect(this->page()->mainFrame(), SIGNAL(javaScriptWindowObjectCleared()), this, SLOT(_q_onJavaScriptWindowObjectCleared()));
     this->connect(this, SIGNAL(titleChanged(QString)), this, SIGNAL(titleChanged()));
@@ -58,11 +57,14 @@ WebView::WebView(WebViewPrivate &dd, QWidget *parent) :
     QWebView(parent),
     d_ptr(&dd)
 {
+    Q_D(WebView);
+
+    d->suppressor = new WebViewSelectionSuppressor(this);
+
     if (QDeclarativeEngine *engine = qmlEngine(this)) {
         this->page()->setNetworkAccessManager(engine->networkAccessManager());
     }
 
-    this->setTextSelectionEnabled(false);
     this->connect(this->page(), SIGNAL(linkClicked(QUrl)), this, SIGNAL(linkClicked(QUrl)));
     this->connect(this->page()->mainFrame(), SIGNAL(javaScriptWindowObjectCleared()), this, SLOT(_q_onJavaScriptWindowObjectCleared()));
     this->connect(this, SIGNAL(titleChanged(QString)), this, SIGNAL(titleChanged()));
@@ -158,7 +160,7 @@ bool WebView::textSelectionEnabled() const {
 void WebView::setTextSelectionEnabled(bool enabled) {
     Q_D(WebView);
 
-    if (enabled = this->textSelectionEnabled()) {
+    if (enabled == this->textSelectionEnabled()) {
         return;
     }
 
@@ -440,6 +442,23 @@ void WebView::focusInEvent(QFocusEvent *event) {
 void WebView::focusOutEvent(QFocusEvent *event) {
     emit focusChanged();
     QWebView::focusOutEvent(event);
+}
+
+void WebView::keyPressEvent(QKeyEvent *event) {
+    switch (event->key()) {
+    case Qt::Key_C:
+        if (event->modifiers() & Qt::ControlModifier) {
+            this->triggerPageAction(QWebPage::Copy);
+            event->accept();
+            return;
+        }
+
+        break;
+    default:
+        break;
+    }
+
+    QWebView::keyPressEvent(event);
 }
 
 void WebView::classBegin() {}

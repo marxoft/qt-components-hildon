@@ -185,6 +185,7 @@ protected:
     virtual void hideEvent(QHideEvent *event);
     virtual void focusInEvent(QFocusEvent *event);
     virtual void focusOutEvent(QFocusEvent *event);
+    virtual void keyPressEvent(QKeyEvent *event);
 
     virtual void classBegin();
     virtual void componentComplete();
