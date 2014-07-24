@@ -145,6 +145,8 @@ public:
     QWidget* newWindowParent() const;
     void setNewWindowParent(QWidget *parent);
 
+    Q_INVOKABLE bool findText(const QString &text);
+
 signals:
     void parentChanged();
     void xChanged();

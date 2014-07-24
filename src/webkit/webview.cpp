@@ -331,6 +331,10 @@ void WebView::setNewWindowParent(QWidget *parent) {
     }
 }
 
+bool WebView::findText(const QString &text) {
+    return QWebView::findText(text, QWebPage::FindWrapsAroundDocument);
+}
+
 QWebView* WebView::createWindow(QWebPage::WebWindowType type) {
     Q_UNUSED(type);
     Q_D(WebView);
