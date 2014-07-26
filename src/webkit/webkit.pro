@@ -14,6 +14,7 @@ HEADERS += \
     ../components/item_p_p.h \
     webhistory_p.h \
     webhistoryinterface_p.h \
+    webpage_p.h \
     websettings_p.h \
     webview_p.h \
     webview_p_p.h \
@@ -24,6 +25,7 @@ SOURCES += \
     ../components/item.cpp \
     webhistory.cpp \
     webhistoryinterface.cpp \
+    webpage.cpp \
     websettings.cpp \
     webview.cpp \
     plugin.cpp

@@ -16,6 +16,7 @@
  */
 
 #include "plugin_p.h"
+#include "webpage_p.h"
 #include "webview_p.h"
 #include "webhistory_p.h"
 #include "webhistoryinterface_p.h"
@@ -41,6 +42,7 @@ void Plugin::initializeEngine(QDeclarativeEngine *engine, const char *uri) {
 void Plugin::registerTypes(const char *uri) {
     Q_ASSERT(uri == QLatin1String("org.hildon.webkit"));
 
+    qmlRegisterType<WebPage>(uri, 1, 0, "WebPage");
     qmlRegisterType<WebView>(uri, 1, 0, "WebView");
 }
 
