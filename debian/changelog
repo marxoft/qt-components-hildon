@@ -1,3 +1,12 @@
+qt-components-hildon (0.6.0) unstable; urgency=low
+
+  * Added ZoomArea component to the org.hildon.components module.
+  * Added WebPage component to the org.hildon.webkit module.
+  * Improved scroll handling in Flickable, ListView, TableView and WebView components.
+  * Bug fixes.
+
+ -- Stuart Howarth <showarth@marxoft.co.uk>  Sat, 26 Jul 2014 22:28:24 +0100
+
 qt-components-hildon (0.5.0) unstable; urgency=low
 
   * Added TabBar and TabButton components to the org.hildon.components module (see example in Gallery).
