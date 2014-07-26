@@ -122,9 +122,8 @@ HEADERS += \
     varianttablemodel_p.h \
     window_p.h \
     window_p_p.h \
-    plugin_p.h \
-    rectangleproperties_p.h \
-    tableview_p_p.h
+    zoomarea_p.h \
+    plugin_p.h
 
 SOURCES += \
     action.cpp \
@@ -192,6 +191,7 @@ SOURCES += \
     variantlistmodel.cpp \
     varianttablemodel.cpp \
     window.cpp \
+    zoomarea.cpp \
     plugin.cpp
 
 qdeclarativesources.files += \

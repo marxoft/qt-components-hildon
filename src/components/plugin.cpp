@@ -77,6 +77,7 @@
 #include "valuebutton_p.h"
 #include "valueselector_p.h"
 #include "window_p.h"
+#include "zoomarea_p.h"
 #include <QDeclarativeEngine>
 #include <QDeclarativeContext>
 
@@ -175,6 +176,7 @@ void Plugin::registerTypes(const char *uri) {
     qmlRegisterType<ValueButton>(uri, 1, 0, "ValueButton");
     qmlRegisterType<ValueSelector>(uri, 1, 0, "ValueSelector");
     qmlRegisterType<Window>(uri, 1, 0, "Window");
+    qmlRegisterType<ZoomArea>(uri, 1, 0, "ZoomArea");
 }
 
 #include "moc_plugin_p.cpp"
