@@ -407,10 +407,10 @@ void FlickablePrivate::_q_onVerticalScrollPositionChanged() {
 void FlickablePrivate::_q_onScrollingStopped() {
     Q_Q(Flickable);
 
-    bool xb = (q->horizontalScrollBar()->value() == q->horizontalScrollBar()->minimum());
-    bool xe = (q->horizontalScrollBar()->value() == q->horizontalScrollBar()->maximum());
-    bool yb = (q->verticalScrollBar()->value() == q->verticalScrollBar()->minimum());
-    bool ye = (q->verticalScrollBar()->value() == q->verticalScrollBar()->maximum());
+    bool xb = q->atXBeginning();
+    bool xe = q->atYEnd();
+    bool yb = q->atYBeginning();
+    bool ye = q->atYEnd();
 
     if (xb != atXBeginning) {
         atXBeginning = xb;

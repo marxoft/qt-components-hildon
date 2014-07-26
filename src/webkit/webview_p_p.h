@@ -111,7 +111,12 @@ public:
         windowComponent(0),
         windowParent(0),
         progress(0),
-        status(WebView::Null)
+        status(WebView::Null),
+        scrollTimer(0),
+        atXBeginning(true),
+        atXEnd(true),
+        atYBeginning(true),
+        atYEnd(true)
     {
     }
 
@@ -143,6 +148,9 @@ public:
 
     void _q_onJavaScriptWindowObjectCleared();
 
+    void _q_onScrollRequested();
+    void _q_onScrollingStopped();
+
     WebViewSelectionSuppressor *suppressor;
 
     QAbstractKineticScroller *kineticScroller;
@@ -160,6 +168,13 @@ public:
     WebView::Status status;
 
     QString statusText;
+
+    QTimer *scrollTimer;
+
+    bool atXBeginning;
+    bool atXEnd;
+    bool atYBeginning;
+    bool atYEnd;
 
     QList<QObject*> jsObjectList;
 

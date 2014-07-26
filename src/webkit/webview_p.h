@@ -52,12 +52,13 @@ class WebView : public QWebView, public QDeclarativeParserStatus
     Q_PROPERTY(QString icon READ iconSource NOTIFY iconChanged)
     Q_PROPERTY(bool interactive READ interactive WRITE setInteractive NOTIFY interactiveChanged)
     Q_PROPERTY(bool textSelectionEnabled READ textSelectionEnabled WRITE setTextSelectionEnabled NOTIFY textSelectionEnabledChanged)
+    Q_PROPERTY(QString selectedText READ selectedText NOTIFY selectedTextChanged)
     Q_PROPERTY(QWebPage::LinkDelegationPolicy linkDelegationPolicy READ linkDelegationPolicy WRITE setLinkDelegationPolicy NOTIFY linkDelegationPolicyChanged)
     Q_PROPERTY(bool moving READ moving NOTIFY movingChanged)
-    Q_PROPERTY(bool atXBeginning READ atXBeginning NOTIFY contentXChanged)
-    Q_PROPERTY(bool atXEnd READ atXEnd NOTIFY contentXChanged)
-    Q_PROPERTY(bool atYBeginning READ atYBeginning NOTIFY contentYChanged)
-    Q_PROPERTY(bool atYEnd READ atYEnd NOTIFY contentYChanged)
+    Q_PROPERTY(bool atXBeginning READ atXBeginning NOTIFY atXBeginningChanged)
+    Q_PROPERTY(bool atXEnd READ atXEnd NOTIFY atXEndChanged)
+    Q_PROPERTY(bool atYBeginning READ atYBeginning NOTIFY atYBeginningChanged)
+    Q_PROPERTY(bool atYEnd READ atYEnd NOTIFY atYEndChanged)
     Q_PROPERTY(int contentX READ contentX WRITE setContentX NOTIFY contentXChanged)
     Q_PROPERTY(int contentY READ contentY WRITE setContentY NOTIFY contentYChanged)
     Q_PROPERTY(qreal flickDeceleration READ flickDeceleration WRITE setFlickDeceleration NOTIFY flickDecelerationChanged)
@@ -149,7 +150,9 @@ public:
     QWidget* newWindowParent() const;
     void setNewWindowParent(QWidget *parent);
 
-    Q_INVOKABLE bool findText(const QString &text);
+public slots:
+    bool findText(const QString &text);
+    bool findAllText(const QString &text);
 
 signals:
     void parentChanged();
@@ -165,8 +168,13 @@ signals:
     void urlChanged();
     void interactiveChanged();
     void textSelectionEnabledChanged();
+    void selectedTextChanged();
     void linkDelegationPolicyChanged();
     void movingChanged();
+    void atXBeginningChanged();
+    void atXEndChanged();
+    void atYBeginningChanged();
+    void atYEndChanged();
     void contentXChanged();
     void contentYChanged();
     void flickDecelerationChanged();
@@ -204,6 +212,8 @@ protected:
     Q_PRIVATE_SLOT(d_func(), void _q_onLoadProgress(int))
     Q_PRIVATE_SLOT(d_func(), void _q_onStatusBarMessage(QString))
     Q_PRIVATE_SLOT(d_func(), void _q_onJavaScriptWindowObjectCleared())
+    Q_PRIVATE_SLOT(d_func(), void _q_onScrollRequested())
+    Q_PRIVATE_SLOT(d_func(), void _q_onScrollingStopped())
 
 private:
     Q_DISABLE_COPY(WebView)

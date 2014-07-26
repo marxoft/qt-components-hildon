@@ -23,13 +23,13 @@
 #include <QResizeEvent>
 #include <QActionGroup>
 #include <QWebFrame>
-#include <QScrollBar>
 #include <QAbstractKineticScroller>
 #include <QGraphicsOpacityEffect>
 #include <QDeclarativeEngine>
 #include <QDeclarativeContext>
 #include <QDeclarativeComponent>
 #include <QDeclarativeInfo>
+#include <QTimer>
 
 WebView::WebView(QWidget *parent) :
     QWebView(parent),
@@ -38,11 +38,17 @@ WebView::WebView(QWidget *parent) :
     Q_D(WebView);
 
     d->suppressor = new WebViewSelectionSuppressor(this);
+    d->scrollTimer = new QTimer(this);
+    d->scrollTimer->setInterval(500);
+    d->scrollTimer->setSingleShot(true);
 
     if (QDeclarativeEngine *engine = qmlEngine(this)) {
         this->page()->setNetworkAccessManager(engine->networkAccessManager());
     }
 
+    this->connect(d->scrollTimer, SIGNAL(timeout()), this, SLOT(_q_onScrollingStopped()));
+    this->connect(this->page(), SIGNAL(scrollRequested(int,int,QRect)), this, SLOT(_q_onScrollRequested()));
+    this->connect(this->page(), SIGNAL(selectionChanged()), this, SIGNAL(selectedTextChanged()));
     this->connect(this->page(), SIGNAL(linkClicked(QUrl)), this, SIGNAL(linkClicked(QUrl)));
     this->connect(this->page()->mainFrame(), SIGNAL(javaScriptWindowObjectCleared()), this, SLOT(_q_onJavaScriptWindowObjectCleared()));
     this->connect(this, SIGNAL(titleChanged(QString)), this, SIGNAL(titleChanged()));
@@ -60,11 +66,17 @@ WebView::WebView(WebViewPrivate &dd, QWidget *parent) :
     Q_D(WebView);
 
     d->suppressor = new WebViewSelectionSuppressor(this);
+    d->scrollTimer = new QTimer(this);
+    d->scrollTimer->setInterval(500);
+    d->scrollTimer->setSingleShot(true);
 
     if (QDeclarativeEngine *engine = qmlEngine(this)) {
         this->page()->setNetworkAccessManager(engine->networkAccessManager());
     }
 
+    this->connect(d->scrollTimer, SIGNAL(timeout()), this, SLOT(_q_onScrollingStopped()));
+    this->connect(this->page(), SIGNAL(scrollRequested(int,int,QRect)), this, SLOT(_q_onScrollRequested()));
+    this->connect(this->page(), SIGNAL(selectionChanged()), this, SIGNAL(selectedTextChanged()));
     this->connect(this->page(), SIGNAL(linkClicked(QUrl)), this, SIGNAL(linkClicked(QUrl)));
     this->connect(this->page()->mainFrame(), SIGNAL(javaScriptWindowObjectCleared()), this, SLOT(_q_onJavaScriptWindowObjectCleared()));
     this->connect(this, SIGNAL(titleChanged(QString)), this, SIGNAL(titleChanged()));
@@ -204,6 +216,10 @@ void WebView::setLinkDelegationPolicy(QWebPage::LinkDelegationPolicy policy) {
 bool WebView::moving() const {
     Q_D(const WebView);
 
+    if (d->scrollTimer->isActive()) {
+        return true;
+    }
+
     switch (d->kineticScroller->state()) {
     case QAbstractKineticScroller::Pushing:
     case QAbstractKineticScroller::AutoScrolling:
@@ -214,62 +230,62 @@ bool WebView::moving() const {
 }
 
 bool WebView::atXBeginning() const {
-    if (this->page()) {
-        return this->page()->mainFrame()->scrollBarValue(Qt::Horizontal) == this->page()->mainFrame()->scrollBarMinimum(Qt::Horizontal);
+    if (QWebFrame *frame = this->page()->currentFrame()) {
+        return frame->scrollPosition().x() == 0;
     }
 
     return false;
 }
 
 bool WebView::atXEnd() const {
-    if (this->page()) {
-        return this->page()->mainFrame()->scrollBarValue(Qt::Horizontal) == this->page()->mainFrame()->scrollBarMaximum(Qt::Horizontal);
+    if (QWebFrame *frame = this->page()->currentFrame()) {
+        return frame->scrollPosition().x() == frame->contentsSize().width() - frame->geometry().width();
     }
 
     return false;
 }
 
 bool WebView::atYBeginning() const {
-    if (this->page()) {
-        return this->page()->mainFrame()->scrollBarValue(Qt::Vertical) == this->page()->mainFrame()->scrollBarMinimum(Qt::Vertical);
+    if (QWebFrame *frame = this->page()->currentFrame()) {
+        return frame->scrollPosition().y() == 0;
     }
 
     return false;
 }
 
 bool WebView::atYEnd() const {
-    if (this->page()) {
-        return this->page()->mainFrame()->scrollBarValue(Qt::Vertical) == this->page()->mainFrame()->scrollBarMaximum(Qt::Vertical);
+    if (QWebFrame *frame = this->page()->currentFrame()) {
+        return frame->scrollPosition().y() == frame->contentsSize().height() - frame->geometry().height();
     }
 
     return false;
 }
 
 int WebView::contentX() const {
-    if (this->page()) {
-        return this->page()->mainFrame()->scrollBarValue(Qt::Horizontal);
+    if (QWebFrame *frame = this->page()->currentFrame()) {
+        return frame->scrollPosition().x();
     }
 
     return 0;
 }
 
 void WebView::setContentX(int x) {
-    if (this->page()) {
-        this->page()->mainFrame()->setScrollBarValue(Qt::Horizontal, x);
+    if (QWebFrame *frame = this->page()->currentFrame()) {
+        frame->setScrollPosition(QPoint(x, frame->scrollPosition().y()));
     }
 }
 
 int WebView::contentY() const {
-    if (this->page()) {
-        return this->page()->mainFrame()->scrollBarValue(Qt::Vertical);
+    if (QWebFrame *frame = this->page()->currentFrame()) {
+        return frame->scrollPosition().y();
     }
 
     return 0;
 }
 
 void WebView::setContentY(int y) {
-    if (this->page()) {
-        this->page()->mainFrame()->setScrollBarValue(Qt::Vertical, y);
+    if (QWebFrame *frame = this->page()->currentFrame()) {
+        frame->setScrollPosition(QPoint(frame->scrollPosition().x(), y));
     }
 }
 
@@ -351,6 +367,10 @@ bool WebView::findText(const QString &text) {
     return QWebView::findText(text, QWebPage::FindWrapsAroundDocument);
 }
 
+bool WebView::findAllText(const QString &text) {
+    return QWebView::findText(text, QWebPage::FindWrapsAroundDocument | QWebPage::HighlightAllOccurrences);
+}
+
 QWebView* WebView::createWindow(QWebPage::WebWindowType type) {
     Q_UNUSED(type);
     Q_D(WebView);
@@ -364,30 +384,17 @@ QWebView* WebView::createWindow(QWebPage::WebWindowType type) {
     QDeclarativeContext *context = new QDeclarativeContext(creationContext ? creationContext : qmlContext(this));
 
     if (QObject *obj = d->windowComponent->create(context)) {
-        if (QWidget *widget = qobject_cast<QWidget*>(obj)) {
-            view = qobject_cast<QWebView*>(widget);
+        view = qobject_cast<QWebView*>(obj);
 
-            if (!view) {
-                foreach (QObject *ch, widget->children()) {
-                    view = qobject_cast<QWebView*>(ch);
+        if (!view) {
+            view = obj->findChild<QWebView*>();
+        }
 
-                    if (view) {
-                        break;
-                    }
-                }
-            }
-
-            if (view) {
-                widget->setParent(d->windowParent);
-            }
-            else {
-                qmlInfo(this) << tr("No WebView found in window component");
-                delete widget;
-                delete context;
-            }
+        if (view) {
+            view->setParent(d->windowParent);
         }
         else {
-            qmlInfo(this) << tr("Window component is not a visual item");
+            qmlInfo(this) << tr("No WebView found in window component");
             delete obj;
             delete context;
         }
@@ -648,6 +655,70 @@ void WebViewPrivate::_q_onJavaScriptWindowObjectCleared() {
     foreach (QObject *obj, jsObjectList) {
         q->page()->mainFrame()->addToJavaScriptWindowObject(obj->objectName(), obj);
     }
+}
+
+void WebViewPrivate::_q_onScrollRequested() {
+    Q_Q(WebView);
+
+    if (!scrollTimer->isActive()) {
+        emit q->movingChanged();
+
+        if (atXBeginning) {
+            atXBeginning = false;
+            emit q->atXBeginningChanged();
+        }
+
+        if (atXEnd) {
+            atXEnd = false;
+            emit q->atXEndChanged();
+        }
+
+        if (atYBeginning) {
+            atYBeginning = false;
+            emit q->atYBeginningChanged();
+        }
+
+        if (atXEnd) {
+            atXEnd = false;
+            emit q->atYEndChanged();
+        }
+    }
+
+    emit q->contentXChanged();
+    emit q->contentYChanged();
+
+    scrollTimer->start();
+}
+
+void WebViewPrivate::_q_onScrollingStopped() {
+    Q_Q(WebView);
+
+    bool xb = q->atXBeginning();
+    bool xe = q->atYEnd();
+    bool yb = q->atYBeginning();
+    bool ye = q->atYEnd();
+
+    if (xb != atXBeginning) {
+        atXBeginning = xb;
+        emit q->atXBeginningChanged();
+    }
+
+    if (xe != atXEnd) {
+        atXEnd = xe;
+        emit q->atXEndChanged();
+    }
+
+    if (yb != atYBeginning) {
+        atYBeginning = yb;
+        emit q->atYBeginningChanged();
+    }
+
+    if (ye != atYEnd) {
+        atYEnd = ye;
+        emit q->atYEndChanged();
+    }
+
+    emit q->movingChanged();
 }
 
 #include "moc_webview_p.cpp"
