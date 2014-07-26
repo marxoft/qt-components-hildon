@@ -255,7 +255,6 @@ void MouseArea::mouseMoveEvent(QMouseEvent *event) {
         }
 
         d->mouseX = event->x();
-        emit mouseXChanged();
     }
 
     if (event->y() != this->mouseY()) {
@@ -278,8 +277,9 @@ void MouseArea::mouseMoveEvent(QMouseEvent *event) {
         }
 
         d->mouseY = event->y();
-        emit mouseYChanged();
     }
+
+    emit positionChanged();
 
     if (this->rect().contains(event->pos())) {
         if (!this->containsMouse()) {
