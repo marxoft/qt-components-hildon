@@ -24,8 +24,8 @@ Window {
     windowTitle: qsTr("Gallery")
     tools: [
         Action {
-            text: mainWindow.inPortrait ? qsTr("Landscape") : qsTr("Portrait")
-            onTriggered: screen.orientationLock = checked ? Screen.PortraitOrientation : Screen.LandscapeOrientation
+            text: qsTr("Change orientation")
+            onTriggered: screen.orientationLock = (screen.orientationLock === Screen.LandscapeOrientation ? Screen.PortraitOrientation : Screen.LandscapeOrientation)
         },
 
         Action {
