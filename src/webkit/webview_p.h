@@ -154,6 +154,10 @@ public slots:
     bool findText(const QString &text);
     bool findAllText(const QString &text);
 
+    void copy();
+    void cut();
+    void paste();
+
 signals:
     void parentChanged();
     void xChanged();

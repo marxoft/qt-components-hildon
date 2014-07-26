@@ -371,6 +371,18 @@ bool WebView::findAllText(const QString &text) {
     return QWebView::findText(text, QWebPage::FindWrapsAroundDocument | QWebPage::HighlightAllOccurrences);
 }
 
+void WebView::copy() {
+    this->triggerPageAction(QWebPage::Copy);
+}
+
+void WebView::cut() {
+    this->triggerPageAction(QWebPage::Cut);
+}
+
+void WebView::paste() {
+    this->triggerPageAction(QWebPage::Paste);
+}
+
 QWebView* WebView::createWindow(QWebPage::WebWindowType type) {
     Q_UNUSED(type);
     Q_D(WebView);
