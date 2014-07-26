@@ -182,8 +182,11 @@ void MouseArea::mousePressEvent(QMouseEvent *event) {
     if ((!this->isPressed()) && (this->rect().contains(event->pos()))) {
         Q_D(MouseArea);
         d->pressed = true;
+        d->mouseX = event->x();
+        d->mouseY = event->y();
         emit pressed();
         emit pressedChanged();
+        emit positionChanged();
 
         if (!d->timerId) {
             d->timerId = this->startTimer(PRESS_AND_HOLD_DURATION);
@@ -229,10 +232,6 @@ void MouseArea::mouseReleaseEvent(QMouseEvent *event) {
 }
 
 void MouseArea::mouseMoveEvent(QMouseEvent *event) {
-    if (!this->isPressed()) {
-        return;
-    }
-
     Q_D(MouseArea);
 
     if (event->x() != this->mouseX()) {
