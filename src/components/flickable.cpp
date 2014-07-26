@@ -22,23 +22,38 @@
 #include <QResizeEvent>
 #include <QScrollBar>
 #include <QGraphicsOpacityEffect>
+#include <QTimer>
 
 Flickable::Flickable(QWidget *parent) :
     QScrollArea(parent),
     d_ptr(new FlickablePrivate(this))
 {
+    Q_D(Flickable);
+
+    d->scrollTimer = new QTimer(this);
+    d->scrollTimer->setInterval(500);
+    d->scrollTimer->setSingleShot(true);
+
     this->setWidgetResizable(true);
-    this->connect(this->horizontalScrollBar(), SIGNAL(valueChanged(int)), this, SIGNAL(contentXChanged()));
-    this->connect(this->verticalScrollBar(), SIGNAL(valueChanged(int)), this, SIGNAL(contentYChanged()));
+    this->connect(d->scrollTimer, SIGNAL(timeout()), this, SLOT(_q_onScrollingStopped()));
+    this->connect(this->horizontalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(_q_onHorizontalScrollPositionChanged()));
+    this->connect(this->verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(_q_onVerticalScrollPositionChanged()));
 }
 
 Flickable::Flickable(FlickablePrivate &dd, QWidget *parent) :
     QScrollArea(parent),
     d_ptr(&dd)
 {
+    Q_D(Flickable);
+
+    d->scrollTimer = new QTimer(this);
+    d->scrollTimer->setInterval(500);
+    d->scrollTimer->setSingleShot(true);
+
     this->setWidgetResizable(true);
-    this->connect(this->horizontalScrollBar(), SIGNAL(valueChanged(int)), this, SIGNAL(contentXChanged()));
-    this->connect(this->verticalScrollBar(), SIGNAL(valueChanged(int)), this, SIGNAL(contentYChanged()));
+    this->connect(d->scrollTimer, SIGNAL(timeout()), this, SLOT(_q_onScrollingStopped()));
+    this->connect(this->horizontalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(_q_onHorizontalScrollPositionChanged(int)));
+    this->connect(this->verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(_q_onVerticalScrollPositionChanged(int)));
 }
 
 Flickable::~Flickable() {}
@@ -130,6 +145,10 @@ void Flickable::setInteractive(bool interactive) {
 bool Flickable::moving() const {
     Q_D(const Flickable);
 
+    if (d->scrollTimer->isActive()) {
+        return true;
+    }
+
     switch (d->kineticScroller->state()) {
     case QAbstractKineticScroller::Pushing:
     case QAbstractKineticScroller::AutoScrolling:
@@ -140,7 +159,7 @@ bool Flickable::moving() const {
 }
 
 bool Flickable::atXBeginning() const {
-    return this->horizontalScrollBar()->value();
+    return this->horizontalScrollBar()->value() == this->horizontalScrollBar()->minimum();
 }
 
 bool Flickable::atXEnd() const {
@@ -148,7 +167,7 @@ bool Flickable::atXEnd() const {
 }
 
 bool Flickable::atYBeginning() const {
-    return this->verticalScrollBar()->value() == 0;
+    return this->verticalScrollBar()->value() == this->verticalScrollBar()->minimum();
 }
 
 bool Flickable::atYEnd() const {
@@ -339,6 +358,81 @@ QDeclarativeListProperty<QWidget> FlickablePrivate::children() {
 
 QDeclarativeListProperty<QObject> FlickablePrivate::actions() {
     return QDeclarativeListProperty<QObject>(q_func(), 0, FlickablePrivate::actions_append);
+}
+
+void FlickablePrivate::_q_onHorizontalScrollPositionChanged() {
+    Q_Q(Flickable);
+
+    if (!scrollTimer->isActive()) {
+        emit q->movingChanged();
+
+        if (atXBeginning) {
+            atXBeginning = false;
+            emit q->atXBeginningChanged();
+        }
+
+        if (atXEnd) {
+            atXEnd = false;
+            emit q->atXEndChanged();
+        }
+    }
+
+    emit q->contentXChanged();
+
+    scrollTimer->start();
+}
+
+void FlickablePrivate::_q_onVerticalScrollPositionChanged() {
+    Q_Q(Flickable);
+
+    if (!scrollTimer->isActive()) {
+        emit q->movingChanged();
+
+        if (atYBeginning) {
+            atYBeginning = false;
+            emit q->atYBeginningChanged();
+        }
+
+        if (atXEnd) {
+            atXEnd = false;
+            emit q->atYEndChanged();
+        }
+    }
+
+    emit q->contentYChanged();
+
+    scrollTimer->start();
+}
+
+void FlickablePrivate::_q_onScrollingStopped() {
+    Q_Q(Flickable);
+
+    bool xb = (q->horizontalScrollBar()->value() == q->horizontalScrollBar()->minimum());
+    bool xe = (q->horizontalScrollBar()->value() == q->horizontalScrollBar()->maximum());
+    bool yb = (q->verticalScrollBar()->value() == q->verticalScrollBar()->minimum());
+    bool ye = (q->verticalScrollBar()->value() == q->verticalScrollBar()->maximum());
+
+    if (xb != atXBeginning) {
+        atXBeginning = xb;
+        emit q->atXBeginningChanged();
+    }
+
+    if (xe != atXEnd) {
+        atXEnd = xe;
+        emit q->atXEndChanged();
+    }
+
+    if (yb != atYBeginning) {
+        atYBeginning = yb;
+        emit q->atYBeginningChanged();
+    }
+
+    if (ye != atYEnd) {
+        atYEnd = ye;
+        emit q->atYEndChanged();
+    }
+
+    emit q->movingChanged();
 }
 
 #include "moc_flickable_p.cpp"

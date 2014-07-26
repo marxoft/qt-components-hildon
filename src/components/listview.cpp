@@ -27,21 +27,36 @@
 #include <QDeclarativeComponent>
 #include <QDeclarativeInfo>
 #include <QGraphicsOpacityEffect>
+#include <QTimer>
 
 ListView::ListView(QWidget *parent) :
     QListView(parent),
     d_ptr(new ListViewPrivate(this))
 {
-    this->connect(this->horizontalScrollBar(), SIGNAL(valueChanged(int)), this, SIGNAL(contentXChanged()));
-    this->connect(this->verticalScrollBar(), SIGNAL(valueChanged(int)), this, SIGNAL(contentYChanged()));
+    Q_D(ListView);
+
+    d->scrollTimer = new QTimer(this);
+    d->scrollTimer->setInterval(500);
+    d->scrollTimer->setSingleShot(true);
+
+    this->connect(d->scrollTimer, SIGNAL(timeout()), this, SLOT(_q_onScrollingStopped()));
+    this->connect(this->horizontalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(_q_onHorizontalScrollPositionChanged()));
+    this->connect(this->verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(_q_onVerticalScrollPositionChanged()));
 }
 
 ListView::ListView(ListViewPrivate &dd, QWidget *parent) :
     QListView(parent),
     d_ptr(&dd)
 {
-    this->connect(this->horizontalScrollBar(), SIGNAL(valueChanged(int)), this, SIGNAL(contentXChanged()));
-    this->connect(this->verticalScrollBar(), SIGNAL(valueChanged(int)), this, SIGNAL(contentYChanged()));
+    Q_D(ListView);
+
+    d->scrollTimer = new QTimer(this);
+    d->scrollTimer->setInterval(500);
+    d->scrollTimer->setSingleShot(true);
+
+    this->connect(d->scrollTimer, SIGNAL(timeout()), this, SLOT(_q_onScrollingStopped()));
+    this->connect(this->horizontalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(_q_onHorizontalScrollPositionChanged()));
+    this->connect(this->verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(_q_onVerticalScrollPositionChanged()));
 }
 
 ListView::~ListView() {}
@@ -133,6 +148,10 @@ void ListView::setInteractive(bool interactive) {
 bool ListView::moving() const {
     Q_D(const ListView);
 
+    if (d->scrollTimer->isActive()) {
+        return true;
+    }
+
     switch (d->kineticScroller->state()) {
     case QAbstractKineticScroller::Pushing:
     case QAbstractKineticScroller::AutoScrolling:
@@ -143,7 +162,7 @@ bool ListView::moving() const {
 }
 
 bool ListView::atXBeginning() const {
-    return this->horizontalScrollBar()->value();
+    return this->horizontalScrollBar()->value() == this->horizontalScrollBar()->minimum();
 }
 
 bool ListView::atXEnd() const {
@@ -151,7 +170,7 @@ bool ListView::atXEnd() const {
 }
 
 bool ListView::atYBeginning() const {
-    return this->verticalScrollBar()->value() == 0;
+    return this->verticalScrollBar()->value() == this->verticalScrollBar()->minimum();
 }
 
 bool ListView::atYEnd() const {
@@ -458,6 +477,81 @@ void ListViewPrivate::setDelegate(QDeclarativeComponent *delegate) {
 
         emit q->delegateChanged();
     }
+}
+
+void ListViewPrivate::_q_onHorizontalScrollPositionChanged() {
+    Q_Q(ListView);
+
+    if (!scrollTimer->isActive()) {
+        emit q->movingChanged();
+
+        if (atXBeginning) {
+            atXBeginning = false;
+            emit q->atXBeginningChanged();
+        }
+
+        if (atXEnd) {
+            atXEnd = false;
+            emit q->atXEndChanged();
+        }
+    }
+
+    emit q->contentXChanged();
+
+    scrollTimer->start();
+}
+
+void ListViewPrivate::_q_onVerticalScrollPositionChanged() {
+    Q_Q(ListView);
+
+    if (!scrollTimer->isActive()) {
+        emit q->movingChanged();
+
+        if (atYBeginning) {
+            atYBeginning = false;
+            emit q->atYBeginningChanged();
+        }
+
+        if (atXEnd) {
+            atXEnd = false;
+            emit q->atYEndChanged();
+        }
+    }
+
+    emit q->contentYChanged();
+
+    scrollTimer->start();
+}
+
+void ListViewPrivate::_q_onScrollingStopped() {
+    Q_Q(ListView);
+
+    bool xb = (q->horizontalScrollBar()->value() == q->horizontalScrollBar()->minimum());
+    bool xe = (q->horizontalScrollBar()->value() == q->horizontalScrollBar()->maximum());
+    bool yb = (q->verticalScrollBar()->value() == q->verticalScrollBar()->minimum());
+    bool ye = (q->verticalScrollBar()->value() == q->verticalScrollBar()->maximum());
+
+    if (xb != atXBeginning) {
+        atXBeginning = xb;
+        emit q->atXBeginningChanged();
+    }
+
+    if (xe != atXEnd) {
+        atXEnd = xe;
+        emit q->atXEndChanged();
+    }
+
+    if (yb != atYBeginning) {
+        atYBeginning = yb;
+        emit q->atYBeginningChanged();
+    }
+
+    if (ye != atYEnd) {
+        atYEnd = ye;
+        emit q->atYEndChanged();
+    }
+
+    emit q->movingChanged();
 }
 
 #include "moc_listview_p.cpp"

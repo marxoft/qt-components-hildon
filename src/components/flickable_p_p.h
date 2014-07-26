@@ -28,7 +28,12 @@ class FlickablePrivate : public ItemPrivate
 public:
     FlickablePrivate(Flickable *parent) :
         ItemPrivate(parent),
-        kineticScroller(parent->property("kineticScroller").value<QAbstractKineticScroller*>())
+        kineticScroller(parent->property("kineticScroller").value<QAbstractKineticScroller*>()),
+        scrollTimer(0),
+        atXBeginning(true),
+        atXEnd(true),
+        atYBeginning(true),
+        atYEnd(true)
     {}
 
     static void data_append(QDeclarativeListProperty<QObject> *list, QObject *obj);
@@ -43,7 +48,18 @@ public:
 
     QDeclarativeListProperty<QObject> actions();
 
+    void _q_onHorizontalScrollPositionChanged();
+    void _q_onVerticalScrollPositionChanged();
+    void _q_onScrollingStopped();
+
     QAbstractKineticScroller *kineticScroller;
+
+    QTimer *scrollTimer;
+
+    bool atXBeginning;
+    bool atXEnd;
+    bool atYBeginning;
+    bool atYEnd;
 
     Q_DECLARE_PUBLIC(Flickable)
 };

@@ -29,21 +29,36 @@
 #include <QDeclarativeComponent>
 #include <QDeclarativeInfo>
 #include <QGraphicsOpacityEffect>
+#include <QTimer>
 
 TableView::TableView(QWidget *parent) :
     QTableView(parent),
     d_ptr(new TableViewPrivate(this))
 {
-    this->connect(this->horizontalScrollBar(), SIGNAL(valueChanged(int)), this, SIGNAL(contentXChanged()));
-    this->connect(this->verticalScrollBar(), SIGNAL(valueChanged(int)), this, SIGNAL(contentYChanged()));
+    Q_D(TableView);
+
+    d->scrollTimer = new QTimer(this);
+    d->scrollTimer->setInterval(500);
+    d->scrollTimer->setSingleShot(true);
+
+    this->connect(d->scrollTimer, SIGNAL(timeout()), this, SLOT(_q_onScrollingStopped()));
+    this->connect(this->horizontalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(_q_onHorizontalScrollPositionChanged()));
+    this->connect(this->verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(_q_onVerticalScrollPositionChanged()));
 }
 
 TableView::TableView(TableViewPrivate &dd, QWidget *parent) :
     QTableView(parent),
     d_ptr(&dd)
 {
-    this->connect(this->horizontalScrollBar(), SIGNAL(valueChanged(int)), this, SIGNAL(contentXChanged()));
-    this->connect(this->verticalScrollBar(), SIGNAL(valueChanged(int)), this, SIGNAL(contentYChanged()));
+    Q_D(TableView);
+
+    d->scrollTimer = new QTimer(this);
+    d->scrollTimer->setInterval(500);
+    d->scrollTimer->setSingleShot(true);
+
+    this->connect(d->scrollTimer, SIGNAL(timeout()), this, SLOT(_q_onScrollingStopped()));
+    this->connect(this->horizontalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(_q_onHorizontalScrollPositionChanged()));
+    this->connect(this->verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(_q_onVerticalScrollPositionChanged()));
 }
 
 TableView::~TableView() {}
@@ -135,6 +150,10 @@ void TableView::setInteractive(bool interactive) {
 bool TableView::moving() const {
     Q_D(const TableView);
 
+    if (d->scrollTimer->isActive()) {
+        return true;
+    }
+
     switch (d->kineticScroller->state()) {
     case QAbstractKineticScroller::Pushing:
     case QAbstractKineticScroller::AutoScrolling:
@@ -145,7 +164,7 @@ bool TableView::moving() const {
 }
 
 bool TableView::atXBeginning() const {
-    return this->horizontalScrollBar()->value();
+    return this->horizontalScrollBar()->value() == this->horizontalScrollBar()->minimum();
 }
 
 bool TableView::atXEnd() const {
@@ -153,7 +172,7 @@ bool TableView::atXEnd() const {
 }
 
 bool TableView::atYBeginning() const {
-    return this->verticalScrollBar()->value() == 0;
+    return this->verticalScrollBar()->value() == this->verticalScrollBar()->minimum();
 }
 
 bool TableView::atYEnd() const {
@@ -468,6 +487,81 @@ void TableViewPrivate::setDelegate(QDeclarativeComponent *delegate) {
 
         emit q->delegateChanged();
     }
+}
+
+void TableViewPrivate::_q_onHorizontalScrollPositionChanged() {
+    Q_Q(TableView);
+
+    if (!scrollTimer->isActive()) {
+        emit q->movingChanged();
+
+        if (atXBeginning) {
+            atXBeginning = false;
+            emit q->atXBeginningChanged();
+        }
+
+        if (atXEnd) {
+            atXEnd = false;
+            emit q->atXEndChanged();
+        }
+    }
+
+    emit q->contentXChanged();
+
+    scrollTimer->start();
+}
+
+void TableViewPrivate::_q_onVerticalScrollPositionChanged() {
+    Q_Q(TableView);
+
+    if (!scrollTimer->isActive()) {
+        emit q->movingChanged();
+
+        if (atYBeginning) {
+            atYBeginning = false;
+            emit q->atYBeginningChanged();
+        }
+
+        if (atXEnd) {
+            atXEnd = false;
+            emit q->atYEndChanged();
+        }
+    }
+
+    emit q->contentYChanged();
+
+    scrollTimer->start();
+}
+
+void TableViewPrivate::_q_onScrollingStopped() {
+    Q_Q(TableView);
+
+    bool xb = (q->horizontalScrollBar()->value() == q->horizontalScrollBar()->minimum());
+    bool xe = (q->horizontalScrollBar()->value() == q->horizontalScrollBar()->maximum());
+    bool yb = (q->verticalScrollBar()->value() == q->verticalScrollBar()->minimum());
+    bool ye = (q->verticalScrollBar()->value() == q->verticalScrollBar()->maximum());
+
+    if (xb != atXBeginning) {
+        atXBeginning = xb;
+        emit q->atXBeginningChanged();
+    }
+
+    if (xe != atXEnd) {
+        atXEnd = xe;
+        emit q->atXEndChanged();
+    }
+
+    if (yb != atYBeginning) {
+        atYBeginning = yb;
+        emit q->atYBeginningChanged();
+    }
+
+    if (ye != atYEnd) {
+        atYEnd = ye;
+        emit q->atYEndChanged();
+    }
+
+    emit q->movingChanged();
 }
 
 #include "moc_tableview_p.cpp"

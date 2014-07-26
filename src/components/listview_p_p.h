@@ -32,7 +32,12 @@ public:
         ItemPrivate(parent),
         kineticScroller(parent->property("kineticScroller").value<QAbstractKineticScroller*>()),
         variantModel(0),
-        delegateComponent(0)
+        delegateComponent(0),
+        scrollTimer(0),
+        atXBeginning(true),
+        atXEnd(true),
+        atYBeginning(true),
+        atYEnd(true)
     {
     }
 
@@ -60,6 +65,10 @@ public:
     QDeclarativeComponent* delegate() const;
     void setDelegate(QDeclarativeComponent *delegate);
 
+    void _q_onHorizontalScrollPositionChanged();
+    void _q_onVerticalScrollPositionChanged();
+    void _q_onScrollingStopped();
+
     QVariant modelVariant;
 
     QAbstractKineticScroller *kineticScroller;
@@ -67,6 +76,13 @@ public:
     VariantListModel *variantModel;
 
     QDeclarativeComponent *delegateComponent;
+
+    QTimer *scrollTimer;
+
+    bool atXBeginning;
+    bool atXEnd;
+    bool atYBeginning;
+    bool atYEnd;
 
     Q_DECLARE_PUBLIC(ListView)
 };
