@@ -62,7 +62,7 @@ void ZoomArea::mousePressEvent(QMouseEvent *event) {
     Q_D(ZoomArea);
 
     d->pressPos = event->posF();
-    Item::mouseReleaseEvent(event);
+    Item::mousePressEvent(event);
 }
 
 void ZoomArea::mouseReleaseEvent(QMouseEvent *event) {
