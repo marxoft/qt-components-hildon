@@ -2,6 +2,7 @@ qt-components-hildon (0.6.0) unstable; urgency=low
 
   * Added ZoomArea component to the org.hildon.components module.
   * Added WebPage component to the org.hildon.webkit module.
+  * Added 'clipboard' global context property to the org.hildon.utils module.
   * Improved scroll handling in Flickable, ListView, TableView and WebView components.
   * Bug fixes.
 
