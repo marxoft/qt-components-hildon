@@ -164,6 +164,7 @@ WebPage::WebPage(QObject *parent) :
     this->connect(this->mainFrame(), SIGNAL(urlChanged(QUrl)), this, SIGNAL(urlChanged()));
     this->connect(this->mainFrame(), SIGNAL(iconChanged()), this, SIGNAL(iconChanged()));
     this->connect(this->mainFrame(), SIGNAL(titleChanged(QString)), this, SIGNAL(titleChanged()));
+    this->connect(this, SIGNAL(selectionChanged()), this, SIGNAL(selectedTextChanged()));
     this->connect(this, SIGNAL(loadStarted()), this, SLOT(_q_onLoadStarted()));
     this->connect(this, SIGNAL(loadFinished(bool)), this, SLOT(_q_onLoadFinished(bool)));
     this->connect(this, SIGNAL(loadProgress(int)), this, SLOT(_q_onLoadProgress(int)));
@@ -182,6 +183,7 @@ WebPage::WebPage(WebPagePrivate &dd, QObject *parent) :
     this->connect(this->mainFrame(), SIGNAL(urlChanged(QUrl)), this, SIGNAL(urlChanged()));
     this->connect(this->mainFrame(), SIGNAL(iconChanged()), this, SIGNAL(iconChanged()));
     this->connect(this->mainFrame(), SIGNAL(titleChanged(QString)), this, SIGNAL(titleChanged()));
+    this->connect(this, SIGNAL(selectionChanged()), this, SIGNAL(selectedTextChanged()));
     this->connect(this, SIGNAL(loadStarted()), this, SLOT(_q_onLoadStarted()));
     this->connect(this, SIGNAL(loadFinished(bool)), this, SLOT(_q_onLoadFinished(bool)));
     this->connect(this, SIGNAL(loadProgress(int)), this, SLOT(_q_onLoadProgress(int)));
@@ -272,6 +274,10 @@ QString WebPage::statusText() const {
     Q_D(const WebPage);
 
     return d->statusText;
+}
+
+bool WebPage::hasSelection() const {
+    return !this->selectedText().isEmpty();
 }
 
 QDeclarativeComponent* WebPage::newWindowComponent() const {

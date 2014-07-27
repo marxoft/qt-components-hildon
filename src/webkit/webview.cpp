@@ -202,12 +202,16 @@ void WebView::setTextSelectionEnabled(bool enabled) {
     emit textSelectionEnabledChanged();
 }
 
+bool WebView::hasSelection() const {
+    return !this->selectedText().isEmpty();
+}
+
 QWebPage::LinkDelegationPolicy WebView::linkDelegationPolicy() const {
-    return this->page() ? this->page()->linkDelegationPolicy() : QWebPage::DontDelegateLinks;
+    return this->page()->linkDelegationPolicy();
 }
 
 void WebView::setLinkDelegationPolicy(QWebPage::LinkDelegationPolicy policy) {
-    if ((policy != this->linkDelegationPolicy()) && (this->page())) {
+    if (policy != this->linkDelegationPolicy()) {
         this->page()->setLinkDelegationPolicy(policy);
         emit linkDelegationPolicyChanged();
     }

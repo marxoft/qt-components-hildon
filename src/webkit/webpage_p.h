@@ -45,6 +45,8 @@ class WebPage : public QWebPage
     Q_PROPERTY(int progress READ progress NOTIFY progressChanged)
     Q_PROPERTY(Status status READ status NOTIFY statusChanged)
     Q_PROPERTY(QString statusText READ statusText NOTIFY statusTextChanged)
+    Q_PROPERTY(QString selectedText READ selectedText NOTIFY selectedTextChanged)
+    Q_PROPERTY(bool hasSelection READ hasSelection NOTIFY selectedTextChanged)
     Q_PROPERTY(QDeclarativeComponent* newWindowComponent READ newWindowComponent WRITE setNewWindowComponent NOTIFY newWindowComponentChanged)
     Q_PRIVATE_PROPERTY(WebPage::d_func(), WebHistory* history READ history CONSTANT FINAL)
     Q_PRIVATE_PROPERTY(WebPage::d_func(), WebSettings* settings READ settings CONSTANT FINAL)
@@ -91,6 +93,8 @@ public:
 
     QString statusText() const;
 
+    bool hasSelection() const;
+
     QDeclarativeComponent* newWindowComponent() const;
     void setNewWindowComponent(QDeclarativeComponent *component);
 
@@ -123,6 +127,7 @@ signals:
     void progressChanged();
     void statusChanged();
     void statusTextChanged();
+    void selectedTextChanged();
     void newWindowComponentChanged();
     void newWindowParentChanged();
 

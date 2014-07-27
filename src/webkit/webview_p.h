@@ -52,6 +52,7 @@ class WebView : public QWebView, public QDeclarativeParserStatus
     Q_PROPERTY(QString icon READ iconSource NOTIFY iconChanged)
     Q_PROPERTY(bool interactive READ interactive WRITE setInteractive NOTIFY interactiveChanged)
     Q_PROPERTY(bool textSelectionEnabled READ textSelectionEnabled WRITE setTextSelectionEnabled NOTIFY textSelectionEnabledChanged)
+    Q_PROPERTY(bool hasSelection READ hasSelection NOTIFY selectedTextChanged)
     Q_PROPERTY(QString selectedText READ selectedText NOTIFY selectedTextChanged)
     Q_PROPERTY(QWebPage::LinkDelegationPolicy linkDelegationPolicy READ linkDelegationPolicy WRITE setLinkDelegationPolicy NOTIFY linkDelegationPolicyChanged)
     Q_PROPERTY(bool moving READ moving NOTIFY movingChanged)
@@ -114,6 +115,8 @@ public:
 
     bool textSelectionEnabled() const;
     void setTextSelectionEnabled(bool enabled);
+
+    bool hasSelection() const;
 
     QWebPage::LinkDelegationPolicy linkDelegationPolicy() const;
     void setLinkDelegationPolicy(QWebPage::LinkDelegationPolicy policy);
