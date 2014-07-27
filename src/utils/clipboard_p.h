@@ -15,18 +15,41 @@
  * Inc., 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef PLUGIN_H
-#define PLUGIN_H
+#ifndef CLIPBOARD_P_H
+#define CLIPBOARD_P_H
 
-#include <QDeclarativeExtensionPlugin>
+#include <QObject>
+#include <qdeclarative.h>
 
-class Plugin : public QDeclarativeExtensionPlugin
+class Clipboard : public QObject
 {
     Q_OBJECT
 
+    Q_PROPERTY(QVariant pixmap READ pixmap WRITE setPixmap NOTIFY dataChanged)
+    Q_PROPERTY(QString text READ text WRITE setText NOTIFY dataChanged)
+    Q_PROPERTY(bool hasPixmap READ hasPixmap NOTIFY dataChanged)
+    Q_PROPERTY(bool hasText READ hasText NOTIFY dataChanged)
+
 public:
-    void initializeEngine(QDeclarativeEngine *engine, const char *uri);
-    void registerTypes(const char *uri);
+    explicit Clipboard(QObject *parent = 0);
+    ~Clipboard();
+
+    QVariant pixmap() const;
+    void setPixmap(const QVariant &pixmap);
+
+    QString text() const;
+    void setText(const QString &text);
+
+    bool hasPixmap() const;
+    bool hasText() const;
+
+signals:
+    void dataChanged();
+
+private:
+    Q_DISABLE_COPY(Clipboard)
 };
 
-#endif // PLUGIN_H
+QML_DECLARE_TYPE(Clipboard)
+
+#endif // CLIPBOARD_P_H

@@ -16,11 +16,26 @@
  */
 
 #include "plugin_p.h"
+#include "clipboard_p.h"
 #include "directory_p.h"
 #include "process_p.h"
 #include "screensaver_p.h"
 #include "screenshot_p.h"
 #include "settings_p.h"
+#include <QDeclarativeEngine>
+#include <QDeclarativeContext>
+
+void Plugin::initializeEngine(QDeclarativeEngine *engine, const char *uri) {
+    Q_ASSERT(uri == QLatin1String("org.hildon.utils"));
+
+    QDeclarativeExtensionPlugin::initializeEngine(engine, uri);
+
+    if (engine->rootContext()->contextProperty("clipboard").isNull()) {
+        engine->rootContext()->setContextProperty("clipboard", new Clipboard(engine));
+
+        qmlRegisterUncreatableType<Clipboard>(uri, 1, 0, "Clipboard", "");
+    }
+}
 
 void Plugin::registerTypes(const char *uri) {
     Q_ASSERT(uri == QLatin1String("org.hildon.utils"));

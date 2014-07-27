@@ -5,6 +5,7 @@ QT += declarative
 TARGET = hildonutils
 
 HEADERS += \
+    clipboard_p.h \
     directory_p.h \
     process_p.h \
     process_p_p.h \
@@ -16,6 +17,7 @@ HEADERS += \
     plugin_p.h
 
 SOURCES += \
+    clipboard.cpp \
     directory.cpp \
     process.cpp \
     screensaver.cpp \
