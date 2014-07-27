@@ -26,12 +26,14 @@ TextField::TextField(QWidget *parent) :
     QLineEdit(parent),
     d_ptr(new TextFieldPrivate(this))
 {
+    this->connect(this, SIGNAL(selectionChanged()), this, SIGNAL(selectedTextChanged()));
 }
 
 TextField::TextField(TextFieldPrivate &dd, QWidget *parent) :
     QLineEdit(parent),
     d_ptr(&dd)
 {
+    this->connect(this, SIGNAL(selectionChanged()), this, SIGNAL(selectedTextChanged()));
 }
 
 TextField::~TextField() {}

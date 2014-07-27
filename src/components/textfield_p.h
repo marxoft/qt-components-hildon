@@ -37,6 +37,8 @@ class TextField : public QLineEdit, public QDeclarativeParserStatus
     Q_PROPERTY(int height READ height WRITE setFixedHeight NOTIFY heightChanged)
     Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity NOTIFY opacityChanged)
     Q_PROPERTY(bool enabled READ isEnabled WRITE setEnabled NOTIFY enabledChanged)
+    Q_PROPERTY(QString selectedText READ selectedText NOTIFY selectedTextChanged)
+    Q_PROPERTY(bool hasSelectedText READ hasSelectedText NOTIFY selectedTextChanged)
     Q_PROPERTY(int leftMargin READ leftMargin WRITE setLeftMargin NOTIFY marginsChanged)
     Q_PROPERTY(int topMargin READ topMargin WRITE setTopMargin NOTIFY marginsChanged)
     Q_PROPERTY(int rightMargin READ rightMargin WRITE setRightMargin NOTIFY marginsChanged)
@@ -95,6 +97,7 @@ signals:
     void visibleChanged();
     void enabledChanged();
     void focusChanged();
+    void selectedTextChanged();
     void marginsChanged();
 
 protected:
