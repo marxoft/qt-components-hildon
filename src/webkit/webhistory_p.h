@@ -71,6 +71,7 @@ public:
 public slots:
     bool save();
     bool load();
+    void clear();
 
 signals:
     void currentIndexChanged();

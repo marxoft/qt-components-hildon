@@ -17,6 +17,7 @@
 
 #include "webhistoryinterface_p.h"
 #include <QFile>
+#include <QTextStream>
 #include <QDeclarativeInfo>
 
 WebHistoryInterface::WebHistoryInterface(QObject *parent) :
@@ -29,7 +30,7 @@ WebHistoryInterface::~WebHistoryInterface() {}
 
 void WebHistoryInterface::addHistoryEntry(const QString &url) {
     m_urls.removeOne(url);
-    m_urls << url;
+    m_urls.prepend(url);
     emit urlsChanged();
 }
 
@@ -59,30 +60,45 @@ void WebHistoryInterface::setStorageFileName(const QString &fileName) {
 bool WebHistoryInterface::save() {
     QFile file(this->storageFileName());
 
-    if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+    if (file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+        QTextStream out(&file);
+
         for (int i = 0; i < m_urls.size(); i++) {
-            file.write(m_urls.at(i).toUtf8());
+            out << m_urls.at(i) << "\n";
         }
 
         file.close();
         return true;
     }
 
-    qmlInfo(this) << tr("Cannot save web history:") << file.errorString();
+    qmlInfo(this) << tr("Cannot save web history to %1: %2").arg(file.fileName()).arg(file.errorString());
 }
 
 bool WebHistoryInterface::load() {
+    this->clear();
     QFile file(this->storageFileName());
 
-    if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        while (!file.atEnd()) {
-            m_urls << file.readLine();
+    if (file.open(QIODevice::ReadOnly)) {
+        QTextStream in(&file);
+        QString line;
+
+        while (!in.atEnd()) {
+            line = in.readLine();
+
+            if (!line.isNull()) {
+                m_urls << line;
+            }
         }
 
         file.close();
+        emit urlsChanged();
         return true;
     }
 
-    qmlInfo(this) << tr("Cannot load web history:") << file.errorString();
+    qmlInfo(this) << tr("Cannot load web history from %1: %2").arg(file.fileName()).arg(file.errorString());
 }
 
+void WebHistoryInterface::clear() {
+    m_urls.clear();
+    emit urlsChanged();
+}

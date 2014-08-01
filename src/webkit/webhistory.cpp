@@ -143,10 +143,11 @@ bool WebHistory::save() {
         return true;
     }
 
-    qmlInfo(this) << tr("Cannot save web history:") << file.errorString();
+    qmlInfo(this) << tr("Cannot save web history to %1: %2").arg(file.fileName()).arg(file.errorString());
 }
 
 bool WebHistory::load() {
+    this->clear();
     QFile file(this->storageFileName());
 
     if (file.open(QIODevice::ReadOnly)) {
@@ -156,7 +157,11 @@ bool WebHistory::load() {
         return true;
     }
 
-    qmlInfo(this) << tr("Cannot load web history:") << file.errorString();
+    qmlInfo(this) << tr("Cannot load web history from %1: %2").arg(file.fileName()).arg(file.errorString());
+}
+
+void WebHistory::clear() {
+    m_history->clear();
 }
 
 #include "moc_webhistory_p.cpp"
