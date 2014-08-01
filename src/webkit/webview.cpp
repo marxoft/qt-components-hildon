@@ -30,6 +30,7 @@
 #include <QDeclarativeComponent>
 #include <QDeclarativeInfo>
 #include <QTimer>
+#include <QNetworkReply>
 
 WebView::WebView(QWidget *parent) :
     QWebView(parent),
@@ -50,6 +51,8 @@ WebView::WebView(QWidget *parent) :
     this->connect(this->page(), SIGNAL(scrollRequested(int,int,QRect)), this, SLOT(_q_onScrollRequested()));
     this->connect(this->page(), SIGNAL(selectionChanged()), this, SIGNAL(selectedTextChanged()));
     this->connect(this->page(), SIGNAL(linkClicked(QUrl)), this, SIGNAL(linkClicked(QUrl)));
+    this->connect(this->page(), SIGNAL(downloadRequested(QNetworkRequest)), this, SLOT(_q_onDownloadRequested(QNetworkRequest)));
+    this->connect(this->page(), SIGNAL(unsupportedContent(QNetworkReply*)), this, SLOT(_q_onUnsupportedContent(QNetworkReply*)));
     this->connect(this->page()->mainFrame(), SIGNAL(javaScriptWindowObjectCleared()), this, SLOT(_q_onJavaScriptWindowObjectCleared()));
     this->connect(this, SIGNAL(titleChanged(QString)), this, SIGNAL(titleChanged()));
     this->connect(this, SIGNAL(urlChanged(QUrl)), this, SIGNAL(urlChanged()));
@@ -78,6 +81,8 @@ WebView::WebView(WebViewPrivate &dd, QWidget *parent) :
     this->connect(this->page(), SIGNAL(scrollRequested(int,int,QRect)), this, SLOT(_q_onScrollRequested()));
     this->connect(this->page(), SIGNAL(selectionChanged()), this, SIGNAL(selectedTextChanged()));
     this->connect(this->page(), SIGNAL(linkClicked(QUrl)), this, SIGNAL(linkClicked(QUrl)));
+    this->connect(this->page(), SIGNAL(downloadRequested(QNetworkRequest)), this, SLOT(_q_onDownloadRequested(QNetworkRequest)));
+    this->connect(this->page(), SIGNAL(unsupportedContent(QNetworkReply*)), this, SLOT(_q_onUnsupportedContent(QNetworkReply*)));
     this->connect(this->page()->mainFrame(), SIGNAL(javaScriptWindowObjectCleared()), this, SLOT(_q_onJavaScriptWindowObjectCleared()));
     this->connect(this, SIGNAL(titleChanged(QString)), this, SIGNAL(titleChanged()));
     this->connect(this, SIGNAL(urlChanged(QUrl)), this, SIGNAL(urlChanged()));
@@ -163,6 +168,18 @@ QString WebView::iconSource() const {
     return this->icon().name();
 }
 
+QString WebView::toHtml() const {
+    return this->page()->mainFrame()->toHtml();
+}
+
+QString WebView::toPlainText() const {
+    return this->page()->mainFrame()->toPlainText();
+}
+
+void WebView::setText(const QString &text) {
+    this->page()->mainFrame()->setContent(text.toUtf8(), "text/plain");
+}
+
 bool WebView::interactive() const {
     Q_D(const WebView);
 
@@ -214,6 +231,17 @@ void WebView::setLinkDelegationPolicy(QWebPage::LinkDelegationPolicy policy) {
     if (policy != this->linkDelegationPolicy()) {
         this->page()->setLinkDelegationPolicy(policy);
         emit linkDelegationPolicyChanged();
+    }
+}
+
+bool WebView::forwardUnsupportedContent() const {
+    return this->page()->forwardUnsupportedContent();
+}
+
+void WebView::setForwardUnsupportedContent(bool forward) {
+    if (forward != this->forwardUnsupportedContent()) {
+        this->page()->setForwardUnsupportedContent(forward);
+        emit forwardUnsupportedContentChanged();
     }
 }
 
@@ -365,6 +393,30 @@ void WebView::setNewWindowParent(QWidget *parent) {
         d->windowParent = parent;
         emit newWindowParentChanged();
     }
+}
+
+QVariant WebView::hitTestContent(int x, int y) {
+    QWebHitTestResult result = this->page()->currentFrame()->hitTestContent(QPoint(x, y));
+    QVariantMap content;
+    content["isNull"] = result.isNull();
+
+    if (!result.isNull()) {
+        content["x"] = result.boundingRect().left();
+        content["y"] = result.boundingRect().top();
+        content["width"] = result.boundingRect().width();
+        content["height"] = result.boundingRect().height();
+        content["isNull"] = result.isNull();
+        content["alternateText"] = result.alternateText();
+        content["imageUrl"] = result.imageUrl();
+        content["isContentEditable"] = result.isContentEditable();
+        content["isContentSelected"] = result.isContentSelected();
+        content["linkText"] = result.linkText();
+        content["linkTitle"] = result.linkTitle();
+        content["linkUrl"] = result.linkUrl();
+        content["title"] = result.title();
+    }
+
+    return content;
 }
 
 bool WebView::findText(const QString &text) {
@@ -663,6 +715,37 @@ void WebViewPrivate::_q_onStatusBarMessage(const QString &message) {
         Q_Q(WebView);
         emit q->statusTextChanged();
     }
+}
+
+void WebViewPrivate::_q_onDownloadRequested(const QNetworkRequest &request) {
+    Q_Q(WebView);
+
+    QVariantMap map;
+    QVariantMap headers;
+    map["url"] = request.url();
+
+    foreach (QByteArray header, request.rawHeaderList()) {
+        headers[header] = request.rawHeader(header);
+    }
+
+    map["headers"] = headers;
+    emit q->downloadRequested(map);
+}
+
+void WebViewPrivate::_q_onUnsupportedContent(QNetworkReply *reply) {
+    Q_Q(WebView);
+
+    QVariantMap map;
+    QVariantMap headers;
+    map["url"] = reply->url();
+
+    foreach (QByteArray header, reply->rawHeaderList()) {
+        headers[header] = reply->rawHeader(header);
+    }
+
+    map["headers"] = headers;
+    emit q->unsupportedContent(map);
+    reply->deleteLater();
 }
 
 void WebViewPrivate::_q_onJavaScriptWindowObjectCleared() {

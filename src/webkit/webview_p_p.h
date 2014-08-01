@@ -146,6 +146,10 @@ public:
 
     void _q_onStatusBarMessage(const QString &message);
 
+    void _q_onDownloadRequested(const QNetworkRequest &request);
+
+    void _q_onUnsupportedContent(QNetworkReply *reply);
+
     void _q_onJavaScriptWindowObjectCleared();
 
     void _q_onScrollRequested();

@@ -50,11 +50,14 @@ class WebView : public QWebView, public QDeclarativeParserStatus
     Q_PROPERTY(QString title READ title NOTIFY titleChanged)
     Q_PROPERTY(QUrl url READ url WRITE setUrl NOTIFY urlChanged)
     Q_PROPERTY(QString icon READ iconSource NOTIFY iconChanged)
+    Q_PROPERTY(QString html READ toHtml WRITE setHtml NOTIFY urlChanged)
+    Q_PROPERTY(QString text READ toPlainText WRITE setText NOTIFY urlChanged)
     Q_PROPERTY(bool interactive READ interactive WRITE setInteractive NOTIFY interactiveChanged)
     Q_PROPERTY(bool textSelectionEnabled READ textSelectionEnabled WRITE setTextSelectionEnabled NOTIFY textSelectionEnabledChanged)
     Q_PROPERTY(bool hasSelection READ hasSelection NOTIFY selectedTextChanged)
     Q_PROPERTY(QString selectedText READ selectedText NOTIFY selectedTextChanged)
     Q_PROPERTY(QWebPage::LinkDelegationPolicy linkDelegationPolicy READ linkDelegationPolicy WRITE setLinkDelegationPolicy NOTIFY linkDelegationPolicyChanged)
+    Q_PROPERTY(bool forwardUnsupportedContent READ forwardUnsupportedContent WRITE setForwardUnsupportedContent NOTIFY forwardUnsupportedContentChanged)
     Q_PROPERTY(bool moving READ moving NOTIFY movingChanged)
     Q_PROPERTY(bool atXBeginning READ atXBeginning NOTIFY atXBeginningChanged)
     Q_PROPERTY(bool atXEnd READ atXEnd NOTIFY atXEndChanged)
@@ -110,6 +113,11 @@ public:
 
     QString iconSource() const;
 
+    QString toHtml() const;
+
+    QString toPlainText() const;
+    void setText(const QString &text);
+
     bool interactive() const;
     void setInteractive(bool interactive);
 
@@ -120,6 +128,9 @@ public:
 
     QWebPage::LinkDelegationPolicy linkDelegationPolicy() const;
     void setLinkDelegationPolicy(QWebPage::LinkDelegationPolicy policy);
+
+    bool forwardUnsupportedContent() const;
+    void setForwardUnsupportedContent(bool forward);
 
     bool moving() const;
 
@@ -153,6 +164,8 @@ public:
     QWidget* newWindowParent() const;
     void setNewWindowParent(QWidget *parent);
 
+    Q_INVOKABLE QVariant hitTestContent(int x, int y);
+
 public slots:
     bool findText(const QString &text);
     bool findAllText(const QString &text);
@@ -177,6 +190,7 @@ signals:
     void textSelectionEnabledChanged();
     void selectedTextChanged();
     void linkDelegationPolicyChanged();
+    void forwardUnsupportedContentChanged();
     void movingChanged();
     void atXBeginningChanged();
     void atXEndChanged();
@@ -192,6 +206,8 @@ signals:
     void newWindowComponentChanged();
     void newWindowParentChanged();
     void linkClicked(const QUrl &link);
+    void downloadRequested(const QVariant &request);
+    void unsupportedContent(const QVariant &content);
 
 protected:
     WebView(WebViewPrivate &dd, QWidget *parent = 0);
@@ -218,6 +234,8 @@ protected:
     Q_PRIVATE_SLOT(d_func(), void _q_onLoadFinished(bool))
     Q_PRIVATE_SLOT(d_func(), void _q_onLoadProgress(int))
     Q_PRIVATE_SLOT(d_func(), void _q_onStatusBarMessage(QString))
+    Q_PRIVATE_SLOT(d_func(), void _q_onDownloadRequested(QNetworkRequest))
+    Q_PRIVATE_SLOT(d_func(), void _q_onUnsupportedContent(QNetworkReply*))
     Q_PRIVATE_SLOT(d_func(), void _q_onJavaScriptWindowObjectCleared())
     Q_PRIVATE_SLOT(d_func(), void _q_onScrollRequested())
     Q_PRIVATE_SLOT(d_func(), void _q_onScrollingStopped())
