@@ -1,3 +1,15 @@
+qt-components-hildon (0.7.0) unstable; urgency=low
+
+  * Added HeaderSection component for defining sections in HeaderView.
+  * Added 'sections' list property to HeaderView.
+  * Added some scrolling properties to TextEdit.
+  * Added hitTestContent() function to WebView and WebPage components.
+  * Added some properties to WebSettings.
+  * Fixed WebHistory saving/loading.
+  * Minor bug fixes.
+
+ -- Stuart Howarth <showarth@marxoft.co.uk>  Fri, 01 Aug 2014 01:25:17 +0100
+
 qt-components-hildon (0.6.0) unstable; urgency=low
 
   * Added ZoomArea component to the org.hildon.components module.
