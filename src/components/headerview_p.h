@@ -25,7 +25,66 @@
 #include <QDeclarativeParserStatus>
 #include <qdeclarative.h>
 
+class HeaderSectionPrivate;
 class HeaderViewPrivate;
+
+class HeaderSection : public QObject, public QDeclarativeParserStatus
+{
+    Q_OBJECT
+
+    Q_PROPERTY(QString text READ text WRITE setText NOTIFY textChanged)
+    Q_PROPERTY(int width READ width WRITE setWidth NOTIFY widthChanged)
+    Q_PROPERTY(QHeaderView::ResizeMode resizeMode READ resizeMode WRITE setResizeMode NOTIFY resizeModeChanged)
+    Q_PROPERTY(int index READ index CONSTANT)
+    Q_PROPERTY(bool visible READ isVisible WRITE setVisible NOTIFY visibleChanged)
+
+    Q_ENUMS(QHeaderView::ResizeMode)
+
+    Q_INTERFACES(QDeclarativeParserStatus)
+
+public:
+    explicit HeaderSection(QObject *parent = 0);
+    ~HeaderSection();
+
+    QString text() const;
+    void setText(const QString &text);
+
+    int width() const;
+    void setWidth(int width);
+
+    QHeaderView::ResizeMode resizeMode() const;
+    void setResizeMode(QHeaderView::ResizeMode mode);
+
+    int index() const;
+
+    bool isVisible() const;
+    void setVisible(bool visible);
+
+signals:
+    void textChanged();
+    void widthChanged();
+    void resizeModeChanged();
+    void indexChanged();
+    void visibleChanged();
+    void clicked();
+
+protected:
+    HeaderSection(HeaderSectionPrivate &dd, QObject *parent = 0);
+
+    virtual void classBegin();
+    virtual void componentComplete();
+
+    QScopedPointer<HeaderSectionPrivate> d_ptr;
+
+    Q_DECLARE_PRIVATE(HeaderSection)
+
+    Q_PRIVATE_SLOT(d_func(), void _q_onSectionClicked(int))
+
+private:
+    friend class HeaderViewPrivate;
+
+    Q_DISABLE_COPY(HeaderSection)
+};
 
 class HeaderView : public QHeaderView, public QDeclarativeParserStatus
 {
@@ -38,7 +97,6 @@ class HeaderView : public QHeaderView, public QDeclarativeParserStatus
     Q_PROPERTY(int height READ height WRITE setFixedHeight NOTIFY heightChanged)
     Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity NOTIFY opacityChanged)
     Q_PROPERTY(bool enabled READ isEnabled WRITE setEnabled NOTIFY enabledChanged)
-    Q_PROPERTY(QStringList labels READ labels WRITE setLabels NOTIFY labelsChanged)
     Q_PRIVATE_PROPERTY(HeaderView::d_func(), Anchors* anchors READ anchors CONSTANT FINAL)
     Q_PROPERTY(AnchorLine left READ left CONSTANT FINAL)
     Q_PROPERTY(AnchorLine right READ right CONSTANT FINAL)
@@ -49,6 +107,7 @@ class HeaderView : public QHeaderView, public QDeclarativeParserStatus
     Q_PRIVATE_PROPERTY(HeaderView::d_func(), QDeclarativeListProperty<QObject> data READ data)
     Q_PRIVATE_PROPERTY(HeaderView::d_func(), QDeclarativeListProperty<QWidget> children READ children)
     Q_PRIVATE_PROPERTY(HeaderView::d_func(), QDeclarativeListProperty<QObject> actions READ actions)
+    Q_PRIVATE_PROPERTY(HeaderView::d_func(), QDeclarativeListProperty<HeaderSection> sections READ sections)
     Q_PRIVATE_PROPERTY(HeaderView::d_func(), bool visible READ qmlVisible WRITE setQmlVisible NOTIFY visibleChanged)
     Q_PRIVATE_PROPERTY(HeaderView::d_func(), bool focus READ hasFocus WRITE setFocus NOTIFY focusChanged)
     Q_PRIVATE_PROPERTY(HeaderView::d_func(), bool clickable READ isClickable WRITE setClickable NOTIFY clickableChanged)
@@ -81,9 +140,6 @@ public:
     AnchorLine bottom() const;
     AnchorLine horizontalCenter() const;
     AnchorLine verticalCenter() const;
-
-    QStringList labels() const;
-    void setLabels(const QStringList &labels);
 
 signals:
     void parentChanged();
@@ -144,6 +200,7 @@ private:
     Q_DISABLE_COPY(HeaderLabelModel)
 };
 
+QML_DECLARE_TYPE(HeaderSection)
 QML_DECLARE_TYPE(HeaderView)
 
 #endif // HEADERVIEW_P_H

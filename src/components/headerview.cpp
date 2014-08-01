@@ -22,6 +22,127 @@
 #include <QActionGroup>
 #include <QGraphicsOpacityEffect>
 
+HeaderSection::HeaderSection(QObject *parent) :
+    QObject(parent),
+    d_ptr(new HeaderSectionPrivate(this))
+{
+}
+
+HeaderSection::HeaderSection(HeaderSectionPrivate &dd, QObject *parent) :
+    QObject(parent),
+    d_ptr(&dd)
+{
+}
+
+HeaderSection::~HeaderSection() {}
+
+QString HeaderSection::text() const {
+    Q_D(const HeaderSection);
+
+    return d->text;
+}
+
+void HeaderSection::setText(const QString &text) {
+    if (text != this->text()) {
+        Q_D(HeaderSection);
+        d->text = text;
+        emit textChanged();
+
+        if (!d->complete) {
+            if (HeaderView *view = qobject_cast<HeaderView*>(this->parent())) {
+                view->model()->setData(view->model()->index(this->index(), 0), this->text());
+            }
+        }
+    }
+}
+
+int HeaderSection::width() const {
+    Q_D(const HeaderSection);
+
+    return d->width;
+}
+
+void HeaderSection::setWidth(int width) {
+    if (width != this->width()) {
+        Q_D(HeaderSection);
+        d->width = width;
+        emit widthChanged();
+
+        if (d->complete) {
+            if (HeaderView *view = qobject_cast<HeaderView*>(this->parent())) {
+                view->resizeSection(this->index(), width);
+            }
+        }
+    }
+}
+
+QHeaderView::ResizeMode HeaderSection::resizeMode() const {
+    Q_D(const HeaderSection);
+
+    return d->resizeMode;
+}
+
+void HeaderSection::setResizeMode(QHeaderView::ResizeMode mode) {
+    if (mode != this->resizeMode()) {
+        Q_D(HeaderSection);
+        d->resizeMode = mode;
+        emit resizeModeChanged();
+
+        if (d->complete) {
+            if (HeaderView *view = qobject_cast<HeaderView*>(this->parent())) {
+                view->setResizeMode(this->index(), mode);
+            }
+        }
+    }
+}
+
+int HeaderSection::index() const {
+    Q_D(const HeaderSection);
+
+    return d->index;
+}
+
+bool HeaderSection::isVisible() const {
+    Q_D(const HeaderSection);
+
+    return d->visible;
+}
+
+void HeaderSection::setVisible(bool visible) {
+    if (visible != this->isVisible()) {
+        Q_D(HeaderSection);
+        d->visible = visible;
+
+        if (d->complete) {
+            if (HeaderView *view = qobject_cast<HeaderView*>(this->parent())) {
+                view->setSectionHidden(this->index(), !visible);
+            }
+        }
+    }
+}
+
+void HeaderSection::classBegin() {}
+
+void HeaderSection::componentComplete() {
+    Q_D(HeaderSection);
+
+    d->complete = true;
+
+    if (HeaderView *view = qobject_cast<HeaderView*>(this->parent())) {
+        view->resizeSection(this->index(), this->width());
+        view->setResizeMode(this->index(), this->resizeMode());
+        view->setSectionHidden(this->index(), !this->isVisible());
+        this->connect(view, SIGNAL(sectionClicked(int)), this, SLOT(_q_onSectionClicked(int)));
+    }
+}
+
+void HeaderSectionPrivate::_q_onSectionClicked(int i) {
+    if (i == index) {
+        Q_Q(HeaderSection);
+        emit q->clicked();
+    }
+}
+
 HeaderView::HeaderView(QWidget *parent) :
     QHeaderView(Qt::Horizontal, parent),
     d_ptr(new HeaderViewPrivate(this))
@@ -110,24 +231,6 @@ AnchorLine HeaderView::verticalCenter() const {
     return d->verticalCenter;
 }
 
-QStringList HeaderView::labels() const {
-    Q_D(const HeaderView);
-
-    return d->labels ? d->labels->stringList() : QStringList();
-}
-
-void HeaderView::setLabels(const QStringList &labels) {
-    Q_D(HeaderView);
-
-    if (!d->labels) {
-        d->labels = new HeaderLabelModel(this);
-        this->setModel(d->labels);
-    }
-
-    d->labels->setStringList(labels);
-    emit labelsChanged();
-}
-
 void HeaderView::changeEvent(QEvent *event) {
     switch (event->type()) {
     case QEvent::ParentChange:
@@ -194,6 +297,16 @@ void HeaderView::componentComplete() {
 
     d->componentComplete();
 
+    HeaderLabelModel *model = new HeaderLabelModel(this);
+    QStringList strings;
+
+    foreach (HeaderSection *section, d->sectionList) {
+        strings.append(section->text());
+    }
+
+    model->setStringList(strings);
+    this->setModel(model);
+
     if (this->parentWidget()) {
         this->setWindowFlags(Qt::Widget);
     }
@@ -250,6 +363,23 @@ void HeaderViewPrivate::actions_append(QDeclarativeListProperty<QObject> *list, 
     }
 }
 
+void HeaderViewPrivate::sections_append(QDeclarativeListProperty<HeaderSection> *list, HeaderSection *section) {
+    if (!section) {
+        return;
+    }
+
+    if (HeaderView *view = qobject_cast<HeaderView*>(list->object)) {
+        section->d_func()->index = view->d_func()->dataList.size();
+        view->d_func()->sectionList.append(section);
+        view->d_func()->dataList.append(section);
+
+        if (view->d_func()->complete) {
+            view->model()->insertRow(section->index());
+            view->model()->setData(view->model()->index(section->index(), 0), section->text());
+        }
+    }
+}
+
 QDeclarativeListProperty<QObject> HeaderViewPrivate::data() {
     return QDeclarativeListProperty<QObject>(q_func(), 0, HeaderViewPrivate::data_append);
 }
@@ -260,6 +390,10 @@ QDeclarativeListProperty<QWidget> HeaderViewPrivate::children() {
 
 QDeclarativeListProperty<QObject> HeaderViewPrivate::actions() {
     return QDeclarativeListProperty<QObject>(q_func(), 0, HeaderViewPrivate::actions_append);
+}
+
+QDeclarativeListProperty<HeaderSection> HeaderViewPrivate::sections() {
+    return QDeclarativeListProperty<HeaderSection>(q_func(), 0, HeaderViewPrivate::sections_append);
 }
 
 QVariant HeaderViewPrivate::currentIndex() const {

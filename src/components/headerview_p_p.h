@@ -23,13 +23,45 @@
 
 class QStringListModel;
 
+class HeaderSectionPrivate
+{
+
+public:
+    HeaderSectionPrivate(HeaderSection *parent) :
+        q_ptr(parent),
+        width(0),
+        resizeMode(QHeaderView::Fixed),
+        index(0),
+        visible(true),
+        complete(false)
+    {
+    }
+
+    void _q_onSectionClicked(int i);
+
+    HeaderSection *q_ptr;
+
+    QString text;
+
+    int width;
+
+    QHeaderView::ResizeMode resizeMode;
+
+    int index;
+
+    bool visible;
+
+    bool complete;
+
+    Q_DECLARE_PUBLIC(HeaderSection)
+};
+
 class HeaderViewPrivate : public ItemPrivate
 {
 
 public:
     HeaderViewPrivate(HeaderView *parent) :
-        ItemPrivate(parent),
-        labels(0)
+        ItemPrivate(parent)
     {
     }
 
@@ -39,11 +71,15 @@ public:
 
     static void actions_append(QDeclarativeListProperty<QObject> *list, QObject *obj);
 
+    static void sections_append(QDeclarativeListProperty<HeaderSection> *list, HeaderSection *section);
+
     QDeclarativeListProperty<QObject> data();
 
     QDeclarativeListProperty<QWidget> children();
 
     QDeclarativeListProperty<QObject> actions();
+
+    QDeclarativeListProperty<HeaderSection> sections();
 
     QVariant currentIndex() const;
     void setCurrentIndex(const QVariant &index);
@@ -72,7 +108,7 @@ public:
     Qt::Alignment defaultAlignment() const;
     void setDefaultAlignment(Qt::Alignment alignment);
 
-    QStringListModel *labels;
+    QList<HeaderSection*> sectionList;
 
     Q_DECLARE_PUBLIC(HeaderView)
 };
