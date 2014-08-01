@@ -1,6 +1,6 @@
 TEMPLATE = lib
 CONFIG = qt plugin
-QT += declarative webkit
+QT += declarative webkit network
 
 TARGET = hildonwebkit
 

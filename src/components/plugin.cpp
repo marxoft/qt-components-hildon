@@ -128,6 +128,7 @@ void Plugin::registerTypes(const char *uri) {
     qmlRegisterType<Gradient>(uri, 1, 0, "Gradient");
     qmlRegisterType<GradientStop>(uri, 1, 0, "GradientStop");
     qmlRegisterType<Grid>(uri, 1, 0, "Grid");
+    qmlRegisterType<HeaderSection>(uri, 1, 0, "HeaderSection");
     qmlRegisterType<HeaderView>(uri, 1, 0, "HeaderView");
     qmlRegisterType<Image>(uri, 1, 0, "Image");
     qmlRegisterType<ImageBorder>(uri, 1, 0, "ImageBorder");

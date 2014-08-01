@@ -104,7 +104,7 @@ HEADERS += \
     text_p.h \
     text_p_p.h \
     textedit_p.h \
-    textedit_p_p.h \
+    texteditautoresizer_p.h \
     textfield_p.h \
     textfield_p_p.h \
     timer_p.h \
