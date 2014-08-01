@@ -37,7 +37,10 @@ bool WebSettings::autoLoadImages() const {
 }
 
 void WebSettings::setAutoLoadImages(bool load) {
-    m_settings->setAttribute(QWebSettings::AutoLoadImages, load);
+    if (load != this->autoLoadImages()) {
+        m_settings->setAttribute(QWebSettings::AutoLoadImages, load);
+        emit autoLoadImagesChanged();
+    }
 }
 
 void WebSettings::resetAutoLoadImages() {
@@ -49,7 +52,10 @@ bool WebSettings::javaEnabled() const {
 }
 
 void WebSettings::setJavaEnabled(bool enabled) {
-    m_settings->setAttribute(QWebSettings::JavaEnabled, enabled);
+    if (enabled != this->javaEnabled()) {
+        m_settings->setAttribute(QWebSettings::JavaEnabled, enabled);
+        emit javaEnabledChanged();
+    }
 }
 
 void WebSettings::resetJavaEnabled() {
@@ -61,7 +67,10 @@ bool WebSettings::javascriptCanAccessClipboard() const {
 }
 
 void WebSettings::setJavascriptCanAccessClipboard(bool access) {
-    m_settings->setAttribute(QWebSettings::JavascriptCanAccessClipboard, access);
+    if (access != this->javascriptCanAccessClipboard()) {
+        m_settings->setAttribute(QWebSettings::JavascriptCanAccessClipboard, access);
+        emit javascriptCanAccessClipboardChanged();
+    }
 }
 
 void WebSettings::resetJavascriptCanAccessClipboard() {
@@ -73,7 +82,10 @@ bool WebSettings::javascriptCanOpenWindows() const {
 }
 
 void WebSettings::setJavascriptCanOpenWindows(bool open) {
-    m_settings->setAttribute(QWebSettings::JavascriptCanOpenWindows, open);
+    if (open != this->javascriptCanOpenWindows()) {
+        m_settings->setAttribute(QWebSettings::JavascriptCanOpenWindows, open);
+        emit javascriptCanOpenWindowsChanged();
+    }
 }
 
 void WebSettings::resetJavascriptCanOpenWindows() {
@@ -85,7 +97,10 @@ bool WebSettings::javascriptEnabled() const {
 }
 
 void WebSettings::setJavascriptEnabled(bool enabled) {
-    m_settings->setAttribute(QWebSettings::JavascriptEnabled, enabled);
+    if (enabled != this->javascriptEnabled()) {
+        m_settings->setAttribute(QWebSettings::JavascriptEnabled, enabled);
+        emit javascriptEnabledChanged();
+    }
 }
 
 void WebSettings::resetJavascriptEnabled() {
@@ -97,7 +112,10 @@ bool WebSettings::linksIncludedInFocusChain() const {
 }
 
 void WebSettings::setLinksIncludedInFocusChain(bool included) {
-    m_settings->setAttribute(QWebSettings::LinksIncludedInFocusChain, included);
+    if (included != this->linksIncludedInFocusChain()) {
+        m_settings->setAttribute(QWebSettings::LinksIncludedInFocusChain, included);
+        emit linksIncludedInFocusChainChanged();
+    }
 }
 
 void WebSettings::resetLinksIncludedInFocusChain() {
@@ -109,7 +127,10 @@ bool WebSettings::localContentCanAccessRemoteUrls() const {
 }
 
 void WebSettings::setLocalContentCanAccessRemoteUrls(bool access) {
-    m_settings->setAttribute(QWebSettings::LocalContentCanAccessRemoteUrls, access);
+    if (access != this->localContentCanAccessRemoteUrls()) {
+        m_settings->setAttribute(QWebSettings::LocalContentCanAccessRemoteUrls, access);
+        emit localContentCanAccessRemoteUrlsChanged();
+    }
 }
 
 void WebSettings::resetLocalContentCanAccessRemoteUrls() {
@@ -121,7 +142,10 @@ bool WebSettings::localStorageDatabaseEnabled() const {
 }
 
 void WebSettings::setLocalStorageDatabaseEnabled(bool enabled) {
-    m_settings->setAttribute(QWebSettings::LocalStorageDatabaseEnabled, enabled);
+    if (enabled != this->localStorageDatabaseEnabled()) {
+        m_settings->setAttribute(QWebSettings::LocalStorageDatabaseEnabled, enabled);
+        emit localStorageDatabaseEnabledChanged();
+    }
 }
 
 void WebSettings::resetLocalStorageDatabaseEnabled() {
@@ -133,7 +157,10 @@ bool WebSettings::offlineStorageDatabaseEnabled() const {
 }
 
 void WebSettings::setOfflineStorageDatabaseEnabled(bool enabled) {
-    m_settings->setAttribute(QWebSettings::OfflineStorageDatabaseEnabled, enabled);
+    if (enabled != this->offlineStorageDatabaseEnabled()) {
+        m_settings->setAttribute(QWebSettings::OfflineStorageDatabaseEnabled, enabled);
+        emit offlineStorageDatabaseEnabledChanged();
+    }
 }
 
 void WebSettings::resetOfflineStorageDatabaseEnabled() {
@@ -145,11 +172,35 @@ bool WebSettings::offlineWebApplicationCacheEnabled() const {
 }
 
 void WebSettings::setOfflineWebApplicationCacheEnabled(bool enabled) {
-    m_settings->setAttribute(QWebSettings::OfflineWebApplicationCacheEnabled, enabled);
+    if (enabled != this->offlineWebApplicationCacheEnabled()) {
+        m_settings->setAttribute(QWebSettings::OfflineWebApplicationCacheEnabled, enabled);
+        emit offlineWebApplicationCacheEnabledChanged();
+    }
 }
 
 void WebSettings::resetOfflineWebApplicationCacheEnabled() {
     m_settings->resetAttribute(QWebSettings::OfflineWebApplicationCacheEnabled);
+}
+
+bool WebSettings::persistentStorageEnabled() const {
+    return (!m_settings->iconDatabasePath().isEmpty())
+            || (!m_settings->localStoragePath().isEmpty())
+            || (!m_settings->offlineStoragePath().isEmpty())
+            || (!m_settings->offlineWebApplicationCachePath().isEmpty());
+}
+
+void WebSettings::setPersistentStorageEnabled(bool enabled) {
+    if (enabled) {
+        m_settings->enablePersistentStorage();
+    }
+    else {
+        m_settings->setIconDatabasePath(QString());
+        m_settings->setLocalStoragePath(QString());
+        m_settings->setOfflineStoragePath(QString());
+        m_settings->setOfflineWebApplicationCachePath(QString());
+    }
+
+    emit persistentStorageEnabledChanged();
 }
 
 bool WebSettings::pluginsEnabled() const {
@@ -157,7 +208,10 @@ bool WebSettings::pluginsEnabled() const {
 }
 
 void WebSettings::setPluginsEnabled(bool enabled) {
-    m_settings->setAttribute(QWebSettings::PluginsEnabled, enabled);
+    if (enabled != this->pluginsEnabled()) {
+        m_settings->setAttribute(QWebSettings::PluginsEnabled, enabled);
+        emit pluginsEnabledChanged();
+    }
 }
 
 void WebSettings::resetPluginsEnabled() {
@@ -169,7 +223,10 @@ bool WebSettings::printElementBackgrounds() const {
 }
 
 void WebSettings::setPrintElementBackgrounds(bool enabled) {
-    m_settings->setAttribute(QWebSettings::PrintElementBackgrounds, enabled);
+    if (enabled != this->printElementBackgrounds()) {
+        m_settings->setAttribute(QWebSettings::PrintElementBackgrounds, enabled);
+        emit printElementBackgroundsChanged();
+    }
 }
 
 void WebSettings::resetPrintElementBackgrounds() {
@@ -181,7 +238,10 @@ bool WebSettings::privateBrowsingEnabled() const {
 }
 
 void WebSettings::setPrivateBrowsingEnabled(bool enabled) {
-    m_settings->setAttribute(QWebSettings::PrivateBrowsingEnabled, enabled);
+    if (enabled != this->privateBrowsingEnabled()) {
+        m_settings->setAttribute(QWebSettings::PrivateBrowsingEnabled, enabled);
+        emit privateBrowsingEnabledChanged();
+    }
 }
 
 void WebSettings::resetPrivateBrowsingEnabled() {
@@ -193,7 +253,10 @@ bool WebSettings::zoomTextOnly() const {
 }
 
 void WebSettings::setZoomTextOnly(bool text) {
-    m_settings->setAttribute(QWebSettings::ZoomTextOnly, text);
+    if (text != this->zoomTextOnly()) {
+        m_settings->setAttribute(QWebSettings::ZoomTextOnly, text);
+        emit zoomTextOnlyChanged();
+    }
 }
 
 void WebSettings::resetZoomTextOnly() {
@@ -205,11 +268,25 @@ bool WebSettings::developerExtrasEnabled() const {
 }
 
 void WebSettings::setDeveloperExtrasEnabled(bool enabled) {
-    m_settings->setAttribute(QWebSettings::DeveloperExtrasEnabled, enabled);
+    if (enabled != this->developerExtrasEnabled()) {
+        m_settings->setAttribute(QWebSettings::DeveloperExtrasEnabled, enabled);
+        emit developerExtrasEnabledChanged();
+    }
 }
 
 void WebSettings::resetDeveloperExtrasEnabled() {
     m_settings->resetAttribute(QWebSettings::DeveloperExtrasEnabled);
+}
+
+QString WebSettings::defaultTextEncoding() const {
+    return m_settings->defaultTextEncoding();
+}
+
+void WebSettings::setDefaultTextEncoding(const QString &encoding) {
+    if (encoding != this->defaultTextEncoding()) {
+        m_settings->setDefaultTextEncoding(encoding);
+        emit defaultTextEncodingChanged();
+    }
 }
 
 int WebSettings::defaultFixedFontSize() const {
@@ -217,7 +294,10 @@ int WebSettings::defaultFixedFontSize() const {
 }
 
 void WebSettings::setDefaultFixedFontSize(int size) {
-    m_settings->setFontSize(QWebSettings::DefaultFixedFontSize, size);
+    if (size != this->defaultFixedFontSize()) {
+        m_settings->setFontSize(QWebSettings::DefaultFixedFontSize, size);
+        emit defaultFixedFontSizeChanged();
+    }
 }
 
 void WebSettings::resetDefaultFixedFontSize() {
@@ -229,7 +309,10 @@ int WebSettings::defaultFontSize() const {
 }
 
 void WebSettings::setDefaultFontSize(int size) {
-    m_settings->setFontSize(QWebSettings::DefaultFontSize, size);
+    if (size != this->defaultFontSize()) {
+        m_settings->setFontSize(QWebSettings::DefaultFontSize, size);
+        emit defaultFontSizeChanged();
+    }
 }
 
 void WebSettings::resetDefaultFontSize() {
@@ -241,7 +324,10 @@ int WebSettings::minimumFontSize() const {
 }
 
 void WebSettings::setMinimumFontSize(int size) {
-    m_settings->setFontSize(QWebSettings::MinimumFontSize, size);
+    if (size != this->minimumFontSize()) {
+        m_settings->setFontSize(QWebSettings::MinimumFontSize, size);
+        emit minimumFontSizeChanged();
+    }
 }
 
 void WebSettings::resetMinimumFontSize() {
@@ -253,7 +339,10 @@ int WebSettings::minimumLogicalFontSize() const {
 }
 
 void WebSettings::setMinimumLogicalFontSize(int size) {
-    m_settings->setFontSize(QWebSettings::MinimumLogicalFontSize, size);
+    if (size != this->minimumLogicalFontSize()) {
+        m_settings->setFontSize(QWebSettings::MinimumLogicalFontSize, size);
+        emit minimumLogicalFontSizeChanged();
+    }
 }
 
 void WebSettings::resetMinimumLogicalFontSize() {
@@ -265,7 +354,10 @@ QString WebSettings::cursiveFontFamily() const {
 }
 
 void WebSettings::setCursiveFontFamily(const QString &family) {
-    m_settings->setFontFamily(QWebSettings::CursiveFont, family);
+    if (family != this->cursiveFontFamily()) {
+        m_settings->setFontFamily(QWebSettings::CursiveFont, family);
+        emit cursiveFontFamilyChanged();
+    }
 }
 
 void WebSettings::resetCursiveFontFamily() {
@@ -277,7 +369,10 @@ QString WebSettings::fantasyFontFamily() const {
 }
 
 void WebSettings::setFantasyFontFamily(const QString &family) {
-    m_settings->setFontFamily(QWebSettings::FantasyFont, family);
+    if (family != this->fantasyFontFamily()) {
+        m_settings->setFontFamily(QWebSettings::FantasyFont, family);
+        emit fantasyFontFamilyChanged();
+    }
 }
 
 void WebSettings::resetFantasyFontFamily() {
@@ -289,7 +384,10 @@ QString WebSettings::fixedFontFamily() const {
 }
 
 void WebSettings::setFixedFontFamily(const QString &family) {
-    m_settings->setFontFamily(QWebSettings::FixedFont, family);
+    if (family != this->fixedFontFamily()) {
+        m_settings->setFontFamily(QWebSettings::FixedFont, family);
+        emit fixedFontFamilyChanged();
+    }
 }
 
 void WebSettings::resetFixedFontFamily() {
@@ -301,7 +399,10 @@ QString WebSettings::sansSerifFontFamily() const {
 }
 
 void WebSettings::setSansSerifFontFamily(const QString &family) {
-    m_settings->setFontFamily(QWebSettings::SansSerifFont, family);
+    if (family != this->sansSerifFontFamily()) {
+        m_settings->setFontFamily(QWebSettings::SansSerifFont, family);
+        emit sansSerifFontFamilyChanged();
+    }
 }
 
 void WebSettings::resetSansSerifFontFamily() {
@@ -313,7 +414,10 @@ QString WebSettings::serifFontFamily() const {
 }
 
 void WebSettings::setSerifFontFamily(const QString &family) {
-    m_settings->setFontFamily(QWebSettings::SerifFont, family);
+    if (family != this->serifFontFamily()) {
+        m_settings->setFontFamily(QWebSettings::SerifFont, family);
+        emit serifFontFamilyChanged();
+    }
 }
 
 void WebSettings::resetSerifFontFamily() {
@@ -325,11 +429,25 @@ QString WebSettings::standardFontFamily() const {
 }
 
 void WebSettings::setStandardFontFamily(const QString &family) {
-    m_settings->setFontFamily(QWebSettings::StandardFont, family);
+    if (family != this->standardFontFamily()) {
+        m_settings->setFontFamily(QWebSettings::StandardFont, family);
+        emit standardFontFamilyChanged();
+    }
 }
 
 void WebSettings::resetStandardFontFamily() {
     m_settings->resetFontFamily(QWebSettings::StandardFont);
+}
+
+QUrl WebSettings::userStyleSheetUrl() const {
+    return m_settings->userStyleSheetUrl();
+}
+
+void WebSettings::setUserStyleSheetUrl(const QUrl &url) {
+    if (url != this->userStyleSheetUrl()) {
+        m_settings->setUserStyleSheetUrl(url);
+        emit userStyleSheetUrlChanged();
+    }
 }
 
 #include "moc_websettings_p.cpp"
