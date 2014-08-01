@@ -28,8 +28,22 @@ Page {
         anchors.fill: parent
         header: HeaderView {
             width: view.width
-            labels: [ "Title", "Subtitle", "Description" ]
             stretchLastSection: true
+            sections: [
+                HeaderSection {
+                    text: qsTr("Title")
+                    width: 200
+                },
+
+                HeaderSection {
+                    text: qsTr("Subtitle")
+                    width: 250
+                },
+
+                HeaderSection {
+                    text: qsTr("Description")
+                }
+            ]
         }
         model: [
             [ "Title One", "Subtitle One", "Description One" ],
