@@ -243,6 +243,11 @@ void ListView::positionViewAtIndex(int index, ScrollHint mode) {
     }
 }
 
+void ListView::currentChanged(const QModelIndex &current, const QModelIndex &previous) {
+    emit currentIndexChanged();
+    QListView::currentChanged(current, previous);
+}
+
 void ListView::changeEvent(QEvent *event) {
     switch (event->type()) {
     case QEvent::ParentChange:

@@ -143,6 +143,8 @@ signals:
 protected:
     ListView(ListViewPrivate &dd, QWidget *parent = 0);
 
+    virtual void currentChanged(const QModelIndex &current, const QModelIndex &previous);
+
     virtual void changeEvent(QEvent *event);
     virtual void moveEvent(QMoveEvent *event);
     virtual void resizeEvent(QResizeEvent *event);
