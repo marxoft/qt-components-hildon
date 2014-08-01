@@ -37,7 +37,8 @@ public:
         atXBeginning(true),
         atXEnd(true),
         atYBeginning(true),
-        atYEnd(true)
+        atYEnd(true),
+        rowNumbersVisible(true)
     {
     }
 
@@ -83,6 +84,8 @@ public:
     bool atXEnd;
     bool atYBeginning;
     bool atYEnd;
+
+    bool rowNumbersVisible;
 
     Q_DECLARE_PUBLIC(TableView)
 };

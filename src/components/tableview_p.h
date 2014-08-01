@@ -56,6 +56,7 @@ class TableView : public QTableView, public QDeclarativeParserStatus
     Q_PROPERTY(int contentY READ contentY WRITE setContentY NOTIFY contentYChanged)
     Q_PROPERTY(qreal flickDeceleration READ flickDeceleration WRITE setFlickDeceleration NOTIFY flickDecelerationChanged)
     Q_PROPERTY(qreal maximumFlickVelocity READ maximumFlickVelocity WRITE setMaximumFlickVelocity NOTIFY maximumFlickVelocityChanged)
+    Q_PROPERTY(bool showRowNumbers READ rowNumbersVisible WRITE setRowNumbersVisible NOTIFY rowNumbersVisibleChanged)
     Q_PROPERTY(QHeaderView* header READ horizontalHeader WRITE setHeader NOTIFY headerChanged)
     Q_PRIVATE_PROPERTY(TableView::d_func(), QDeclarativeListProperty<QObject> data READ data)
     Q_PRIVATE_PROPERTY(TableView::d_func(), QDeclarativeListProperty<QWidget> children READ children)
@@ -111,6 +112,9 @@ public:
     qreal maximumFlickVelocity() const;
     void setMaximumFlickVelocity(qreal maximum);
 
+    bool rowNumbersVisible() const;
+    void setRowNumbersVisible(bool visible);
+
     void setHeader(QHeaderView *header);
 
 public slots:
@@ -139,6 +143,7 @@ signals:
     void contentYChanged();
     void flickDecelerationChanged();
     void maximumFlickVelocityChanged();
+    void rowNumbersVisibleChanged();
     void headerChanged();
     void modelChanged();
     void rootIndexChanged();
@@ -147,6 +152,8 @@ signals:
 
 protected:
     TableView(TableViewPrivate &dd, QWidget *parent = 0);
+
+    virtual void currentChanged(const QModelIndex &current, const QModelIndex &previous);
 
     virtual void changeEvent(QEvent *event);
     virtual void moveEvent(QMoveEvent *event);

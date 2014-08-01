@@ -223,6 +223,21 @@ void TableView::setMaximumFlickVelocity(qreal maximum) {
     }
 }
 
+bool TableView::rowNumbersVisible() const {
+    Q_D(const TableView);
+
+    return d->rowNumbersVisible;
+}
+
+void TableView::setRowNumbersVisible(bool visible) {
+    if (visible != this->rowNumbersVisible()) {
+        Q_D(TableView);
+        d->rowNumbersVisible = visible;
+        this->verticalHeader()->setVisible(visible);
+        emit rowNumbersVisibleChanged();
+    }
+}
+
 void TableView::setHeader(QHeaderView *header) {
     if (header != this->horizontalHeader()) {
         this->setHorizontalHeader(header);
@@ -251,6 +266,11 @@ void TableView::positionViewAtIndex(int index, ScrollHint mode) {
     if (this->model()) {
         this->positionViewAtIndex(this->model()->index(index, 0), mode);
     }
+}
+
+void TableView::currentChanged(const QModelIndex &current, const QModelIndex &previous) {
+    emit currentIndexChanged();
+    QTableView::currentChanged(current, previous);
 }
 
 void TableView::changeEvent(QEvent *event) {
@@ -325,6 +345,10 @@ void TableView::componentComplete() {
 
     if (d->qmlVisible()) {
         this->show();
+    }
+
+    if (!this->rowNumbersVisible()) {
+        this->verticalHeader()->hide();
     }
 }
 
