@@ -37,6 +37,8 @@ class WebPage : public QWebPage
     Q_PROPERTY(QUrl requestedUrl READ requestedUrl NOTIFY urlChanged)
     Q_PROPERTY(QString icon READ icon NOTIFY iconChanged)
     Q_PROPERTY(QString title READ title NOTIFY titleChanged)
+    Q_PROPERTY(QString html READ toHtml WRITE setHtml NOTIFY urlChanged)
+    Q_PROPERTY(QString text READ toPlainText WRITE setText NOTIFY urlChanged)
     Q_PROPERTY(int contentWidth READ contentWidth NOTIFY contentSizeChanged)
     Q_PROPERTY(int contentHeight READ contentHeight NOTIFY contentSizeChanged)
     Q_PROPERTY(int preferredWidth READ preferredWidth WRITE setPreferredWidth NOTIFY preferredWidthChanged)
@@ -76,6 +78,12 @@ public:
 
     QString title() const;
 
+    QString toHtml() const;
+    void setHtml(const QString &html, const QUrl &baseUrl = QUrl());
+
+    QString toPlainText() const;
+    void setText(const QString &text);
+
     int contentWidth() const;
     int contentHeight() const;
 
@@ -100,6 +108,8 @@ public:
 
     QObject* newWindowParent() const;
     void setNewWindowParent(QObject *parent);
+
+    Q_INVOKABLE QVariant hitTestContent(int x, int y);
 
 public slots:
     bool findText(const QString &text);
@@ -130,6 +140,8 @@ signals:
     void selectedTextChanged();
     void newWindowComponentChanged();
     void newWindowParentChanged();
+    void downloadRequested(const QVariant &request);
+    void unsupportedContent(const QVariant &content);
 
 protected:
     WebPage(WebPagePrivate &dd, QObject *parent = 0);
@@ -144,6 +156,8 @@ protected:
     Q_PRIVATE_SLOT(d_func(), void _q_onLoadFinished(bool))
     Q_PRIVATE_SLOT(d_func(), void _q_onLoadProgress(int))
     Q_PRIVATE_SLOT(d_func(), void _q_onStatusBarMessage(QString))
+    Q_PRIVATE_SLOT(d_func(), void _q_onDownloadRequested(QNetworkRequest))
+    Q_PRIVATE_SLOT(d_func(), void _q_onUnsupportedContent(QNetworkReply*))
     Q_PRIVATE_SLOT(d_func(), void _q_onJavaScriptWindowObjectCleared())
 
 private:

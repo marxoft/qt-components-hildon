@@ -22,6 +22,7 @@
 #include <QDeclarativeContext>
 #include <QDeclarativeComponent>
 #include <QDeclarativeInfo>
+#include <QNetworkReply>
 
 class WebPagePrivate
 {
@@ -123,6 +124,37 @@ public:
         }
     }
 
+    void _q_onDownloadRequested(const QNetworkRequest &request) {
+        Q_Q(WebPage);
+
+        QVariantMap map;
+        QVariantMap headers;
+        map["url"] = request.url();
+
+        foreach (QByteArray header, request.rawHeaderList()) {
+            headers[header] = request.rawHeader(header);
+        }
+
+        map["headers"] = headers;
+        emit q->downloadRequested(map);
+    }
+
+    void _q_onUnsupportedContent(QNetworkReply *reply) {
+        Q_Q(WebPage);
+
+        QVariantMap map;
+        QVariantMap headers;
+        map["url"] = reply->url();
+
+        foreach (QByteArray header, reply->rawHeaderList()) {
+            headers[header] = reply->rawHeader(header);
+        }
+
+        map["headers"] = headers;
+        emit q->unsupportedContent(map);
+        reply->deleteLater();
+    }
+
     void _q_onJavaScriptWindowObjectCleared() {
         Q_Q(WebPage);
 
@@ -169,6 +201,8 @@ WebPage::WebPage(QObject *parent) :
     this->connect(this, SIGNAL(loadFinished(bool)), this, SLOT(_q_onLoadFinished(bool)));
     this->connect(this, SIGNAL(loadProgress(int)), this, SLOT(_q_onLoadProgress(int)));
     this->connect(this, SIGNAL(statusBarMessage(QString)), this, SLOT(_q_onStatusBarMessage(QString)));
+    this->connect(this, SIGNAL(downloadRequested(QNetworkRequest)), this, SLOT(_q_onDownloadRequested(QNetworkRequest)));
+    this->connect(this, SIGNAL(unsupportedContent(QNetworkReply*)), this, SLOT(_q_onUnsupportedContent(QNetworkReply*)));
     this->connect(this->mainFrame(), SIGNAL(javaScriptWindowObjectCleared()), this, SLOT(_q_onJavaScriptWindowObjectCleared()));
 }
 
@@ -188,6 +222,8 @@ WebPage::WebPage(WebPagePrivate &dd, QObject *parent) :
     this->connect(this, SIGNAL(loadFinished(bool)), this, SLOT(_q_onLoadFinished(bool)));
     this->connect(this, SIGNAL(loadProgress(int)), this, SLOT(_q_onLoadProgress(int)));
     this->connect(this, SIGNAL(statusBarMessage(QString)), this, SLOT(_q_onStatusBarMessage(QString)));
+    this->connect(this, SIGNAL(downloadRequested(QNetworkRequest)), this, SLOT(_q_onDownloadRequested(QNetworkRequest)));
+    this->connect(this, SIGNAL(unsupportedContent(QNetworkReply*)), this, SLOT(_q_onUnsupportedContent(QNetworkReply*)));
     this->connect(this->mainFrame(), SIGNAL(javaScriptWindowObjectCleared()), this, SLOT(_q_onJavaScriptWindowObjectCleared()));
 }
 
@@ -215,6 +251,22 @@ QString WebPage::icon() const {
 
 QString WebPage::title() const {
     return this->mainFrame()->title();
+}
+
+QString WebPage::toHtml() const {
+    return this->mainFrame()->toHtml();
+}
+
+void WebPage::setHtml(const QString &html, const QUrl &baseUrl) {
+    this->mainFrame()->setHtml(html, baseUrl);
+}
+
+QString WebPage::toPlainText() const {
+    return this->mainFrame()->toPlainText();
+}
+
+void WebPage::setText(const QString &text) {
+    this->mainFrame()->setContent(text.toUtf8(), "text/plain");
 }
 
 int WebPage::contentWidth() const {
@@ -248,12 +300,12 @@ void WebPage::setPreferredHeight(int height) {
 }
 
 qreal WebPage::zoomFactor() const {
-    return this->mainFrame()->zoomFactor();
+    return this->currentFrame()->zoomFactor();
 }
 
 void WebPage::setZoomFactor(qreal zoom) {
     if (zoom != this->zoomFactor()) {
-        this->mainFrame()->setZoomFactor(zoom);
+        this->currentFrame()->setZoomFactor(zoom);
         emit zoomFactorChanged();
     }
 }
@@ -306,6 +358,30 @@ void WebPage::setNewWindowParent(QObject *parent) {
         d->windowParent = parent;
         emit newWindowParentChanged();
     }
+}
+
+QVariant WebPage::hitTestContent(int x, int y) {
+    QWebHitTestResult result = this->currentFrame()->hitTestContent(QPoint(x, y));
+    QVariantMap content;
+    content["isNull"] = result.isNull();
+
+    if (!result.isNull()) {
+        content["x"] = result.boundingRect().left();
+        content["y"] = result.boundingRect().top();
+        content["width"] = result.boundingRect().width();
+        content["height"] = result.boundingRect().height();
+        content["isNull"] = result.isNull();
+        content["alternateText"] = result.alternateText();
+        content["imageUrl"] = result.imageUrl();
+        content["isContentEditable"] = result.isContentEditable();
+        content["isContentSelected"] = result.isContentSelected();
+        content["linkText"] = result.linkText();
+        content["linkTitle"] = result.linkTitle();
+        content["linkUrl"] = result.linkUrl();
+        content["title"] = result.title();
+    }
+
+    return content;
 }
 
 bool WebPage::findText(const QString &text) {
