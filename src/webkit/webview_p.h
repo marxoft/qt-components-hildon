@@ -19,6 +19,7 @@
 #define WEBVIEW_P_H
 
 #include "anchors_p.h"
+#include "webpage_p.h"
 #include <QWebView>
 #include <QWebPage>
 #include <QDeclarativeParserStatus>
@@ -70,8 +71,10 @@ class WebView : public QWebView, public QDeclarativeParserStatus
     Q_PROPERTY(int progress READ progress NOTIFY progressChanged)
     Q_PROPERTY(Status status READ status NOTIFY statusChanged)
     Q_PROPERTY(QString statusText READ statusText NOTIFY statusTextChanged)
+    Q_PROPERTY(QString userAgent READ userAgent WRITE setUserAgent NOTIFY userAgentChanged)
     Q_PROPERTY(QDeclarativeComponent* newWindowComponent READ newWindowComponent WRITE setNewWindowComponent NOTIFY newWindowComponentChanged)
     Q_PROPERTY(QWidget* newWindowParent READ newWindowParent WRITE setNewWindowParent NOTIFY newWindowParentChanged)
+    Q_PRIVATE_PROPERTY(WebView::d_func(), WebPage* page READ page WRITE setPage NOTIFY pageChanged)
     Q_PRIVATE_PROPERTY(WebView::d_func(), WebHistory* history READ history CONSTANT FINAL)
     Q_PRIVATE_PROPERTY(WebView::d_func(), WebSettings* settings READ settings CONSTANT FINAL)
     Q_PRIVATE_PROPERTY(WebView::d_func(), QDeclarativeListProperty<QObject> data READ data)
@@ -158,6 +161,9 @@ public:
 
     QString statusText() const;
 
+    QString userAgent() const;
+    void setUserAgent(const QString &agent);
+
     QDeclarativeComponent* newWindowComponent() const;
     void setNewWindowComponent(QDeclarativeComponent *component);
 
@@ -203,8 +209,10 @@ signals:
     void progressChanged();
     void statusChanged();
     void statusTextChanged();
+    void userAgentChanged();
     void newWindowComponentChanged();
     void newWindowParentChanged();
+    void pageChanged();
     void linkClicked(const QUrl &link);
     void downloadRequested(const QVariant &request);
     void unsupportedContent(const QVariant &content);

@@ -38,22 +38,26 @@ WebView::WebView(QWidget *parent) :
 {
     Q_D(WebView);
 
+    d->webPage = new WebPage(this);
     d->suppressor = new WebViewSelectionSuppressor(this);
     d->scrollTimer = new QTimer(this);
     d->scrollTimer->setInterval(500);
     d->scrollTimer->setSingleShot(true);
 
+    this->setPage(d->webPage);
+
     if (QDeclarativeEngine *engine = qmlEngine(this)) {
-        this->page()->setNetworkAccessManager(engine->networkAccessManager());
+        d->webPage->setNetworkAccessManager(engine->networkAccessManager());
     }
 
     this->connect(d->scrollTimer, SIGNAL(timeout()), this, SLOT(_q_onScrollingStopped()));
-    this->connect(this->page(), SIGNAL(scrollRequested(int,int,QRect)), this, SLOT(_q_onScrollRequested()));
-    this->connect(this->page(), SIGNAL(selectionChanged()), this, SIGNAL(selectedTextChanged()));
-    this->connect(this->page(), SIGNAL(linkClicked(QUrl)), this, SIGNAL(linkClicked(QUrl)));
-    this->connect(this->page(), SIGNAL(downloadRequested(QNetworkRequest)), this, SLOT(_q_onDownloadRequested(QNetworkRequest)));
-    this->connect(this->page(), SIGNAL(unsupportedContent(QNetworkReply*)), this, SLOT(_q_onUnsupportedContent(QNetworkReply*)));
-    this->connect(this->page()->mainFrame(), SIGNAL(javaScriptWindowObjectCleared()), this, SLOT(_q_onJavaScriptWindowObjectCleared()));
+    this->connect(d->webPage, SIGNAL(scrollRequested(int,int,QRect)), this, SLOT(_q_onScrollRequested()));
+    this->connect(d->webPage, SIGNAL(selectionChanged()), this, SIGNAL(selectedTextChanged()));
+    this->connect(d->webPage, SIGNAL(userAgentChanged()), this, SIGNAL(userAgentChanged()));
+    this->connect(d->webPage, SIGNAL(linkClicked(QUrl)), this, SIGNAL(linkClicked(QUrl)));
+    this->connect(d->webPage, SIGNAL(downloadRequested(QNetworkRequest)), this, SLOT(_q_onDownloadRequested(QNetworkRequest)));
+    this->connect(d->webPage, SIGNAL(unsupportedContent(QNetworkReply*)), this, SLOT(_q_onUnsupportedContent(QNetworkReply*)));
+    this->connect(d->webPage->mainFrame(), SIGNAL(javaScriptWindowObjectCleared()), this, SLOT(_q_onJavaScriptWindowObjectCleared()));
     this->connect(this, SIGNAL(titleChanged(QString)), this, SIGNAL(titleChanged()));
     this->connect(this, SIGNAL(urlChanged(QUrl)), this, SIGNAL(urlChanged()));
     this->connect(this, SIGNAL(loadStarted()), this, SLOT(_q_onLoadStarted()));
@@ -68,22 +72,26 @@ WebView::WebView(WebViewPrivate &dd, QWidget *parent) :
 {
     Q_D(WebView);
 
+    d->webPage = new WebPage(this);
     d->suppressor = new WebViewSelectionSuppressor(this);
     d->scrollTimer = new QTimer(this);
     d->scrollTimer->setInterval(500);
     d->scrollTimer->setSingleShot(true);
 
+    this->setPage(d->webPage);
+
     if (QDeclarativeEngine *engine = qmlEngine(this)) {
-        this->page()->setNetworkAccessManager(engine->networkAccessManager());
+        d->webPage->setNetworkAccessManager(engine->networkAccessManager());
     }
 
     this->connect(d->scrollTimer, SIGNAL(timeout()), this, SLOT(_q_onScrollingStopped()));
-    this->connect(this->page(), SIGNAL(scrollRequested(int,int,QRect)), this, SLOT(_q_onScrollRequested()));
-    this->connect(this->page(), SIGNAL(selectionChanged()), this, SIGNAL(selectedTextChanged()));
-    this->connect(this->page(), SIGNAL(linkClicked(QUrl)), this, SIGNAL(linkClicked(QUrl)));
-    this->connect(this->page(), SIGNAL(downloadRequested(QNetworkRequest)), this, SLOT(_q_onDownloadRequested(QNetworkRequest)));
-    this->connect(this->page(), SIGNAL(unsupportedContent(QNetworkReply*)), this, SLOT(_q_onUnsupportedContent(QNetworkReply*)));
-    this->connect(this->page()->mainFrame(), SIGNAL(javaScriptWindowObjectCleared()), this, SLOT(_q_onJavaScriptWindowObjectCleared()));
+    this->connect(d->webPage, SIGNAL(scrollRequested(int,int,QRect)), this, SLOT(_q_onScrollRequested()));
+    this->connect(d->webPage, SIGNAL(selectionChanged()), this, SIGNAL(selectedTextChanged()));
+    this->connect(d->webPage, SIGNAL(userAgentChanged()), this, SIGNAL(userAgentChanged()));
+    this->connect(d->webPage, SIGNAL(linkClicked(QUrl)), this, SIGNAL(linkClicked(QUrl)));
+    this->connect(d->webPage, SIGNAL(downloadRequested(QNetworkRequest)), this, SLOT(_q_onDownloadRequested(QNetworkRequest)));
+    this->connect(d->webPage, SIGNAL(unsupportedContent(QNetworkReply*)), this, SLOT(_q_onUnsupportedContent(QNetworkReply*)));
+    this->connect(d->webPage->mainFrame(), SIGNAL(javaScriptWindowObjectCleared()), this, SLOT(_q_onJavaScriptWindowObjectCleared()));
     this->connect(this, SIGNAL(titleChanged(QString)), this, SIGNAL(titleChanged()));
     this->connect(this, SIGNAL(urlChanged(QUrl)), this, SIGNAL(urlChanged()));
     this->connect(this, SIGNAL(loadStarted()), this, SLOT(_q_onLoadStarted()));
@@ -365,6 +373,18 @@ QString WebView::statusText() const {
     Q_D(const WebView);
 
     return d->statusText;
+}
+
+QString WebView::userAgent() const {
+    Q_D(const WebView);
+
+    return d->webPage->userAgent();
+}
+
+void WebView::setUserAgent(const QString &agent) {
+    Q_D(WebView);
+
+    d->webPage->setUserAgent(agent);
 }
 
 QDeclarativeComponent* WebView::newWindowComponent() const {
@@ -662,6 +682,19 @@ QDeclarativeListProperty<QObject> WebViewPrivate::actions() {
 
 QDeclarativeListProperty<QObject> WebViewPrivate::jsObjects() {
     return QDeclarativeListProperty<QObject>(q_func(), 0, WebViewPrivate::jsobjects_append);
+}
+
+WebPage* WebViewPrivate::page() const {
+    return webPage;
+}
+
+void WebViewPrivate::setPage(WebPage *page) {
+    if (page != webPage) {
+        Q_Q(WebView);
+        webPage = page;
+        q->setPage(page);
+        emit q->pageChanged();
+    }
 }
 
 WebHistory* WebViewPrivate::history() {
