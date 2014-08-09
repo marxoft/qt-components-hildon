@@ -448,15 +448,15 @@ QWebPage* WebPage::createWindow(WebWindowType type) {
         return 0;
     }
 
-    WebPage *page = 0;
+    QWebPage *page = 0;
     QDeclarativeContext *creationContext = d->windowComponent->creationContext();
     QDeclarativeContext *context = new QDeclarativeContext(creationContext ? creationContext : qmlContext(this));
 
     if (QObject *obj = d->windowComponent->create(context)) {
-        page = qobject_cast<WebPage*>(obj);
+        page = qobject_cast<QWebPage*>(obj);
 
         if (!page) {
-            page = obj->findChild<WebPage*>();
+            page = obj->findChild<QWebPage*>();
         }
 
         if (page) {
