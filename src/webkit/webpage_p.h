@@ -49,6 +49,7 @@ class WebPage : public QWebPage
     Q_PROPERTY(QString statusText READ statusText NOTIFY statusTextChanged)
     Q_PROPERTY(QString selectedText READ selectedText NOTIFY selectedTextChanged)
     Q_PROPERTY(bool hasSelection READ hasSelection NOTIFY selectedTextChanged)
+    Q_PROPERTY(QString userAgent READ userAgent WRITE setUserAgent NOTIFY userAgentChanged)
     Q_PROPERTY(QDeclarativeComponent* newWindowComponent READ newWindowComponent WRITE setNewWindowComponent NOTIFY newWindowComponentChanged)
     Q_PRIVATE_PROPERTY(WebPage::d_func(), WebHistory* history READ history CONSTANT FINAL)
     Q_PRIVATE_PROPERTY(WebPage::d_func(), WebSettings* settings READ settings CONSTANT FINAL)
@@ -103,6 +104,9 @@ public:
 
     bool hasSelection() const;
 
+    QString userAgent() const;
+    void setUserAgent(const QString &agent);
+
     QDeclarativeComponent* newWindowComponent() const;
     void setNewWindowComponent(QDeclarativeComponent *component);
 
@@ -138,6 +142,7 @@ signals:
     void statusChanged();
     void statusTextChanged();
     void selectedTextChanged();
+    void userAgentChanged();
     void newWindowComponentChanged();
     void newWindowParentChanged();
     void downloadRequested(const QVariant &request);
@@ -146,7 +151,9 @@ signals:
 protected:
     WebPage(WebPagePrivate &dd, QObject *parent = 0);
 
-    QWebPage* createWindow(WebWindowType type);
+    virtual QWebPage* createWindow(WebWindowType type);
+
+    virtual QString userAgentForUrl(const QUrl &url) const;
 
     QScopedPointer<WebPagePrivate> d_ptr;
 

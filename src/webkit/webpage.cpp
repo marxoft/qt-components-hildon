@@ -179,6 +179,8 @@ public:
 
     QString statusText;
 
+    QString userAgent;
+
     QList<QObject*> dataList;
     QList<QObject*> jsObjectList;
 
@@ -332,6 +334,20 @@ bool WebPage::hasSelection() const {
     return !this->selectedText().isEmpty();
 }
 
+QString WebPage::userAgent() const {
+    Q_D(const WebPage);
+
+    return d->userAgent;
+}
+
+void WebPage::setUserAgent(const QString &agent) {
+    if (agent != this->userAgent()) {
+        Q_D(WebPage);
+        d->userAgent = agent;
+        emit userAgentChanged();
+    }
+}
+
 QDeclarativeComponent* WebPage::newWindowComponent() const {
     Q_D(const WebPage);
 
@@ -457,6 +473,10 @@ QWebPage* WebPage::createWindow(WebWindowType type) {
     }
 
     return page;
+}
+
+QString WebPage::userAgentForUrl(const QUrl &url) const {
+    return this->userAgent().isEmpty() ? QWebPage::userAgentForUrl(url) : this->userAgent();
 }
 
 #include "moc_webpage_p.cpp"
