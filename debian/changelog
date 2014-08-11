@@ -1,3 +1,11 @@
+qt-components-hildon (0.8.0) unstable; urgency=low
+
+  * Added Keys attached property.
+  * Added option to set a custom WebPage component for WebView.
+  * Added 'userAgent' property to WebPage and WebView components.
+
+ -- Stuart Howarth <showarth@marxoft.co.uk>  Mon, 11 Aug 2014 15:18:32 +0100
+
 qt-components-hildon (0.7.0) unstable; urgency=low
 
   * Added HeaderSection component for defining sections in HeaderView.
