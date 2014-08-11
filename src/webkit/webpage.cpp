@@ -195,6 +195,9 @@ WebPage::WebPage(QObject *parent) :
         this->setNetworkAccessManager(engine->networkAccessManager());
     }
 
+    this->mainFrame()->setScrollBarPolicy(Qt::Horizontal, Qt::ScrollBarAlwaysOff);
+    this->mainFrame()->setScrollBarPolicy(Qt::Vertical, Qt::ScrollBarAlwaysOff);
+
     this->connect(this->mainFrame(), SIGNAL(urlChanged(QUrl)), this, SIGNAL(urlChanged()));
     this->connect(this->mainFrame(), SIGNAL(iconChanged()), this, SIGNAL(iconChanged()));
     this->connect(this->mainFrame(), SIGNAL(titleChanged(QString)), this, SIGNAL(titleChanged()));
@@ -215,6 +218,9 @@ WebPage::WebPage(WebPagePrivate &dd, QObject *parent) :
     if (QDeclarativeEngine *engine = qmlEngine(this)) {
         this->setNetworkAccessManager(engine->networkAccessManager());
     }
+
+    this->mainFrame()->setScrollBarPolicy(Qt::Horizontal, Qt::ScrollBarAlwaysOff);
+    this->mainFrame()->setScrollBarPolicy(Qt::Vertical, Qt::ScrollBarAlwaysOff);
 
     this->connect(this->mainFrame(), SIGNAL(urlChanged(QUrl)), this, SIGNAL(urlChanged()));
     this->connect(this->mainFrame(), SIGNAL(iconChanged()), this, SIGNAL(iconChanged()));
