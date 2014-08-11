@@ -166,40 +166,6 @@ void Item::focusOutEvent(QFocusEvent *event) {
     QWidget::focusOutEvent(event);
 }
 
-void Item::keyPressEvent(QKeyEvent *event) {
-    Q_D(Item);
-
-    if (d->keys) {
-        switch (d->keys->priority()) {
-        case Keys::BeforeItem:
-            d->keys->event(event);
-            QWidget::keyPressEvent(event);
-            return;
-        default:
-            QWidget::keyPressEvent(event);
-            d->keys->event(event);
-            return;
-        }
-    }
-}
-
-void Item::keyReleaseEvent(QKeyEvent *event) {
-    Q_D(Item);
-
-    if (d->keys) {
-        switch (d->keys->priority()) {
-        case Keys::BeforeItem:
-            d->keys->event(event);
-            QWidget::keyReleaseEvent(event);
-            return;
-        default:
-            QWidget::keyReleaseEvent(event);
-            d->keys->event(event);
-            return;
-        }
-    }
-}
-
 void Item::classBegin() {}
 
 void Item::componentComplete() {
@@ -261,16 +227,6 @@ void ItemPrivate::actions_append(QDeclarativeListProperty<QObject> *list, QObjec
             item->addActions(group->actions());
         }
     }
-}
-
-Keys* ItemPrivate::attachedKeys() {
-    Q_Q(Item);
-
-    if (!keys) {
-        keys = new Keys(q);
-    }
-
-    return keys;
 }
 
 Anchors* ItemPrivate::anchors() {

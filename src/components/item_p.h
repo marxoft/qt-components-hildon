@@ -19,7 +19,6 @@
 #define ITEM_P_H
 
 #include "anchors_p.h"
-#include "keys_p.h"
 #include <QWidget>
 #include <QIcon>
 #include <QDeclarativeParserStatus>
@@ -45,7 +44,6 @@ class Item : public QWidget, public QDeclarativeParserStatus
     Q_PROPERTY(AnchorLine bottom READ bottom CONSTANT FINAL)
     Q_PROPERTY(AnchorLine horizontalCenter READ horizontalCenter CONSTANT FINAL)
     Q_PROPERTY(AnchorLine verticalCenter READ verticalCenter CONSTANT FINAL)
-    Q_PRIVATE_PROPERTY(Item::d_func(), Keys* Keys READ attachedKeys CONSTANT FINAL)
     Q_PRIVATE_PROPERTY(Item::d_func(), QDeclarativeListProperty<QObject> data READ data)
     Q_PRIVATE_PROPERTY(Item::d_func(), QDeclarativeListProperty<QWidget> children READ children)
     Q_PRIVATE_PROPERTY(Item::d_func(), QDeclarativeListProperty<QObject> actions READ actions)
@@ -94,8 +92,6 @@ protected:
     virtual void hideEvent(QHideEvent *event);
     virtual void focusInEvent(QFocusEvent *event);
     virtual void focusOutEvent(QFocusEvent *event);
-    virtual void keyPressEvent(QKeyEvent *event);
-    virtual void keyReleaseEvent(QKeyEvent *event);
 
     virtual void classBegin();
     virtual void componentComplete();

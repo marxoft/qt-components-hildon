@@ -105,10 +105,13 @@ void Plugin::registerTypes(const char *uri) {
     Q_ASSERT(uri == QLatin1String("org.hildon.components"));
 
     qRegisterMetaType<AnchorLine>("AnchorLine");
+    qRegisterMetaType<KeyEvent*>("KeyEvent*");
 
     qmlRegisterUncreatableType<QWidget>(uri, 1, 0, "Widget", "");
     qmlRegisterUncreatableType<QAbstractButton>(uri, 1, 0, "AbstractButton", "");
     qmlRegisterUncreatableType<QHeaderView>(uri, 1, 0, "QHeaderView", "");
+    qmlRegisterUncreatableType<Keys>(uri, 1, 0, "Keys", "");
+    qmlRegisterUncreatableType<KeyEvent>(uri, 1, 0, "KeyEvent", "");
 
     qmlRegisterType<Action>(uri, 1, 0, "Action");
     qmlRegisterType<ActionGroup>(uri, 1, 0, "ActionGroup");
@@ -134,7 +137,6 @@ void Plugin::registerTypes(const char *uri) {
     qmlRegisterType<ImageBorder>(uri, 1, 0, "ImageBorder");
     qmlRegisterType<InformationBox>(uri, 1, 0, "InformationBox");
     qmlRegisterType<Item>(uri, 1, 0, "Item");
-//    qmlRegisterType<Keys>(uri, 1, 0, "Keys");
     qmlRegisterType<Label>(uri, 1, 0, "Label");
     qmlRegisterType<ListItem>(uri, 1, 0, "ListItem");
     qmlRegisterType<ListItemImage>(uri, 1, 0, "ListItemImage");

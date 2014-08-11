@@ -19,10 +19,45 @@
 #define KEYS_P_H
 
 #include <QObject>
+#include <QKeyEvent>
 #include <QDeclarativeListProperty>
 #include <qdeclarative.h>
 
 class KeysPrivate;
+
+class KeyEvent : public QObject
+{
+    Q_OBJECT
+
+    Q_PROPERTY(bool accepted READ isAccepted WRITE setAccepted)
+    Q_PROPERTY(bool isAutoRepeat READ isAutoRepeat CONSTANT)
+    Q_PROPERTY(int count READ count CONSTANT)
+    Q_PROPERTY(int key READ key CONSTANT)
+    Q_PROPERTY(int modifiers READ modifiers CONSTANT)
+    Q_PROPERTY(QString text READ text CONSTANT)
+
+public:
+    explicit KeyEvent(QKeyEvent *event, QObject *parent = 0);
+    ~KeyEvent();
+
+    bool isAccepted() const;
+    void setAccepted(bool accept);
+
+    bool isAutoRepeat() const;
+
+    int count() const;
+
+    int key() const;
+
+    int modifiers() const;
+
+    QString text() const;
+
+private:
+    QKeyEvent *m_event;
+
+    Q_DISABLE_COPY(KeyEvent)
+};
 
 class Keys : public QObject
 {
@@ -49,61 +84,70 @@ public:
     Priority priority() const;
     void setPriority(Priority priority);
 
-    bool event(QEvent *event);
+    bool eventFilter(QObject *obj, QEvent *event);
+
+    static Keys* qmlAttachedProperties(QObject *obj);
 
 signals:
     void enabledChanged();
     void priorityChanged();
 
-    void asteriskPressed();
-    void backPressed();
-    void backtabPressed();
-    void callPressed();
-    void cancelPressed();
-    void context1Pressed();
-    void context2Pressed();
-    void context3Pressed();
-    void context4Pressed();
-    void deletePressed();
-    void digit0Pressed();
-    void digit1Pressed();
-    void digit2Pressed();
-    void digit3Pressed();
-    void digit4Pressed();
-    void digit5Pressed();
-    void digit6Pressed();
-    void digit7Pressed();
-    void digit8Pressed();
-    void digit9Pressed();
-    void downPressed();
-    void enterPressed();
-    void escapePressed();
-    void flipPressed();
-    void hangupPressed();
-    void leftPressed();
-    void menuPressed();
-    void noPressed();
-    void pressed();
-    void released();
-    void returnPressed();
-    void rightPressed();
-    void selectPressed();
-    void spacePressed();
-    void tabPressed();
-    void upPressed();
-    void volumeDownPressed();
-    void volumeUpPressed();
-    void yesPressed();
+    void asteriskPressed(KeyEvent *event);
+    void backPressed(KeyEvent *event);
+    void backtabPressed(KeyEvent *event);
+    void callPressed(KeyEvent *event);
+    void cancelPressed(KeyEvent *event);
+    void context1Pressed(KeyEvent *event);
+    void context2Pressed(KeyEvent *event);
+    void context3Pressed(KeyEvent *event);
+    void context4Pressed(KeyEvent *event);
+    void deletePressed(KeyEvent *event);
+    void digit0Pressed(KeyEvent *event);
+    void digit1Pressed(KeyEvent *event);
+    void digit2Pressed(KeyEvent *event);
+    void digit3Pressed(KeyEvent *event);
+    void digit4Pressed(KeyEvent *event);
+    void digit5Pressed(KeyEvent *event);
+    void digit6Pressed(KeyEvent *event);
+    void digit7Pressed(KeyEvent *event);
+    void digit8Pressed(KeyEvent *event);
+    void digit9Pressed(KeyEvent *event);
+    void downPressed(KeyEvent *event);
+    void enterPressed(KeyEvent *event);
+    void escapePressed(KeyEvent *event);
+    void flipPressed(KeyEvent *event);
+    void hangupPressed(KeyEvent *event);
+    void leftPressed(KeyEvent *event);
+    void menuPressed(KeyEvent *event);
+    void noPressed(KeyEvent *event);
+    void returnPressed(KeyEvent *event);
+    void rightPressed(KeyEvent *event);
+    void selectPressed(KeyEvent *event);
+    void spacePressed(KeyEvent *event);
+    void tabPressed(KeyEvent *event);
+    void upPressed(KeyEvent *event);
+    void volumeDownPressed(KeyEvent *event);
+    void volumeUpPressed(KeyEvent *event);
+    void yesPressed(KeyEvent *event);
 
-private:
+    void pressed(KeyEvent *event);
+    void released(KeyEvent *event);
+
+protected:
     Keys(KeysPrivate &dd, QObject *parent = 0);
+
+    void timerEvent(QTimerEvent *event);
 
     QScopedPointer<KeysPrivate> d_ptr;
 
-    Q_DISABLE_COPY(Keys)
     Q_DECLARE_PRIVATE(Keys)
+
+private:
+    Q_DISABLE_COPY(Keys)
 };
 
+QML_DECLARE_TYPE(KeyEvent)
 QML_DECLARE_TYPE(Keys)
+QML_DECLARE_TYPEINFO(Keys, QML_HAS_ATTACHED_PROPERTIES)
 
 #endif // KEYS_P_H

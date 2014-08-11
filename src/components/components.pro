@@ -48,7 +48,6 @@ HEADERS += \
     item_p.h \
     item_p_p.h \
     keys_p.h \
-    keys_p_p.h \
     label_p.h \
     listitem_p.h \
     listitemcontent_p.h \
