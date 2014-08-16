@@ -21,6 +21,10 @@
 #include <QActionGroup>
 #include <QMoveEvent>
 #include <QResizeEvent>
+#include <QStylePainter>
+#include <QStyleOption>
+#include <QStyle>
+#include <QMaemo5Style>
 #include <QGraphicsOpacityEffect>
 
 ValueButton::ValueButton(QWidget *parent) :
@@ -199,6 +203,28 @@ void ValueButton::focusInEvent(QFocusEvent *event) {
 void ValueButton::focusOutEvent(QFocusEvent *event) {
     emit focusChanged();
     QMaemo5ValueButton::focusOutEvent(event);
+}
+
+void ValueButton::paintEvent(QPaintEvent *event) {
+    Q_UNUSED(event);
+
+    QStylePainter p(this);
+    QStyleOptionButton button;
+    initStyleOption(&button);
+    QStyleOptionMaemo5ValueButton option;
+    initStyleOption(&option);
+    option.value = this->valueText();
+    option.styles = (this->valueLayout() == ValueBesideText) ? QStyleOptionMaemo5ValueButton::ValueBesideText
+                                                        : QStyleOptionMaemo5ValueButton::ValueUnderText;
+
+    if (this->valueLayout() == ValueUnderTextCentered) {
+        option.styles |= QStyleOptionMaemo5ValueButton::Centered;
+    }
+
+    option.styles |= QStyleOptionMaemo5ValueButton::PickButton;
+    p.drawControl(QStyle::CE_PushButtonBevel, button);
+    option.rect = style()->subElementRect(QStyle::SE_PushButtonContents, &button, this);
+    p.drawControl(QStyle::CE_PushButtonLabel, option);
 }
 
 void ValueButton::classBegin() {}
