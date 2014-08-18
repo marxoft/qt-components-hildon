@@ -25,6 +25,30 @@ PlatformStyle::PlatformStyle(QObject *parent) :
 
 PlatformStyle::~PlatformStyle() {}
 
+int PlatformStyle::paddingSmall() {
+    return 4;
+}
+
+int PlatformStyle::paddingMedium() {
+    return 8;
+}
+
+int PlatformStyle::paddingLarge() {
+    return 16;
+}
+
+int PlatformStyle::fontSizeSmall() {
+    return 20;
+}
+
+int PlatformStyle::fontSizeMedium() {
+    return 24;
+}
+
+int PlatformStyle::fontSizeLarge() {
+    return 32;
+}
+
 QColor PlatformStyle::defaultTextColor() {
     return QMaemo5Style::standardColor("DefaultTextColor");
 }

@@ -25,6 +25,12 @@ class PlatformStyle : public QObject
 {
     Q_OBJECT
 
+    Q_PROPERTY(int paddingSmall READ paddingSmall CONSTANT)
+    Q_PROPERTY(int paddingMedium READ paddingMedium CONSTANT)
+    Q_PROPERTY(int paddingLarge READ paddingLarge CONSTANT)
+    Q_PROPERTY(int fontSizeSmall READ fontSizeSmall CONSTANT)
+    Q_PROPERTY(int fontSizeMedium READ fontSizeMedium CONSTANT)
+    Q_PROPERTY(int fontSizeLarge READ fontSizeLarge CONSTANT)
     Q_PROPERTY(QColor defaultTextColor READ defaultTextColor CONSTANT)
     Q_PROPERTY(QColor secondaryTextColor READ secondaryTextColor CONSTANT)
     Q_PROPERTY(QColor activeTextColor READ activeTextColor CONSTANT)
@@ -58,6 +64,14 @@ class PlatformStyle : public QObject
 public:
     explicit PlatformStyle(QObject *parent = 0);
     ~PlatformStyle();
+
+    static int paddingSmall();
+    static int paddingMedium();
+    static int paddingLarge();
+
+    static int fontSizeSmall();
+    static int fontSizeMedium();
+    static int fontSizeLarge();
 
     static QColor defaultTextColor();
     static QColor secondaryTextColor();
