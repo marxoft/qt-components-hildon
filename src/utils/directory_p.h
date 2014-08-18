@@ -33,6 +33,7 @@ public:
     enum Filter {
         Dirs = QDir::Dirs,
         AllDirs = QDir::AllDirs,
+        Files = QDir::Files,
         Drives = QDir::Drives,
         NoSymLinks = QDir::NoSymLinks,
         NoDotAndDotDot = QDir::NoDotAndDotDot,
