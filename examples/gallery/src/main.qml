@@ -16,7 +16,6 @@
  */
 
 import org.hildon.components 1.0
-import org.hildon.utils 1.0
 
 Window {
     id: mainWindow
@@ -112,7 +111,7 @@ Window {
 
             anchors.fill: parent
             alignment: Qt.AlignCenter
-            color: platformStyle.notificationTextColor
+            color: platformStyle.reversedTextColor
         }
     }
 
