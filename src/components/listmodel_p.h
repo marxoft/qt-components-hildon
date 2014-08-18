@@ -31,6 +31,7 @@ class ListModel : public QAbstractListModel, public QDeclarativeParserStatus
     Q_PROPERTY(int count READ rowCount NOTIFY countChanged)
     Q_PRIVATE_PROPERTY(ListModel::d_func(), QDeclarativeListProperty<QObject> data READ data)
 
+    Q_INTERFACES(QDeclarativeParserStatus)
     Q_CLASSINFO("DefaultProperty", "data")
 
 public:
