@@ -16,12 +16,37 @@
  */
 
 #include "screensaver_p.h"
-#include "screensaver_p_p.h"
-#include <QApplication>
-#include <QDesktopWidget>
+#include <QWidget>
+#include <QDeclarativeContext>
+#include <QDeclarativeInfo>
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
 #include <QX11Info>
+
+class ScreenSaverPrivate
+{
+
+public:
+    ScreenSaverPrivate(ScreenSaver *parent) :
+        q_ptr(parent),
+        windowId(0),
+        inhibited(false),
+        complete(false)
+    {
+    }
+
+    virtual ~ScreenSaverPrivate() {}
+
+    ScreenSaver *q_ptr;
+
+    WId windowId;
+
+    bool inhibited;
+
+    bool complete;
+
+    Q_DECLARE_PUBLIC(ScreenSaver)
+};
 
 ScreenSaver::ScreenSaver(QObject *parent) :
     QObject(parent),
@@ -46,15 +71,13 @@ bool ScreenSaver::screenSaverInhibited() const {
 }
 
 void ScreenSaver::setScreenSaverInhibited(bool inhibited) {
-    QDesktopWidget *desktop = QApplication::desktop();
-
-    if (!desktop) {
-        return;
-    }
-
     Q_D(ScreenSaver);
 
     d->inhibited = inhibited;
+
+    if ((!d->complete) || (!d->windowId)) {
+        return;
+    }
 
     Atom atom = XInternAtom(QX11Info::display() , "_HILDON_DO_NOT_DISTURB", False);
 
@@ -62,7 +85,7 @@ void ScreenSaver::setScreenSaverInhibited(bool inhibited) {
         long state = 1;
         XChangeProperty(
                     QX11Info::display(),
-                    desktop->winId(),
+                    d->windowId,
                     atom,
                     XA_INTEGER,
                     32,
@@ -71,8 +94,27 @@ void ScreenSaver::setScreenSaverInhibited(bool inhibited) {
                     1);
     }
     else {
-        XDeleteProperty(QX11Info::display(), desktop->winId(), atom);
+        XDeleteProperty(QX11Info::display(), d->windowId, atom);
     }
+}
+
+void ScreenSaver::classBegin() {}
+
+void ScreenSaver::componentComplete() {
+    Q_D(ScreenSaver);
+    d->complete = true;
+
+    if (QDeclarativeContext *context = qmlContext(this)) {
+        if (QObject *pageStack = qvariant_cast<QObject*>(context->contextProperty("pageStack"))) {
+            if (QWidget *currentPage = qvariant_cast<QWidget*>(pageStack->property("currentPage"))) {
+                d->windowId = currentPage->winId();
+                this->setScreenSaverInhibited(d->inhibited);
+                return;
+            }
+        }
+    }
+
+    qmlInfo(this) << tr("Could not find window id");
 }
 
 #include "moc_screensaver_p.cpp"

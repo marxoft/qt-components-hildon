@@ -19,15 +19,18 @@
 #define SCREENSAVER_P_H
 
 #include <QObject>
+#include <QDeclarativeParserStatus>
 #include <qdeclarative.h>
 
 class ScreenSaverPrivate;
 
-class ScreenSaver : public QObject
+class ScreenSaver : public QObject, public QDeclarativeParserStatus
 {
     Q_OBJECT
 
     Q_PROPERTY(bool screenSaverInhibited READ screenSaverInhibited WRITE setScreenSaverInhibited)
+
+    Q_INTERFACES(QDeclarativeParserStatus)
 
 public:
     explicit ScreenSaver(QObject *parent = 0);
@@ -38,6 +41,9 @@ public:
 
 protected:
     ScreenSaver(ScreenSaverPrivate &dd, QObject *parent = 0);
+
+    virtual void classBegin();
+    virtual void componentComplete();
 
     QScopedPointer<ScreenSaverPrivate> d_ptr;
 
