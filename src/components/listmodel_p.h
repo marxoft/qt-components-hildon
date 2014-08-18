@@ -38,9 +38,9 @@ public:
     explicit ListModel(QObject *parent = 0);
     ~ListModel();
 
-    int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
 
-    QVariant data(const QModelIndex &index, int role) const;
+    virtual QVariant data(const QModelIndex &index, int role) const;
 
     Q_INVOKABLE QVariant property(const QModelIndex &index, const QString &name) const;
     Q_INVOKABLE QVariant property(int row, const QString &name) const;
@@ -73,8 +73,8 @@ signals:
 protected:
     ListModel(ListModelPrivate &dd, QObject *parent = 0);
 
-    void classBegin();
-    void componentComplete();
+    virtual void classBegin();
+    virtual void componentComplete();
 
     QScopedPointer<ListModelPrivate> d_ptr;
 
