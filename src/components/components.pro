@@ -47,6 +47,7 @@ HEADERS += \
     informationbox_p_p.h \
     item_p.h \
     item_p_p.h \
+    itemaction_p.h \
     keys_p.h \
     label_p.h \
     listitem_p.h \
@@ -59,6 +60,7 @@ HEADERS += \
     listitemprogressbar_p.h \
     listitemrectangle_p.h \
     listitemtext_p.h \
+    listmodel_p.h \
     listselector_p.h \
     listselector_p_p.h \
     listview_p.h \
@@ -147,6 +149,7 @@ SOURCES += \
     imageproviders.cpp \
     informationbox.cpp \
     item.cpp \
+    itemaction.cpp \
     keys.cpp \
     listitem.cpp \
     listitemcontent.cpp \
@@ -156,6 +159,7 @@ SOURCES += \
     listitemprogressbar.cpp \
     listitemrectangle.cpp \
     listitemtext.cpp \
+    listmodel.cpp \
     listselector.cpp \
     listview.cpp \
     loader.cpp \

@@ -37,6 +37,7 @@
 #include "imageproviders_p.h"
 #include "informationbox_p.h"
 #include "item_p.h"
+#include "itemaction_p.h"
 #include "keys_p.h"
 #include "label_p.h"
 #include "listitem_p.h"
@@ -45,6 +46,7 @@
 #include "listitemprogressbar_p.h"
 #include "listitemrectangle_p.h"
 #include "listitemtext_p.h"
+#include "listmodel_p.h"
 #include "listselector_p.h"
 #include "listview_p.h"
 #include "loader_p.h"
@@ -137,6 +139,7 @@ void Plugin::registerTypes(const char *uri) {
     qmlRegisterType<ImageBorder>(uri, 1, 0, "ImageBorder");
     qmlRegisterType<InformationBox>(uri, 1, 0, "InformationBox");
     qmlRegisterType<Item>(uri, 1, 0, "Item");
+    qmlRegisterType<ItemAction>(uri, 1, 0, "ItemAction");
     qmlRegisterType<Label>(uri, 1, 0, "Label");
     qmlRegisterType<ListItem>(uri, 1, 0, "ListItem");
     qmlRegisterType<ListItemImage>(uri, 1, 0, "ListItemImage");
@@ -144,6 +147,7 @@ void Plugin::registerTypes(const char *uri) {
     qmlRegisterType<ListItemProgressBar>(uri, 1, 0, "ListItemProgressBar");
     qmlRegisterType<ListItemRectangle>(uri, 1, 0, "ListItemRectangle");
     qmlRegisterType<ListItemText>(uri, 1, 0, "ListItemText");
+    qmlRegisterType<ListModel>(uri, 1, 0, "ListModel");
     qmlRegisterType<ListSelector>(uri, 1, 0, "ListSelector");
     qmlRegisterType<ListView>(uri, 1, 0, "ListView");
     qmlRegisterType<Loader>(uri, 1, 0, "Loader");
