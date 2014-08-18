@@ -19,13 +19,13 @@ class Directory : public QObject
     Q_PROPERTY(uint count READ count NOTIFY pathChanged)
     Q_PROPERTY(QString dirName READ dirName NOTIFY pathChanged)
     Q_PROPERTY(bool exists READ exists NOTIFY pathChanged)
-    Q_PROPERTY(int filter READ filter WRITE setFilter RESET resetFilter NOTIFY filterChanged)
+    Q_PROPERTY(Filters filter READ filter WRITE setFilter RESET resetFilter NOTIFY filterChanged)
     Q_PROPERTY(bool absolute READ isAbsolute NOTIFY pathChanged)
     Q_PROPERTY(bool readable READ isReadable NOTIFY pathChanged)
     Q_PROPERTY(bool relative READ isRelative NOTIFY pathChanged)
     Q_PROPERTY(bool root READ isRoot NOTIFY pathChanged)
     Q_PROPERTY(QStringList nameFilters READ nameFilters WRITE setNameFilters NOTIFY nameFiltersChanged)
-    Q_PROPERTY(int sorting READ sorting WRITE setSorting RESET resetSorting NOTIFY sortingChanged)
+    Q_PROPERTY(SortFlags sorting READ sorting WRITE setSorting RESET resetSorting NOTIFY sortingChanged)
 
     Q_ENUMS(Filter SortFlag)
 
