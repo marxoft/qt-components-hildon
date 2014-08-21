@@ -185,6 +185,7 @@ void ListModel::insert(int row, const QVariantMap &item) {
         }
 
         this->endInsertRows();
+        emit countChanged();
     }
     else {
         this->append(item);
