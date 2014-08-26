@@ -10,7 +10,6 @@ HEADERS += \
     process_p.h \
     process_p_p.h \
     screensaver_p.h \
-    screensaver_p_p.h \
     screenshot_p.h \
     screenshot_p_p.h \
     settings_p.h \
