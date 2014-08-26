@@ -38,20 +38,29 @@ Window {
     DBusMessage {
         id: message
 
+        bus: busSelector.currentIndex
         type: typeSelector.currentIndex
         serviceName: serviceField.text
         path: pathField.text
         interfaceName: interfaceField.text
         methodName: methodField.text
-        arguments: argsField.text.split(",")
         onStatusChanged: {
             switch (status) {
+            case DBusMessage.Loading:
+                replyField.text = qsTr("Loading");
+                return;
             case DBusMessage.Ready:
+            {
+                replyField.text = reply.toString();
                 infobox.showMessage(qsTr("Message sent successfully"));
                 return;
+            }
             case DBusMessage.Error:
+            {
+                replyField.text = qsTr("Error");
                 infobox.showMessage(qsTr("Error sending message"));
                 return;
+            }
             default:
                 return;
             }
@@ -73,6 +82,16 @@ Window {
                 left: parent.left
                 right: parent.right
                 top: parent.top
+            }
+
+            ValueButton {
+                text: qsTr("Bus type")
+                valueText: qsTr("Session bus")
+                selector: ListSelector {
+                    id: busSelector
+
+                    model: [ qsTr("Session bus"), qsTr("System bus") ]
+                }
             }
 
             ValueButton {
@@ -118,7 +137,7 @@ Window {
             }
 
             Label {
-                text: qsTr("Arguments (comma separated)")
+                text: qsTr("Arguments")
             }
 
             TextField {
@@ -127,7 +146,21 @@ Window {
 
             Button {
                 text: qsTr("Send")
-                onClicked: message.send()
+                onClicked: {
+                    message.arguments = eval("(" + argsField.text + ")");
+                    message.send();
+                }
+            }
+
+            Label {
+                text: qsTr("Reply")
+            }
+
+            TextEdit {
+                id: replyField
+
+                height: 200
+                readOnly: true
             }
         }
     }
