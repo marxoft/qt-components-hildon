@@ -7,11 +7,13 @@ TARGET = hildondbus
 HEADERS += \
     dbusadaptor_p.h \
     dbusmessage_p.h \
-    plugin_p.h
+    dbusutils_p.h \
+    plugin_p.h \
 
 SOURCES += \
     dbusadaptor.cpp \
     dbusmessage.cpp \
+    dbusutils.cpp \
     plugin.cpp
 
 qdeclarativesources.files += \
