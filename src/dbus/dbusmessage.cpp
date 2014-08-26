@@ -16,9 +16,11 @@
  */
 
 #include "dbusmessage_p.h"
+#include "dbusutils_p.h"
 #include <QDBusInterface>
-#include <QDBusPendingCallWatcher>
-#include <QDBusPendingReply>
+#include <QDBusConnection>
+#include <QDBusMessage>
+#include <QDBusArgument>
 #include <QDeclarativeInfo>
 
 class DBusMessagePrivate
@@ -28,6 +30,7 @@ public:
     DBusMessagePrivate(DBusMessage *parent) :
         q_ptr(parent),
         path("/"),
+        bus(DBusMessage::SessionBus),
         type(DBusMessage::MethodCallMessage),
         status(DBusMessage::Null)
     {
@@ -44,10 +47,22 @@ public:
         }
         else {
             status = DBusMessage::Loading;
-            QDBusInterface iface(service, path.isEmpty() ? "/" : path, interface);
-            QDBusPendingCall call = iface.asyncCallWithArgumentList(method, arguments);
-            QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(call, q);
-            q->connect(watcher, SIGNAL(finished(QDBusPendingCallWatcher*)), q, SLOT(_q_onReplyFinished(QDBusPendingCallWatcher*)));
+            QDBusMessage message = QDBusMessage::createMethodCall(service, path.isEmpty() ? "/" : path, interface, method);
+            QDBusConnection connection = (bus == DBusMessage::SystemBus ? QDBusConnection::systemBus() : QDBusConnection::sessionBus());
+
+            if (!arguments.isEmpty()) {
+                if (convertedArguments.isEmpty()) {
+                    QDBusInterface iface(service, path.isEmpty() ? "/" : path, interface, connection);
+                    convertedArguments = DBusUtils::convertMethodCallArguments(iface, arguments);
+                }
+
+                message.setArguments(convertedArguments);
+            }
+
+            if (!connection.callWithCallback(message, q, SLOT(_q_onReplyFinished(QDBusMessage)), SLOT(_q_onReplyError(QDBusError)))) {
+                status = DBusMessage::Error;
+                qmlInfo(q) << DBusMessage::tr("Cannot send message.");
+            }
         }
 
         emit q->statusChanged();
@@ -62,12 +77,23 @@ public:
         }
         else {
             QDBusMessage message = QDBusMessage::createSignal(path, interface, method);
+            QDBusConnection connection = (bus == DBusMessage::SystemBus ? QDBusConnection::systemBus() : QDBusConnection::sessionBus());
 
-            if (QDBusConnection::sessionBus().send(message)) {
+            if (!arguments.isEmpty()) {
+                if (convertedArguments.isEmpty()) {
+                    QDBusInterface iface(service, path.isEmpty() ? "/" : path, interface, connection);
+                    convertedArguments = DBusUtils::convertMethodCallArguments(iface, arguments);
+                }
+
+                message.setArguments(convertedArguments);
+            }
+
+            if (connection.send(message)) {
                 status = DBusMessage::Ready;
             }
             else {
                 status = DBusMessage::Error;
+                qmlInfo(q) << DBusMessage::tr("Cannot send message.");
             }
         }
 
@@ -78,13 +104,23 @@ public:
         Q_Q(DBusMessage);
 
         QDBusMessage message;
-        message.setArguments(arguments);
+        QDBusConnection connection = (bus == DBusMessage::SystemBus ? QDBusConnection::systemBus() : QDBusConnection::sessionBus());
 
-        if (QDBusConnection::sessionBus().send(message)) {
+        if (!arguments.isEmpty()) {
+            if (convertedArguments.isEmpty()) {
+                QDBusInterface iface(service, path.isEmpty() ? "/" : path, interface, connection);
+                convertedArguments = DBusUtils::convertMethodCallArguments(iface, arguments);
+            }
+
+            message.setArguments(convertedArguments);
+        }
+
+        if (connection.send(message)) {
             status = DBusMessage::Ready;
         }
         else {
             status = DBusMessage::Error;
+            qmlInfo(q) << DBusMessage::tr("Cannot send message.");
         }
 
         emit q->statusChanged();
@@ -99,37 +135,49 @@ public:
         }
         else {
             QDBusMessage message = QDBusMessage::createError(arguments.first().toString(), arguments.at(1).toString());
+            QDBusConnection connection = (bus == DBusMessage::SystemBus ? QDBusConnection::systemBus() : QDBusConnection::sessionBus());
 
-            if (QDBusConnection::sessionBus().send(message)) {
+            if (connection.send(message)) {
                 status = DBusMessage::Ready;
             }
             else {
                 status = DBusMessage::Error;
+                qmlInfo(q) << DBusMessage::tr("Cannot send message.");
             }
         }
 
         emit q->statusChanged();
     }
 
-    void _q_onReplyFinished(QDBusPendingCallWatcher *watcher) {
-        Q_Q(DBusMessage);
+    void _q_onReplyFinished(const QDBusMessage &replyMessage) {
+        QVariantList list;
 
-        QDBusPendingReply<QVariant> reply = *watcher;
+        foreach (QVariant arg, replyMessage.arguments()) {
+            if (arg.canConvert<QDBusArgument>()) {
+                list.append(DBusUtils::dbusArgumentToVariant(arg.value<QDBusArgument>()));
+            }
+            else {
+                list.append(arg);
+            }
+        }
 
-        if (reply.isError()) {
-            status = DBusMessage::Error;
+        if (list.size() == 1) {
+            reply = list.first();
         }
         else {
-            status = DBusMessage::Ready;
+            reply = list;
         }
 
-        if (reply.count()) {
-            response = reply.argumentAt(0);
-        }
-
+        Q_Q(DBusMessage);
+        status = DBusMessage::Ready;
         emit q->statusChanged();
+    }
 
-        watcher->deleteLater();
+    void _q_onReplyError(const QDBusError &error) {
+        Q_Q(DBusMessage);
+        status = DBusMessage::Error;
+        qmlInfo(q) << DBusMessage::tr("Error received: ") << error.message();
+        emit q->statusChanged();
     }
 
     DBusMessage *q_ptr;
@@ -140,12 +188,15 @@ public:
     QString method;
 
     QVariantList arguments;
+    QVariantList convertedArguments;
+
+    DBusMessage::BusType bus;
 
     DBusMessage::MessageType type;
 
     DBusMessage::Status status;
 
-    QVariant response;
+    QVariant reply;
 
     Q_DECLARE_PUBLIC(DBusMessage)
 };
@@ -174,6 +225,7 @@ void DBusMessage::setServiceName(const QString &name) {
     if (name != this->serviceName()) {
         Q_D(DBusMessage);
         d->service = name;
+        d->convertedArguments.clear();
         emit serviceNameChanged();
     }
 }
@@ -188,6 +240,7 @@ void DBusMessage::setPath(const QString &path) {
     if (path != this->path()) {
         Q_D(DBusMessage);
         d->path = path;
+        d->convertedArguments.clear();
         emit pathChanged();
     }
 }
@@ -202,6 +255,7 @@ void DBusMessage::setInterfaceName(const QString &name) {
     if (name != this->interfaceName()) {
         Q_D(DBusMessage);
         d->interface = name;
+        d->convertedArguments.clear();
         emit interfaceNameChanged();
     }
 }
@@ -216,6 +270,7 @@ void DBusMessage::setMethodName(const QString &name) {
     if (name != this->methodName()) {
         Q_D(DBusMessage);
         d->method = name;
+        d->convertedArguments.clear();
         emit methodNameChanged();
     }
 }
@@ -228,9 +283,24 @@ QVariantList DBusMessage::arguments() const {
 
 void DBusMessage::setArguments(const QVariantList &args) {
     Q_D(DBusMessage);
-
     d->arguments = args;
+    d->convertedArguments.clear();
     emit argumentsChanged();
+}
+
+DBusMessage::BusType DBusMessage::bus() const {
+    Q_D(const DBusMessage);
+
+    return d->bus;
+}
+
+void DBusMessage::setBus(DBusMessage::BusType bus) {
+    if (bus != this->bus()) {
+        Q_D(DBusMessage);
+        d->bus = bus;
+        d->convertedArguments.clear();
+        emit busChanged();
+    }
 }
 
 DBusMessage::MessageType DBusMessage::type() const {
@@ -243,6 +313,7 @@ void DBusMessage::setType(MessageType type) {
     if (type != this->type()) {
         Q_D(DBusMessage);
         d->type = type;
+        d->convertedArguments.clear();
         emit typeChanged();
     }
 }
@@ -253,10 +324,10 @@ DBusMessage::Status DBusMessage::status() const {
     return d->status;
 }
 
-QVariant DBusMessage::response() const {
+QVariant DBusMessage::reply() const {
     Q_D(const DBusMessage);
 
-    return d->response;
+    return d->reply;
 }
 
 void DBusMessage::send() {
@@ -266,7 +337,7 @@ void DBusMessage::send() {
     case DBusMessage::Loading:
         return;
     default:
-        d->response = QVariant();
+        d->reply = QVariant();
         break;
     }
 

@@ -21,7 +21,8 @@
 #include <QObject>
 #include <qdeclarative.h>
 
-class QDBusPendingCallWatcher;
+class QDBusMessage;
+class QDBusError;
 class DBusMessagePrivate;
 
 class DBusMessage : public QObject
@@ -33,13 +34,19 @@ class DBusMessage : public QObject
     Q_PROPERTY(QString interfaceName READ interfaceName WRITE setInterfaceName NOTIFY interfaceNameChanged)
     Q_PROPERTY(QString methodName READ methodName WRITE setMethodName NOTIFY methodNameChanged)
     Q_PROPERTY(QVariantList arguments READ arguments WRITE setArguments NOTIFY argumentsChanged)
+    Q_PROPERTY(BusType bus READ bus WRITE setBus NOTIFY busChanged)
     Q_PROPERTY(MessageType type READ type WRITE setType NOTIFY typeChanged)
     Q_PROPERTY(Status status READ status NOTIFY statusChanged)
-    Q_PROPERTY(QVariant response READ response NOTIFY statusChanged)
+    Q_PROPERTY(QVariant reply READ reply NOTIFY statusChanged)
 
-    Q_ENUMS(MessageType Status)
+    Q_ENUMS(BusType MessageType Status)
 
 public:
+    enum BusType {
+        SessionBus = 0,
+        SystemBus
+    };
+
     enum MessageType {
         MethodCallMessage = 0,
         SignalMessage,
@@ -72,12 +79,15 @@ public:
     QVariantList arguments() const;
     void setArguments(const QVariantList &args);
 
+    BusType bus() const;
+    void setBus(BusType bus);
+
     MessageType type() const;
     void setType(MessageType type);
 
     Status status() const;
 
-    QVariant response() const;
+    QVariant reply() const;
 
 public slots:
     void send();
@@ -88,6 +98,7 @@ signals:
     void interfaceNameChanged();
     void methodNameChanged();
     void argumentsChanged();
+    void busChanged();
     void typeChanged();
     void statusChanged();
 
@@ -98,7 +109,8 @@ protected:
 
     Q_DECLARE_PRIVATE(DBusMessage)
 
-    Q_PRIVATE_SLOT(d_func(), void _q_onReplyFinished(QDBusPendingCallWatcher*))
+    Q_PRIVATE_SLOT(d_func(), void _q_onReplyFinished(QDBusMessage))
+    Q_PRIVATE_SLOT(d_func(), void _q_onReplyError(QDBusError))
 
 private:
     Q_DISABLE_COPY(DBusMessage)
