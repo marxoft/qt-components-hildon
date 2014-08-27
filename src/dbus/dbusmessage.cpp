@@ -71,7 +71,7 @@ public:
     void emitSignal() {
         Q_Q(DBusMessage);
 
-        if ((path.isEmpty()) || (interface.isEmpty()) || (method.isEmpty())) {
+        if ((path.isEmpty()) || (method.isEmpty())) {
             status = DBusMessage::Error;
             qmlInfo(q) << DBusMessage::tr("Cannot send message. Missing parameters.");
         }
