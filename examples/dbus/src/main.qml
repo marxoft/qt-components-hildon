@@ -31,8 +31,8 @@ Window {
         id: adaptor
 
         serviceName: "org.hildon.QtComponentsHildon"
-        path: "/"
-        target: infobox
+        path: "/org/hildon/QtComponentsHildon"
+        target: mainWindow
     }
 
     DBusMessage {
@@ -147,7 +147,7 @@ Window {
             Button {
                 text: qsTr("Send")
                 onClicked: {
-                    message.arguments = eval("(" + argsField.text + ")");
+                    message.arguments = (argsField.text ? eval("(" + argsField.text + ")") : []);
                     message.send();
                 }
             }
