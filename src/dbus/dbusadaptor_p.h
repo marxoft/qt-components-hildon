@@ -28,15 +28,26 @@ class DBusAdaptor : public QObject, public QDeclarativeParserStatus
 {
     Q_OBJECT
 
-    Q_PROPERTY(QString serviceName READ serviceName WRITE setServiceName)
-    Q_PROPERTY(QString path READ path WRITE setPath)
+    Q_PROPERTY(BusType bus READ bus WRITE setBus NOTIFY busChanged)
+    Q_PROPERTY(QString serviceName READ serviceName WRITE setServiceName NOTIFY serviceNameChanged)
+    Q_PROPERTY(QString path READ path WRITE setPath NOTIFY pathChanged)
     Q_PROPERTY(QObject* target READ target WRITE setTarget RESET resetTarget NOTIFY targetChanged)
+
+    Q_ENUMS(BusType)
 
     Q_INTERFACES(QDeclarativeParserStatus)
 
 public:
+    enum BusType {
+        SessionBus = 0,
+        SystemBus
+    };
+
     explicit DBusAdaptor(QObject *parent = 0);
     ~DBusAdaptor();
+
+    BusType bus() const;
+    void setBus(BusType bus);
 
     QString serviceName() const;
     void setServiceName(const QString &name);
@@ -49,6 +60,9 @@ public:
     void resetTarget();
 
 signals:
+    void busChanged();
+    void serviceNameChanged();
+    void pathChanged();
     void targetChanged();
 
 protected:

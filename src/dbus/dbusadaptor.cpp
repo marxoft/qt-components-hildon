@@ -25,6 +25,7 @@ class DBusAdaptorPrivate
 public:
     DBusAdaptorPrivate(DBusAdaptor *parent) :
         q_ptr(parent),
+        bus(DBusAdaptor::SessionBus),
         path("/"),
         target(0),
         complete(false)
@@ -42,13 +43,15 @@ public:
             return;
         }
 
-        if (!serviceRegistered()) {
-            if (QDBusConnection::sessionBus().registerService(service)) {
+        if (!this->serviceRegistered()) {
+            QDBusConnection connection = (bus == DBusAdaptor::SystemBus ? QDBusConnection::systemBus() : QDBusConnection::sessionBus());
+
+            if (connection.registerService(service)) {
                 services[service] = 1;
             }
             else {
                 Q_Q(DBusAdaptor);
-                qmlInfo(q) << DBusAdaptor::tr("Cannot register service") << service;
+                qmlInfo(q) << DBusAdaptor::tr("Cannot register service %1").arg(service);
             }
         }
         else {
@@ -58,12 +61,14 @@ public:
 
     void unregisterService() {
         if (services[service] == 1) {
-            if (QDBusConnection::sessionBus().unregisterService(service)) {
+            QDBusConnection connection = (bus == DBusAdaptor::SystemBus ? QDBusConnection::systemBus() : QDBusConnection::sessionBus());
+
+            if (connection.unregisterService(service)) {
                 services.remove(service);
             }
             else {
                 Q_Q(DBusAdaptor);
-                qmlInfo(q) << DBusAdaptor::tr("Cannot unregister service") << service;
+                qmlInfo(q) << DBusAdaptor::tr("Cannot unregister service %1").arg(service);
             }
         }
         else {
@@ -73,7 +78,9 @@ public:
 
     void registerTarget() {
         if (target) {
-            if (!QDBusConnection::sessionBus().registerObject(path.isEmpty() ? "/" : path,
+            QDBusConnection connection = (bus == DBusAdaptor::SystemBus ? QDBusConnection::systemBus() : QDBusConnection::sessionBus());
+
+            if (!connection.registerObject(path.isEmpty() ? "/" : path,
                                                               target,
                                                               QDBusConnection::ExportAllContents)) {
 
@@ -86,13 +93,16 @@ public:
 
     void unregisterTarget() {
         if (target) {
-            QDBusConnection::sessionBus().unregisterObject(path.isEmpty() ? "/" : path);
+            QDBusConnection connection = (bus == DBusAdaptor::SystemBus ? QDBusConnection::systemBus() : QDBusConnection::sessionBus());
+            connection.unregisterObject(path.isEmpty() ? "/" : path);
         }
     }
 
     static QHash<QString, int> services;
 
     DBusAdaptor *q_ptr;
+
+    DBusAdaptor::BusType bus;
 
     QString service;
     QString path;
@@ -125,6 +135,24 @@ DBusAdaptor::~DBusAdaptor() {
     d->unregisterService();
 }
 
+DBusAdaptor::BusType DBusAdaptor::bus() const {
+    Q_D(const DBusAdaptor);
+
+    return d->bus;
+}
+
+void DBusAdaptor::setBus(BusType bus) {
+    Q_D(DBusAdaptor);
+
+    if (!d->complete) {
+        d->bus = bus;
+        emit busChanged();
+    }
+    else {
+        qmlInfo(this) << tr("Bus can only be set during initialisation");
+    }
+}
+
 QString DBusAdaptor::serviceName() const {
     Q_D(const DBusAdaptor);
 
@@ -136,6 +164,7 @@ void DBusAdaptor::setServiceName(const QString &name) {
 
     if (!d->complete) {
         d->service = name;
+        emit serviceNameChanged();
     }
     else {
         qmlInfo(this) << tr("Service name can only be set during initialisation");
@@ -153,6 +182,7 @@ void DBusAdaptor::setPath(const QString &path) {
 
     if (!d->complete) {
         d->path = path;
+        emit pathChanged();
     }
     else {
         qmlInfo(this) << tr("Path can only be set during initialisation");
@@ -168,13 +198,12 @@ QObject* DBusAdaptor::target() const {
 void DBusAdaptor::setTarget(QObject *obj) {
     if (obj != this->target()) {
         Q_D(DBusAdaptor);
+        d->unregisterTarget();
+        d->target = obj;
+        emit targetChanged();
 
         if (d->complete) {
-            d->unregisterTarget();
-            d->target = obj;
             d->registerTarget();
-
-            emit targetChanged();
         }
     }
 }
