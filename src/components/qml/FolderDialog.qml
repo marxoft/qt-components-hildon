@@ -75,6 +75,8 @@ Dialog {
                 nameFilterDisables: false
                 readOnly: false
             }
+            horizontalScrollMode: ListView.ScrollPerItem
+            horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff
             iconSize: "48x48"
             rootIndex: fileModel.index("/home/user/MyDocs/")
             onClicked: {
