@@ -2,6 +2,7 @@ qt-components-hildon (0.9.0) unstable; urgency=low
 
   * Added ListModel and ItemAction components to the org.hildon.components module.
   * Improvements to DBusMessage and DBusAdaptor components.
+  * Updated example applications (see /opt/qt-components-hildon/bin/ for available examples).
   * Bug fixes.
 
  -- Stuart Howarth <showarth@marxoft.co.uk>  Mon, 27 Aug 2014 23:17:14 +0100
