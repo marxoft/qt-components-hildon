@@ -17,6 +17,7 @@
 
 #include "dbusmessage_p.h"
 #include "dbusutils_p.h"
+#include "qdbusutil_p.h"
 #include <QDBusInterface>
 #include <QDBusConnection>
 #include <QDBusMessage>
@@ -328,6 +329,10 @@ QVariant DBusMessage::reply() const {
     Q_D(const DBusMessage);
 
     return d->reply;
+}
+
+QString DBusMessage::replyString() const {
+    return QDBusUtil::argumentToString(this->reply());
 }
 
 void DBusMessage::send() {

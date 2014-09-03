@@ -8,6 +8,7 @@ HEADERS += \
     dbusadaptor_p.h \
     dbusmessage_p.h \
     dbusutils_p.h \
+    qdbusutil_p.h \
     plugin_p.h \
 
 SOURCES += \

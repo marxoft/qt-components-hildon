@@ -38,6 +38,7 @@ class DBusMessage : public QObject
     Q_PROPERTY(MessageType type READ type WRITE setType NOTIFY typeChanged)
     Q_PROPERTY(Status status READ status NOTIFY statusChanged)
     Q_PROPERTY(QVariant reply READ reply NOTIFY statusChanged)
+    Q_PROPERTY(QString replyString READ replyString NOTIFY statusChanged)
 
     Q_ENUMS(BusType MessageType Status)
 
@@ -88,6 +89,7 @@ public:
     Status status() const;
 
     QVariant reply() const;
+    QString replyString() const;
 
 public slots:
     void send();
