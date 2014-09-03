@@ -5,16 +5,9 @@ QT += declarative
 
 SOURCES += src/main.cpp
 
-RESOURCES += src/resources.qrc
+target.path = /opt/qt-components-hildon/examples/dbus/bin
 
-OTHER_FILES += src/*.qml
+qml.files += $$files(src/qml/*.*)
+qml.path = /opt/qt-components-hildon/examples/dbus/qml
 
-target.path = /opt/qt-components-hildon/bin
-
-#desktopfile.files = qt-components-hildon-dbus.desktop
-#desktopfile.path = /usr/share/applications/hildon
-
-#icon.files = qt-components-hildon-dbus.png
-#icon.path = /usr/share/icons/hicolor/64x64/apps
-
-INSTALLS += target #desktopfile icon
+INSTALLS += target qml

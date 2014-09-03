@@ -27,7 +27,7 @@ int main(int argc, char *argv[]) {
     app.setApplicationName(QObject::tr("Process"));
 
     QDeclarativeEngine engine;
-    QDeclarativeComponent component(&engine, QUrl("qrc:/main.qml"));
+    QDeclarativeComponent component(&engine, QUrl::fromLocalFile("/opt/qt-components-hildon/examples/process/qml/main.qml"));
     component.create();
 
     if (component.isError()) {

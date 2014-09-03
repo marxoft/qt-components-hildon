@@ -27,7 +27,7 @@ int main(int argc, char *argv[]) {
     app.setApplicationName(QObject::tr("Gallery"));
 
     QDeclarativeEngine engine;
-    QDeclarativeComponent component(&engine, QUrl("qrc:/main.qml"));
+    QDeclarativeComponent component(&engine, QUrl::fromLocalFile("/opt/qt-components-hildon/examples/gallery/qml/main.qml"));
     component.create();
 
     if (component.isError()) {
