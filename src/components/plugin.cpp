@@ -58,6 +58,9 @@
 #include "pagestack_p.h"
 #include "platformstyle_p.h"
 #include "progressbar_p.h"
+#include "qdeclarativebind_p.h"
+#include "qdeclarativeconnections_p.h"
+#include "qdeclarativetimer_p.h"
 #include "radiobutton_p.h"
 #include "rectangle_p.h"
 #include "repeater_p.h"
@@ -72,7 +75,6 @@
 #include "text_p.h"
 #include "textedit_p.h"
 #include "textfield_p.h"
-#include "timer_p.h"
 #include "timeselector_p.h"
 #include "toolbar_p.h"
 #include "toolbutton_p.h"
@@ -82,6 +84,7 @@
 #include "zoomarea_p.h"
 #include <QDeclarativeEngine>
 #include <QDeclarativeContext>
+//#include <QDeclarativeComponent>
 
 void Plugin::initializeEngine(QDeclarativeEngine *engine, const char *uri) {
     Q_ASSERT(uri == QLatin1String("org.hildon.components"));
@@ -157,7 +160,9 @@ void Plugin::registerTypes(const char *uri) {
     qmlRegisterType<MultiListSelector>(uri, 1, 0, "MultiListSelector");
     qmlRegisterType<Page>(uri, 1, 0, "Page");
     qmlRegisterType<ProgressBar>(uri, 1, 0, "ProgressBar");
-//    qmlRegisterType<QDeclarativeComponent>(uri, 1, 0, "Component");
+    qmlRegisterType<QDeclarativeBind>(uri, 1, 0, "Binding");
+    //qmlRegisterType<QDeclarativeComponent>(uri, 1, 0, "Component");
+    qmlRegisterType<QDeclarativeTimer>(uri, 1, 0, "Timer");
     qmlRegisterType<QDoubleValidator>(uri, 1, 0, "DoubleValidator");
     qmlRegisterType<QIntValidator>(uri, 1, 0, "IntValidator");
     qmlRegisterType<QRegExpValidator>(uri, 1, 0, "RegExpValidator");
@@ -176,7 +181,6 @@ void Plugin::registerTypes(const char *uri) {
     qmlRegisterType<Text>(uri, 1, 0, "Text");
     qmlRegisterType<TextEdit>(uri, 1, 0, "TextEdit");
     qmlRegisterType<TextField>(uri, 1, 0, "TextField");
-    qmlRegisterType<Timer>(uri, 1, 0, "Timer");
     qmlRegisterType<TimeSelector>(uri, 1, 0, "TimeSelector");
     qmlRegisterType<ToolBar>(uri, 1, 0, "ToolBar");
     qmlRegisterType<ToolButton>(uri, 1, 0, "ToolButton");
@@ -184,6 +188,8 @@ void Plugin::registerTypes(const char *uri) {
     qmlRegisterType<ValueSelector>(uri, 1, 0, "ValueSelector");
     qmlRegisterType<Window>(uri, 1, 0, "Window");
     qmlRegisterType<ZoomArea>(uri, 1, 0, "ZoomArea");
+    
+    qmlRegisterCustomType<QDeclarativeConnections>(uri, 1, 0, "Connections", new QDeclarativeConnectionsParser);
 }
 
 #include "moc_plugin_p.cpp"

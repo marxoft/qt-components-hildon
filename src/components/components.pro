@@ -5,6 +5,32 @@ QT += maemo5 declarative dbus network
 TARGET = hildoncomponents
 
 HEADERS += \
+    private/qdeclarativebinding_p.h \
+    private/qdeclarativecleanup_p.h \
+    private/qdeclarativecontext_p.h \
+    private/qdeclarativecontextscriptclass_p.h \
+    private/qdeclarativecustomparser_p.h \
+    private/qdeclarativedata_p.h \
+    private/qdeclarativedirparser_p.h \
+    private/qdeclarativeengine_p.h \
+    private/qdeclarativeglobal_p.h \
+    private/qdeclarativeguard_p.h \
+    private/qdeclarativeimport_p.h \
+    private/qdeclarativeintegercache_p.h \
+    private/qdeclarativemetatype_p.h \
+    private/qdeclarativenotifier_p.h \
+    private/qdeclarativenullablevalue_p_p.h \
+    private/qdeclarativeobjectscriptclass_p.h \
+    private/qdeclarativeparser_p.h \
+    private/qdeclarativepropertycache_p.h \
+    private/qdeclarativeproperty_p.h \
+    private/qdeclarativerefcount_p.h \
+    private/qdeclarativescriptparser_p.h \
+    private/qdeclarativetypenamecache_p.h \
+    private/qdeclarativevaluetype_p.h \
+    private/qdeclarativevaluetypescriptclass_p.h \
+    private/qobject_p.h \
+    private/qscriptdeclarativeclass_p.h \
     action_p.h \
     actiongroup_p.h \
     actiongroup_p_p.h \
@@ -81,6 +107,9 @@ HEADERS += \
     platformstyle_p.h \
     progressbar_p.h \
     progressbar_p_p.h \
+    qdeclarativebind_p.h \
+    qdeclarativeconnections_p.h \
+    qdeclarativetimer_p.h \
     radiobutton_p.h \
     radiobutton_p_p.h \
     rectangle_p.h \
@@ -108,8 +137,6 @@ HEADERS += \
     texteditautoresizer_p.h \
     textfield_p.h \
     textfield_p_p.h \
-    timer_p.h \
-    timer_p_p.h \
     timeselector_p.h \
     toolbar_p.h \
     toolbar_p_p.h \
@@ -185,7 +212,6 @@ SOURCES += \
     text.cpp \
     textedit.cpp \
     textfield.cpp \
-    timer.cpp \
     timeselector.cpp \
     toolbar.cpp \
     toolbutton.cpp \
