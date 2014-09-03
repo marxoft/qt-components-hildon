@@ -5,4 +5,5 @@ SUBDIRS = \
     webkit \
     filesystemmodel \
     dbus \
+    tracker \
     components
