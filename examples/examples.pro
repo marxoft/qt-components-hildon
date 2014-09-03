@@ -5,4 +5,5 @@ SUBDIRS += \
     gallery \
     network \
     process \
-    screenshot
+    screenshot \
+    tracker
