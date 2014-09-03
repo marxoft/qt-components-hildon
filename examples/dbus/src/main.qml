@@ -37,7 +37,7 @@ Window {
 
     DBusMessage {
         id: message
-
+       
         bus: busSelector.currentIndex
         type: typeSelector.currentIndex
         serviceName: serviceField.text
@@ -51,7 +51,7 @@ Window {
                 return;
             case DBusMessage.Ready:
             {
-                replyField.text = reply.toString();
+                replyField.text = replyString;
                 infobox.showMessage(qsTr("Message sent successfully"));
                 return;
             }
@@ -145,6 +145,8 @@ Window {
             }
 
             Button {
+                id: sendButton
+                
                 text: qsTr("Send")
                 onClicked: {
                     message.arguments = (argsField.text ? eval("(" + argsField.text + ")") : []);
@@ -193,6 +195,7 @@ Window {
         }
 
         buttons: Button {
+            id: dialogButton
             text: qsTr("Done")
             onClicked: dialog.accept()
         }
