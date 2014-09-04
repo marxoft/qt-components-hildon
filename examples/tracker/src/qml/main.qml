@@ -30,25 +30,25 @@ Window {
         id: view
         
         anchors.fill: parent
-        model: [ 
-            { "name": qsTr("Images"), "icon": "/usr/share/icons/hicolor/48x48/hildon/general_image.png", },
-            { "name": qsTr("Audio"), "icon": "/usr/share/icons/hicolor/48x48/hildon/general_audio_file.png", },
-            { "name": qsTr("Video"), "icon": "/usr/share/icons/hicolor/48x48/hildon/general_video_file.png", }
+        model: [
+            {
+                "name": qsTr("Images"),
+                "icon": "/usr/share/icons/hicolor/48x48/hildon/general_image.png",
+                "page": Qt.resolvedUrl("ImagesPage.qml")
+            },
+            {
+                "name": qsTr("Music"),
+                "icon": "/usr/share/icons/hicolor/48x48/hildon/general_audio_file.png",
+                "page": Qt.resolvedUrl("AudioPage.qml")
+            },
+            {
+                "name": qsTr("Videos"),
+                "icon": "/usr/share/icons/hicolor/48x48/hildon/general_video_file.png",
+                "page": Qt.resolvedUrl("VideoPage.qml")
+            }
         ]
         delegate: MainListDelegate {}
-        onActivated: {
-            switch (QModelIndex.row(view.currentIndex)) {
-            case 0:
-                pageStack.push(Qt.resolvedUrl("ImagesPage.qml"), {});
-                break;
-            case 1:
-                pageStack.push(Qt.resolvedUrl("AudioPage.qml"), {});
-                break;
-            case 2:
-                pageStack.push(Qt.resolvedUrl("VideoPage.qml"), {});
-                break;
-            }
-        }
+        onActivated: pageStack.push(model[QModelIndex.row(view.currentIndex)].page, {})
     }
 
     Dialog {

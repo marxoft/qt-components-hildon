@@ -21,7 +21,7 @@
  Page {
     id: root
     
-    windowTitle: qsTr("Audio")
+    windowTitle: qsTr("Music")
     
     ListView {
         id: view

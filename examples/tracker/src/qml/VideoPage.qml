@@ -21,7 +21,7 @@
  Page {
     id: root
     
-    windowTitle: qsTr("Video")
+    windowTitle: qsTr("Videos")
     
     ListView {
         id: view
