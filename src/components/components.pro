@@ -5,6 +5,8 @@ QT += maemo5 declarative dbus network
 TARGET = hildoncomponents
 
 HEADERS += \
+    private/qbitfield_p.h \
+    private/qobject_p.h \
     private/qdeclarativebinding_p.h \
     private/qdeclarativecleanup_p.h \
     private/qdeclarativecontext_p.h \
@@ -26,10 +28,11 @@ HEADERS += \
     private/qdeclarativeproperty_p.h \
     private/qdeclarativerefcount_p.h \
     private/qdeclarativescriptparser_p.h \
+    private/qdeclartivetypeloader_p.h \
     private/qdeclarativetypenamecache_p.h \
     private/qdeclarativevaluetype_p.h \
     private/qdeclarativevaluetypescriptclass_p.h \
-    private/qobject_p.h \
+    private/qdeclarativecomponent_p.h \
     private/qscriptdeclarativeclass_p.h \
     action_p.h \
     actiongroup_p.h \

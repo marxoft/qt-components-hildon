@@ -82,9 +82,8 @@
 #include "valueselector_p.h"
 #include "window_p.h"
 #include "zoomarea_p.h"
-#include <QDeclarativeEngine>
+#include "private/qdeclarativecomponent_p.h"
 #include <QDeclarativeContext>
-//#include <QDeclarativeComponent>
 
 void Plugin::initializeEngine(QDeclarativeEngine *engine, const char *uri) {
     Q_ASSERT(uri == QLatin1String("org.hildon.components"));
@@ -115,12 +114,12 @@ void Plugin::registerTypes(const char *uri) {
     qmlRegisterUncreatableType<QWidget>(uri, 1, 0, "Widget", "");
     qmlRegisterUncreatableType<QAbstractButton>(uri, 1, 0, "AbstractButton", "");
     qmlRegisterUncreatableType<QHeaderView>(uri, 1, 0, "QHeaderView", "");
+    qmlRegisterUncreatableType<Anchors>(uri, 1, 0, "Anchors", "");
     qmlRegisterUncreatableType<Keys>(uri, 1, 0, "Keys", "");
     qmlRegisterUncreatableType<KeyEvent>(uri, 1, 0, "KeyEvent", "");
 
     qmlRegisterType<Action>(uri, 1, 0, "Action");
     qmlRegisterType<ActionGroup>(uri, 1, 0, "ActionGroup");
-    qmlRegisterType<Anchors>(uri, 1, 0, "Anchors");
     qmlRegisterType<Border>(uri, 1, 0, "Border");
     qmlRegisterType<BorderImage>(uri, 1, 0, "BorderImage");
     qmlRegisterType<Button>(uri, 1, 0, "Button");
@@ -161,7 +160,7 @@ void Plugin::registerTypes(const char *uri) {
     qmlRegisterType<Page>(uri, 1, 0, "Page");
     qmlRegisterType<ProgressBar>(uri, 1, 0, "ProgressBar");
     qmlRegisterType<QDeclarativeBind>(uri, 1, 0, "Binding");
-    //qmlRegisterType<QDeclarativeComponent>(uri, 1, 0, "Component");
+    qmlRegisterType<QDeclarativeComponent>(uri, 1, 0, "Component");
     qmlRegisterType<QDeclarativeTimer>(uri, 1, 0, "Timer");
     qmlRegisterType<QDoubleValidator>(uri, 1, 0, "DoubleValidator");
     qmlRegisterType<QIntValidator>(uri, 1, 0, "IntValidator");
