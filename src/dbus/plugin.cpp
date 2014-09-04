@@ -17,6 +17,7 @@
 
 #include "plugin_p.h"
 #include "dbusadaptor_p.h"
+#include "dbusconnections_p.h"
 #include "dbusmessage_p.h"
 
 void Plugin::registerTypes(const char *uri) {
@@ -24,6 +25,8 @@ void Plugin::registerTypes(const char *uri) {
 
     qmlRegisterType<DBusAdaptor>(uri, 1, 0, "DBusAdaptor");
     qmlRegisterType<DBusMessage>(uri, 1, 0, "DBusMessage");
+    
+    qmlRegisterCustomType<DBusConnections>(uri, 1, 0, "DBusConnections", new QDeclarativeConnectionsParser);
 }
 
 #include "moc_plugin_p.cpp"
