@@ -23,7 +23,10 @@ Window {
     windowTitle: qsTr("Tracker")
     tools: Action {
         text: qsTr("About")
-        onTriggered: dialog.open()
+        onTriggered: {
+            loader.sourceComponent = dialog;
+            loader.item.open();
+        }
     }
 
     ListView {
@@ -50,20 +53,26 @@ Window {
         delegate: MainListDelegate {}
         onActivated: pageStack.push(model[QModelIndex.row(view.currentIndex)].page, {})
     }
+    
+    Loader {
+        id: loader
+    }
 
-    Dialog {
+    Component {
         id: dialog
+        
+        Dialog {
+            windowTitle: qsTr("About")
+            content: Label {
+                anchors.fill: parent
+                wordWrap: true
+                text: qsTr("Qt Components Hildon Tracker is a demo of the Qt Components Hildon Tracker module.")
+            }
 
-        windowTitle: qsTr("About")
-        content: Label {
-            anchors.fill: parent
-            wordWrap: true
-            text: qsTr("Qt Components Hildon Tracker is a demo of the Qt Components Hildon Tracker module.")
-        }
-
-        buttons: Button {
-            text: qsTr("Done")
-            onClicked: dialog.accept()
+            buttons: Button {
+                text: qsTr("Done")
+                onClicked: dialog.accept()
+            }
         }
     }
 }
