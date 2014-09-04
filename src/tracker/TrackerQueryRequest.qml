@@ -97,4 +97,11 @@ QtObject {
             root.status = status;
         }
     }
+    
+    DBusConnections {
+        serviceName: "org.freedesktop.Tracker"
+        path: "/org/freedesktop/Tracker"
+        interfaceName: root.autoUpdate ? "org.freedesktop.Tracker" : ""
+        onIndexFinished: root.reload()
+    }
 }
