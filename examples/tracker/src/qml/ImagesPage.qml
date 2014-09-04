@@ -41,7 +41,7 @@
             onStatusChanged: root.showProgressIndicator = (status == 1)
         }
         delegate: ImageListDelegate {}
-        onClicked: {
+        onActivated: {
             dialog.uri = imageModel.property(QModelIndex.row(currentIndex), "File:Uri");
             dialog.open();
             dialog.reload();

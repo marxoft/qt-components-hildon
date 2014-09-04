@@ -38,7 +38,7 @@
             onStatusChanged: root.showProgressIndicator = (status == 1)
         }
         delegate: AudioListDelegate {}
-        onClicked: {
+        onActivated: {
             dialog.uri = audioModel.property(QModelIndex.row(currentIndex), "File:Uri");
             dialog.open();
             dialog.reload();

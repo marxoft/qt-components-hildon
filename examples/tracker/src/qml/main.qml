@@ -36,7 +36,7 @@ Window {
             { "name": qsTr("Video"), "icon": "/usr/share/icons/hicolor/48x48/hildon/general_video_file.png", }
         ]
         delegate: MainListDelegate {}
-        onClicked: {
+        onActivated: {
             switch (QModelIndex.row(view.currentIndex)) {
             case 0:
                 pageStack.push(Qt.resolvedUrl("ImagesPage.qml"), {});

@@ -38,7 +38,7 @@
             onStatusChanged: root.showProgressIndicator = (status == 1)
         }
         delegate: VideoListDelegate {}
-        onClicked: {
+        onActivated: {
             dialog.uri = videoModel.property(QModelIndex.row(currentIndex), "File:Uri");
             dialog.open();
             dialog.reload();
