@@ -39,15 +39,22 @@
         }
         delegate: VideoListDelegate {}
         onActivated: {
-            dialog.uri = videoModel.property(QModelIndex.row(currentIndex), "File:Uri");
-            dialog.open();
-            dialog.reload();
+            loader.sourceComponent = dialog;
+            loader.item.uri = videoModel.property(QModelIndex.row(currentIndex), "File:Uri");
+            loader.item.open();
+            loader.item.reload();
         }
     }
     
-    VideoDetailsDialog {
-        id: dialog
+    Loader {
+        id: loader
     }
     
-    onVisibleChanged: if (visible) videoModel.reload();
+    Component {
+        id: dialog
+        
+        VideoDetailsDialog {}
+    }
+    
+    Component.onCompleted: videoModel.reload()
 }

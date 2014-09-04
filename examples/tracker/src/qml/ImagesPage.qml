@@ -42,15 +42,22 @@
         }
         delegate: ImageListDelegate {}
         onActivated: {
-            dialog.uri = imageModel.property(QModelIndex.row(currentIndex), "File:Uri");
-            dialog.open();
-            dialog.reload();
+            loader.sourceComponent = dialog;
+            loader.item.uri = imageModel.property(QModelIndex.row(currentIndex), "File:Uri");
+            loader.item.open();
+            loader.item.reload();
         }
     }
     
-    ImageDetailsDialog {
-        id: dialog
+    Loader {
+        id: loader
     }
     
-    onVisibleChanged: if (visible) imageModel.reload();
+    Component {
+        id: dialog
+        
+        ImageDetailsDialog {}
+    }
+    
+    Component.onCompleted: imageModel.reload()
 }

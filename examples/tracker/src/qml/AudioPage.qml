@@ -39,15 +39,22 @@
         }
         delegate: AudioListDelegate {}
         onActivated: {
-            dialog.uri = audioModel.property(QModelIndex.row(currentIndex), "File:Uri");
-            dialog.open();
-            dialog.reload();
+            loader.sourceComponent = dialog;
+            loader.item.uri = audioModel.property(QModelIndex.row(currentIndex), "File:Uri");
+            loader.item.open();
+            loader.item.reload();
         }
     }
     
-    AudioDetailsDialog {
-        id: dialog
+    Loader {
+        id: loader
     }
     
-    onVisibleChanged: if (visible) audioModel.reload();
+    Component {
+        id: dialog
+        
+        AudioDetailsDialog {}
+    }
+    
+    Component.onCompleted: audioModel.reload()
 }
