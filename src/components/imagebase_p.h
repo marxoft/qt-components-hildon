@@ -27,7 +27,8 @@ class ImageBase : public Item
     Q_OBJECT
 
     Q_PROPERTY(QUrl source READ source WRITE setSource NOTIFY sourceChanged)
-    Q_PROPERTY(QSize sourceSize READ sourceSize NOTIFY sourceSizeChanged)
+    Q_PROPERTY(QSize sourceSize READ sourceSize WRITE setSourceSize RESET resetSourceSize NOTIFY sourceSizeChanged)
+    Q_PROPERTY(bool asynchronous READ asynchronous WRITE setAsynchronous NOTIFY asynchronousChanged)
     Q_PROPERTY(bool cache READ cache WRITE setCache NOTIFY cacheChanged)
     Q_PROPERTY(bool mirror READ mirror WRITE setMirror NOTIFY mirrorChanged)
     Q_PROPERTY(bool smooth READ smooth WRITE setSmooth NOTIFY smoothChanged)
@@ -51,6 +52,11 @@ public:
     void setSource(const QUrl &url);
 
     QSize sourceSize() const;
+    void setSourceSize(const QSize &size);
+    void resetSourceSize();
+    
+    bool asynchronous() const;
+    void setAsynchronous(bool async);
 
     bool cache() const;
     void setCache(bool cache);
@@ -68,6 +74,7 @@ public:
 signals:
     void sourceChanged();
     void sourceSizeChanged();
+    void asynchronousChanged();
     void cacheChanged();
     void mirrorChanged();
     void smoothChanged();
@@ -77,11 +84,14 @@ signals:
 protected:
     ImageBase(ImageBasePrivate &dd, QWidget *parent = 0);
 
-    void componentComplete();
+    virtual void componentComplete();
 
-    void paintEvent(QPaintEvent *event);
+    virtual QSize sizeHint() const;
 
-    Q_DECLARE_PRIVATE(ImageBase)    
+    Q_DECLARE_PRIVATE(ImageBase)
+    
+    Q_PRIVATE_SLOT(d_func(), void _q_requestProgress(qint64,qint64))
+    Q_PRIVATE_SLOT(d_func(), void _q_requestFinished())
 
 private:
     Q_DISABLE_COPY(ImageBase)

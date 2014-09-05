@@ -17,8 +17,8 @@
 
 #include "listitemimage_p.h"
 #include "listitemimagebase_p_p.h"
-#include "imageloader_p.h"
 #include <QPainter>
+#include <QTransform>
 
 class ListItemImagePrivate : public ListItemImageBasePrivate
 {
@@ -26,65 +26,64 @@ class ListItemImagePrivate : public ListItemImageBasePrivate
 public:
     ListItemImagePrivate(ListItemImage *parent) :
         ListItemImageBasePrivate(parent),
-        fillMode(ListItemImage::Stretch)
+        fillMode(ListItemImage::Stretch),
+        paintedWidth(0),
+        paintedHeight(0)
     {
+    }
+    
+    void updatePaintedGeometry() {
+        Q_Q(ListItemImage);
+        
+        if (fillMode == ListItemImage::PreserveAspectFit) {
+            if ((!pix.width()) || (!pix.height())) {
+                return;
+            }
+            
+            int w = q->width() > 0 ? q->width() : pix.width();
+            int widthScale = w / pix.width();
+            int h = q->height() > 0 ? q->height() : pix.height();
+            int heightScale = h / pix.height();
+            
+            if (widthScale <= heightScale) {
+                paintedWidth = w;
+                paintedHeight = widthScale * pix.height();
+            }
+            else if (heightScale < widthScale) {
+                paintedWidth = heightScale * pix.width();
+                paintedHeight = h;
+            }
+        }
+        else if (fillMode == ListItemImage::PreserveAspectCrop) {
+            if ((!pix.width()) || (!pix.height())) {
+                return;
+            }
+            
+            int widthScale = q->width() / pix.width();
+            int heightScale = q->height() / pix.height();
+            
+            if (widthScale < heightScale) {
+                widthScale = heightScale;
+            }
+            else if (heightScale < widthScale) {
+                heightScale = widthScale;
+            }
+            
+            paintedWidth = widthScale * pix.width();
+            paintedHeight = heightScale * pix.height();
+        }
+        else {
+            paintedWidth = q->width();
+            paintedHeight = q->height();
+        }
+        
+        emit q->paintedGeometryChanged();
     }
 
     ListItemImage::FillMode fillMode;
-
-    void load() {
-        Q_Q(ListItemImage);
-
-        if (source.isEmpty()) {
-            image = QImage();
-            progress = 1.0;
-            status = ListItemImage::Null;
-            emit q->progressChanged();
-            emit q->statusChanged();
-            return;
-        }
-
-        progress = 0.0;
-        status = ListItemImage::Loading;
-        emit q->progressChanged();
-        emit q->statusChanged();
-
-        ImageLoader *loader = new ImageLoader;
-        q->connect(loader, SIGNAL(finished(ImageLoader*)), q, SLOT(_q_onLoaderFinished(ImageLoader*)));
-        q->connect(loader, SIGNAL(canceled(ImageLoader*)), q, SLOT(_q_onLoaderCanceled(ImageLoader*)));
-        q->connect(loader, SIGNAL(progressChanged(qreal)), q, SLOT(_q_onLoaderProgressChanged(qreal)));
-        q->connect(q, SIGNAL(destroyed()), loader, SLOT(deleteLater()));
-        loader->loadImage(source, QSize(q->width(), q->height()), sourceSize, fillMode, smooth ? Qt::SmoothTransformation : Qt::FastTransformation, mirror, cache);
-    }
-
-    void _q_onLoaderFinished(ImageLoader *loader) {
-        Q_Q(ListItemImage);
-
-        image = loader->image();
-        loader->deleteLater();
-
-        progress = 1.0;
-        status = image.isNull() ? ListItemImage::Error : ListItemImage::Ready;
-        emit q->progressChanged();
-        emit q->statusChanged();
-    }
-
-    void _q_onLoaderCanceled(ImageLoader *loader) {
-        Q_Q(ListItemImage);
-
-        loader->deleteLater();
-        progress = 0.0;
-        status = ListItemImage::Null;
-        emit q->progressChanged();
-        emit q->statusChanged();
-    }
-
-    void _q_onLoaderProgressChanged(qreal p) {
-        Q_Q(ListItemImage);
-
-        progress = p;
-        emit q->progressChanged();
-    }
+    
+    int paintedWidth;
+    int paintedHeight;
 
     Q_DECLARE_PUBLIC(ListItemImage)
 };
@@ -109,41 +108,113 @@ void ListItemImage::setFillMode(FillMode mode) {
     if (mode != this->fillMode()) {
         Q_D(ListItemImage);
         d->fillMode = mode;
+        this->update();
+        d->updatePaintedGeometry();
         emit fillModeChanged();
-
-        if ((d->complete) && (!this->source().isEmpty())) {
-//            d->load();
-        }
     }
 }
 
-void ListItemImage::setSourceSize(const QSize &size) {
-    if (size != this->sourceSize()) {
+QPixmap ListItemImage::pixmap() const {
+    Q_D(const ListItemImage);
+    
+    return d->pix.pixmap();
+}
+
+void ListItemImage::setPixmap(const QPixmap &p) {
+    Q_D(ListItemImage);
+    
+    if (this->source().isEmpty()) {
         Q_D(ListItemImage);
-        d->sourceSize = size;
-
-        if ((d->complete) && (!this->source().isEmpty())) {
-//            d->load();
-        }
+        d->pix.setPixmap(p);
+        d->pixmapChange();
+        d->status = d->pix.isNull() ? Null : Ready;
+        this->update();
     }
 }
 
-void ListItemImage::resetSourceSize() {
-    this->setSourceSize(QSize());
+int ListItemImage::paintedWidth() const {
+    Q_D(const ListItemImage);
+    
+    return d->paintedWidth;
+}
+
+int ListItemImage::paintedHeight() const {
+    Q_D(const ListItemImage);
+    
+    return d->paintedHeight;
 }
 
 void ListItemImage::paint(QPainter *painter, const QRect &rect) {
-    Q_D(const ListItemImage);
+    Q_D(ListItemImage);
 
-    painter->save();
-    painter->setOpacity(this->opacity());
-    painter->setRenderHint(QPainter::Antialiasing, this->smooth());
-    painter->drawImage(QRect(rect.left() + this->x(),
-                             rect.top() + this->y(),
-                             this->width(),
-                             this->height()),
-                       QImage(this->source().toLocalFile()));
-    painter->restore();
+    if (!d->pix.pixmap().isNull()) {
+        painter->save();
+        
+        int drawWidth = this->width();
+        int drawHeight = this->height();
+        QTransform transform;
+        qreal widthScale = this->width() / qreal (d->pix.width());
+        qreal heightScale = this->height() / qreal (d->pix.height());
+        
+        if ((this->width() != d->pix.width()) || (this->height() != d->pix.height())) {
+            if (this->fillMode() >= Tile) {
+                if (this->fillMode() == TileVertically) {
+                    transform.scale(widthScale, 1.0);
+                    drawWidth = d->pix.width();
+                }
+                else if (this->fillMode() == TileHorizontally) {
+                    transform.scale(1.0, heightScale);
+                    drawHeight = d->pix.height();
+                }
+            }
+            else {
+                if (this->fillMode() == PreserveAspectFit) {
+                    if (widthScale <= heightScale) {
+                        heightScale = widthScale;
+                        transform.translate(0, (this->height() - heightScale * d->pix.height()) / 2);
+                    }
+                    else if (heightScale < widthScale) {
+                        widthScale = heightScale;
+                        transform.translate((this->width() - widthScale * d->pix.width()) / 2, 0);
+                    }
+                }
+                else if (this->fillMode() == PreserveAspectCrop) {
+                    if (widthScale < heightScale) {
+                        widthScale = heightScale;
+                        transform.translate((this->width() - widthScale * d->pix.width()) / 2, 0);
+                    }
+                    else if (heightScale < widthScale) {
+                        heightScale = widthScale;
+                        transform.translate(0, (this->height() - heightScale * d->pix.height()) / 2);
+                    }
+                }
+                
+                transform.scale(widthScale, heightScale);
+                drawWidth = d->pix.width();
+                drawHeight = d->pix.height();
+            }
+        }
+        
+        painter->setOpacity(this->opacity());
+        painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform, this->smooth());
+        
+        if (this->mirror()) {
+            transform.translate(drawWidth, 0).scale(-1.0, 1.0);
+        }
+        
+        if (this->fillMode() >= Tile) {
+            painter->drawTiledPixmap(QRect(0, 0, drawWidth, drawHeight), d->pix);
+        }
+        else {
+            painter->drawPixmap(QRect(rect.left() + this->x(), 
+                                      rect.top() + this->y(), 
+                                      drawWidth, 
+                                      drawHeight), 
+                                      d->pix, QRect(0, 0, drawWidth, drawHeight));
+        }
+        
+        painter->restore();
+    }
 
     foreach (ListItemContent *content, d->contentList) {
         if (content->isVisible()) {

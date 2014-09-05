@@ -65,7 +65,6 @@ private:
     Q_DISABLE_COPY(ImageBorder)
 };
 
-class ImageLoader;
 class BorderImagePrivate;
 
 class BorderImage : public ImageBase
@@ -75,6 +74,7 @@ class BorderImage : public ImageBase
     Q_PRIVATE_PROPERTY(BorderImage::d_func(), ImageBorder* border READ border CONSTANT FINAL)
     Q_PROPERTY(TileMode horizontalTileMode READ horizontalTileMode WRITE setHorizontalTileMode NOTIFY horizontalTileModeChanged)
     Q_PROPERTY(TileMode verticalTileMode READ verticalTileMode WRITE setVerticalTileMode NOTIFY verticalTileModeChanged)
+    Q_PROPERTY(QSize sourceSize READ sourceSize NOTIFY sourceSizeChanged) // read-only
 
     Q_ENUMS(TileMode)
 
@@ -97,15 +97,14 @@ public:
 signals:
     void horizontalTileModeChanged();
     void verticalTileModeChanged();
+    void sourceSizeChanged();
 
 protected:
     BorderImage(BorderImagePrivate &dd, QWidget *parent = 0);
+    
+    virtual void paintEvent(QPaintEvent *);
 
     Q_DECLARE_PRIVATE(BorderImage)
-
-    Q_PRIVATE_SLOT(d_func(), void _q_onLoaderFinished(ImageLoader*))
-    Q_PRIVATE_SLOT(d_func(), void _q_onLoaderCanceled(ImageLoader*))
-    Q_PRIVATE_SLOT(d_func(), void _q_onLoaderProgressChanged(qreal))
 
 private:
     Q_DISABLE_COPY(BorderImage)

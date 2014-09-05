@@ -27,13 +27,12 @@ class ImagePrivate : public ImageBasePrivate
 public:
     ImagePrivate(Image *parent);
 
-    void load();
-
-    void _q_onLoaderFinished(ImageLoader *loader);
-    void _q_onLoaderCanceled(ImageLoader *loader);
-    void _q_onLoaderProgressChanged(qreal p);
+    void updatePaintedGeometry();
 
     Image::FillMode fillMode;
+    
+    int paintedWidth;
+    int paintedHeight;
 
     Q_DECLARE_PUBLIC(Image)
 };

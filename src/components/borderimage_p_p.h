@@ -29,12 +29,6 @@ public:
 
     ImageBorder* border();
 
-    void load();
-
-    void _q_onLoaderFinished(ImageLoader *loader);
-    void _q_onLoaderCanceled(ImageLoader *loader);
-    void _q_onLoaderProgressChanged(qreal p);
-
     ImageBorder* imageBorder;
 
     BorderImage::TileMode horizontalTileMode;

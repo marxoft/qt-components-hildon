@@ -17,7 +17,10 @@
 
 #include "image_p.h"
 #include "image_p_p.h"
-#include "imageloader_p.h"
+#include <QPainter>
+#include <QPaintEvent>
+#include <QResizeEvent>
+#include <QTransform>
 
 Image::Image(QWidget *parent) :
     ImageBase(*new ImagePrivate(this), parent)
@@ -41,89 +44,174 @@ void Image::setFillMode(FillMode mode) {
     if (mode != this->fillMode()) {
         Q_D(Image);
         d->fillMode = mode;
+        this->update();
+        d->updatePaintedGeometry();
         emit fillModeChanged();
-
-        if ((d->complete) && (!this->source().isEmpty())) {
-            d->load();
-        }
     }
 }
 
-void Image::setSourceSize(const QSize &size) {
-    if (size != this->sourceSize()) {
+QPixmap Image::pixmap() const {
+    Q_D(const Image);
+    
+    return d->pix.pixmap();
+}
+
+void Image::setPixmap(const QPixmap &p) {
+    Q_D(Image);
+    
+    if (this->source().isEmpty()) {
         Q_D(Image);
-        d->sourceSize = size;
-
-        if ((d->complete) && (!this->source().isEmpty())) {
-            d->load();
-        }
+        d->pix.setPixmap(p);
+        d->pixmapChange();
+        d->status = d->pix.isNull() ? Null : Ready;
+        this->update();
     }
 }
 
-void Image::resetSourceSize() {
-    this->setSourceSize(QSize());
+int Image::paintedWidth() const {
+    Q_D(const Image);
+    
+    return d->paintedWidth;
+}
+
+int Image::paintedHeight() const {
+    Q_D(const Image);
+    
+    return d->paintedHeight;
+}
+
+void Image::resizeEvent(QResizeEvent *event) {
+    if (event->size().isValid()) {
+        Q_D(Image);
+        d->updatePaintedGeometry();
+    }
+    
+    ImageBase::resizeEvent(event);
+}
+
+void Image::paintEvent(QPaintEvent *) {
+    Q_D(Image);
+    
+    if (d->pix.pixmap().isNull()) {
+        return;
+    }
+    
+    QPainter painter(this);
+    
+    int drawWidth = this->width();
+    int drawHeight = this->height();
+    QTransform transform;
+    qreal widthScale = this->width() / qreal (d->pix.width());
+    qreal heightScale = this->height() / qreal (d->pix.height());
+    
+    if ((this->width() != d->pix.width()) || (this->height() != d->pix.height())) {
+        if (this->fillMode() >= Tile) {
+            if (this->fillMode() == TileVertically) {
+                transform.scale(widthScale, 1.0);
+                drawWidth = d->pix.width();
+            }
+            else if (this->fillMode() == TileHorizontally) {
+                transform.scale(1.0, heightScale);
+                drawHeight = d->pix.height();
+            }
+        }
+        else {
+            if (this->fillMode() == PreserveAspectFit) {
+                if (widthScale <= heightScale) {
+                    heightScale = widthScale;
+                    transform.translate(0, (this->height() - heightScale * d->pix.height()) / 2);
+                }
+                else if (heightScale < widthScale) {
+                    widthScale = heightScale;
+                    transform.translate((this->width() - widthScale * d->pix.width()) / 2, 0);
+                }
+            }
+            else if (this->fillMode() == PreserveAspectCrop) {
+                if (widthScale < heightScale) {
+                    widthScale = heightScale;
+                    transform.translate((this->width() - widthScale * d->pix.width()) / 2, 0);
+                }
+                else if (heightScale < widthScale) {
+                    heightScale = widthScale;
+                    transform.translate(0, (this->height() - heightScale * d->pix.height()) / 2);
+                }
+            }
+            
+            transform.scale(widthScale, heightScale);
+            drawWidth = d->pix.width();
+            drawHeight = d->pix.height();
+        }
+    }
+    
+    painter.setOpacity(this->opacity());
+    painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform, this->smooth());
+    
+    if (this->mirror()) {
+        transform.translate(drawWidth, 0).scale(-1.0, 1.0);
+    }
+    
+    if (this->fillMode() >= Tile) {
+        painter.drawTiledPixmap(QRect(0, 0, drawWidth, drawHeight), d->pix);
+    }
+    else {
+        painter.drawPixmap(QRect(0, 0, drawWidth, drawHeight), d->pix, QRect(0, 0, drawWidth, drawHeight));
+    }
 }
 
 ImagePrivate::ImagePrivate(Image *parent) :
     ImageBasePrivate(parent),
-    fillMode(Image::Stretch)
+    fillMode(Image::Stretch),
+    paintedWidth(0),
+    paintedHeight(0)
 {
 }
 
-void ImagePrivate::load() {
+void ImagePrivate::updatePaintedGeometry() {
     Q_Q(Image);
-
-    if (source.isEmpty()) {
-        image = QImage();
-        progress = 1.0;
-        status = Image::Null;
-        q->update();
-        emit q->progressChanged();
-        emit q->statusChanged();
-        return;
+    
+    if (fillMode == Image::PreserveAspectFit) {
+        if ((!pix.width()) || (!pix.height())) {
+            return;
+        }
+        
+        int w = q->width() > 0 ? q->width() : pix.width();
+        int widthScale = w / pix.width();
+        int h = q->height() > 0 ? q->height() : pix.height();
+        int heightScale = h / pix.height();
+        
+        if (widthScale <= heightScale) {
+            paintedWidth = w;
+            paintedHeight = widthScale * pix.height();
+        }
+        else if (heightScale < widthScale) {
+            paintedWidth = heightScale * pix.width();
+            paintedHeight = h;
+        }
     }
-
-    progress = 0.0;
-    status = Image::Loading;
-    emit q->progressChanged();
-    emit q->statusChanged();
-
-    ImageLoader *loader = new ImageLoader;
-    q->connect(loader, SIGNAL(finished(ImageLoader*)), q, SLOT(_q_onLoaderFinished(ImageLoader*)));
-    q->connect(loader, SIGNAL(canceled(ImageLoader*)), q, SLOT(_q_onLoaderCanceled(ImageLoader*)));
-    q->connect(loader, SIGNAL(progressChanged(qreal)), q, SLOT(_q_onLoaderProgressChanged(qreal)));
-    q->connect(q, SIGNAL(destroyed()), loader, SLOT(deleteLater()));
-    loader->loadImage(source, q->size(), sourceSize, fillMode, smooth ? Qt::SmoothTransformation : Qt::FastTransformation, mirror, cache);
-}
-
-void ImagePrivate::_q_onLoaderFinished(ImageLoader *loader) {
-    Q_Q(Image);
-
-    image = loader->image();
-    loader->deleteLater();
-    q->update();
-
-    progress = 1.0;
-    status = image.isNull() ? Image::Error : Image::Ready;
-    emit q->progressChanged();
-    emit q->statusChanged();    
-}
-
-void ImagePrivate::_q_onLoaderCanceled(ImageLoader *loader) {
-    Q_Q(Image);
-
-    loader->deleteLater();
-    progress = 0.0;
-    status = Image::Null;
-    emit q->progressChanged();
-    emit q->statusChanged();
-}
-
-void ImagePrivate::_q_onLoaderProgressChanged(qreal p) {
-    Q_Q(Image);
-
-    progress = p;
-    emit q->progressChanged();
+    else if (fillMode == Image::PreserveAspectCrop) {
+        if ((!pix.width()) || (!pix.height())) {
+            return;
+        }
+        
+        int widthScale = q->width() / pix.width();
+        int heightScale = q->height() / pix.height();
+        
+        if (widthScale < heightScale) {
+            widthScale = heightScale;
+        }
+        else if (heightScale < widthScale) {
+            heightScale = widthScale;
+        }
+        
+        paintedWidth = widthScale * pix.width();
+        paintedHeight = heightScale * pix.height();
+    }
+    else {
+        paintedWidth = q->width();
+        paintedHeight = q->height();
+    }
+    
+    emit q->paintedGeometryChanged();
 }
 
 #include "moc_image_p.cpp"

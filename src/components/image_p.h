@@ -21,7 +21,6 @@
 #include "imagebase_p.h"
 #include <qdeclarative.h>
 
-class ImageLoader;
 class ImagePrivate;
 
 class Image : public ImageBase
@@ -29,7 +28,8 @@ class Image : public ImageBase
     Q_OBJECT
 
     Q_PROPERTY(FillMode fillMode READ fillMode WRITE setFillMode NOTIFY fillModeChanged)
-    Q_PROPERTY(QSize sourceSize READ sourceSize WRITE setSourceSize RESET resetSourceSize NOTIFY sourceSizeChanged)
+    Q_PROPERTY(int paintedWidth READ paintedWidth NOTIFY paintedGeometryChanged)
+    Q_PROPERTY(int paintedHeight READ paintedHeight NOTIFY paintedGeometryChanged)
 
     Q_ENUMS(FillMode)
 
@@ -48,21 +48,24 @@ public:
 
     FillMode fillMode() const;
     void setFillMode(FillMode mode);
-
-    void setSourceSize(const QSize &size);
-    void resetSourceSize();
-
+    
+    QPixmap pixmap() const;
+    void setPixmap(const QPixmap &p);
+    
+    int paintedWidth() const;
+    int paintedHeight() const;
+    
 signals:
     void fillModeChanged();
+    void paintedGeometryChanged();
 
 protected:
     Image(ImagePrivate &dd, QWidget *parent = 0);
+    
+    virtual void resizeEvent(QResizeEvent *event);
+    virtual void paintEvent(QPaintEvent *);
 
     Q_DECLARE_PRIVATE(Image)
-
-    Q_PRIVATE_SLOT(d_func(), void _q_onLoaderFinished(ImageLoader*))
-    Q_PRIVATE_SLOT(d_func(), void _q_onLoaderCanceled(ImageLoader*))
-    Q_PRIVATE_SLOT(d_func(), void _q_onLoaderProgressChanged(qreal))
 
 private:
     Q_DISABLE_COPY(Image)

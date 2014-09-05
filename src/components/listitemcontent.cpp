@@ -219,6 +219,8 @@ void ListItemContent::paint(QPainter *painter, const QRect &rect) {
     Q_UNUSED(rect);
 }
 
+void ListItemContent::update() {}
+
 void ListItemContent::classBegin() {}
 
 void ListItemContent::componentComplete() {

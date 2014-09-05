@@ -20,7 +20,6 @@
 
 #include "listitemimagebase_p.h"
 
-class ImageLoader;
 class ListItemImagePrivate;
 
 class ListItemImage : public ListItemImageBase
@@ -28,7 +27,8 @@ class ListItemImage : public ListItemImageBase
     Q_OBJECT
 
     Q_PROPERTY(FillMode fillMode READ fillMode WRITE setFillMode NOTIFY fillModeChanged)
-    Q_PROPERTY(QSize sourceSize READ sourceSize WRITE setSourceSize RESET resetSourceSize NOTIFY sourceSizeChanged)
+    Q_PROPERTY(int paintedWidth READ paintedWidth NOTIFY paintedGeometryChanged)
+    Q_PROPERTY(int paintedHeight READ paintedHeight NOTIFY paintedGeometryChanged)
 
     Q_ENUMS(FillMode)
 
@@ -46,23 +46,23 @@ public:
 
     FillMode fillMode() const;
     void setFillMode(FillMode mode);
+    
+    QPixmap pixmap() const;
+    void setPixmap(const QPixmap &p);
+    
+    int paintedWidth() const;
+    int paintedHeight() const;
 
-    void setSourceSize(const QSize &size);
-    void resetSourceSize();
-
-    void paint(QPainter *painter, const QRect &rect);
+    virtual void paint(QPainter *painter, const QRect &rect);
 
 signals:
     void fillModeChanged();
+    void paintedGeometryChanged();
 
 protected:
     ListItemImage(ListItemImagePrivate &dd, QObject *parent = 0);
 
     Q_DECLARE_PRIVATE(ListItemImage)
-
-    Q_PRIVATE_SLOT(d_func(), void _q_onLoaderFinished(ImageLoader*))
-    Q_PRIVATE_SLOT(d_func(), void _q_onLoaderCanceled(ImageLoader*))
-    Q_PRIVATE_SLOT(d_func(), void _q_onLoaderProgressChanged(qreal))
 
 private:
     Q_DISABLE_COPY(ListItemImage)

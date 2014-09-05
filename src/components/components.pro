@@ -24,6 +24,7 @@ HEADERS += \
     private/qdeclarativenullablevalue_p_p.h \
     private/qdeclarativeobjectscriptclass_p.h \
     private/qdeclarativeparser_p.h \
+    private/qdeclarativepixmapcache_p.h \
     private/qdeclarativepropertycache_p.h \
     private/qdeclarativeproperty_p.h \
     private/qdeclarativerefcount_p.h \
@@ -69,8 +70,6 @@ HEADERS += \
     image_p_p.h \
     imagebase_p.h \
     imagebase_p_p.h \
-    imageloader_p.h \
-    imageloader_p_p.h \
     imageproviders_p.h \
     informationbox_p.h \
     informationbox_p_p.h \
@@ -157,6 +156,7 @@ HEADERS += \
     plugin_p.h
 
 SOURCES += \
+    private/qdeclarativepixmapcache.cpp \
     action.cpp \
     actiongroup.cpp \
     anchors.cpp \
@@ -175,7 +175,6 @@ SOURCES += \
     headerview.cpp \
     image.cpp \
     imagebase.cpp \
-    imageloader.cpp \
     imageproviders.cpp \
     informationbox.cpp \
     item.cpp \

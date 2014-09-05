@@ -91,6 +91,9 @@ public:
     virtual bool event(QEvent *event);
     virtual bool editorEvent(QEvent *event, const QRect &rect);
     virtual void paint(QPainter *painter, const QRect &rect);
+    
+public slots:
+    virtual void update();
 
 signals:
     void parentChanged();

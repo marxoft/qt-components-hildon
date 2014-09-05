@@ -17,7 +17,11 @@
 
 #include "borderimage_p.h"
 #include "borderimage_p_p.h"
-#include "imageloader_p.h"
+#include <QPainter>
+#include <QPaintEvent>
+#include <QTransform>
+#include <QMargins>
+#include <QTileRules>
 
 ImageBorder::ImageBorder(ImageBase *parent) :
     QObject(parent),
@@ -142,6 +146,47 @@ BorderImage::TileMode BorderImage::verticalTileMode() const {
     return d->verticalTileMode;
 }
 
+void BorderImage::paintEvent(QPaintEvent *) {
+    Q_D(BorderImage);
+    
+    if ((d->pix.isNull()) || (this->width() < 0) || (this->height() < 0)) {
+        return;
+    }
+    
+    QPainter painter(this);
+    painter.setOpacity(this->opacity());
+    painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform, this->smooth());
+    
+    if (this->mirror()) {
+        QTransform mirror;
+        mirror.translate(this->width(), 0).scale(-1, 1.0);
+    }
+    
+    int left = d->imageBorder ? d->imageBorder->left() : 0;
+    int right = d->imageBorder ? d->imageBorder->right() : 0;
+    int borderWidth = left + right;
+    
+    if ((borderWidth > 0) && (this->width() < borderWidth)) {
+        int diff = borderWidth - this->width() - 1;
+        left -= qRound(diff * left / borderWidth);
+        right -= qRound(diff * right / borderWidth);
+    }
+    
+    int top = d->imageBorder ? d->imageBorder->top() : 0;
+    int bottom = d->imageBorder ? d->imageBorder->bottom() : 0;
+    int borderHeight = top + bottom;
+    
+    if ((borderHeight > 0) && (this->height() < borderHeight)) {
+        int diff = borderHeight - this->height() - 1;
+        top -= qRound(diff * top / borderHeight);
+        bottom -= qRound(diff * bottom / borderHeight);
+    }
+    
+    QMargins margins(left, top, right, bottom);
+    QTileRules rules((Qt::TileRule)this->horizontalTileMode(), (Qt::TileRule)this->verticalTileMode());
+    qDrawBorderPixmap(&painter, QRect(0, 0, this->width(), this->height()), margins, d->pix, d->pix.rect(), margins, rules);
+}
+
 void BorderImage::setVerticalTileMode(TileMode mode) {
     if (mode != this->verticalTileMode()) {
         Q_D(BorderImage);
@@ -168,70 +213,6 @@ ImageBorder* BorderImagePrivate::border() {
     }
 
     return imageBorder;
-}
-
-void BorderImagePrivate::load() {
-    Q_Q(BorderImage);
-
-    if (source.isEmpty()) {
-        image = QImage();
-        progress = 1.0;
-        status = ImageBase::Null;
-        q->update();
-        emit q->progressChanged();
-        emit q->statusChanged();
-        return;
-    }
-
-    progress = 0.0;
-    status = BorderImage::Loading;
-    emit q->progressChanged();
-    emit q->statusChanged();
-
-    ImageLoader *loader = new ImageLoader;
-    q->connect(loader, SIGNAL(finished(ImageLoader*)), q, SLOT(_q_onLoaderFinished(ImageLoader*)));
-    q->connect(loader, SIGNAL(canceled(ImageLoader*)), q, SLOT(_q_onLoaderCanceled(ImageLoader*)));
-    q->connect(loader, SIGNAL(progressChanged(qreal)), q, SLOT(_q_onLoaderProgressChanged(qreal)));
-    q->connect(q, SIGNAL(destroyed()), loader, SLOT(deleteLater()));
-
-    if (imageBorder) {
-        loader->loadBorderImage(source, q->size(), imageBorder->top(), imageBorder->right(), imageBorder->left(), imageBorder->bottom(),
-                                horizontalTileMode, verticalTileMode, smooth ? Qt::SmoothTransformation : Qt::FastTransformation, mirror, cache);
-    }
-    else {
-        loader->loadBorderImage(source, q->size(), 0, 0, 0, 0,
-                                horizontalTileMode, verticalTileMode, smooth ? Qt::SmoothTransformation : Qt::FastTransformation, mirror, cache);
-    }
-}
-
-void BorderImagePrivate::_q_onLoaderFinished(ImageLoader *loader) {
-    Q_Q(BorderImage);
-
-    image = loader->image();
-    loader->deleteLater();
-    q->update();
-
-    progress = 1.0;
-    status = image.isNull() ? ImageBase::Error : ImageBase::Ready;
-    emit q->progressChanged();
-    emit q->statusChanged();
-}
-
-void BorderImagePrivate::_q_onLoaderCanceled(ImageLoader *loader) {
-    Q_Q(BorderImage);
-
-    loader->deleteLater();
-    progress = 0.0;
-    status = ImageBase::Null;
-    emit q->progressChanged();
-    emit q->statusChanged();
-}
-
-void BorderImagePrivate::_q_onLoaderProgressChanged(qreal p) {
-    Q_Q(BorderImage);
-
-    progress = p;
-    emit q->progressChanged();
 }
 
 #include "moc_borderimage_p.cpp"

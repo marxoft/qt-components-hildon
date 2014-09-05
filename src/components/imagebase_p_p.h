@@ -20,7 +20,7 @@
 
 #include "imagebase_p.h"
 #include "item_p_p.h"
-#include <QUrl>
+#include "private/qdeclarativepixmapcache_p.h"
 
 class ImageBasePrivate : public ItemPrivate
 {
@@ -29,10 +29,22 @@ public:
     ImageBasePrivate(ImageBase *parent);
 
     virtual void load();
+    
+    virtual void pixmapChange();
+    
+    void _q_requestProgress(qint64 received, qint64 total);
+    
+    virtual void _q_requestFinished();
+    
+    QDeclarativePixmap pix;
 
     QUrl source;
 
     QSize sourceSize;
+    
+    bool explicitSourceSize;
+    
+    bool asynchronous;
 
     bool cache;
 
@@ -43,8 +55,6 @@ public:
     qreal progress;
 
     ImageBase::Status status;
-
-    QImage image;
 
     Q_DECLARE_PUBLIC(ImageBase)
 };

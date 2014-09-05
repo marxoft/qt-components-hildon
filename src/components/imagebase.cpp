@@ -17,8 +17,7 @@
 
 #include "imagebase_p.h"
 #include "imagebase_p_p.h"
-#include <QPainter>
-#include <QPaintEvent>
+#include <QDeclarativeInfo>
 
 ImageBase::ImageBase(QWidget *parent) :
     Item(*new ImageBasePrivate(this), parent)
@@ -54,6 +53,36 @@ QSize ImageBase::sourceSize() const {
     Q_D(const ImageBase);
 
     return d->sourceSize;
+}
+
+void ImageBase::setSourceSize(const QSize &size) {
+    if (size != this->sourceSize()) {
+        Q_D(ImageBase);
+        d->sourceSize = size;
+        emit sourceSizeChanged();
+
+        if ((d->complete) && (!this->source().isEmpty())) {
+            d->load();
+        }
+    }
+}
+
+void ImageBase::resetSourceSize() {
+    this->setSourceSize(QSize());
+}
+
+bool ImageBase::asynchronous() const {
+    Q_D(const ImageBase);
+    
+    return d->asynchronous;
+}
+
+void ImageBase::setAsynchronous(bool async) {
+    if (async != this->asynchronous()) {
+        Q_D(ImageBase);
+        d->asynchronous = async;
+        emit asynchronousChanged();
+    }
 }
 
 bool ImageBase::cache() const {
@@ -128,17 +157,15 @@ void ImageBase::componentComplete() {
     }
 }
 
-void ImageBase::paintEvent(QPaintEvent *event) {
-    Q_D(ImageBase);
-
-    QPainter painter(this);
-    painter.drawImage(this->rect(), d->image);
-
-    event->accept();
+QSize ImageBase::sizeHint() const {
+    Q_D(const ImageBase);
+    return QSize(d->pix.width(), d->pix.height());
 }
 
 ImageBasePrivate::ImageBasePrivate(ImageBase *parent) :
     ItemPrivate(parent),
+    explicitSourceSize(false),
+    asynchronous(false),
     cache(true),
     mirror(false),
     smooth(false),
@@ -147,6 +174,103 @@ ImageBasePrivate::ImageBasePrivate(ImageBase *parent) :
 {
 }
 
-void ImageBasePrivate::load() {}
+void ImageBasePrivate::load() {
+    Q_Q(ImageBase);
+    
+    if (source.isEmpty()) {
+        pix.clear(q);
+        status = ImageBase::Null;
+        progress = 0.0;
+        this->pixmapChange();
+        emit q->progressChanged();
+        emit q->statusChanged();
+        q->update();
+    }
+    else {
+        QDeclarativePixmap::Options options;
+        
+        if (asynchronous) {
+            options |= QDeclarativePixmap::Asynchronous;
+        }
+        
+        if (cache) {
+            options |= QDeclarativePixmap::Cache;
+        }
+        
+        pix.clear(q);
+        pix.load(qmlEngine(q), source, explicitSourceSize ? sourceSize : QSize(), options);
+        
+        if (pix.isLoading()) {
+            progress = 0.0;
+            status = ImageBase::Loading;
+            emit q->progressChanged();
+            emit q->statusChanged();
+            
+            static int thisRequestProgress = -1;
+            static int thisRequestFinished = -1;
+            
+            if (thisRequestProgress == -1) {
+                thisRequestProgress =
+                ImageBase::staticMetaObject.indexOfSlot("_q_requestProgress(qint64,qint64)");
+                thisRequestFinished =
+                ImageBase::staticMetaObject.indexOfSlot("_q_requestFinished()");
+            }
+            
+            pix.connectFinished(q, thisRequestFinished);
+            pix.connectDownloadProgress(q, thisRequestProgress);
+        }
+        else {
+            this->_q_requestFinished();
+        }
+    }
+}
+
+void ImageBasePrivate::_q_requestProgress(qint64 received, qint64 total) {
+    switch (status) {
+    case ImageBase::Loading:
+        if (total > 0) {
+            Q_Q(ImageBase);
+            progress = qreal (received) / total;
+            emit q->progressChanged();
+        }
+        
+        break;
+    default:
+        break;
+    }
+}
+
+void ImageBasePrivate::_q_requestFinished() {
+    Q_Q(ImageBase);
+    ImageBase::Status oldStatus = status;
+    qreal oldProgress = progress;
+    
+    if (pix.isError()) {
+        status = ImageBase::Error;
+        qmlInfo(q) << pix.error();
+    }
+    else {
+        status = ImageBase::Ready;
+    }
+    
+    progress = 1.0;
+    this->pixmapChange();
+    
+    if ((sourceSize.width() != pix.width()) || (sourceSize.height() != pix.height())) {
+        emit q->sourceSizeChanged();
+    }
+    
+    if (status != oldStatus) {
+        emit q->statusChanged();
+    }
+    
+    if (progress != oldProgress) {
+        emit q->progressChanged();
+    }
+    
+    q->update();
+}
+
+void ImageBasePrivate::pixmapChange() {}
 
 #include "moc_imagebase_p.cpp"

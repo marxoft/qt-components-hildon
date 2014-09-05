@@ -17,6 +17,7 @@
 
 #include "listitemimagebase_p.h"
 #include "listitemimagebase_p_p.h"
+#include <QDeclarativeInfo>
 
 ListItemImageBase::ListItemImageBase(QObject *parent) :
     ListItemContent(*new ListItemImageBasePrivate(this), parent)
@@ -41,7 +42,7 @@ void ListItemImageBase::setSource(const QUrl &url) {
         emit sourceChanged();
 
         if (d->complete) {
-//            d->load();
+            d->load();
         }
     }
 }
@@ -50,6 +51,36 @@ QSize ListItemImageBase::sourceSize() const {
     Q_D(const ListItemImageBase);
 
     return d->sourceSize;
+}
+
+void ListItemImageBase::setSourceSize(const QSize &size) {
+    if (size != this->sourceSize()) {
+        Q_D(ListItemImageBase);
+        d->sourceSize = size;
+        emit sourceSizeChanged();
+
+        if ((d->complete) && (!this->source().isEmpty())) {
+            d->load();
+        }
+    }
+}
+
+void ListItemImageBase::resetSourceSize() {
+    this->setSourceSize(QSize());
+}
+
+bool ListItemImageBase::asynchronous() const {
+    Q_D(const ListItemImageBase);
+    
+    return d->asynchronous;
+}
+
+void ListItemImageBase::setAsynchronous(bool async) {
+    if (async != this->asynchronous()) {
+        Q_D(ListItemImageBase);
+        d->asynchronous = async;
+        emit asynchronousChanged();
+    }
 }
 
 bool ListItemImageBase::cache() const {
@@ -79,7 +110,7 @@ void ListItemImageBase::setMirror(bool mirror) {
         emit mirrorChanged();
 
         if ((d->complete) && (!this->source().isEmpty())) {
-//            d->load();
+            d->load();
         }
     }
 }
@@ -97,7 +128,7 @@ void ListItemImageBase::setSmooth(bool smooth) {
         emit smoothChanged();
 
         if ((d->complete) && (!this->source().isEmpty())) {
-//            d->load();
+            d->load();
         }
     }
 }
@@ -120,13 +151,107 @@ void ListItemImageBase::componentComplete() {
     Q_D(ListItemImageBase);
 
     if (!this->source().isEmpty()) {
-//        d->load();
+        d->load();
     }
 }
 
-void ListItemImageBase::paint(QPainter *painter, const QRect &rect) {
-    Q_UNUSED(painter);
-    Q_UNUSED(rect);
+void ListItemImageBasePrivate::load() {
+    Q_Q(ListItemImageBase);
+    
+    if (source.isEmpty()) {
+        pix.clear(q);
+        status = ListItemImageBase::Null;
+        progress = 0.0;
+        this->pixmapChange();
+        emit q->progressChanged();
+        emit q->statusChanged();
+        q->update();
+    }
+    else {
+        QDeclarativePixmap::Options options;
+        
+        if (asynchronous) {
+            options |= QDeclarativePixmap::Asynchronous;
+        }
+        
+        if (cache) {
+            options |= QDeclarativePixmap::Cache;
+        }
+        
+        pix.clear(q);
+        pix.load(qmlEngine(q), source, explicitSourceSize ? sourceSize : QSize(), options);
+        
+        if (pix.isLoading()) {
+            progress = 0.0;
+            status = ListItemImageBase::Loading;
+            emit q->progressChanged();
+            emit q->statusChanged();
+            
+            static int thisRequestProgress = -1;
+            static int thisRequestFinished = -1;
+            
+            if (thisRequestProgress == -1) {
+                thisRequestProgress =
+                ListItemImageBase::staticMetaObject.indexOfSlot("_q_requestProgress(qint64,qint64)");
+                thisRequestFinished =
+                ListItemImageBase::staticMetaObject.indexOfSlot("_q_requestFinished()");
+            }
+            
+            pix.connectFinished(q, thisRequestFinished);
+            pix.connectDownloadProgress(q, thisRequestProgress);
+        }
+        else {
+            this->_q_requestFinished();
+        }
+    }
 }
+
+void ListItemImageBasePrivate::_q_requestProgress(qint64 received, qint64 total) {
+    switch (status) {
+    case ListItemImageBase::Loading:
+        if (total > 0) {
+            Q_Q(ListItemImageBase);
+            progress = qreal (received) / total;
+            emit q->progressChanged();
+        }
+        
+        break;
+    default:
+        break;
+    }
+}
+
+void ListItemImageBasePrivate::_q_requestFinished() {
+    Q_Q(ListItemImageBase);
+    ListItemImageBase::Status oldStatus = status;
+    qreal oldProgress = progress;
+    
+    if (pix.isError()) {
+        status = ListItemImageBase::Error;
+        qmlInfo(q) << pix.error();
+    }
+    else {
+        status = ListItemImageBase::Ready;
+    }
+    
+    progress = 1.0;
+    this->pixmapChange();
+    
+    if ((sourceSize.width() != pix.width()) || (sourceSize.height() != pix.height())) {
+        emit q->sourceSizeChanged();
+    }
+    
+    if (status != oldStatus) {
+        emit q->statusChanged();
+    }
+    
+    if (progress != oldProgress) {
+        emit q->progressChanged();
+    }
+    
+    q->update();
+}
+
+void ListItemImageBasePrivate::pixmapChange() {}
 
 #include "moc_listitemimagebase_p.cpp"

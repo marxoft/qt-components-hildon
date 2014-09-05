@@ -20,9 +20,7 @@
 
 #include "listitemimagebase_p.h"
 #include "listitemcontent_p_p.h"
-#include <QUrl>
-#include <QSize>
-#include <QImage>
+#include "private/qdeclarativepixmapcache_p.h"
 
 class ListItemImageBasePrivate : public ListItemContentPrivate
 {
@@ -30,6 +28,8 @@ class ListItemImageBasePrivate : public ListItemContentPrivate
 public:
     ListItemImageBasePrivate(ListItemImageBase *parent) :
         ListItemContentPrivate(parent),
+        explicitSourceSize(false),
+        asynchronous(false),
         cache(true),
         mirror(false),
         smooth(false),
@@ -38,11 +38,23 @@ public:
     {
     }
 
-    virtual void load() {}
+    virtual void load();
+    
+    virtual void pixmapChange();
+    
+    void _q_requestProgress(qint64 received, qint64 total);
+    
+    virtual void _q_requestFinished();
+    
+    QDeclarativePixmap pix;
 
     QUrl source;
 
     QSize sourceSize;
+    
+    bool explicitSourceSize;
+    
+    bool asynchronous;
 
     bool cache;
 
@@ -53,8 +65,6 @@ public:
     qreal progress;
 
     ListItemImageBase::Status status;
-
-    QImage image;
 
     Q_DECLARE_PUBLIC(ListItemImageBase)
 };
