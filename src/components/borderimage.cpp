@@ -17,98 +17,12 @@
 
 #include "borderimage_p.h"
 #include "borderimage_p_p.h"
+#include "imageborder_p.h"
 #include <QPainter>
 #include <QPaintEvent>
 #include <QTransform>
 #include <QMargins>
 #include <QTileRules>
-
-ImageBorder::ImageBorder(ImageBase *parent) :
-    QObject(parent),
-    m_left(0),
-    m_right(0),
-    m_top(0),
-    m_bottom(0)
-{
-}
-
-ImageBorder::~ImageBorder() {}
-
-int ImageBorder::left() const {
-    return m_left;
-}
-
-void ImageBorder::setLeft(int left) {
-    if (left != this->left()) {
-        m_left = left;
-        emit leftChanged();
-
-        if (ImageBase *image = qobject_cast<ImageBase*>(this->parent())) {
-            image->update();
-        }
-    }
-}
-
-void ImageBorder::resetLeft() {
-    this->setLeft(0);
-}
-
-int ImageBorder::right() const {
-    return m_right;
-}
-
-void ImageBorder::setRight(int right) {
-    if (right != this->right()) {
-        m_right = right;
-        emit rightChanged();
-
-        if (ImageBase *image = qobject_cast<ImageBase*>(this->parent())) {
-            image->update();
-        }
-    }
-}
-
-void ImageBorder::resetRight() {
-    this->setRight(0);
-}
-
-int ImageBorder::top() const {
-    return m_top;
-}
-
-void ImageBorder::setTop(int top) {
-    if (top != this->top()) {
-        m_top = top;
-        emit topChanged();
-
-        if (ImageBase *image = qobject_cast<ImageBase*>(this->parent())) {
-            image->update();
-        }
-    }
-}
-
-void ImageBorder::resetTop() {
-    this->setTop(0);
-}
-
-int ImageBorder::bottom() const {
-    return m_bottom;
-}
-
-void ImageBorder::setBottom(int bottom) {
-    if (bottom != this->bottom()) {
-        m_bottom = bottom;
-        emit bottomChanged();
-
-        if (ImageBase *image = qobject_cast<ImageBase*>(this->parent())) {
-            image->update();
-        }
-    }
-}
-
-void ImageBorder::resetBottom() {
-    this->setBottom(0);
-}
 
 BorderImage::BorderImage(QWidget *parent) :
     ImageBase(*new BorderImagePrivate(this), parent)
@@ -210,6 +124,7 @@ ImageBorder* BorderImagePrivate::border() {
 
     if (!imageBorder) {
         imageBorder = new ImageBorder(q);
+        q->connect(imageBorder, SIGNAL(borderChanged()), q, SLOT(update()));
     }
 
     return imageBorder;

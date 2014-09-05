@@ -15,20 +15,20 @@
  * Inc., 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef BORDERIMAGE_P_H
-#define BORDERIMAGE_P_H
+#ifndef LISTITEMBORDERIMAGE_P_H
+#define LISTITEMBORDERIMAGE_P_H
 
-#include "imagebase_p.h"
+#include "listitemimagebase_p.h"
 #include <qdeclarative.h>
 
 class ImageBorder;
-class BorderImagePrivate;
+class ListItemBorderImagePrivate;
 
-class BorderImage : public ImageBase
+class ListItemBorderImage : public ListItemImageBase
 {
     Q_OBJECT
 
-    Q_PRIVATE_PROPERTY(BorderImage::d_func(), ImageBorder* border READ border CONSTANT FINAL)
+    Q_PRIVATE_PROPERTY(ListItemBorderImage::d_func(), ImageBorder* border READ border CONSTANT FINAL)
     Q_PROPERTY(TileMode horizontalTileMode READ horizontalTileMode WRITE setHorizontalTileMode NOTIFY horizontalTileModeChanged)
     Q_PROPERTY(TileMode verticalTileMode READ verticalTileMode WRITE setVerticalTileMode NOTIFY verticalTileModeChanged)
     Q_PROPERTY(QSize sourceSize READ sourceSize NOTIFY sourceSizeChanged) // read-only
@@ -42,14 +42,17 @@ public:
         Round
     };
 
-    explicit BorderImage(QWidget *parent = 0);
-    ~BorderImage();
+    explicit ListItemBorderImage(QObject *parent = 0);
+    ~ListItemBorderImage();
 
     TileMode horizontalTileMode() const;
     void setHorizontalTileMode(TileMode mode);
 
     TileMode verticalTileMode() const;
     void setVerticalTileMode(TileMode mode);
+    
+public slots:
+    virtual void paint(QPainter *painter, const QRect &rect);
 
 signals:
     void horizontalTileModeChanged();
@@ -57,16 +60,14 @@ signals:
     void sourceSizeChanged();
 
 protected:
-    BorderImage(BorderImagePrivate &dd, QWidget *parent = 0);
-    
-    virtual void paintEvent(QPaintEvent *);
+    ListItemBorderImage(ListItemBorderImagePrivate &dd, QObject *parent = 0);
 
-    Q_DECLARE_PRIVATE(BorderImage)
+    Q_DECLARE_PRIVATE(ListItemBorderImage)
 
 private:
-    Q_DISABLE_COPY(BorderImage)
+    Q_DISABLE_COPY(ListItemBorderImage)
 };
 
-QML_DECLARE_TYPE(BorderImage)
+QML_DECLARE_TYPE(ListItemBorderImage)
 
-#endif // BORDERIMAGE_P_H
+#endif // LISTITEMBORDERIMAGE_P_H

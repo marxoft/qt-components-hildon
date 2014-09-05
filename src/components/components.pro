@@ -70,6 +70,7 @@ HEADERS += \
     image_p_p.h \
     imagebase_p.h \
     imagebase_p_p.h \
+    imageborder_p.h \
     imageproviders_p.h \
     informationbox_p.h \
     informationbox_p_p.h \
@@ -79,6 +80,7 @@ HEADERS += \
     keys_p.h \
     label_p.h \
     listitem_p.h \
+    listitemborderimage_p.h \
     listitemcontent_p.h \
     listitemcontent_p_p.h \
     listitemimage_p.h \
@@ -175,12 +177,14 @@ SOURCES += \
     headerview.cpp \
     image.cpp \
     imagebase.cpp \
+    imageborder.cpp \
     imageproviders.cpp \
     informationbox.cpp \
     item.cpp \
     itemaction.cpp \
     keys.cpp \
     listitem.cpp \
+    listitemborderimage.cpp \
     listitemcontent.cpp \
     listitemimage.cpp \
     listitemimagebase.cpp \

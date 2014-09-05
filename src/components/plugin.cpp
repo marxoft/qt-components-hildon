@@ -34,6 +34,7 @@
 #include "grid_p.h"
 #include "headerview_p.h"
 #include "image_p.h"
+#include "imageborder_p.h"
 #include "imageproviders_p.h"
 #include "informationbox_p.h"
 #include "item_p.h"
@@ -41,6 +42,7 @@
 #include "keys_p.h"
 #include "label_p.h"
 #include "listitem_p.h"
+#include "listitemborderimage_p.h"
 #include "listitemimage_p.h"
 #include "listitemmousearea_p.h"
 #include "listitemprogressbar_p.h"
@@ -115,12 +117,13 @@ void Plugin::registerTypes(const char *uri) {
     qmlRegisterUncreatableType<QAbstractButton>(uri, 1, 0, "AbstractButton", "");
     qmlRegisterUncreatableType<QHeaderView>(uri, 1, 0, "QHeaderView", "");
     qmlRegisterUncreatableType<Anchors>(uri, 1, 0, "Anchors", "");
+    qmlRegisterUncreatableType<Border>(uri, 1, 0, "Border", "");
+    qmlRegisterUncreatableType<ImageBorder>(uri, 1, 0, "ImageBorder", "");
     qmlRegisterUncreatableType<Keys>(uri, 1, 0, "Keys", "");
     qmlRegisterUncreatableType<KeyEvent>(uri, 1, 0, "KeyEvent", "");
 
     qmlRegisterType<Action>(uri, 1, 0, "Action");
     qmlRegisterType<ActionGroup>(uri, 1, 0, "ActionGroup");
-    qmlRegisterType<Border>(uri, 1, 0, "Border");
     qmlRegisterType<BorderImage>(uri, 1, 0, "BorderImage");
     qmlRegisterType<Button>(uri, 1, 0, "Button");
     qmlRegisterType<ButtonRow>(uri, 1, 0, "ButtonRow");
@@ -138,12 +141,12 @@ void Plugin::registerTypes(const char *uri) {
     qmlRegisterType<HeaderSection>(uri, 1, 0, "HeaderSection");
     qmlRegisterType<HeaderView>(uri, 1, 0, "HeaderView");
     qmlRegisterType<Image>(uri, 1, 0, "Image");
-    qmlRegisterType<ImageBorder>(uri, 1, 0, "ImageBorder");
     qmlRegisterType<InformationBox>(uri, 1, 0, "InformationBox");
     qmlRegisterType<Item>(uri, 1, 0, "Item");
     qmlRegisterType<ItemAction>(uri, 1, 0, "ItemAction");
     qmlRegisterType<Label>(uri, 1, 0, "Label");
     qmlRegisterType<ListItem>(uri, 1, 0, "ListItem");
+    qmlRegisterType<ListItemBorderImage>(uri, 1, 0, "ListItemBorderImage");
     qmlRegisterType<ListItemImage>(uri, 1, 0, "ListItemImage");
     qmlRegisterType<ListItemMouseArea>(uri, 1, 0, "ListItemMouseArea");
     qmlRegisterType<ListItemProgressBar>(uri, 1, 0, "ListItemProgressBar");
