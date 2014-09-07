@@ -150,6 +150,8 @@ void Image::paintEvent(QPaintEvent *) {
         transform.translate(drawWidth, 0).scale(-1.0, 1.0);
     }
     
+    painter.setTransform(transform);
+    
     if (this->fillMode() >= Tile) {
         painter.drawTiledPixmap(QRect(0, 0, drawWidth, drawHeight), d->pix);
     }

@@ -152,9 +152,9 @@ void ListItemImage::paint(QPainter *painter, const QRect &rect) {
         
         int drawWidth = this->width();
         int drawHeight = this->height();
-        QTransform transform;
         qreal widthScale = this->width() / qreal (d->pix.width());
         qreal heightScale = this->height() / qreal (d->pix.height());
+        QTransform transform;
         
         if ((this->width() != d->pix.width()) || (this->height() != d->pix.height())) {
             if (this->fillMode() >= Tile) {
@@ -201,6 +201,8 @@ void ListItemImage::paint(QPainter *painter, const QRect &rect) {
         if (this->mirror()) {
             transform.translate(drawWidth, 0).scale(-1.0, 1.0);
         }
+        
+        painter->setTransform(transform);
         
         if (this->fillMode() >= Tile) {
             painter->drawTiledPixmap(QRect(0, 0, drawWidth, drawHeight), d->pix);

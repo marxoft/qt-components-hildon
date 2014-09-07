@@ -74,6 +74,7 @@ void BorderImage::paintEvent(QPaintEvent *) {
     if (this->mirror()) {
         QTransform mirror;
         mirror.translate(this->width(), 0).scale(-1, 1.0);
+        painter.setTransform(mirror);
     }
     
     int left = d->imageBorder ? d->imageBorder->left() : 0;
