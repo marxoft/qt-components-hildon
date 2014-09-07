@@ -22,8 +22,6 @@
 #include <QPainter>
 #include <QHashIterator>
 
-static const int PRESS_AND_HOLD_DURATION = 800;
-
 class ListItemPrivate
 {
 
@@ -369,10 +367,7 @@ bool ListItem::editorEvent(QEvent *event, QAbstractItemModel *model, const QStyl
     return QStyledItemDelegate::editorEvent(event, model, option, index);
 }
 
-QSize ListItem::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const {
-    Q_UNUSED(option);
-    Q_UNUSED(index);
-
+QSize ListItem::sizeHint(const QStyleOptionViewItem &, const QModelIndex &) const {
     return QSize(this->width(), this->height());
 }
 

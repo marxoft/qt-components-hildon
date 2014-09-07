@@ -98,10 +98,10 @@ public:
 
     QVariantMap modelData() const;
 
-    bool event(QEvent *event);
-    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
-    bool editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index);
-    QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
+    virtual bool event(QEvent *event);
+    virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+    virtual bool editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index);
+    virtual QSize sizeHint(const QStyleOptionViewItem &, const QModelIndex &) const;
 
 signals:
     void parentChanged();
@@ -116,7 +116,7 @@ signals:
     void modelDataChanged() const;
 
 protected:
-    ListItem(ListItemPrivate &dd, QObject *parent = 0);    
+    ListItem(ListItemPrivate &dd, QObject *parent = 0);
 
     virtual void classBegin();
     virtual void componentComplete();
