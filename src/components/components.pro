@@ -79,6 +79,7 @@ HEADERS += \
     itemaction_p.h \
     keys_p.h \
     label_p.h \
+    listelement_p.h \
     listitem_p.h \
     listitemborderimage_p.h \
     listitemcontent_p.h \
@@ -86,6 +87,7 @@ HEADERS += \
     listitemimage_p.h \
     listitemimagebase_p.h \
     listitemimagebase_p_p.h \
+    listitemlabel_p.h \
     listitemmousearea_p.h \
     listitemprogressbar_p.h \
     listitemrectangle_p.h \
@@ -127,6 +129,7 @@ HEADERS += \
     separator_p.h \
     slider_p.h \
     slider_p_p.h \
+    sortfilterproxymodel_p.h \
     spinbox_p.h \
     spinbox_p_p.h \
     tabbar_p.h \
@@ -183,6 +186,7 @@ SOURCES += \
     item.cpp \
     itemaction.cpp \
     keys.cpp \
+    listelement.cpp \
     listitem.cpp \
     listitemborderimage.cpp \
     listitemcontent.cpp \
@@ -212,6 +216,7 @@ SOURCES += \
     separator.cpp \
     slider.cpp \
     spinbox.cpp \
+    sortfilterproxymodel.cpp \
     tabbar.cpp \
     tabgroup.cpp \
     tableview.cpp \

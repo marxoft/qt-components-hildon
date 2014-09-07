@@ -41,9 +41,11 @@
 #include "itemaction_p.h"
 #include "keys_p.h"
 #include "label_p.h"
+//#include "listelement_p.h"
 #include "listitem_p.h"
 #include "listitemborderimage_p.h"
 #include "listitemimage_p.h"
+#include "listitemlabel_p.h"
 #include "listitemmousearea_p.h"
 #include "listitemprogressbar_p.h"
 #include "listitemrectangle_p.h"
@@ -71,6 +73,7 @@
 #include "separator_p.h"
 #include "slider_p.h"
 #include "spinbox_p.h"
+#include "sortfilterproxymodel_p.h"
 #include "tabbar_p.h"
 #include "tabgroup_p.h"
 #include "tableview_p.h"
@@ -148,6 +151,7 @@ void Plugin::registerTypes(const char *uri) {
     qmlRegisterType<ListItem>(uri, 1, 0, "ListItem");
     qmlRegisterType<ListItemBorderImage>(uri, 1, 0, "ListItemBorderImage");
     qmlRegisterType<ListItemImage>(uri, 1, 0, "ListItemImage");
+    qmlRegisterType<ListItemLabel>(uri, 1, 0, "ListItemLabel");
     qmlRegisterType<ListItemMouseArea>(uri, 1, 0, "ListItemMouseArea");
     qmlRegisterType<ListItemProgressBar>(uri, 1, 0, "ListItemProgressBar");
     qmlRegisterType<ListItemRectangle>(uri, 1, 0, "ListItemRectangle");
@@ -175,6 +179,7 @@ void Plugin::registerTypes(const char *uri) {
     qmlRegisterType<Row>(uri, 1, 0, "Row");
     qmlRegisterType<Separator>(uri, 1, 0, "Separator");
     qmlRegisterType<Slider>(uri, 1, 0, "Slider");
+    qmlRegisterType<SortFilterProxyModel>(uri, 1, 0, "SortFilterProxyModel");
     qmlRegisterType<SpinBox>(uri, 1, 0, "SpinBox");
     qmlRegisterType<TabBar>(uri, 1, 0, "TabBar");
     qmlRegisterType<TabButton>(uri, 1, 0, "TabButton");
@@ -191,6 +196,7 @@ void Plugin::registerTypes(const char *uri) {
     qmlRegisterType<Window>(uri, 1, 0, "Window");
     qmlRegisterType<ZoomArea>(uri, 1, 0, "ZoomArea");
     
+    //qmlRegisterCustomType<ListElement>(uri, 1, 0, "ListElement", new ListElementParser);
     qmlRegisterCustomType<QDeclarativeConnections>(uri, 1, 0, "Connections", new QDeclarativeConnectionsParser);
 }
 
