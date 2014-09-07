@@ -17,7 +17,6 @@
 
 #include "tableview_p.h"
 #include "tableview_p_p.h"
-#include "listitem_p.h"
 #include "varianttablemodel_p.h"
 #include <QHeaderView>
 #include <QMoveEvent>
@@ -469,6 +468,31 @@ void TableViewPrivate::setCurrentIndex(const QVariant &index) {
         Q_Q(TableView);
         q->setCurrentIndex(index.value<QModelIndex>());
         emit q->currentIndexChanged();
+    }
+}
+
+QVariantList TableViewPrivate::selectedIndexes() const {
+    Q_Q(const TableView);
+    QVariantList indexes;
+    
+    foreach(QModelIndex index, q->selectedIndexes()) {
+        indexes.append(QVariant::fromValue(index));
+    }
+    
+    return indexes;
+}
+
+void TableViewPrivate::setSelectedIndexes(const QVariantList &indexes) {
+    Q_Q(TableView);
+    
+    if (!q->selectionModel()) {
+        return;
+    }
+    
+    q->clearSelection();
+    
+    foreach (QVariant index, indexes) {
+        q->selectionModel()->select(index.value<QModelIndex>(), QItemSelectionModel::Select);
     }
 }
 

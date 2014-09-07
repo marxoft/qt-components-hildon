@@ -61,6 +61,9 @@ public:
 
     QVariant currentIndex() const;
     void setCurrentIndex(const QVariant &index);
+    
+    QVariantList selectedIndexes() const;
+    void setSelectedIndexes(const QVariantList &indexes);
 
     QDeclarativeComponent* delegate() const;
     void setDelegate(QDeclarativeComponent *delegate);

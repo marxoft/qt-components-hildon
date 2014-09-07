@@ -66,6 +66,7 @@ class TableView : public QTableView, public QDeclarativeParserStatus
     Q_PRIVATE_PROPERTY(TableView::d_func(), QVariant model READ model WRITE setModel NOTIFY modelChanged)
     Q_PRIVATE_PROPERTY(TableView::d_func(), QVariant rootIndex READ rootIndex WRITE setRootIndex NOTIFY rootIndexChanged)
     Q_PRIVATE_PROPERTY(TableView::d_func(), QVariant currentIndex READ currentIndex WRITE setCurrentIndex NOTIFY currentIndexChanged)
+    Q_PRIVATE_PROPERTY(TableView::d_func(), QVariantList selectedIndexes READ selectedIndexes WRITE setSelectedIndexes NOTIFY currentIndexChanged)
     Q_PRIVATE_PROPERTY(TableView::d_func(), QDeclarativeComponent* delegate READ delegate WRITE setDelegate NOTIFY delegateChanged)
 
     Q_INTERFACES(QDeclarativeParserStatus)

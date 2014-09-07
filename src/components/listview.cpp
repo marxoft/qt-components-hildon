@@ -443,6 +443,31 @@ void ListViewPrivate::setCurrentIndex(const QVariant &index) {
     }
 }
 
+QVariantList ListViewPrivate::selectedIndexes() const {
+    Q_Q(const ListView);
+    QVariantList indexes;
+    
+    foreach(QModelIndex index, q->selectedIndexes()) {
+        indexes.append(QVariant::fromValue(index));
+    }
+    
+    return indexes;
+}
+
+void ListViewPrivate::setSelectedIndexes(const QVariantList &indexes) {
+    Q_Q(ListView);
+    
+    if (!q->selectionModel()) {
+        return;
+    }
+    
+    q->clearSelection();
+    
+    foreach (QVariant index, indexes) {
+        q->selectionModel()->select(index.value<QModelIndex>(), QItemSelectionModel::Select);
+    }
+}
+
 QDeclarativeComponent* ListViewPrivate::delegate() const {
     return delegateComponent;
 }
