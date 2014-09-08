@@ -39,7 +39,7 @@ Dialog {
         view.rootIndex = proxyModel.mapFromSource(fileModel.index(fileModel.filePath(proxyModel.mapToSource(view.rootIndex)).substring(0, fileModel.filePath(proxyModel.mapToSource(view.rootIndex)).lastIndexOf("/"))));
     }
 
-    height: screen.currentOrientation === Screen.PortraitOrientation ? 600 : 340
+    height: screen.currentOrientation === Screen.PortraitOrientation ? 680 : 360
     windowTitle: qsTr("Open file")
     content: Column {
         anchors.fill: parent

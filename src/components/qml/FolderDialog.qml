@@ -39,7 +39,7 @@ Dialog {
         view.rootIndex = proxyModel.mapFromSource(fileModel.index(fileModel.filePath(proxyModel.mapToSource(view.rootIndex)).substring(0, fileModel.filePath(proxyModel.mapToSource(view.rootIndex)).lastIndexOf("/"))));
     }
 
-    height: screen.currentOrientation === Screen.PortraitOrientation ? 600 : 340
+    height: screen.currentOrientation === Screen.PortraitOrientation ? 680 : 360
     windowTitle: qsTr("Choose folder")
     content: Column {
         anchors.fill: parent
@@ -84,7 +84,7 @@ Dialog {
             horizontalScrollMode: ListView.ScrollPerItem
             horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff
             iconSize: "48x48"
-            rootIndex: fileModel.index("/home/user/MyDocs/")
+            rootIndex: proxyModel.mapFromSource(fileModel.index("/home/user/MyDocs/"))
             onClicked: {
                 if (fileModel.isDir(proxyModel.mapToSource(currentIndex))) {
                     rootIndex = currentIndex;
@@ -140,7 +140,7 @@ Dialog {
         id: newFolderDialog
         
         Dialog {
-            height: screen.currentOrientation === Screen.PortraitOrientation ? 220 : 140
+            height: screen.currentOrientation === Screen.PortraitOrientation ? 260 : 140
             windowTitle: qsTr("New folder")
             content: Column {
                 anchors.fill: parent

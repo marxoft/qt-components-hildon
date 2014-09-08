@@ -119,6 +119,7 @@ Window {
         id: dialog
         
         Dialog {
+            height: mainWindow.inPortrait ? 200 : 100
             windowTitle: qsTr("About")
             content: Label {
                 anchors.fill: parent

@@ -60,7 +60,7 @@ Page {
         id: propertiesDialog
 
         windowTitle: qsTr("Properties")
-        height: root.inPortrait ? 600 : 340
+        height: root.inPortrait ? 680 : 360
         content: Flickable {
             id: flicker
 
