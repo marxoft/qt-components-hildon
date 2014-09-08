@@ -24,7 +24,8 @@ class SortFilterProxyModelPrivate
 public:
     SortFilterProxyModelPrivate(SortFilterProxyModel *parent) :
         q_ptr(parent),
-        variantModel(0)
+        variantModel(0),
+        complete(false)
     {
     }
     
@@ -87,6 +88,8 @@ public:
     QString filterProperty;
     QString sortProperty;
     
+    bool complete;
+    
     Q_DECLARE_PUBLIC(SortFilterProxyModel)
 };
 
@@ -138,8 +141,27 @@ void SortFilterProxyModel::setSortProperty(const QString &property) {
     }
 }
 
+QModelIndex SortFilterProxyModel::mapFromSource(const QModelIndex &sourceIndex) const {
+    Q_D(const SortFilterProxyModel);
+    
+    return d->complete ? QSortFilterProxyModel::mapFromSource(sourceIndex) : QModelIndex();
+}
+
+QModelIndex SortFilterProxyModel::mapToSource(const QModelIndex &proxyIndex) const {
+    Q_D(const SortFilterProxyModel);
+    
+    return d->complete ? QSortFilterProxyModel::mapToSource(proxyIndex) : QModelIndex();
+}
+
 void SortFilterProxyModel::sort(int column, Qt::SortOrder order) {
     QSortFilterProxyModel::sort(column, order);
+}
+
+void SortFilterProxyModel::classBegin() {}
+
+void SortFilterProxyModel::componentComplete() {
+    Q_D(SortFilterProxyModel);
+    d->complete = true;
 }
 
 #include "moc_sortfilterproxymodel_p.cpp"

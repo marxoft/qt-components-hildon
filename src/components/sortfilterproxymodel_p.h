@@ -19,17 +19,20 @@
 #define SORTFILTERPROXYMODEL_P_H
 
 #include <QSortFilterProxyModel>
+#include <QDeclarativeParserStatus>
 #include <qdeclarative.h>
 
 class SortFilterProxyModelPrivate;
 
-class SortFilterProxyModel : public QSortFilterProxyModel
+class SortFilterProxyModel : public QSortFilterProxyModel, public QDeclarativeParserStatus
 {
     Q_OBJECT
     
     Q_PROPERTY(QString filterProperty READ filterProperty WRITE setFilterProperty)
     Q_PROPERTY(QString sortProperty READ sortProperty WRITE setSortProperty)
     Q_PRIVATE_PROPERTY(SortFilterProxyModel::d_func(), QVariant sourceModel READ sourceModel WRITE setSourceModel NOTIFY sourceModelChanged)
+    
+    Q_INTERFACES(QDeclarativeParserStatus)
     
 public:
     explicit SortFilterProxyModel(QObject *parent = 0);
@@ -41,6 +44,9 @@ public:
     QString sortProperty() const;
     void setSortProperty(const QString &property);
     
+    Q_INVOKABLE QModelIndex mapFromSource(const QModelIndex &sourceIndex) const;
+    Q_INVOKABLE QModelIndex mapToSource(const QModelIndex &proxyIndex) const;
+    
     Q_INVOKABLE virtual void sort(int column, Qt::SortOrder order = Qt::AscendingOrder);
     
 signals:
@@ -48,6 +54,9 @@ signals:
     
 protected:
     SortFilterProxyModel(SortFilterProxyModelPrivate &dd, QObject *parent = 0);
+    
+    virtual void classBegin();
+    virtual void componentComplete();
     
     QScopedPointer<SortFilterProxyModelPrivate> d_ptr;
     
