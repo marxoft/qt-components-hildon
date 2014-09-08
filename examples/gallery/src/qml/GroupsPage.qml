@@ -47,7 +47,10 @@ Page {
 
         Action {
             text: qsTr("Show dialog")
-            onTriggered: dialog.open()
+            onTriggered: {
+                loader.sourceComponent = dialog;
+                loader.item.open();
+            }
         }
     ]
 
@@ -83,61 +86,67 @@ Page {
             text: qsTr("Showing tab three")
         }
     }
-
-    Dialog {
+    
+    Loader {
+        id: loader
+    }
+    
+    Component {
         id: dialog
 
-        windowTitle: root.windowTitle
-        height: 340
-        content: Column {
-            anchors.fill: parent
+        Dialog {
+            windowTitle: root.windowTitle
+            height: 340
+            content: Column {
+                anchors.fill: parent
 
-            TabBar {
-                id: dialogTabBar
+                TabBar {
+                    id: dialogTabBar
 
-                TabButton {
-                    text: qsTr("One")
+                    TabButton {
+                        text: qsTr("One")
+                    }
+
+                    TabButton {
+                        text: qsTr("Two")
+                    }
+
+                    TabButton {
+                        text: qsTr("Three")
+                    }
                 }
 
-                TabButton {
-                    text: qsTr("Two")
-                }
+                TabGroup {
+                    id: dialogTabGroup
 
-                TabButton {
-                    text: qsTr("Three")
-                }
-            }
+                    currentIndex: dialogTabBar.currentIndex
 
-            TabGroup {
-                id: dialogTabGroup
+                    Label {
+                        alignment: Qt.AlignCenter
+                        font.bold: true
+                        font.pixelSize: 40
+                        color: platformStyle.activeTextColor
+                        wordWrap: true
+                        text: qsTr("Showing tab one")
+                    }
 
-                currentIndex: dialogTabBar.currentIndex
+                    Label {
+                        alignment: Qt.AlignCenter
+                        font.bold: true
+                        font.pixelSize: 40
+                        color: platformStyle.activeTextColor
+                        wordWrap: true
+                        text: qsTr("Showing tab two")
+                    }
 
-                Label {
-                    alignment: Qt.AlignCenter
-                    font.bold: true
-                    font.pixelSize: 40
-                    color: platformStyle.activeTextColor
-                    wordWrap: true
-                    text: qsTr("Showing tab one")
-                }
-
-                Label {
-                    alignment: Qt.AlignCenter
-                    font.bold: true
-                    font.pixelSize: 40
-                    color: platformStyle.activeTextColor
-                    wordWrap: true
-                    text: qsTr("Showing tab two")
-                }
-
-                Label {
-                    alignment: Qt.AlignCenter
-                    font.bold: true
-                    font.pixelSize: 40
-                    color: platformStyle.activeTextColor
-                    wordWrap: true
-                    text: qsTr("Showing tab three")
+                    Label {
+                        alignment: Qt.AlignCenter
+                        font.bold: true
+                        font.pixelSize: 40
+                        color: platformStyle.activeTextColor
+                        wordWrap: true
+                        text: qsTr("Showing tab three")
+                    }
                 }
             }
         }

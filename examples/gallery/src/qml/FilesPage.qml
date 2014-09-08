@@ -25,9 +25,8 @@ Page {
     Column {
         anchors {
             fill: parent
-            margins: 10
+            margins: platformStyle.paddingMedium
         }
-        spacing: 20
 
         ValueButton {
             id: fileSelector
@@ -38,7 +37,10 @@ Page {
             }
             text: qsTr("Select a file")
             valueText: qsTr("None chosen")
-            onClicked: fileDialog.open()
+            onClicked: {
+                loader.sourceComponent = fileDialog;
+                loader.item.open();
+            }
         }
 
         ValueButton {
@@ -50,21 +52,32 @@ Page {
             }
             text: qsTr("Select a directory")
             valueText: qsTr("None chosen")
-            onClicked: folderDialog.open()
+            onClicked: {
+                loader.sourceComponent = folderDialog;
+                loader.item.open();
+            }
+        }
+    }
+    
+    Loader {
+        id: loader
+    }
+    
+    Component {
+        id: fileDialog
+
+        FileDialog {
+            showHidden: true
+            onSelected: fileSelector.valueText = filePath
         }
     }
 
-    FileDialog {
-        id: fileDialog
-
-        showHidden: true
-        onSelected: fileSelector.valueText = filePath
-    }
-
-    FolderDialog {
+    Component {
         id: folderDialog
-
-        showHidden: true
-        onSelected: folderSelector.valueText = folder
+        
+        FolderDialog {
+            showHidden: true
+            onSelected: folderSelector.valueText = folder
+        }
     }
 }

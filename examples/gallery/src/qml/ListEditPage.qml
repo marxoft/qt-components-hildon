@@ -35,7 +35,20 @@ Page {
 
         Button {
             text: qsTr("Perform action")
-            onClicked: pageStack.pop()
+            onClicked: {
+                var l = view.selectedIndexes.length;
+                var message = l > 0 ? qsTr("You selected items") + " " : qsTr("You did not select any items");
+                var rows = [];
+                
+                for (var i = 0; i < l; i++) {
+                    rows.push(QModelIndex.row(view.selectedIndexes[i]));
+                }
+                
+                message += rows.join(", ");
+                
+                infobox.showMessage(message);
+                pageStack.pop();
+            }
         }
     }
 

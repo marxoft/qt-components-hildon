@@ -27,7 +27,7 @@ Page {
 
         anchors {
             fill: parent
-            margins: 10
+            margins: platformStyle.paddingMedium
         }
 
         Column {
@@ -38,7 +38,6 @@ Page {
                 right: parent.right
                 top: parent.top
             }
-            spacing: 10
 
             ButtonRow {
                 width: parent.width

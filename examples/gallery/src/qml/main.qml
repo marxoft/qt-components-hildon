@@ -30,11 +30,8 @@ Window {
         Action {
             text: qsTr("About")
             onTriggered: {
-                loader.source = Qt.resolvedUrl("AboutDialog.qml");
-
-                if (loader.item) {
-                    loader.item.open();
-                }
+                loader.sourceComponent = dialog;
+                loader.item.open();
             }
         }
     ]
@@ -42,10 +39,9 @@ Window {
     Grid {
         anchors {
             fill: parent
-            margins: 10
+            margins: platformStyle.paddingMedium
         }
         columns: mainWindow.inPortrait ? 1 : 2
-        spacing: 10
 
         Button {
             text: qsTr("Buttons")
@@ -117,5 +113,23 @@ Window {
 
     Loader {
         id: loader
+    }
+    
+    Component {
+        id: dialog
+        
+        Dialog {
+            windowTitle: qsTr("About")
+            content: Label {
+                anchors.fill: parent
+                wordWrap: true
+                text: qsTr("Qt Components Hildon Gallery is a demo of Qt Components Hildon.")
+            }
+
+            buttons: Button {
+                text: qsTr("Done")
+                onClicked: dialog.accept()
+            }
+        }
     }
 }

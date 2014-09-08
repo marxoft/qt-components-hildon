@@ -80,7 +80,14 @@ Page {
                     selector: ListSelector {
                         id: fillModeSelector
 
-                        model: [ "Stretch", "PreserveAspectFit", "PreserveAspectCrop", "Tile", "TileHorizontally", "TileVertically" ]
+                        model: [
+                            "Stretch",
+                            "PreserveAspectFit",
+                            "PreserveAspectCrop",
+                            "Tile",
+                            "TileHorizontally",
+                            "TileVertically"
+                        ]
                         currentIndex: 0
                     }
                 }
