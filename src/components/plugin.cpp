@@ -116,14 +116,15 @@ void Plugin::registerTypes(const char *uri) {
     qRegisterMetaType<AnchorLine>("AnchorLine");
     qRegisterMetaType<KeyEvent*>("KeyEvent*");
 
-    qmlRegisterUncreatableType<QWidget>(uri, 1, 0, "Widget", "");
-    qmlRegisterUncreatableType<QAbstractButton>(uri, 1, 0, "AbstractButton", "");
-    qmlRegisterUncreatableType<QHeaderView>(uri, 1, 0, "QHeaderView", "");
     qmlRegisterUncreatableType<Anchors>(uri, 1, 0, "Anchors", "");
     qmlRegisterUncreatableType<Border>(uri, 1, 0, "Border", "");
     qmlRegisterUncreatableType<ImageBorder>(uri, 1, 0, "ImageBorder", "");
     qmlRegisterUncreatableType<Keys>(uri, 1, 0, "Keys", "");
     qmlRegisterUncreatableType<KeyEvent>(uri, 1, 0, "KeyEvent", "");
+    qmlRegisterUncreatableType<MouseDrag>(uri, 1, 0, "Drag", "");
+    qmlRegisterUncreatableType<QWidget>(uri, 1, 0, "Widget", "");
+    qmlRegisterUncreatableType<QAbstractButton>(uri, 1, 0, "AbstractButton", "");
+    qmlRegisterUncreatableType<QHeaderView>(uri, 1, 0, "QHeaderView", "");
 
     qmlRegisterType<Action>(uri, 1, 0, "Action");
     qmlRegisterType<ActionGroup>(uri, 1, 0, "ActionGroup");
@@ -162,7 +163,6 @@ void Plugin::registerTypes(const char *uri) {
     qmlRegisterType<Loader>(uri, 1, 0, "Loader");
     qmlRegisterType<Menu>(uri, 1, 0, "Menu");
     qmlRegisterType<MouseArea>(uri, 1, 0, "MouseArea");
-    qmlRegisterType<MouseDrag>(uri, 1, 0, "Drag");
     qmlRegisterType<MultiListSelector>(uri, 1, 0, "MultiListSelector");
     qmlRegisterType<Page>(uri, 1, 0, "Page");
     qmlRegisterType<ProgressBar>(uri, 1, 0, "ProgressBar");
@@ -177,7 +177,7 @@ void Plugin::registerTypes(const char *uri) {
     qmlRegisterType<Rectangle>(uri, 1, 0, "Rectangle");
     qmlRegisterType<Repeater>(uri, 1, 0, "Repeater");
     qmlRegisterType<Row>(uri, 1, 0, "Row");
-    qmlRegisterType<Separator>(uri, 1, 0, "Separator");
+    qmlRegisterType<Separator>(uri, 1, 0, "MenuSeparator");
     qmlRegisterType<Slider>(uri, 1, 0, "Slider");
     qmlRegisterType<SortFilterProxyModel>(uri, 1, 0, "SortFilterProxyModel");
     qmlRegisterType<SpinBox>(uri, 1, 0, "SpinBox");

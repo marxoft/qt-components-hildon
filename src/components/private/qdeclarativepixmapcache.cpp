@@ -39,7 +39,7 @@
 **
 ****************************************************************************/
 
-#include "private/qdeclarativepixmapcache_p.h"
+#include "qdeclarativepixmapcache_p.h"
 #include "qdeclarativenetworkaccessmanagerfactory.h"
 #include "qdeclarativeimageprovider.h"
 
