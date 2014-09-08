@@ -44,8 +44,8 @@ public:
     QString sortProperty() const;
     void setSortProperty(const QString &property);
     
-    Q_INVOKABLE QModelIndex mapFromSource(const QModelIndex &sourceIndex) const;
-    Q_INVOKABLE QModelIndex mapToSource(const QModelIndex &proxyIndex) const;
+    Q_INVOKABLE virtual QModelIndex mapFromSource(const QModelIndex &sourceIndex) const;
+    Q_INVOKABLE virtual QModelIndex mapToSource(const QModelIndex &proxyIndex) const;
     
     Q_INVOKABLE virtual void sort(int column, Qt::SortOrder order = Qt::AscendingOrder);
     
