@@ -24,7 +24,10 @@ Window {
     windowTitle: qsTr("Browser")
     tools: Action {
         text: qsTr("About")
-        onTriggered: dialog.open()
+        onTriggered: {
+            loader.sourceComponent = dialog;
+            loader.item.open();
+        }
     }
 
     WebView {
@@ -66,20 +69,26 @@ Window {
             onTriggered: webView.status == WebView.Loading ? webView.stop() : webView.reload()
         }
     }
-
-    Dialog {
+    
+    Loader {
+        id: loader
+    }
+    
+    Component {
         id: dialog
 
-        windowTitle: qsTr("About")
-        content: Label {
-            anchors.fill: parent
-            wordWrap: true
-            text: qsTr("Qt Components Hildon Browser is a demo of Qt Components Hildon Webkit.")
-        }
+        Dialog {
+            windowTitle: qsTr("About")
+            content: Label {
+                anchors.fill: parent
+                wordWrap: true
+                text: qsTr("Qt Components Hildon Browser is a demo of Qt Components Hildon Webkit.")
+            }
 
-        buttons: Button {
-            text: qsTr("Done")
-            onClicked: dialog.accept()
+            buttons: Button {
+                text: qsTr("Done")
+                onClicked: dialog.accept()
+            }
         }
     }
 }
