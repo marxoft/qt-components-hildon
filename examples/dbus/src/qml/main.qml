@@ -24,7 +24,10 @@ Window {
     windowTitle: qsTr("DBus")
     tools: Action {
         text: qsTr("About")
-        onTriggered: dialog.open()
+        onTriggered: {
+            loader.sourceComponent = dialog;
+            loader.item.open();
+        }
     }
 
     DBusAdaptor {
@@ -183,21 +186,27 @@ Window {
             color: platformStyle.reversedTextColor
         }
     }
-
-    Dialog {
+    
+    Loader {
+        id: loader
+    }
+    
+    Component {
         id: dialog
 
-        windowTitle: qsTr("About")
-        content: Label {
-            anchors.fill: parent
-            wordWrap: true
-            text: qsTr("Qt Components Hildon DBus is a demo of the Qt Components Hildon DBus module.")
-        }
+        Dialog {
+            windowTitle: qsTr("About")
+            content: Label {
+                anchors.fill: parent
+                wordWrap: true
+                text: qsTr("Qt Components Hildon DBus is a demo of the Qt Components Hildon DBus module.")
+            }
 
-        buttons: Button {
-            id: dialogButton
-            text: qsTr("Done")
-            onClicked: dialog.accept()
+            buttons: Button {
+                id: dialogButton
+                text: qsTr("Done")
+                onClicked: dialog.accept()
+            }
         }
     }
 }
