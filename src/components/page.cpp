@@ -188,7 +188,10 @@ void Page::hideEvent(QHideEvent *event) {
 }
 
 void Page::closeEvent(QCloseEvent *event) {
-    PageStack::instance(this)->d_func()->stack.removeOne(this);
+    if (PageStack *stack = PageStack::instance(this)) {
+        stack->d_func()->stack.removeOne(this);
+    }
+    
     QMainWindow::closeEvent(event);
 }
 
