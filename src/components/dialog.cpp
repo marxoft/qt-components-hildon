@@ -29,6 +29,7 @@ Dialog::Dialog(QWidget *parent) :
     Q_D(Dialog);
 
     d->contentItem = new Item(this);
+    d->contentItem->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     d->grid = new QGridLayout(this);
     d->buttonBox = new QDialogButtonBox(Qt::Vertical, this);
 }
@@ -37,6 +38,12 @@ Dialog::Dialog(DialogPrivate &dd, QWidget *parent) :
     QDialog(parent),
     d_ptr(&dd)
 {
+    Q_D(Dialog);
+
+    d->contentItem = new Item(this);
+    d->contentItem->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    d->grid = new QGridLayout(this);
+    d->buttonBox = new QDialogButtonBox(Qt::Vertical, this);
 }
 
 Dialog::~Dialog() {}
@@ -276,8 +283,6 @@ QDeclarativeListProperty<QAbstractButton> DialogPrivate::buttons() {
 void DialogPrivate::_q_onOrientationChanged(Screen::Orientation orientation) {
     Q_Q(Dialog);
 
-    int h = 0;
-
     switch (orientation) {
     case Screen::PortraitOrientation:
         buttonBox->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
@@ -291,7 +296,7 @@ void DialogPrivate::_q_onOrientationChanged(Screen::Orientation orientation) {
             grid->addWidget(buttonBox, 1, 0);
         }
 
-        return;
+        break;
     default:
         buttonBox->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
 
@@ -304,7 +309,7 @@ void DialogPrivate::_q_onOrientationChanged(Screen::Orientation orientation) {
             grid->addWidget(buttonBox, 0, 1);
         }
 
-        return;
+        break;
     }
 }
 
