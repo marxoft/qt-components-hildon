@@ -1,5 +1,5 @@
 TEMPLATE = app
-TARGET = browser
+TARGET = gallery
 
 QT += declarative
 
