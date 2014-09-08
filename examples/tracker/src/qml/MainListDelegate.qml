@@ -27,7 +27,7 @@ ListItem {
         id: highlight
 
         anchors.fill: parent
-        source: "/etc/hildon/theme/images/TouchListBackground" + (isCurrentItem ? "Pressed" : "Normal") + ".png"
+        source: "image://theme/TouchListBackground" + (isCurrentItem ? "Pressed" : "Normal")
 
     }
 
@@ -59,7 +59,7 @@ ListItem {
         smooth: true
     }
     
-    ListItemText {
+    ListItemLabel {
         id: name
         
         anchors {

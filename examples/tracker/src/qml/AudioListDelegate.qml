@@ -27,7 +27,7 @@ ListItem {
         id: highlight
 
         anchors.fill: parent
-        source: "/etc/hildon/theme/images/TouchListBackground" + (isCurrentItem ? "Pressed" : "Normal") + ".png"
+        source: "image://theme/TouchListBackground" + (isCurrentItem ? "Pressed" : "Normal")
     }
 
     ListItemImage {
@@ -44,7 +44,7 @@ ListItem {
         smooth: true
     }
     
-    ListItemText {
+    ListItemLabel {
         id: title
         
         height: 24
@@ -58,7 +58,7 @@ ListItem {
         text: modelData["Audio:Title"]
     }
     
-    ListItemText {
+    ListItemLabel {
         id: artist
         
         height: 24

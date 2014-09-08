@@ -28,7 +28,7 @@ ListItem {
         id: highlight
 
         anchors.fill: parent
-        source: "/etc/hildon/theme/images/TouchListBackground" + (isCurrentItem ? "Pressed" : "Normal") + ".png"
+        source: "image://theme/TouchListBackground" + (isCurrentItem ? "Pressed" : "Normal")
     }
 
     ListItemImage {
@@ -57,7 +57,7 @@ ListItem {
         opacity: 0.7
     }
     
-    ListItemText {
+    ListItemLabel {
         id: duration
             
         anchors.fill: rect
@@ -66,7 +66,7 @@ ListItem {
         text: Utils.durationFromSecs(modelData["Video:Duration"])
     }
     
-    ListItemText {
+    ListItemLabel {
         id: title
         
         anchors {
