@@ -32,11 +32,11 @@ Dialog {
     signal selected(string filePath)
 
     function cd(path) {
-        view.rootIndex = fileModel.index(path);
+        view.rootIndex = proxyModel.mapFromSource(fileModel.index(path));
     }
 
     function cdUp() {
-        view.rootIndex = fileModel.index(fileModel.filePath(view.rootIndex).substring(0, fileModel.filePath(view.rootIndex).lastIndexOf("/")));
+        view.rootIndex = proxyModel.mapFromSource(fileModel.index(fileModel.filePath(proxyModel.mapToSource(view.rootIndex)).substring(0, fileModel.filePath(proxyModel.mapToSource(view.rootIndex)).lastIndexOf("/"))));
     }
 
     height: screen.currentOrientation === Screen.PortraitOrientation ? 600 : 340
@@ -48,34 +48,40 @@ Dialog {
             Button {
                 width: 80
                 icon: "filemanager_folder_up"
-                enabled: fileModel.filePath(view.rootIndex) !== "/"
+                enabled: fileModel.filePath(proxyModel.mapToSource(view.rootIndex)) !== "/"
                 onClicked: root.cdUp()
             }
 
             Label {
                 width: parent.width - 90
-                text: fileModel.filePath(view.rootIndex)
+                text: fileModel.filePath(proxyModel.mapToSource(view.rootIndex))
             }
         }
 
         ListView {
             id: view
 
-            model: FileSystemModel {
-                id: fileModel
+            model: SortFilterProxyModel {
+                id: proxyModel
+                
+                sourceModel: FileSystemModel {
+                    id: fileModel
 
-                rootPath: "/"
-                showFiles: true
-                showDotAndDotDot: false
-                nameFilterDisables: false
-                readOnly: true
+                    rootPath: "/"
+                    showFiles: true
+                    showDotAndDotDot: false
+                    nameFilterDisables: false
+                    readOnly: true
+                }
+                dynamicSortFilter: true
+                filterRegExp: filterEdit.text ? eval("(/" + filterEdit.text + "/i)") : /^/
             }
             horizontalScrollMode: ListView.ScrollPerItem
             horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff
             iconSize: "48x48"
-            rootIndex: fileModel.index("/home/user/MyDocs/")
+            rootIndex: proxyModel.mapFromSource(fileModel.index("/home/user/MyDocs/"))
             onClicked: {
-                if (fileModel.isDir(currentIndex)) {
+                if (fileModel.isDir(proxyModel.mapToSource(currentIndex))) {
                     rootIndex = currentIndex;
                 }
                 else {
@@ -83,7 +89,37 @@ Dialog {
                 }
             }
         }
+        
+        ToolBar {
+            id: toolBar
+            
+            visible: false
+            movable: false
+            
+            TextField {
+                id: filterEdit
+                
+                onTextChanged: if (text) toolBar.visible = true;
+            }
+            
+            Action {
+                icon: "general_close"
+                onTriggered: toolBar.visible = false
+            }
+            
+            onVisibleChanged: {
+                if (visible) {
+                    filterEdit.focus = true;
+                }
+                else {
+                    filterEdit.clear();
+                }
+            }
+        }
     }
+    
+    Keys.onPressed: if ((!filterEdit.focus) && (event.text != " ")) filterEdit.text += event.text;
 
-    onAccepted: selected(fileModel.filePath(view.currentIndex))
+    onAccepted: selected(fileModel.filePath(proxyModel.mapToSource(view.currentIndex)))
+    onVisibleChanged: if (!visible) toolBar.visible = false;
 }
