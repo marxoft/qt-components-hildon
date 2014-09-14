@@ -25,7 +25,8 @@ class FileSystemModelPrivate
 public:
     FileSystemModelPrivate(FileSystemModel *parent) :
         q_ptr(parent),
-        model(new QFileSystemModel(parent))
+        model(new QFileSystemModel(parent)),
+        filterPath("/")
     {
     }
 
@@ -34,6 +35,8 @@ public:
     FileSystemModel *q_ptr;
 
     QFileSystemModel *model;
+    
+    QString filterPath;
 
     Q_DECLARE_PUBLIC(FileSystemModel)
 };
@@ -78,6 +81,20 @@ void FileSystemModel::setRootPath(const QString &path) {
     Q_D(FileSystemModel);
 
     d->model->setRootPath(path);
+}
+
+QString FileSystemModel::filterPath() const {
+    Q_D(const FileSystemModel);
+
+    return d->filterPath;
+}
+
+void FileSystemModel::setFilterPath(const QString &path) {
+    if (path != this->filterPath()) {
+        Q_D(FileSystemModel);
+        d->filterPath = path;
+        emit filterPathChanged();
+    }
 }
 
 int FileSystemModel::count() const {
@@ -257,7 +274,7 @@ QDateTime FileSystemModel::lastModified(const QModelIndex &index) const {
 QModelIndex FileSystemModel::mkdir(const QModelIndex &parent, const QString &name) {
     Q_D(FileSystemModel);
 
-    return d->model->mkdir(parent, name);
+    return this->mapFromSource(d->model->mkdir(this->mapToSource(parent), name));
 }
 
 bool FileSystemModel::rmdir(const QModelIndex &index) const {
@@ -282,6 +299,16 @@ bool FileSystemModel::remove(const QModelIndex &index) const {
     Q_D(const FileSystemModel);
 
     return d->model->remove(this->mapToSource(index));
+}
+
+bool FileSystemModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const {
+    Q_D(const FileSystemModel);
+    
+    if (source_parent == d->model->index(this->filterPath())) {
+        return QSortFilterProxyModel::filterAcceptsRow(source_row, source_parent);
+    }
+
+    return true;
 }
 
 #include "moc_filesystemmodel_p.cpp"

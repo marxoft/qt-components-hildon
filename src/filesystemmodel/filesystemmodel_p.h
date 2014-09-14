@@ -28,6 +28,7 @@ class FileSystemModel : public QSortFilterProxyModel
     Q_OBJECT
 
     Q_PROPERTY(QString rootPath READ rootPath WRITE setRootPath NOTIFY rootPathChanged)
+    Q_PROPERTY(QString filterPath READ filterPath WRITE setFilterPath NOTIFY filterPathChanged)
     Q_PROPERTY(int count READ count NOTIFY countChanged)
     Q_PROPERTY(bool showDirs READ showDirs WRITE setShowDirs NOTIFY dirFilterChanged)
     Q_PROPERTY(bool showFiles READ showFiles WRITE setShowFiles NOTIFY dirFilterChanged)
@@ -54,6 +55,9 @@ public:
 
     QString rootPath() const;
     void setRootPath(const QString &path);
+    
+    QString filterPath() const;
+    void setFilterPath(const QString &path);
 
     int count() const;
 
@@ -103,6 +107,7 @@ public:
 
 signals:
     void rootPathChanged();
+    void filterPathChanged();
     void directoryLoaded();
     void countChanged();
     void resolveSymlinksChanged();
@@ -113,6 +118,8 @@ signals:
 
 protected:
     FileSystemModel(FileSystemModelPrivate &dd, QObject *parent = 0);
+    
+    bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const;
 
     QScopedPointer<FileSystemModelPrivate> d_ptr;
 
