@@ -147,5 +147,5 @@ Page {
         }
     }
     
-    Keys.onPressed: if ((!filterEdit.focus) && (event.text != " ")) filterEdit.text += event.text;
+    Keys.onPressed: if ((!filterEdit.focus) && (!/^\s/.test(event.text))) filterEdit.text += event.text;
 }

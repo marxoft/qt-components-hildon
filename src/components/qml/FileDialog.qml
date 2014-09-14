@@ -118,7 +118,7 @@ Dialog {
         }
     }
     
-    Keys.onPressed: if ((!filterEdit.focus) && (event.text != " ")) filterEdit.text += event.text;
+    Keys.onPressed: if ((!filterEdit.focus) && (!/^\s/.test(event.text))) filterEdit.text += event.text;
 
     onAccepted: selected(fileModel.filePath(proxyModel.mapToSource(view.currentIndex)))
     onVisibleChanged: if (!visible) toolBar.visible = false;
