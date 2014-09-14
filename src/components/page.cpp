@@ -17,7 +17,6 @@
 
 #include "page_p.h"
 #include "page_p_p.h"
-#include "pagestack_p_p.h"
 #include "separator_p.h"
 #include <QMenuBar>
 #include <QToolBar>
@@ -29,13 +28,7 @@ Page::Page(QWidget *parent) :
     QMainWindow(parent),
     d_ptr(new PagePrivate(this))
 {
-    if (!parent) {
-        if (PageStack *stack = PageStack::instance(this)) {
-            this->setParent(stack->currentPage(), Qt::Window);
-        }
-    }
-
-    this->setAttribute(Qt::WA_Maemo5StackedWindow, true);
+    this->setAttribute(Qt::WA_DeleteOnClose, true);
     this->setOrientationLock(Screen::instance()->orientationLock());
     this->connect(Screen::instance(), SIGNAL(orientationLockChanged(Screen::Orientation)), this, SLOT(setOrientationLock(Screen::Orientation)));
     this->connect(Screen::instance(), SIGNAL(currentOrientationChanged(Screen::Orientation)), this, SIGNAL(inPortraitChanged()));
@@ -45,13 +38,7 @@ Page::Page(PagePrivate &dd, QWidget *parent) :
     QMainWindow(parent),
     d_ptr(&dd)
 {
-    if (!parent) {
-        if (PageStack *stack = PageStack::instance(this)) {
-            this->setParent(stack->currentPage(), Qt::Window);
-        }
-    }
-
-    this->setAttribute(Qt::WA_Maemo5StackedWindow, true);
+    this->setAttribute(Qt::WA_DeleteOnClose, true);
     this->setOrientationLock(Screen::instance()->orientationLock());
     this->connect(Screen::instance(), SIGNAL(orientationLockChanged(Screen::Orientation)), this, SLOT(setOrientationLock(Screen::Orientation)));
     this->connect(Screen::instance(), SIGNAL(currentOrientationChanged(Screen::Orientation)), this, SIGNAL(inPortraitChanged()));
@@ -170,14 +157,6 @@ AnchorLine Page::verticalCenter() const {
 }
 
 void Page::showEvent(QShowEvent *event) {
-    if (PageStack *stack = PageStack::instance(this)) {
-        if (stack->currentPage() != this) {
-            stack->d_func()->stack.append(this);
-            emit stack->currentPageChanged();
-            emit stack->countChanged();
-        }
-    }
-
     emit visibleChanged();
     QMainWindow::showEvent(event);
 }
@@ -185,14 +164,6 @@ void Page::showEvent(QShowEvent *event) {
 void Page::hideEvent(QHideEvent *event) {
     emit visibleChanged();
     QMainWindow::hideEvent(event);
-}
-
-void Page::closeEvent(QCloseEvent *event) {
-    if (PageStack *stack = PageStack::instance(this)) {
-        stack->d_func()->stack.removeOne(this);
-    }
-    
-    QMainWindow::closeEvent(event);
 }
 
 void Page::changeEvent(QEvent *event) {

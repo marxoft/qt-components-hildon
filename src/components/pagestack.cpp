@@ -17,57 +17,34 @@
 
 #include "pagestack_p.h"
 #include "pagestack_p_p.h"
-#include "screen_p.h"
 #include <QWidget>
 #include <QDeclarativeEngine>
+#include <QDeclarativeComponent>
 #include <QDeclarativeContext>
 #include <QDeclarativeInfo>
+#include <X11/Xlib.h>
+#include <X11/Xatom.h>
+#include <QX11Info>
 
-PageStack::PageStack(QObject *parent) :
+PageStack::PageStack(QWidget *parent) :
     QObject(parent),
     d_ptr(new PageStackPrivate(this))
 {
-    QDeclarativeContext *context = qmlContext(parent);
-
-    if (!context) {
-        context = qmlContext(Screen::instance());
+    if (parent) {
+        this->push(parent);
     }
-
-    context->setContextProperty("pageStack", this);
-    QDeclarativeEngine::setContextForObject(this, context);
 }
 
-PageStack::PageStack(PageStackPrivate &dd, QObject *parent) :
+PageStack::PageStack(PageStackPrivate &dd, QWidget *parent) :
     QObject(parent),
     d_ptr(&dd)
 {
-    QDeclarativeContext *context = qmlContext(parent);
-
-    if (!context) {
-        context = qmlContext(Screen::instance());
+    if (parent) {
+        this->push(parent);
     }
-
-    context->setContextProperty("pageStack", this);
-    QDeclarativeEngine::setContextForObject(this, context);
 }
 
 PageStack::~PageStack() {}
-
-PageStack* PageStack::instance(QWidget *page) {
-    QDeclarativeContext *context = qmlContext(page);
-
-    if (!context) {
-        context = qmlContext(Screen::instance());
-    }
-
-    if (QObject *obj = qvariant_cast<QObject*>(context->contextProperty("pageStack"))) {
-        if (PageStack* stack = qobject_cast<PageStack*>(obj)) {
-            return stack;
-        }
-    }
-
-    return 0;
-}
 
 int PageStack::depth() const {
     Q_D(const PageStack);
@@ -77,7 +54,7 @@ int PageStack::depth() const {
 
 QWidget* PageStack::currentPage() const {
     Q_D(const PageStack);
-
+    
     return d->stack.isEmpty() ? 0 : d->stack.last();
 }
 
@@ -87,31 +64,17 @@ QWidget* PageStack::rootPage() const {
     return d->stack.isEmpty() ? 0 : d->stack.first();
 }
 
-void PageStack::push(QObject *page) {
-    if (QWidget *w = qobject_cast<QWidget*>(page)) {
-        if (!w->parent()) {
-            w->setParent(this->currentPage());
-        }
-
-        w->show();
-    }
+void PageStack::push(QWidget *page) {
+    Q_D(PageStack);
+    
+    d->stack.append(page);
+    this->connect(page, SIGNAL(destroyed(QObject*)), this, SLOT(_q_onPageClosed(QObject*)));
+    emit countChanged();
+    emit currentPageChanged();
 }
 
 void PageStack::push(const QUrl &url) {
-    Q_D(PageStack);
-
-    if ((d->component) && (d->component->status() == QDeclarativeComponent::Loading)) {
-        return;
-    }
-
-    d->data.clear();
-
-    if (!d->component) {
-        d->component = new QDeclarativeComponent(qmlEngine(this), this);
-        this->connect(d->component, SIGNAL(statusChanged(QDeclarativeComponent::Status)), this, SLOT(_q_onPageStatusChanged(QDeclarativeComponent::Status)));
-    }
-
-    d->component->loadUrl(url);
+    this->push(url, QVariantMap());
 }
 
 void PageStack::push(const QUrl &url, const QVariantMap &data) {
@@ -124,8 +87,8 @@ void PageStack::push(const QUrl &url, const QVariantMap &data) {
     d->data = data;
 
     if (!d->component) {
-        d->component = new QDeclarativeComponent(qmlEngine(this), this);
-        this->connect(d->component, SIGNAL(statusChanged(QDeclarativeComponent::Status)), this, SLOT(_q_onPageStatusChanged(QDeclarativeComponent::Status)));
+        d->component = new QDeclarativeComponent(qmlEngine(this->currentPage()), this);
+        this->connect(d->component, SIGNAL(statusChanged(QDeclarativeComponent::Status)), this, SLOT(_q_onPageStatusChanged()));
     }
 
     d->component->loadUrl(url);
@@ -141,7 +104,7 @@ void PageStack::pop() {
     }
 }
 
-void PageStack::pop(QObject *page) {
+void PageStack::pop(QWidget *page) {
     Q_D(PageStack);
 
     if (d->stack.isEmpty()) {
@@ -175,31 +138,49 @@ void PageStack::pop(const QString &objectName) {
     emit currentPageChanged();
 }
 
-void PageStackPrivate::_q_onPageStatusChanged(QDeclarativeComponent::Status status) {
+void PageStackPrivate::_q_onPageStatusChanged() {
     if (!component) {
         return;
     }
 
     Q_Q(PageStack);
 
-    switch (status) {
+    switch (component->status()) {
     case QDeclarativeComponent::Ready:
         if (QObject *obj = component->beginCreate(q->currentPage() ? qmlContext(q->currentPage()) : qmlContext(q))) {
             if (!data.isEmpty()) {
-                foreach (QString key, data.keys()) {
-                    obj->setProperty(key.toUtf8(), data.value(key));
+                QMapIterator<QString, QVariant> iterator(data);
+                
+                while (iterator.hasNext()) {
+                    iterator.next();
+                    obj->setProperty(iterator.key().toUtf8(), iterator.value());
                 }
             }
+            
+            if (obj->isWidgetType()) {
+                QWidget *page = qobject_cast<QWidget*>(obj);
+                page->setParent(q->currentPage());
+                page->setWindowFlags(Qt::Window);
+                page->setAttribute(Qt::WA_Maemo5StackedWindow, true);
+                const int pos = stack.size();
+                XChangeProperty(QX11Info::display(), page->winId(), 
+                                XInternAtom(QX11Info::display() , "_HILDON_STACKABLE_WINDOW", True), 
+                                XA_INTEGER, 32, PropModeReplace, (unsigned char *) &pos, 1);
+                
+                component->completeCreate();
 
-            component->completeCreate();
-
-            if (component->isError()) {
-                if (!component->errors().isEmpty()) {
-                    qmlInfo(q, component->errors());
+                if (component->isError()) {
+                    if (!component->errors().isEmpty()) {
+                        qmlInfo(q, component->errors());
+                    }
+                }
+                else {
+                    q->push(page);
                 }
             }
             else {
-                q->push(obj);
+                qmlInfo(q) << "Page must be a visual item";
+                delete obj;
             }
         }
 
@@ -212,6 +193,12 @@ void PageStackPrivate::_q_onPageStatusChanged(QDeclarativeComponent::Status stat
         return;
     default:
         return;
+    }
+}
+
+void PageStackPrivate::_q_onPageClosed(QObject *page) {
+    if (QWidget *w = qobject_cast<QWidget*>(page)) {
+        stack.removeOne(w);
     }
 }
 

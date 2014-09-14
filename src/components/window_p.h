@@ -24,17 +24,19 @@
 #include <QDeclarativeParserStatus>
 #include <qdeclarative.h>
 
+class PageStack;
 class WindowPrivate;
 
 class Window : public QMainWindow, public QDeclarativeParserStatus
 {
     Q_OBJECT
 
+    Q_PROPERTY(QWidget* parent READ parentWidget WRITE setParent NOTIFY parentChanged)
+    Q_PROPERTY(PageStack* pageStack READ pageStack CONSTANT)
     Q_PROPERTY(Screen::Orientation orientationLock READ orientationLock WRITE setOrientationLock NOTIFY orientationLockChanged)
     Q_PROPERTY(bool inPortrait READ inPortrait NOTIFY inPortraitChanged)
     Q_PROPERTY(bool fullScreen READ isFullScreen WRITE setFullScreen NOTIFY fullScreenChanged)
     Q_PROPERTY(bool showProgressIndicator READ showingProgressIndicator WRITE showProgressIndicator)
-    Q_PROPERTY(QWidget* parent READ parentWidget WRITE setParent NOTIFY parentChanged)
     Q_PROPERTY(int x READ x WRITE setX NOTIFY xChanged)
     Q_PROPERTY(int y READ y WRITE setY NOTIFY yChanged)
     Q_PROPERTY(int width READ width WRITE setFixedWidth NOTIFY widthChanged)
@@ -61,6 +63,8 @@ class Window : public QMainWindow, public QDeclarativeParserStatus
 public:
     explicit Window(QWidget *parent = 0);
     ~Window();
+    
+    PageStack* pageStack() const;
 
     Screen::Orientation orientationLock() const;
 
@@ -106,6 +110,7 @@ protected:
 
     virtual void showEvent(QShowEvent *event);
     virtual void hideEvent(QHideEvent *event);
+    virtual void closeEvent(QCloseEvent *event);
     virtual void changeEvent(QEvent *event);
     virtual void moveEvent(QMoveEvent *event);
     virtual void resizeEvent(QResizeEvent *event);

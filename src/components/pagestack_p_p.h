@@ -20,6 +20,8 @@
 
 #include "pagestack_p.h"
 
+class QDeclarativeComponent;
+
 class PageStackPrivate
 {
 
@@ -32,7 +34,8 @@ public:
 
     virtual ~PageStackPrivate() {}
 
-    void _q_onPageStatusChanged(QDeclarativeComponent::Status status);
+    void _q_onPageStatusChanged();
+    void _q_onPageClosed(QObject *page);
 
     PageStack *q_ptr;
 

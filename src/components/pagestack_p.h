@@ -20,7 +20,6 @@
 
 #include <QObject>
 #include <QVariantMap>
-#include <QDeclarativeComponent>
 #include <qdeclarative.h>
 
 class QWidget;
@@ -32,12 +31,11 @@ class PageStack : public QObject
 
     Q_PROPERTY(int depth READ depth NOTIFY countChanged)
     Q_PROPERTY(QWidget* currentPage READ currentPage NOTIFY currentPageChanged)
+    Q_PROPERTY(QWidget* rootPage READ rootPage CONSTANT)
 
 public:
-    explicit PageStack(QObject *parent = 0);
+    explicit PageStack(QWidget *parent);
     ~PageStack();
-
-    static PageStack* instance(QWidget *page);
 
     int depth() const;
 
@@ -45,12 +43,12 @@ public:
     QWidget* rootPage() const;
         
 public slots:
-    void push(QObject *page);
+    void push(QWidget *page);
     void push(const QUrl &url);
     void push(const QUrl &url, const QVariantMap &data);
 
     void pop();
-    void pop(QObject *page);
+    void pop(QWidget *page);
     void pop(const QString &objectName);
 
 signals:
@@ -58,18 +56,16 @@ signals:
     void currentPageChanged();
     
 protected:
-    PageStack(PageStackPrivate &dd, QObject *parent = 0);
+    PageStack(PageStackPrivate &dd, QWidget *parent);
 
     QScopedPointer<PageStackPrivate> d_ptr;
 
     Q_DECLARE_PRIVATE(PageStack)
 
-    Q_PRIVATE_SLOT(d_func(), void _q_onPageStatusChanged(QDeclarativeComponent::Status))
+    Q_PRIVATE_SLOT(d_func(), void _q_onPageStatusChanged())
+    Q_PRIVATE_SLOT(d_func(), void _q_onPageClosed(QObject*))
 
 private:
-    friend class Page;
-    friend class Window;
-
     Q_DISABLE_COPY(PageStack)
 };
 

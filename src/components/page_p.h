@@ -106,7 +106,6 @@ protected:
 
     virtual void showEvent(QShowEvent *event);
     virtual void hideEvent(QHideEvent *event);
-    virtual void closeEvent(QCloseEvent *event);
     virtual void changeEvent(QEvent *event);
     virtual void moveEvent(QMoveEvent *event);
     virtual void resizeEvent(QResizeEvent *event);

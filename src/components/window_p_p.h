@@ -30,7 +30,7 @@ class WindowPrivate : ItemPrivate
 public:
     WindowPrivate(Window *parent) :
         ItemPrivate(parent),
-        pageStack(new PageStack(parent)),
+        pageStack(0),
         orientation(Screen::LandscapeOrientation)
     {
     }
