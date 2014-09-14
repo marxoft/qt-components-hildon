@@ -32,11 +32,11 @@ Dialog {
     signal selected(string folder)
 
     function cd(path) {
-        view.rootIndex = proxyModel.mapFromSource(fileModel.index(path));
+        view.rootIndex = fileModel.index(path);
     }
 
     function cdUp() {
-        view.rootIndex = proxyModel.mapFromSource(fileModel.index(fileModel.filePath(proxyModel.mapToSource(view.rootIndex)).substring(0, fileModel.filePath(proxyModel.mapToSource(view.rootIndex)).lastIndexOf("/"))));
+        view.rootIndex = fileModel.index(fileModel.filePath(view.rootIndex).substring(0, fileModel.filePath(view.rootIndex).lastIndexOf("/") + 1));
     }
 
     height: screen.currentOrientation === Screen.PortraitOrientation ? 680 : 360
@@ -49,16 +49,16 @@ Dialog {
             Button {
                 width: 80
                 icon: "filemanager_folder_up"
-                enabled: fileModel.filePath(proxyModel.mapToSource(view.rootIndex)) !== "/"
+                enabled: fileModel.filePath(view.rootIndex) !== "/"
                 onClicked: root.cdUp()
             }
 
             ValueButton {
                 width: parent.width - 90
-                icon: !fileModel.fileIcon(proxyModel.mapToSource(view.rootIndex)) ? "general_folder" : fileModel.fileIcon(proxyModel.mapToSource(view.rootIndex))
+                icon: !fileModel.fileIcon(view.rootIndex) ? "general_folder" : fileModel.fileIcon(view.rootIndex)
                 iconSize: "24x24"
-                text: fileModel.fileName(proxyModel.mapToSource(view.rootIndex))
-                valueText: fileModel.filePath(proxyModel.mapToSource(view.rootIndex)).substring(0, fileModel.filePath(proxyModel.mapToSource(view.rootIndex)).lastIndexOf("/"))
+                text: fileModel.fileName(view.rootIndex)
+                valueText: fileModel.filePath(view.rootIndex).substring(0, fileModel.filePath(view.rootIndex).lastIndexOf("/"))
                 onClicked: root.accept();
             }
         }
@@ -66,33 +66,22 @@ Dialog {
         ListView {
             id: view
 
-            model: SortFilterProxyModel {
-                id: proxyModel
+            model: FileSystemModel {
+                id: fileModel
                 
-                sourceModel: FileSystemModel {
-                    id: fileModel
-
-                    rootPath: "/"
-                    showFiles: false
-                    showDotAndDotDot: false
-                    nameFilterDisables: false
-                    readOnly: false
-                }
+                rootPath: "/"
+                showFiles: false
+                showDotAndDotDot: false
+                nameFilterDisables: false
+                readOnly: false
                 dynamicSortFilter: true
+                filterPath: filePath(view.rootIndex)
                 filterRegExp: filterEdit.text ? eval("(/" + filterEdit.text + "/i)") : /^/
             }
+            rootIndex: fileModel.index("/home/user/MyDocs")
             horizontalScrollMode: ListView.ScrollPerItem
             horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff
-            iconSize: "48x48"
-            rootIndex: proxyModel.mapFromSource(fileModel.index("/home/user/MyDocs/"))
-            onClicked: {
-                if (fileModel.isDir(proxyModel.mapToSource(currentIndex))) {
-                    rootIndex = currentIndex;
-                }
-                else {
-                    root.accept();
-                }
-            }
+            onActivated: rootIndex = currentIndex
         }
         
         ToolBar {
@@ -127,7 +116,7 @@ Dialog {
         text: qsTr("New")
         enabled: !fileModel.readOnly
         onClicked: {
-            loader.sourceComponent = newFolderDialog;
+            loader.sourceComponent = newFolderDialogComponent;
             loader.item.open();
         }
     }
@@ -137,9 +126,11 @@ Dialog {
     }
 
     Component {
-        id: newFolderDialog
+        id: newFolderDialogComponent
         
         Dialog {
+            id: newFolderDialog
+            
             height: screen.currentOrientation === Screen.PortraitOrientation ? 260 : 140
             windowTitle: qsTr("New folder")
             content: Column {
@@ -160,7 +151,7 @@ Dialog {
                     Label {
                         height: 48
                         alignment: Qt.AlignVCenter
-                        text: fileModel.fileName(proxyModel.mapToSource(view.rootIndex))
+                        text: fileModel.fileName(view.rootIndex)
                     }
                 }
             }
@@ -172,7 +163,7 @@ Dialog {
             }
 
             onAccepted: {
-                view.positionViewAtIndex(fileModel.mkdir(proxyModel.mapToSource(view.rootIndex), folderEdit.text), ListView.EnsureVisible);
+                view.positionViewAtIndex(fileModel.mkdir(view.rootIndex, folderEdit.text), ListView.EnsureVisible);
                 folderEdit.clear();
             }
 
@@ -182,6 +173,6 @@ Dialog {
     
     Keys.onPressed: if ((!filterEdit.focus) && (!/^\s/.test(event.text))) filterEdit.text += event.text;
 
-    onAccepted: selected(fileModel.filePath(proxyModel.mapToSource(view.rootIndex)))
+    onAccepted: selected(fileModel.filePath(view.rootIndex))
     onVisibleChanged: if (!visible) toolBar.visible = false;
 }
