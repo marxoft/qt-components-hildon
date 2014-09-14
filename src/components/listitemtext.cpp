@@ -117,6 +117,9 @@ void ListItemText::paint(QPainter *painter, const QRect &rect) {
     painter->setRenderHint(QPainter::Antialiasing, this->smooth());
     painter->setPen(this->color());
     painter->setFont(this->font());
+    painter->setClipRect(QRect(rect.left() + this->x(), rect.top() + this->y(), this->width(), this->height()), 
+                         Qt::IntersectClip);
+        
     painter->drawText(rect.left() + this->x(),
                       rect.top() + this->y(),
                       this->width(),
