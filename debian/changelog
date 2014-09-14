@@ -1,7 +1,7 @@
 qt-components-hildon (0.10.0) unstable; urgency=low
 
   * Added org.hildon.tracker module.
-  * Added Binding, Component and Connections components to the org.hildon.components module.
+  * Added Binding, Component, Connections and SortFilterProxyModel components to the org.hildon.components module.
   * Added DBusConnections component to the org.hildon.dbus module.
   * Added Tracker example.
   * Fixes and improvements to existing components.
