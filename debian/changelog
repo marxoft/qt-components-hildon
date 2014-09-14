@@ -1,3 +1,15 @@
+qt-components-hildon (0.10.0) unstable; urgency=low
+
+  * Added org.hildon.tracker module.
+  * Added Binding, Component and Connections components to the org.hildon.components module.
+  * Added DBusConnections component to the org.hildon.dbus module.
+  * Added Tracker example.
+  * Fixes and improvements to existing components.
+  * Updated examples.
+  * Ship QML files for all examples (see /opt/qt-components-hildon/examples/)
+
+ -- Stuart Howarth <showarth@marxoft.co.uk>  Sun, 14 Sep 2014 15:31:32 +0100
+
 qt-components-hildon (0.9.0) unstable; urgency=low
 
   * Added ListModel and ItemAction components to the org.hildon.components module.
