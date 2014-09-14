@@ -285,7 +285,7 @@ void DialogPrivate::_q_onOrientationChanged(Screen::Orientation orientation) {
 
     switch (orientation) {
     case Screen::PortraitOrientation:
-        buttonBox->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+        buttonBox->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
 
         if (grid->isEmpty()) {
             grid->addWidget(contentItem, 0, 0);
