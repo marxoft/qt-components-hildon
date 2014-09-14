@@ -69,6 +69,9 @@ public:
     qreal progress() const;
 
     Status status() const;
+    
+public slots:
+    virtual void update();
 
 signals:
     void sourceChanged();
@@ -82,8 +85,6 @@ signals:
 
 protected:
     ListItemImageBase(ListItemImageBasePrivate &dd, QObject *parent = 0);
-
-    void componentComplete();
 
     Q_DECLARE_PRIVATE(ListItemImageBase)
     

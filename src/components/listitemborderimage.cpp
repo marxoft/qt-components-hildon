@@ -38,7 +38,6 @@ public:
 
         if (!imageBorder) {
             imageBorder = new ImageBorder(q);
-            q->connect(imageBorder, SIGNAL(borderChanged()), q, SLOT(update()));
         }
 
         return imageBorder;
@@ -75,10 +74,6 @@ void ListItemBorderImage::setHorizontalTileMode(TileMode mode) {
         Q_D(ListItemBorderImage);
         d->horizontalTileMode = mode;
         emit horizontalTileModeChanged();
-
-        if ((d->complete) && (!this->source().isEmpty())) {
-            d->load();
-        }
     }
 }
 
@@ -88,10 +83,18 @@ ListItemBorderImage::TileMode ListItemBorderImage::verticalTileMode() const {
     return d->verticalTileMode;
 }
 
+void ListItemBorderImage::setVerticalTileMode(TileMode mode) {
+    if (mode != this->verticalTileMode()) {
+        Q_D(ListItemBorderImage);
+        d->verticalTileMode = mode;
+        emit verticalTileModeChanged();
+    }
+}
+
 void ListItemBorderImage::paint(QPainter *painter, const QRect &rect) {
     Q_D(ListItemBorderImage);
     
-    if ((!d->pix.isNull()) && (this->width() > 0) && (this->height() > 0)) {
+    if ((d->load()) && (this->width() > 0) && (this->height() > 0)) {
         painter->save();
         painter->setOpacity(this->opacity());
         painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform, this->smooth());
@@ -139,18 +142,6 @@ void ListItemBorderImage::paint(QPainter *painter, const QRect &rect) {
                                  rect.top() + this->y(),
                                  this->width(),
                                  this->height()));
-        }
-    }
-}
-
-void ListItemBorderImage::setVerticalTileMode(TileMode mode) {
-    if (mode != this->verticalTileMode()) {
-        Q_D(ListItemBorderImage);
-        d->verticalTileMode = mode;
-        emit verticalTileModeChanged();
-
-        if ((d->complete) && (!this->source().isEmpty())) {
-            d->load();
         }
     }
 }

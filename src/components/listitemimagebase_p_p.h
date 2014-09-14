@@ -38,7 +38,7 @@ public:
     {
     }
 
-    virtual void load();
+    virtual bool load();
     
     virtual void pixmapChange();
     
@@ -65,6 +65,8 @@ public:
     qreal progress;
 
     ListItemImageBase::Status status;
+    
+    mutable QHash<QUrl, QDeclarativePixmap> pixmaps;
 
     Q_DECLARE_PUBLIC(ListItemImageBase)
 };

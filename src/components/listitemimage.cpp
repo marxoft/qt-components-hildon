@@ -108,7 +108,6 @@ void ListItemImage::setFillMode(FillMode mode) {
     if (mode != this->fillMode()) {
         Q_D(ListItemImage);
         d->fillMode = mode;
-        this->update();
         d->updatePaintedGeometry();
         emit fillModeChanged();
     }
@@ -128,7 +127,6 @@ void ListItemImage::setPixmap(const QPixmap &p) {
         d->pix.setPixmap(p);
         d->pixmapChange();
         d->status = d->pix.isNull() ? Null : Ready;
-        this->update();
     }
 }
 
@@ -147,7 +145,7 @@ int ListItemImage::paintedHeight() const {
 void ListItemImage::paint(QPainter *painter, const QRect &rect) {
     Q_D(ListItemImage);
 
-    if (!d->pix.pixmap().isNull()) {
+    if (d->load()) {
         painter->save();
         
         int drawWidth = this->width();
@@ -155,6 +153,7 @@ void ListItemImage::paint(QPainter *painter, const QRect &rect) {
         qreal widthScale = this->width() / qreal (d->pix.width());
         qreal heightScale = this->height() / qreal (d->pix.height());
         QTransform transform;
+        transform.translate(rect.left() + this->x(), rect.top() + this->y());
         
         if ((this->width() != d->pix.width()) || (this->height() != d->pix.height())) {
             if (this->fillMode() >= Tile) {
@@ -187,6 +186,9 @@ void ListItemImage::paint(QPainter *painter, const QRect &rect) {
                         heightScale = widthScale;
                         transform.translate(0, (this->height() - heightScale * d->pix.height()) / 2);
                     }
+                    
+                    painter->setClipRect(QRect(rect.left() + this->x(), rect.top() + this->y(), this->width(), this->height()),
+                                         Qt::IntersectClip);
                 }
                 
                 transform.scale(widthScale, heightScale);
@@ -208,11 +210,7 @@ void ListItemImage::paint(QPainter *painter, const QRect &rect) {
             painter->drawTiledPixmap(QRect(0, 0, drawWidth, drawHeight), d->pix);
         }
         else {
-            painter->drawPixmap(QRect(rect.left() + this->x(), 
-                                      rect.top() + this->y(), 
-                                      drawWidth, 
-                                      drawHeight), 
-                                      d->pix, QRect(0, 0, drawWidth, drawHeight));
+            painter->drawPixmap(QRect(0, 0, drawWidth, drawHeight), d->pix, QRect(0, 0, drawWidth, drawHeight));
         }
         
         painter->restore();

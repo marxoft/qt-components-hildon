@@ -49,7 +49,7 @@ void BorderImage::setHorizontalTileMode(TileMode mode) {
         emit horizontalTileModeChanged();
 
         if ((d->complete) && (!this->source().isEmpty())) {
-            d->load();
+            this->update();
         }
     }
 }
@@ -58,6 +58,18 @@ BorderImage::TileMode BorderImage::verticalTileMode() const {
     Q_D(const BorderImage);
 
     return d->verticalTileMode;
+}
+
+void BorderImage::setVerticalTileMode(TileMode mode) {
+    if (mode != this->verticalTileMode()) {
+        Q_D(BorderImage);
+        d->verticalTileMode = mode;
+        emit verticalTileModeChanged();
+
+        if ((d->complete) && (!this->source().isEmpty())) {
+            this->update();
+        }
+    }
 }
 
 void BorderImage::paintEvent(QPaintEvent *) {
@@ -100,18 +112,6 @@ void BorderImage::paintEvent(QPaintEvent *) {
     QMargins margins(left, top, right, bottom);
     QTileRules rules((Qt::TileRule)this->horizontalTileMode(), (Qt::TileRule)this->verticalTileMode());
     qDrawBorderPixmap(&painter, QRect(0, 0, this->width(), this->height()), margins, d->pix, d->pix.rect(), margins, rules);
-}
-
-void BorderImage::setVerticalTileMode(TileMode mode) {
-    if (mode != this->verticalTileMode()) {
-        Q_D(BorderImage);
-        d->verticalTileMode = mode;
-        emit verticalTileModeChanged();
-
-        if ((d->complete) && (!this->source().isEmpty())) {
-            d->load();
-        }
-    }
 }
 
 BorderImagePrivate::BorderImagePrivate(BorderImage *parent) :

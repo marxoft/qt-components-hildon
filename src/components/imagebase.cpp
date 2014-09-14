@@ -59,9 +59,10 @@ void ImageBase::setSourceSize(const QSize &size) {
     if (size != this->sourceSize()) {
         Q_D(ImageBase);
         d->sourceSize = size;
+        d->explicitSourceSize = size.isValid();
         emit sourceSizeChanged();
 
-        if ((d->complete) && (!this->source().isEmpty())) {
+        if (d->complete) {
             d->load();
         }
     }
@@ -111,8 +112,8 @@ void ImageBase::setMirror(bool mirror) {
         d->mirror = mirror;
         emit mirrorChanged();
 
-        if ((d->complete) && (!this->source().isEmpty())) {
-            d->load();
+        if (d->complete) {
+            this->update();
         }
     }
 }
@@ -129,8 +130,8 @@ void ImageBase::setSmooth(bool smooth) {
         d->smooth = smooth;
         emit smoothChanged();
 
-        if ((d->complete) && (!this->source().isEmpty())) {
-            d->load();
+        if (d->complete) {
+            this->update();
         }
     }
 }
@@ -187,18 +188,8 @@ void ImageBasePrivate::load() {
         q->update();
     }
     else {
-        QDeclarativePixmap::Options options;
-        
-        if (asynchronous) {
-            options |= QDeclarativePixmap::Asynchronous;
-        }
-        
-        if (cache) {
-            options |= QDeclarativePixmap::Cache;
-        }
-        
         pix.clear(q);
-        pix.load(qmlEngine(q), source, explicitSourceSize ? sourceSize : QSize(), options);
+        pix.load(qmlEngine(q), source, explicitSourceSize ? sourceSize : QSize());
         
         if (pix.isLoading()) {
             progress = 0.0;

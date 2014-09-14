@@ -51,7 +51,6 @@ public:
     TileMode verticalTileMode() const;
     void setVerticalTileMode(TileMode mode);
     
-public slots:
     virtual void paint(QPainter *painter, const QRect &rect);
 
 signals:
