@@ -133,7 +133,6 @@ HEADERS += \
     plugin_p.h
 
 SOURCES += \
-    private/qdeclarativepixmapcache.cpp \
     action.cpp \
     actiongroup.cpp \
     anchors.cpp \

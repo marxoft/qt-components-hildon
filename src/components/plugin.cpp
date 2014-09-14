@@ -106,7 +106,6 @@ void Plugin::initializeEngine(QDeclarativeEngine *engine, const char *uri) {
 
         qmlRegisterUncreatableType<PlatformStyle>(uri, 1, 0, "PlatformStyle", "");
         qmlRegisterUncreatableType<Screen>(uri, 1, 0, "Screen", "");
-        qmlRegisterUncreatableType<PageStack>(uri, 1, 0, "PageStack", "");
     }
 }
 
@@ -122,6 +121,7 @@ void Plugin::registerTypes(const char *uri) {
     qmlRegisterUncreatableType<Keys>(uri, 1, 0, "Keys", "");
     qmlRegisterUncreatableType<KeyEvent>(uri, 1, 0, "KeyEvent", "");
     qmlRegisterUncreatableType<MouseDrag>(uri, 1, 0, "Drag", "");
+    qmlRegisterUncreatableType<PageStack>(uri, 1, 0, "PageStack", "");
     qmlRegisterUncreatableType<QWidget>(uri, 1, 0, "Widget", "");
     qmlRegisterUncreatableType<QAbstractButton>(uri, 1, 0, "AbstractButton", "");
     qmlRegisterUncreatableType<QHeaderView>(uri, 1, 0, "QHeaderView", "");
