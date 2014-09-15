@@ -223,13 +223,13 @@ void ListView::setMaximumFlickVelocity(qreal maximum) {
 
 void ListView::positionViewAtBeginning() {
     if (this->model()) {
-        this->scrollTo(this->model()->index(0, 0), QListView::PositionAtTop);
+        this->scrollTo(this->model()->index(0, 0, this->rootIndex()), QListView::PositionAtTop);
     }
 }
 
 void ListView::positionViewAtEnd() {
     if (this->model()) {
-        this->scrollTo(this->model()->index(model()->rowCount() - 1, 0), QListView::PositionAtBottom);
+        this->scrollTo(this->model()->index(model()->rowCount() - 1, 0, this->rootIndex()), QListView::PositionAtBottom);
     }
 }
 
@@ -239,7 +239,7 @@ void ListView::positionViewAtIndex(const QModelIndex &index, ScrollHint mode) {
 
 void ListView::positionViewAtIndex(int index, ScrollHint mode) {
     if (this->model()) {
-        this->positionViewAtIndex(this->model()->index(index, 0), mode);
+        this->positionViewAtIndex(this->model()->index(index, 0, this->rootIndex()), mode);
     }
 }
 
