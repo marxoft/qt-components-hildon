@@ -29,7 +29,6 @@ class FileSystemModel : public QSortFilterProxyModel
 
     Q_PROPERTY(QString rootPath READ rootPath WRITE setRootPath NOTIFY rootPathChanged)
     Q_PROPERTY(QString filterPath READ filterPath WRITE setFilterPath NOTIFY filterPathChanged)
-    Q_PROPERTY(int count READ count NOTIFY countChanged)
     Q_PROPERTY(bool showDirs READ showDirs WRITE setShowDirs NOTIFY dirFilterChanged)
     Q_PROPERTY(bool showFiles READ showFiles WRITE setShowFiles NOTIFY dirFilterChanged)
     Q_PROPERTY(bool showHidden READ showHidden WRITE setShowHidden NOTIFY dirFilterChanged)
@@ -39,6 +38,7 @@ class FileSystemModel : public QSortFilterProxyModel
     Q_PROPERTY(bool readOnly READ isReadOnly WRITE setReadOnly NOTIFY readOnlyChanged)
     Q_PROPERTY(bool nameFilterDisables READ nameFilterDisables WRITE setNameFilterDisables NOTIFY nameFilterDisablesChanged)
     Q_PROPERTY(QStringList nameFilters READ nameFilters WRITE setNameFilters NOTIFY nameFiltersChanged)
+    Q_PROPERTY(QStringList loadedDirectories READ loadedDirectories NOTIFY directoryLoaded)
 
     Q_ENUMS(Roles)
 
@@ -58,8 +58,6 @@ public:
     
     QString filterPath() const;
     void setFilterPath(const QString &path);
-
-    int count() const;
 
     bool showDirs() const;
     void setShowDirs(bool show);
@@ -87,6 +85,12 @@ public:
 
     QStringList nameFilters() const;
     void setNameFilters(const QStringList &filters);
+    
+    QStringList loadedDirectories() const;
+    
+    Q_INVOKABLE bool directoryIsLoaded(const QString &directory) const;
+    
+    Q_INVOKABLE int count(const QModelIndex &parent = QModelIndex()) const;
 
     Q_INVOKABLE QVariant data(const QModelIndex &index, int role = FileNameRole) const;
     Q_INVOKABLE bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
@@ -108,8 +112,7 @@ public:
 signals:
     void rootPathChanged();
     void filterPathChanged();
-    void directoryLoaded();
-    void countChanged();
+    void directoryLoaded(const QString &directory);
     void resolveSymlinksChanged();
     void readOnlyChanged();
     void nameFilterDisablesChanged();
@@ -124,6 +127,8 @@ protected:
     QScopedPointer<FileSystemModelPrivate> d_ptr;
 
     Q_DECLARE_PRIVATE(FileSystemModel)
+    
+    Q_PRIVATE_SLOT(d_func(), void _q_onDirectoryLoaded(QString))
 
 private:
     Q_DISABLE_COPY(FileSystemModel)

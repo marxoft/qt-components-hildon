@@ -31,12 +31,22 @@ public:
     }
 
     virtual ~FileSystemModelPrivate() {}
+    
+    void _q_onDirectoryLoaded(const QString &directory) {
+        Q_Q(FileSystemModel);
+        
+        loadedDirectories.removeOne(directory);
+        loadedDirectories.append(directory);
+        emit q->directoryLoaded(directory);
+    }
 
     FileSystemModel *q_ptr;
 
     QFileSystemModel *model;
     
     QString filterPath;
+    
+    QStringList loadedDirectories;
 
     Q_DECLARE_PUBLIC(FileSystemModel)
 };
@@ -51,8 +61,7 @@ FileSystemModel::FileSystemModel(QObject *parent) :
     this->setFilterRole(FileNameRole);
     this->setDynamicSortFilter(true);
     this->connect(d->model, SIGNAL(rootPathChanged(QString)), this, SIGNAL(rootPathChanged()));
-    this->connect(d->model, SIGNAL(directoryLoaded(QString)), this, SIGNAL(directoryLoaded()));
-    this->connect(d->model, SIGNAL(directoryLoaded(QString)), this, SIGNAL(countChanged()));
+    this->connect(d->model, SIGNAL(directoryLoaded(QString)), this, SLOT(_q_onDirectoryLoaded(QString)));
 }
 
 FileSystemModel::FileSystemModel(FileSystemModelPrivate &dd, QObject *parent) :
@@ -65,8 +74,7 @@ FileSystemModel::FileSystemModel(FileSystemModelPrivate &dd, QObject *parent) :
     this->setFilterRole(FileNameRole);
     this->setDynamicSortFilter(true);
     this->connect(d->model, SIGNAL(rootPathChanged(QString)), this, SIGNAL(rootPathChanged()));
-    this->connect(d->model, SIGNAL(directoryLoaded(QString)), this, SIGNAL(directoryLoaded()));
-    this->connect(d->model, SIGNAL(directoryLoaded(QString)), this, SIGNAL(countChanged()));
+    this->connect(d->model, SIGNAL(directoryLoaded(QString)), this, SLOT(_q_onDirectoryLoaded(QString)));
 }
 
 FileSystemModel::~FileSystemModel() {}
@@ -95,12 +103,6 @@ void FileSystemModel::setFilterPath(const QString &path) {
         d->filterPath = path;
         emit filterPathChanged();
     }
-}
-
-int FileSystemModel::count() const {
-    Q_D(const FileSystemModel);
-
-    return d->model->rowCount();
 }
 
 bool FileSystemModel::showDirs() const {
@@ -225,6 +227,22 @@ void FileSystemModel::setNameFilters(const QStringList &filters) {
 
     d->model->setNameFilters(filters);
     emit nameFiltersChanged();
+}
+
+QStringList FileSystemModel::loadedDirectories() const {
+    Q_D(const FileSystemModel);
+    
+    return d->loadedDirectories;
+}
+
+bool FileSystemModel::directoryIsLoaded(const QString &directory) const {
+    return this->loadedDirectories().contains(directory);
+}
+
+int FileSystemModel::count(const QModelIndex &parent) const {
+    Q_D(const FileSystemModel);
+
+    return d->model->rowCount(this->mapToSource(parent));
 }
 
 QVariant FileSystemModel::data(const QModelIndex &index, int role) const {
