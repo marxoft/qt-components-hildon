@@ -77,11 +77,30 @@ Dialog {
                 dynamicSortFilter: true
                 filterPath: filePath(view.rootIndex)
                 filterRegExp: filterEdit.text ? eval("(/" + filterEdit.text + "/i)") : /^/
+                onDirectoryLoaded: noFilesLabel.visible = (count(view.rootIndex) == 0)
             }
             rootIndex: fileModel.index("/home/user/MyDocs")
             horizontalScrollMode: ListView.ScrollPerItem
             horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff
-            onActivated: rootIndex = currentIndex
+            onRootIndexChanged: {
+                toolBar.visible = false;
+                noFilesLabel.visible = (fileModel.directoryIsLoaded(fileModel.filePath(rootIndex))) 
+                                        && (fileModel.count(rootIndex) == 0);
+            }
+            onVisibleChanged: if (visible) contentY = 0;
+            onClicked: rootIndex = currentIndex
+            
+            Label {
+                id: noFilesLabel
+                
+                anchors {
+                    top: parent.top
+                    horizontalCenter: parent.horizontalCenter
+                }
+                alignment: Qt.AlignHCenter
+                text: qsTr("(no files/folders)")
+                visible: false
+            }
         }
         
         ToolBar {
@@ -93,7 +112,7 @@ Dialog {
             TextField {
                 id: filterEdit
                 
-                onTextChanged: if (text) toolBar.visible = true;
+                onTextChanged: toolBar.visible = (text != "")
             }
             
             Action {
@@ -101,14 +120,7 @@ Dialog {
                 onTriggered: toolBar.visible = false
             }
             
-            onVisibleChanged: {
-                if (visible) {
-                    filterEdit.focus = true;
-                }
-                else {
-                    filterEdit.clear();
-                }
-            }
+            onVisibleChanged: if (visible) filterEdit.focus = true;
         }
     }
 
@@ -171,7 +183,7 @@ Dialog {
         }
     }
     
-    Keys.onPressed: if ((!filterEdit.focus) && (!/^\s/.test(event.text))) filterEdit.text += event.text;
+    Keys.onPressed: if ((visible) && (!filterEdit.focus) && (/\w/.test(event.text))) filterEdit.text += event.text;
 
     onAccepted: selected(fileModel.filePath(view.rootIndex))
     onVisibleChanged: if (!visible) toolBar.visible = false;
