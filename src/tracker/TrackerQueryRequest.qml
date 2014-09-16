@@ -80,8 +80,8 @@ QtObject {
                     try {
                         item["File:Uri"] = result[0];
 
-                        for (var j = 1; j < result.length; j++) {
-                            item[root.properties[j - 1]] = result[j];
+                        for (var j = 2; j < result.length; j++) {
+                            item[root.properties[j - 2]] = result[j];
                         }
                     }
                     catch (e) {
