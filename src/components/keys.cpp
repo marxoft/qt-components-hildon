@@ -20,6 +20,7 @@
 #include <QDeclarativeContext>
 #include <QDeclarativeInfo>
 #include <QWidget>
+#include <QApplication>
 #include <QX11Info>
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
@@ -352,19 +353,15 @@ void Keys::timerEvent(QTimerEvent *event) {
     this->killTimer(event->timerId());
 
     if ((this->receivers(SIGNAL(volumeDownPressed(KeyEvent*))) > 0) || (this->receivers(SIGNAL(volumeUpPressed(KeyEvent*))) > 0)) {
-        if (QDeclarativeContext *context = qmlContext(this)) {
-            if (QObject *pageStack = qvariant_cast<QObject*>(context->contextProperty("pageStack"))) {
-                if (QWidget *currentPage = qvariant_cast<QWidget*>(pageStack->property("currentPage"))) {
-                    Q_D(Keys);
-                    d->volumeKeysEnabled = true;
-                    d->windowId = currentPage->winId();
-                    d->grabVolumeKeys(d->windowId, true);
-                    return;
-                }
-            }
+        if (QWidget *window = QApplication::activeWindow()) {
+            Q_D(Keys);
+            d->volumeKeysEnabled = true;
+            d->windowId = window->winId();
+            d->grabVolumeKeys(d->windowId, true);
         }
-
-        qmlInfo(this) << tr("Could not find window id to grab volume keys");
+        else {
+            qmlInfo(this) << tr("Could not find window id to grab volume keys");
+        }
     }
 }
 
