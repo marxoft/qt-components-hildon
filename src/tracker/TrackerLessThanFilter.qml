@@ -24,6 +24,10 @@ QtObject {
     property bool negated
 
     function condition() {
+        if (!value) {
+            return "";
+        }
+        
         var propertyType = Tracker.propertyTypes[property];
         return (negated ? "<rdfq:not>" : "") + 
                 "<rdfq:lessThan> \
