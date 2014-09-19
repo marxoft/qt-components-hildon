@@ -12,7 +12,6 @@ HEADERS += \
     screensaver_p.h \
     screenshot_p.h \
     screenshot_p_p.h \
-    settings_p.h \
     plugin_p.h
 
 SOURCES += \
@@ -21,7 +20,6 @@ SOURCES += \
     process.cpp \
     screensaver.cpp \
     screenshot.cpp \
-    settings.cpp \
     plugin.cpp
 
 qdeclarativesources.files += \

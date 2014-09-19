@@ -21,7 +21,6 @@
 #include "process_p.h"
 #include "screensaver_p.h"
 #include "screenshot_p.h"
-#include "settings_p.h"
 #include <QDeclarativeEngine>
 #include <QDeclarativeContext>
 
@@ -44,7 +43,6 @@ void Plugin::registerTypes(const char *uri) {
     qmlRegisterType<Process>(uri, 1, 0, "Process");
     qmlRegisterType<ScreenSaver>(uri, 1, 0, "ScreenSaver");
     qmlRegisterType<ScreenShot>(uri, 1, 0, "ScreenShot");
-    qmlRegisterType<Settings>(uri, 1, 0, "Settings");
 }
 
 #include "moc_plugin_p.cpp"

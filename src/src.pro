@@ -3,7 +3,7 @@ SUBDIRS = \
     network \
     utils \
     webkit \
-    filesystemmodel \
     dbus \
+    settings \
     tracker \
     components
