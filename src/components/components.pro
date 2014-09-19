@@ -30,6 +30,7 @@ HEADERS += \
     doublespinbox_p_p.h \
     editbar_p.h \
     editbar_p_p.h \
+    filesystemmodel_p.h \
     flickable_p.h \
     flickable_p_p.h \
     flow_p.h \
@@ -145,6 +146,7 @@ SOURCES += \
     dialog.cpp \
     doublespinbox.cpp \
     editbar.cpp \
+    filesystemmodel.cpp \
     flickable.cpp \
     flow.cpp \
     grid.cpp \

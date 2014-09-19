@@ -16,7 +16,6 @@
  */
 
 import org.hildon.components 1.0
-import org.hildon.filesystemmodel 1.0
 
 Dialog {
     id: root
