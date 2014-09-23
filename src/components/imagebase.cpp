@@ -52,7 +52,8 @@ void ImageBase::setSource(const QUrl &url) {
 QSize ImageBase::sourceSize() const {
     Q_D(const ImageBase);
 
-    return d->sourceSize;
+    return d->explicitSourceSize ? d->sourceSize 
+                                 : QSize(d->pix.width(), d->pix.height());
 }
 
 void ImageBase::setSourceSize(const QSize &size) {
