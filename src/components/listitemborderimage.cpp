@@ -96,7 +96,7 @@ void ListItemBorderImage::paint(QPainter *painter, const QRect &rect) {
     
     if ((d->load()) && (this->width() > 0) && (this->height() > 0)) {
         painter->save();
-        painter->setOpacity(this->opacity());
+        painter->setOpacity(painter->opacity() * this->opacity());
         painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform, this->smooth());
         
         if (this->mirror()) {

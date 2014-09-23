@@ -197,7 +197,7 @@ void ListItemImage::paint(QPainter *painter, const QRect &rect) {
             }
         }
         
-        painter->setOpacity(this->opacity());
+        painter->setOpacity(painter->opacity() * this->opacity());
         painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform, this->smooth());
         
         if (this->mirror()) {

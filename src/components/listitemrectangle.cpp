@@ -117,7 +117,7 @@ void ListItemRectangle::paint(QPainter *painter, const QRect &rect) {
     Q_D(const ListItemRectangle);
 
     painter->save();
-    painter->setOpacity(this->opacity());
+    painter->setOpacity(painter->opacity() * this->opacity());
     painter->setRenderHint(QPainter::Antialiasing, this->smooth());
 
     if (d->rectBorder) {

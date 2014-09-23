@@ -347,11 +347,18 @@ void ListItem::paint(QPainter *painter, const QStyleOptionViewItem &option, cons
     d->isCurrentItem = (option.state) & (QStyle::State_Selected) ? true : false;
     emit indexChanged();
     emit modelDataChanged();
+    
+    if (this->isVisible()) {
+        painter->save();
+        painter->setOpacity(this->opacity());
 
-    foreach (ListItemContent *content, d->contentList) {
-        if (content->isVisible()) {
-            content->paint(painter, option.rect);
+        foreach (ListItemContent *content, d->contentList) {
+            if (content->isVisible()) {
+                content->paint(painter, option.rect);
+            }
         }
+        
+        painter->restore();
     }
 }
 

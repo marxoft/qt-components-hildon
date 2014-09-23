@@ -113,7 +113,7 @@ void ListItemText::paint(QPainter *painter, const QRect &rect) {
     Q_D(const ListItemText);
 
     painter->save();
-    painter->setOpacity(this->opacity());
+    painter->setOpacity(painter->opacity() * this->opacity());
     painter->setRenderHint(QPainter::Antialiasing, this->smooth());
     painter->setPen(this->color());
     painter->setFont(this->font());

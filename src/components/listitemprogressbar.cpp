@@ -137,7 +137,7 @@ void ListItemProgressBar::paint(QPainter *painter, const QRect &r) {
     Q_D(const ListItemContent);
 
     painter->save();
-    painter->setOpacity(this->opacity());
+    painter->setOpacity(painter->opacity() * this->opacity());
     painter->setRenderHint(QPainter::Antialiasing, this->smooth());
     QStyleOptionProgressBarV2::rect = QRect(r.left() + this->x(),
                  r.top() + this->y(),
