@@ -35,6 +35,12 @@ ListModel {
     function reload() {
         request.reload();
     }
+    
+    function setMetaData(index, metaData) {
+        item.uri = property(index, "File:Uri");
+        item._metaData = metaData;
+        item.setMetaData(metaData);
+    }
 
     TrackerQueryRequest {
         id: request
@@ -56,6 +62,26 @@ ListModel {
                 break;
             }
 
+            root.status = status;
+        }
+    }
+    
+    TrackerItemRequest {
+        id: item
+        
+        property variant _metaData
+        
+        itemType: root.itemType
+        properties: root.properties
+        onStatusChanged: {
+            if (status == 2) {
+                for (var i = 0; i < root.count; i++) {
+                    if (root.property(i, "File:Uri") == uri) {
+                        root.set(i, _metaData);
+                    }
+                }
+            }
+            
             root.status = status;
         }
     }
