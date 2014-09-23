@@ -28,11 +28,16 @@ Dialog {
         return exec();
     }
 
+    windowTitle: " "
     modal: true
     content: Label {
         id: label
 
-        anchors.fill: parent
+        anchors {
+            fill: parent
+            leftMargin: screen.currentOrientation == Screen.PortraitOrientation ? 40 : 100
+            rightMargin: leftMargin
+        }
         wordWrap: true
     }
 
