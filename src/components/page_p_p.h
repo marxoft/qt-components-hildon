@@ -27,7 +27,8 @@ class PagePrivate : ItemPrivate
 public:
     PagePrivate(Page *parent) :
         ItemPrivate(parent),
-        orientation(Screen::LandscapeOrientation)
+        orientation(Screen::LandscapeOrientation),
+        autoClose(true)
     {
     }
 
@@ -50,6 +51,8 @@ public:
     void componentComplete();
 
     Screen::Orientation orientation;
+    
+    bool autoClose;
 
     QList<QObject*> toolList;
 

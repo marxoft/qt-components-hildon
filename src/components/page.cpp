@@ -86,6 +86,20 @@ void Page::showProgressIndicator(bool show) {
     this->setAttribute(Qt::WA_Maemo5ShowProgressIndicator, show);
 }
 
+bool Page::autoClose() const {
+    Q_D(const Page);
+    
+    return d->autoClose;
+}
+
+void Page::setAutoClose(bool close) {
+    if (close != this->autoClose()) {
+        Q_D(Page);
+        d->autoClose = close;
+        emit autoCloseChanged();
+    }
+}
+
 void Page::setX(int x) {
     if (x != this->x()) {
         this->move(x, this->y());
@@ -164,6 +178,16 @@ void Page::showEvent(QShowEvent *event) {
 void Page::hideEvent(QHideEvent *event) {
     emit visibleChanged();
     QMainWindow::hideEvent(event);
+}
+
+void Page::closeEvent(QCloseEvent *event) {
+    if (this->autoClose()) {
+        QMainWindow::closeEvent(event);
+    }
+    else {
+        event->ignore();
+        emit closeRequest();
+    }
 }
 
 void Page::changeEvent(QEvent *event) {

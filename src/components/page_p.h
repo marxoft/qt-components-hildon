@@ -34,6 +34,7 @@ class Page : public QMainWindow, public QDeclarativeParserStatus
     Q_PROPERTY(bool inPortrait READ inPortrait NOTIFY inPortraitChanged)
     Q_PROPERTY(bool fullScreen READ isFullScreen WRITE setFullScreen NOTIFY fullScreenChanged)
     Q_PROPERTY(bool showProgressIndicator READ showingProgressIndicator WRITE showProgressIndicator)
+    Q_PROPERTY(bool autoClose READ autoClose WRITE setAutoClose NOTIFY autoCloseChanged)
     Q_PROPERTY(QWidget* parent READ parentWidget WRITE setParent NOTIFY parentChanged)
     Q_PROPERTY(int x READ x WRITE setX NOTIFY xChanged)
     Q_PROPERTY(int y READ y WRITE setY NOTIFY yChanged)
@@ -70,6 +71,9 @@ public:
 
     bool showingProgressIndicator() const;
     void showProgressIndicator(bool show);
+    
+    bool autoClose() const;
+    void setAutoClose(bool close);
 
     void setX(int x);
     void setY(int y);
@@ -100,12 +104,15 @@ signals:
     void orientationLockChanged();
     void inPortraitChanged();
     void fullScreenChanged();
+    void autoCloseChanged();
+    void closeRequest();
 
 protected:
     Page(PagePrivate &dd, QWidget *parent = 0);
 
     virtual void showEvent(QShowEvent *event);
     virtual void hideEvent(QHideEvent *event);
+    virtual void closeEvent(QCloseEvent *event);
     virtual void changeEvent(QEvent *event);
     virtual void moveEvent(QMoveEvent *event);
     virtual void resizeEvent(QResizeEvent *event);
