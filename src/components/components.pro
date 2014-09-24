@@ -113,6 +113,7 @@ HEADERS += \
     tableview_p_p.h \
     text_p.h \
     text_p_p.h \
+    textbrowser_p.h \
     textedit_p.h \
     texteditautoresizer_p.h \
     textfield_p.h \
@@ -194,6 +195,7 @@ SOURCES += \
     tabgroup.cpp \
     tableview.cpp \
     text.cpp \
+    textbrowser.cpp \
     textedit.cpp \
     textfield.cpp \
     timeselector.cpp \

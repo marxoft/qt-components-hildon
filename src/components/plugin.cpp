@@ -79,6 +79,7 @@
 #include "tabgroup_p.h"
 #include "tableview_p.h"
 #include "text_p.h"
+#include "textbrowser_p.h"
 #include "textedit_p.h"
 #include "textfield_p.h"
 #include "timeselector_p.h"
@@ -188,6 +189,7 @@ void Plugin::registerTypes(const char *uri) {
     qmlRegisterType<TabGroup>(uri, 1, 0, "TabGroup");
     qmlRegisterType<TableView>(uri, 1, 0, "TableView");
     qmlRegisterType<Text>(uri, 1, 0, "Text");
+    qmlRegisterType<TextBrowser>(uri, 1, 0, "TextBrowser");
     qmlRegisterType<TextEdit>(uri, 1, 0, "TextEdit");
     qmlRegisterType<TextField>(uri, 1, 0, "TextField");
     qmlRegisterType<TimeSelector>(uri, 1, 0, "TimeSelector");
