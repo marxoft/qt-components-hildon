@@ -116,37 +116,37 @@ QString Style::toStyleSheet() const {
     }
     
     if (!s.isEmpty()) {
-        s+= "background-position:";
+        s += "background-position:";
         
         if (d->backgroundPosition & Qt::AlignCenter) {
             s += " center;";
         }
         else {
             if (d->backgroundPosition & Qt::AlignTop) {
-                s+= " top";
+                s += " top";
             }
             
             if (d->backgroundPosition & Qt::AlignBottom) {
-                s+= " bottom";
+                s += " bottom";
             }
             
             if (d->backgroundPosition & Qt::AlignVCenter) {
-                s+= " center";
+                s += " center";
             }
             
             if (d->backgroundPosition & Qt::AlignLeft) {
-                s+= " left";
+                s += " left";
             }
             
             if (d->backgroundPosition & Qt::AlignRight) {
-                s+= " right";
+                s += " right";
             }
             
             if (d->backgroundPosition & Qt::AlignHCenter) {
-                s+= " center";
+                s += " center";
             }
             
-            s+= ";";
+            s += ";";
         }
         
         switch(d->backgroundRepeat) {
