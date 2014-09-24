@@ -51,6 +51,7 @@ class Dialog : public QDialog, public QDeclarativeParserStatus
     Q_PRIVATE_PROPERTY(Dialog::d_func(), QDeclarativeListProperty<QWidget> content READ content)
     Q_PRIVATE_PROPERTY(Dialog::d_func(), QDeclarativeListProperty<QAbstractButton> buttons READ buttons)
     Q_PRIVATE_PROPERTY(Dialog::d_func(), bool focus READ hasFocus WRITE setFocus NOTIFY focusChanged)
+    Q_PRIVATE_PROPERTY(Dialog::d_func(), Style* style READ style WRITE setStyle RESET resetStyle)
 
     Q_INTERFACES(QDeclarativeParserStatus)
 
@@ -103,6 +104,7 @@ protected:
     Q_DECLARE_PRIVATE(Dialog)
 
     Q_PRIVATE_SLOT(d_func(), void _q_onOrientationChanged(Screen::Orientation))
+    Q_PRIVATE_SLOT(d_func(), void _q_onStyleChanged())
 
 private:
     Q_DISABLE_COPY(Dialog)

@@ -48,6 +48,7 @@ class ProgressBar : public QProgressBar, public QDeclarativeParserStatus
     Q_PRIVATE_PROPERTY(ProgressBar::d_func(), QDeclarativeListProperty<QObject> actions READ actions)
     Q_PRIVATE_PROPERTY(ProgressBar::d_func(), bool visible READ qmlVisible WRITE setQmlVisible NOTIFY visibleChanged)
     Q_PRIVATE_PROPERTY(ProgressBar::d_func(), bool focus READ hasFocus WRITE setFocus NOTIFY focusChanged)
+    Q_PRIVATE_PROPERTY(ProgressBar::d_func(), Style* style READ style WRITE setStyle RESET resetStyle)
 
     Q_INTERFACES(QDeclarativeParserStatus)
 
@@ -98,6 +99,8 @@ protected:
     QScopedPointer<ProgressBarPrivate> d_ptr;
 
     Q_DECLARE_PRIVATE(ProgressBar)
+    
+    Q_PRIVATE_SLOT(d_func(), void _q_onStyleChanged())
 
 private:
     Q_DISABLE_COPY(ProgressBar)

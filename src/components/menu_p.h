@@ -39,6 +39,7 @@ class Menu : public QMenu, public QDeclarativeParserStatus
     Q_PROPERTY(QString icon READ iconSource WRITE setIconSource NOTIFY iconChanged)
     Q_PRIVATE_PROPERTY(Menu::d_func(), QDeclarativeListProperty<QObject> data READ data)
     Q_PRIVATE_PROPERTY(Menu::d_func(), bool focus READ hasFocus WRITE setFocus NOTIFY focusChanged)
+    Q_PRIVATE_PROPERTY(Menu::d_func(), Style* style READ style WRITE setStyle RESET resetStyle)
 
     Q_INTERFACES(QDeclarativeParserStatus)
 
@@ -85,6 +86,8 @@ protected:
     QScopedPointer<MenuPrivate> d_ptr;
 
     Q_DECLARE_PRIVATE(Menu)
+    
+    Q_PRIVATE_SLOT(d_func(), void _q_onStyleChanged());
 
 private:
     Q_DISABLE_COPY(Menu)

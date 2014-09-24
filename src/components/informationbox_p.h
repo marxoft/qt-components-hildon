@@ -37,6 +37,8 @@ class InformationBox : public QMaemo5InformationBox, public QDeclarativeParserSt
     Q_PRIVATE_PROPERTY(InformationBox::d_func(), QDeclarativeListProperty<QObject> actions READ actions)
     Q_PRIVATE_PROPERTY(InformationBox::d_func(), QDeclarativeListProperty<QWidget> content READ content)
     Q_PRIVATE_PROPERTY(InformationBox::d_func(), bool focus READ hasFocus WRITE setFocus NOTIFY focusChanged)
+    Q_PRIVATE_PROPERTY(InformationBox::d_func(), Style* style READ style WRITE setStyle RESET resetStyle)
+    
 
     Q_ENUMS(Timeout)
 
@@ -64,6 +66,8 @@ signals:
     void focusChanged();
 
 protected:
+    InformationBox(InformationBoxPrivate &dd, QWidget *parent = 0);
+    
     virtual void changeEvent(QEvent *event);
     virtual void showEvent(QShowEvent *event);
     virtual void hideEvent(QHideEvent *event);
@@ -73,11 +77,11 @@ protected:
     virtual void classBegin();
     virtual void componentComplete();
 
-    InformationBox(InformationBoxPrivate &dd, QWidget *parent = 0);
-
     QScopedPointer<InformationBoxPrivate> d_ptr;
 
     Q_DECLARE_PRIVATE(InformationBox)
+    
+    Q_PRIVATE_SLOT(d_func(), void _q_onStyleChanged())
 
 private:
     Q_DISABLE_COPY(InformationBox)

@@ -105,6 +105,8 @@ HEADERS += \
     sortfilterproxymodel_p.h \
     spinbox_p.h \
     spinbox_p_p.h \
+    style_p.h \
+    style_p_p.h \
     tabbar_p.h \
     tabbar_p_p.h \
     tabgroup_p.h \
@@ -191,6 +193,7 @@ SOURCES += \
     slider.cpp \
     spinbox.cpp \
     sortfilterproxymodel.cpp \
+    style.cpp \
     tabbar.cpp \
     tabgroup.cpp \
     tableview.cpp \

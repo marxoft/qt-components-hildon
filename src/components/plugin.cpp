@@ -75,6 +75,7 @@
 #include "slider_p.h"
 #include "spinbox_p.h"
 #include "sortfilterproxymodel_p.h"
+#include "style_p.h"
 #include "tabbar_p.h"
 #include "tabgroup_p.h"
 #include "tableview_p.h"
@@ -184,6 +185,7 @@ void Plugin::registerTypes(const char *uri) {
     qmlRegisterType<Slider>(uri, 1, 0, "Slider");
     qmlRegisterType<SortFilterProxyModel>(uri, 1, 0, "SortFilterProxyModel");
     qmlRegisterType<SpinBox>(uri, 1, 0, "SpinBox");
+    qmlRegisterType<Style>(uri, 1, 0, "Style");
     qmlRegisterType<TabBar>(uri, 1, 0, "TabBar");
     qmlRegisterType<TabButton>(uri, 1, 0, "TabButton");
     qmlRegisterType<TabGroup>(uri, 1, 0, "TabGroup");

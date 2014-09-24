@@ -14,49 +14,38 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
  */
-
-#ifndef MENU_P_P_H
-#define MENU_P_P_H
-
-#include "menu_p.h"
+ 
 #include "style_p.h"
+#include <QColor>
 
-class MenuPrivate
+class StylePrivate
 {
 
 public:
-    MenuPrivate(Menu *parent) :
+    StylePrivate(Style *parent) :
         q_ptr(parent),
-        qmlStyle(0)
+        complete(false),
+        dirty(false),
+        backgroundPosition(Qt::AlignTop | Qt::AlignLeft),
+        backgroundRepeat(Style::RepeatXandY)
     {
     }
-
-    virtual ~MenuPrivate() {}
-
-    static void data_append(QDeclarativeListProperty<QObject> *list, QObject *obj);
-
-    QDeclarativeListProperty<QObject> data();
-
-    bool hasFocus() const;
-    void setFocus(bool focus);
     
-    Style* style() const;
-    void setStyle(Style *style);
-    void resetStyle();
+    virtual ~StylePrivate() {}
     
-    void _q_onStyleChanged();
-
-    void componentComplete();
-
-    Menu *q_ptr;
+    Style *q_ptr;
     
-    Style *qmlStyle;
-
+    QColor backgroundColor;
+    
+    QString backgroundImage;
+    
+    Qt::Alignment backgroundPosition;
+    
+    Style::Repeat backgroundRepeat;
+    
     bool complete;
-
-    QList<QObject*> dataList;
-
-    Q_DECLARE_PUBLIC(Menu)
+    bool dirty;
+    
+    Q_DECLARE_PUBLIC(Style)
 };
 
-#endif // MENU_P_P_H

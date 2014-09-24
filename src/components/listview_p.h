@@ -65,6 +65,7 @@ class ListView : public QListView, public QDeclarativeParserStatus
     Q_PRIVATE_PROPERTY(ListView::d_func(), QVariant currentIndex READ currentIndex WRITE setCurrentIndex NOTIFY currentIndexChanged)
     Q_PRIVATE_PROPERTY(ListView::d_func(), QVariantList selectedIndexes READ selectedIndexes WRITE setSelectedIndexes NOTIFY currentIndexChanged)
     Q_PRIVATE_PROPERTY(ListView::d_func(), QDeclarativeComponent* delegate READ delegate WRITE setDelegate NOTIFY delegateChanged)
+    Q_PRIVATE_PROPERTY(ListView::d_func(), Style* style READ style WRITE setStyle RESET resetStyle)
 
     Q_INTERFACES(QDeclarativeParserStatus)
 
@@ -164,6 +165,7 @@ protected:
     Q_PRIVATE_SLOT(d_func(), void _q_onHorizontalScrollPositionChanged())
     Q_PRIVATE_SLOT(d_func(), void _q_onVerticalScrollPositionChanged())
     Q_PRIVATE_SLOT(d_func(), void _q_onScrollingStopped())
+    Q_PRIVATE_SLOT(d_func(), void _q_onStyleChanged())
 
 private:
     Q_DISABLE_COPY(ListView)

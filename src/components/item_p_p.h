@@ -19,6 +19,7 @@
 #define ITEM_P_P_H
 
 #include "item_p.h"
+#include "style_p.h"
 #include "anchors_p_p.h"
 
 class ItemPrivate
@@ -27,6 +28,7 @@ class ItemPrivate
 public:
     ItemPrivate(QWidget *parent) :
         q_ptr(parent),
+        qmlStyle(0),
         anc(0),
         left(AnchorLine(parent, AnchorLine::Left)),
         right(AnchorLine(parent, AnchorLine::Right)),
@@ -60,10 +62,18 @@ public:
 
     bool hasFocus() const;
     void setFocus(bool focus);
+    
+    Style* style() const;
+    void setStyle(Style *style);
+    void resetStyle();
+    
+    void _q_onStyleChanged();
 
     virtual void componentComplete();
 
     QWidget *q_ptr;
+    
+    Style *qmlStyle;
 
     Anchors *anc;
 

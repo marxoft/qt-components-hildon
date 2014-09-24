@@ -12,6 +12,8 @@ HEADERS += \
     ../components/anchors_p_p.h \
     ../components/item_p.h \
     ../components/item_p_p.h \
+    ../components/style_p.h \
+    ../components/style_p_p.h \
     webhistory_p.h \
     webhistoryinterface_p.h \
     webpage_p.h \
@@ -23,6 +25,7 @@ HEADERS += \
 SOURCES += \
     ../components/anchors.cpp \
     ../components/item.cpp \
+    ../components/style.cpp \
     webhistory.cpp \
     webhistoryinterface.cpp \
     webpage.cpp \

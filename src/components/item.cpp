@@ -21,6 +21,9 @@
 #include <QActionGroup>
 #include <QMoveEvent>
 #include <QResizeEvent>
+#include <QPaintEvent>
+#include <QPainter>
+#include <QStyleOption>
 #include <QGraphicsOpacityEffect>
 
 Item::Item(QWidget *parent) :
@@ -166,6 +169,13 @@ void Item::focusOutEvent(QFocusEvent *event) {
     QWidget::focusOutEvent(event);
 }
 
+void Item::paintEvent(QPaintEvent *) {
+    QStyleOption opt;
+    opt.init(this);
+    QPainter p(this);
+    this->style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
+}
+
 void Item::classBegin() {}
 
 void Item::componentComplete() {
@@ -279,6 +289,41 @@ void ItemPrivate::setFocus(bool focus) {
         else {
             q->clearFocus();
         }
+    }
+}
+
+Style* ItemPrivate::style() const {
+    return qmlStyle;
+}
+
+void ItemPrivate::setStyle(Style *style) {
+    if (style != qmlStyle) {
+        Q_Q(Item);
+        
+        if (qmlStyle) {
+            q->disconnect(qmlStyle, SIGNAL(changed()), q, SLOT(_q_onStyleChanged()));
+        }
+        
+        qmlStyle = style;
+        
+        if (qmlStyle) {
+            q->setStyleSheet(qmlStyle->toStyleSheet());
+            q->connect(qmlStyle, SIGNAL(changed()), q, SLOT(_q_onStyleChanged()));
+        }
+        else {
+            q->setStyleSheet(QString());
+        }
+    }
+}
+
+void ItemPrivate::resetStyle() {
+    this->setStyle(0);
+}
+
+void ItemPrivate::_q_onStyleChanged() {
+    if (qmlStyle) {
+        Q_Q(Item);
+        q->setStyleSheet(qmlStyle->toStyleSheet());
     }
 }
 

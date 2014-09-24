@@ -179,6 +179,41 @@ void MenuPrivate::setFocus(bool focus) {
     }
 }
 
+Style* MenuPrivate::style() const {
+    return qmlStyle;
+}
+
+void MenuPrivate::setStyle(Style *style) {
+    if (style != qmlStyle) {
+        Q_Q(Menu);
+        
+        if (qmlStyle) {
+            q->disconnect(qmlStyle, SIGNAL(changed()), q, SLOT(_q_onStyleChanged()));
+        }
+        
+        qmlStyle = style;
+        
+        if (qmlStyle) {
+            q->setStyleSheet(qmlStyle->toStyleSheet());
+            q->connect(qmlStyle, SIGNAL(changed()), q, SLOT(_q_onStyleChanged()));
+        }
+        else {
+            q->setStyleSheet(QString());
+        }
+    }
+}
+
+void MenuPrivate::resetStyle() {
+    this->setStyle(0);
+}
+
+void MenuPrivate::_q_onStyleChanged() {
+    if (qmlStyle) {
+        Q_Q(Menu);
+        q->setStyleSheet(qmlStyle->toStyleSheet());
+    }
+}
+
 void MenuPrivate::componentComplete() {
     Q_Q(Menu);
 

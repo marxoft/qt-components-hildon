@@ -58,6 +58,7 @@ class Flickable : public QScrollArea, public QDeclarativeParserStatus
     Q_PRIVATE_PROPERTY(Flickable::d_func(), QDeclarativeListProperty<QObject> actions READ actions)
     Q_PRIVATE_PROPERTY(Flickable::d_func(), bool visible READ qmlVisible WRITE setQmlVisible NOTIFY visibleChanged)
     Q_PRIVATE_PROPERTY(Flickable::d_func(), bool focus READ hasFocus WRITE setFocus NOTIFY focusChanged)
+    Q_PRIVATE_PROPERTY(Flickable::d_func(), Style* style READ style WRITE setStyle RESET resetStyle)
 
     Q_INTERFACES(QDeclarativeParserStatus)
 
@@ -145,6 +146,7 @@ protected:
     Q_PRIVATE_SLOT(d_func(), void _q_onHorizontalScrollPositionChanged())
     Q_PRIVATE_SLOT(d_func(), void _q_onVerticalScrollPositionChanged())
     Q_PRIVATE_SLOT(d_func(), void _q_onScrollingStopped())
+    Q_PRIVATE_SLOT(d_func(), void _q_onStyleChanged())
 
 private:
     Q_DISABLE_COPY(Flickable)

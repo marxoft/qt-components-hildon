@@ -119,6 +119,7 @@ class HeaderView : public QHeaderView, public QDeclarativeParserStatus
     Q_PRIVATE_PROPERTY(HeaderView::d_func(), int minimumSectionSize READ minimumSectionSize WRITE setMinimumSectionSize NOTIFY minimumSectionSizeChanged)
     Q_PRIVATE_PROPERTY(HeaderView::d_func(), Qt::Alignment defaultAlignment READ defaultAlignment WRITE setDefaultAlignment NOTIFY defaultAlignmentChanged)
     Q_PRIVATE_PROPERTY(HeaderView::d_func(), QVariant currentIndex READ currentIndex WRITE setCurrentIndex NOTIFY currentIndexChanged)
+    Q_PRIVATE_PROPERTY(HeaderView::d_func(), Style* style READ style WRITE setStyle RESET resetStyle)
 
     Q_INTERFACES(QDeclarativeParserStatus)
 
@@ -179,6 +180,8 @@ protected:
     QScopedPointer<HeaderViewPrivate> d_ptr;
 
     Q_DECLARE_PRIVATE(HeaderView)
+    
+    Q_PRIVATE_SLOT(d_func(), void _q_onStyleChanged())
 
 private:
     Q_DISABLE_COPY(HeaderView)

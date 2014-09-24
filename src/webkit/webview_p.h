@@ -83,6 +83,8 @@ class WebView : public QWebView, public QDeclarativeParserStatus
     Q_PRIVATE_PROPERTY(WebView::d_func(), QDeclarativeListProperty<QObject> javaScriptWindowObjects READ jsObjects)
     Q_PRIVATE_PROPERTY(WebView::d_func(), bool visible READ qmlVisible WRITE setQmlVisible NOTIFY visibleChanged)
     Q_PRIVATE_PROPERTY(WebView::d_func(), bool focus READ hasFocus WRITE setFocus NOTIFY focusChanged)
+    Q_PRIVATE_PROPERTY(WebView::d_func(), Style* style READ style WRITE setStyle RESET resetStyle)
+    
 
     Q_ENUMS(Status QWebPage::LinkDelegationPolicy)
 
@@ -247,6 +249,7 @@ protected:
     Q_PRIVATE_SLOT(d_func(), void _q_onJavaScriptWindowObjectCleared())
     Q_PRIVATE_SLOT(d_func(), void _q_onScrollRequested())
     Q_PRIVATE_SLOT(d_func(), void _q_onScrollingStopped())
+    Q_PRIVATE_SLOT(d_func(), void _q_onStyleChanged())
 
 private:
     Q_DISABLE_COPY(WebView)
