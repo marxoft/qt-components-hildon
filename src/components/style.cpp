@@ -108,7 +108,7 @@ QString Style::toStyleSheet() const {
     QString s;
     
     if (d->backgroundColor.isValid()) {
-        s += "background-color:" + d->backgroundColor.name() + ";";
+        s += "background-color: " + d->backgroundColor.name() + ";";
     }
     
     if (!d->backgroundImage.isEmpty()) {
@@ -125,24 +125,20 @@ QString Style::toStyleSheet() const {
             if (d->backgroundPosition & Qt::AlignTop) {
                 s += " top";
             }
-            
-            if (d->backgroundPosition & Qt::AlignBottom) {
+            else if (d->backgroundPosition & Qt::AlignBottom) {
                 s += " bottom";
             }
-            
-            if (d->backgroundPosition & Qt::AlignVCenter) {
+            else if (d->backgroundPosition & Qt::AlignVCenter) {
                 s += " center";
             }
             
             if (d->backgroundPosition & Qt::AlignLeft) {
                 s += " left";
             }
-            
-            if (d->backgroundPosition & Qt::AlignRight) {
+            else if (d->backgroundPosition & Qt::AlignRight) {
                 s += " right";
             }
-            
-            if (d->backgroundPosition & Qt::AlignHCenter) {
+            else if (d->backgroundPosition & Qt::AlignHCenter) {
                 s += " center";
             }
             
