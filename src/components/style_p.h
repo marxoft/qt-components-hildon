@@ -28,8 +28,10 @@ class Style : public QObject, public QDeclarativeParserStatus
 {
     Q_OBJECT
     
+    Q_PROPERTY(Origin backgroundClip READ backgroundClip WRITE setBackgroundClip NOTIFY changed)
     Q_PROPERTY(QColor backgroundColor READ backgroundColor WRITE setBackgroundColor NOTIFY changed)
     Q_PROPERTY(QString backgroundImage READ backgroundImage WRITE setBackgroundImage NOTIFY changed)
+    Q_PROPERTY(Origin backgroundOrigin READ backgroundOrigin WRITE setBackgroundOrigin NOTIFY changed)
     Q_PROPERTY(Qt::Alignment backgroundPosition READ backgroundPosition WRITE setBackgroundPosition NOTIFY changed)
     Q_PROPERTY(Repeat backgroundRepeat READ backgroundRepeat WRITE setBackgroundRepeat NOTIFY changed)
     
@@ -38,6 +40,13 @@ class Style : public QObject, public QDeclarativeParserStatus
     Q_INTERFACES(QDeclarativeParserStatus)
     
 public:
+    enum Origin {
+        Margin = 0,
+        Border,
+        Padding,
+        Content
+    };
+        
     enum Repeat {
         RepeatX = 0,
         RepeatY,
@@ -48,11 +57,17 @@ public:
     explicit Style(QObject *parent = 0);
     ~Style();
     
+    Origin backgroundClip() const;
+    void setBackgroundClip(Origin clip);
+    
     QColor backgroundColor() const;
     void setBackgroundColor(const QColor &color);
     
     QString backgroundImage() const;
     void setBackgroundImage(const QString &source);
+    
+    Origin backgroundOrigin() const;
+    void setBackgroundOrigin(Origin origin);
     
     Qt::Alignment backgroundPosition() const;
     void setBackgroundPosition(Qt::Alignment align);

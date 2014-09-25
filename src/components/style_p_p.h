@@ -26,6 +26,8 @@ public:
         q_ptr(parent),
         complete(false),
         dirty(false),
+        backgroundClip(Style::Border),
+        backgroundOrigin(Style::Padding),
         backgroundPosition(Qt::AlignTop | Qt::AlignLeft),
         backgroundRepeat(Style::RepeatXandY)
     {
@@ -35,9 +37,13 @@ public:
     
     Style *q_ptr;
     
+    Style::Origin backgroundClip;
+    
     QColor backgroundColor;
     
     QString backgroundImage;
+    
+    Style::Origin backgroundOrigin;
     
     Qt::Alignment backgroundPosition;
     

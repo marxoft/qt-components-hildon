@@ -26,6 +26,24 @@ Style::Style(QObject *parent) :
 
 Style::~Style() {}
 
+Style::Origin Style::backgroundClip() const {
+    Q_D(const Style);
+    
+    return d->backgroundClip;
+}
+
+void Style::setBackgroundClip(Origin clip) {
+    if (clip != this->backgroundClip()) {
+        Q_D(Style);
+        d->backgroundClip = clip;
+        d->dirty = true;
+        
+        if (d->complete) {
+            emit changed();
+        }
+    }
+}
+
 QColor Style::backgroundColor() const {
     Q_D(const Style);
     
@@ -54,6 +72,24 @@ void Style::setBackgroundImage(const QString &source) {
     if (source != this->backgroundImage()) {
         Q_D(Style);
         d->backgroundImage = source;
+        d->dirty = true;
+        
+        if (d->complete) {
+            emit changed();
+        }
+    }
+}
+
+Style::Origin Style::backgroundOrigin() const {
+    Q_D(const Style);
+    
+    return d->backgroundOrigin;
+}
+
+void Style::setBackgroundOrigin(Origin origin) {
+    if (origin != this->backgroundOrigin()) {
+        Q_D(Style);
+        d->backgroundOrigin;
         d->dirty = true;
         
         if (d->complete) {
@@ -107,16 +143,48 @@ QString Style::toStyleSheet() const {
     
     QString s;
     
+    switch (d->backgroundClip) {
+    case Margin:
+        s += "background-clip: margin;";
+        break;
+    case Border:
+        s += "background-clip: border;";
+        break;
+    case Padding:
+        s += "background-clip: padding;";
+        break;
+    case Content:
+        s += "background-clip: content;";
+        break;
+    default:
+        s += "background-clip: border;";
+        break;
+    }
+        
+    switch (d->backgroundOrigin) {
+    case Margin:
+        s += "background-origin: margin;";
+        break;
+    case Border:
+        s += "background-origin: border;";
+        break;
+    case Padding:
+        s += "background-origin: padding;";
+        break;
+    case Content:
+        s += "background-origin: content;";
+        break;
+    default:
+        s += "background-origin: padding;";
+        break;
+    }
+    
     if (d->backgroundColor.isValid()) {
         s += "background-color: " + d->backgroundColor.name() + ";";
     }
     
     if (!d->backgroundImage.isEmpty()) {
         s += "background-image: url(" + d->backgroundImage + ");";
-    }
-    
-    if (!s.isEmpty()) {
-        s += "background-position:";
         
         if (d->backgroundPosition & Qt::AlignCenter) {
             s += " center;";
