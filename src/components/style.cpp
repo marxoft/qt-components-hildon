@@ -24,6 +24,12 @@ Style::Style(QObject *parent) :
 {
 }
 
+Style::Style(StylePrivate &dd, QObject *parent) :
+    QObject(parent),
+    d_ptr(&dd)
+{
+}
+
 Style::~Style() {}
 
 Style::Origin Style::backgroundClip() const {

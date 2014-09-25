@@ -23,6 +23,7 @@
 #include "borderimage_p.h"
 #include "button_p.h"
 #include "buttonrow_p.h"
+#include "buttonstyle_p.h"
 #include "checkbox_p.h"
 #include "column_p.h"
 #include "dateselector_p.h"
@@ -134,6 +135,7 @@ void Plugin::registerTypes(const char *uri) {
     qmlRegisterType<BorderImage>(uri, 1, 0, "BorderImage");
     qmlRegisterType<Button>(uri, 1, 0, "Button");
     qmlRegisterType<ButtonRow>(uri, 1, 0, "ButtonRow");
+    qmlRegisterType<ButtonStyle>(uri, 1, 0, "ButtonStyle");
     qmlRegisterType<CheckBox>(uri, 1, 0, "CheckBox");
     qmlRegisterType<Column>(uri, 1, 0, "Column");
     qmlRegisterType<DateSelector>(uri, 1, 0, "DateSelector");

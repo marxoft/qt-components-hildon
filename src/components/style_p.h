@@ -81,6 +81,8 @@ signals:
     void changed();
     
 protected:
+    Style(StylePrivate &dd, QObject *parent = 0);
+    
     virtual void classBegin();
     virtual void componentComplete();
     

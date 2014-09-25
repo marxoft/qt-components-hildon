@@ -15,12 +15,18 @@ HEADERS += \
     anchors_p_p.h \
     borderimage_p.h \
     borderimage_p_p.h \
+    boxstyle_p.h \
+    boxstyle_p_p.h \
     button_p.h \
     button_p_p.h \
     buttonrow_p.h \
     buttonrow_p_p.h \
+    buttonstyle_p.h \
+    buttonstyle_p_p.h \
     checkbox_p.h \
     checkbox_p_p.h \
+    checkboxstyle_p.h \
+    checkboxstyle_p_p.h \
     column_p.h \
     column_p_p.h \
     dateselector_p.h \
@@ -52,7 +58,6 @@ HEADERS += \
     itemaction_p.h \
     keys_p.h \
     label_p.h \
-    listelement_p.h \
     listitem_p.h \
     listitemborderimage_p.h \
     listitemcontent_p.h \
@@ -141,9 +146,12 @@ SOURCES += \
     actiongroup.cpp \
     anchors.cpp \
     borderimage.cpp \
+    boxstyle.cpp \
     button.cpp \
     buttonrow.cpp \
+    buttonstyle.cpp \
     checkbox.cpp \
+    checkboxstyle.cpp \
     column.cpp \
     dateselector.cpp \
     dialog.cpp \
@@ -162,7 +170,6 @@ SOURCES += \
     item.cpp \
     itemaction.cpp \
     keys.cpp \
-    listelement.cpp \
     listitem.cpp \
     listitemborderimage.cpp \
     listitemcontent.cpp \
