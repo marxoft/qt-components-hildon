@@ -607,63 +607,72 @@ QString BoxStyle::toStyleSheet() const {
         }
     }
     
-    switch (d->borderStyle) {
-    case Dashed:
-        s += "border-style: dashed;";
-        break;
-    case DotDash:
-        s += "border-style: dot-dash;";
-        break;
-    case DotDotDash:
-        s += "border-style: dot-dot-dash;";
-        break;
-    case Dotted:
-        s += "border-style: dotted;";
-        break;
-    case Double:
-        s += "border-style: double;";
-        break;
-    case Groove:
-        s += "border-style: groove;";
-        break;
-    case Inset:
-        s += "border-style: inset;";
-        break;
-    case Outset:
-        s += "border-style: outset;";
-        break;
-    case Ridge:
-        s += "border-style: ridge;";
-        break;
-    case Solid:
-        s += "border-style: solid;";
-        break;
-    case None:
-        s += "border-style: none;";
-        break;
-    default:
-        s += "border-style: none;";
-        break;
-    }
+    bool useBorderStyle = false;
     
     if (d->borderWidth) {
         s += "border-width: " + QString::number(d->borderWidth) + "px;";
+        useBorderStyle = true;
     }
     else {
         if (d->borderWidthTop) {
             s += "border-top-width: " + QString::number(d->borderWidthTop) + "px;";
+            useBorderStyle = true;
         }
         
         if (d->borderWidthRight) {
             s += "border-right-width: " + QString::number(d->borderWidthRight) + "px;";
+            useBorderStyle = true;
         }
         
         if (d->borderWidthBottom) {
             s += "border-bottom-width: " + QString::number(d->borderWidthBottom) + "px;";
+            useBorderStyle = true;
         }
         
         if (d->borderWidthLeft) {
             s += "border-left-width: " + QString::number(d->borderWidthLeft) + "px;";
+            useBorderStyle = true;
+        }
+    }
+    
+    if (useBorderStyle) {
+        switch (d->borderStyle) {
+        case Dashed:
+            s += "border-style: dashed;";
+            break;
+        case DotDash:
+            s += "border-style: dot-dash;";
+            break;
+        case DotDotDash:
+            s += "border-style: dot-dot-dash;";
+            break;
+        case Dotted:
+            s += "border-style: dotted;";
+            break;
+        case Double:
+            s += "border-style: double;";
+            break;
+        case Groove:
+            s += "border-style: groove;";
+            break;
+        case Inset:
+            s += "border-style: inset;";
+            break;
+        case Outset:
+            s += "border-style: outset;";
+            break;
+        case Ridge:
+            s += "border-style: ridge;";
+            break;
+        case Solid:
+            s += "border-style: solid;";
+            break;
+        case None:
+            s += "border-style: none;";
+            break;
+        default:
+            s += "border-style: none;";
+            break;
         }
     }
     
