@@ -37,6 +37,10 @@ BoxStylePrivate::BoxStylePrivate(BoxStyle *parent) :
     marginRight(0),
     marginBottom(0),
     marginLeft(0),
+    minimumWidth(0),
+    maximumWidth(0),
+    minimumHeight(0),
+    maximumHeight(0),
     padding(0),
     paddingTop(0),
     paddingRight(0),
@@ -217,6 +221,22 @@ QString BoxStylePrivate::mainBody() const {
         if (marginLeft) {
             body += "margin-left: " + QString::number(marginLeft) + "px;";
         }
+    }
+    
+    if (minimumWidth) {
+        body += "min-width: " + QString::number(minimumWidth) + "px;";
+    }
+    
+    if (maximumWidth) {
+        body += "max-width: " + QString::number(maximumWidth) + "px;";
+    }
+    
+    if (minimumHeight) {
+        body += "min-height: " + QString::number(minimumHeight) + "px;";
+    }
+    
+    if (maximumHeight) {
+        body += "max-height: " + QString::number(maximumHeight) + "px;";
     }
     
     if (padding) {
@@ -683,6 +703,78 @@ void BoxStyle::setMarginLeft(int m) {
     if (m != this->marginLeft()) {
         Q_D(BoxStyle);
         d->marginLeft = m;
+        d->dirty = true;
+        
+        if (d->complete) {
+            emit changed();
+        }
+    }
+}
+
+int BoxStyle::minimumWidth() const {
+    Q_D(const BoxStyle);
+    
+    return d->minimumWidth;
+}
+
+void BoxStyle::setMinimumWidth(int w) {
+    if (w != this->minimumWidth()) {
+        Q_D(BoxStyle);
+        d->minimumWidth = w;
+        d->dirty = true;
+        
+        if (d->complete) {
+            emit changed();
+        }
+    }
+}
+
+int BoxStyle::maximumWidth() const {
+    Q_D(const BoxStyle);
+    
+    return d->maximumWidth;
+}
+
+void BoxStyle::setMaximumWidth(int w) {
+    if (w != this->maximumWidth()) {
+        Q_D(BoxStyle);
+        d->maximumWidth = w;
+        d->dirty = true;
+        
+        if (d->complete) {
+            emit changed();
+        }
+    }
+}
+
+int BoxStyle::minimumHeight() const {
+    Q_D(const BoxStyle);
+    
+    return d->minimumHeight;
+}
+
+void BoxStyle::setMinimumHeight(int h) {
+    if (h != this->minimumHeight()) {
+        Q_D(BoxStyle);
+        d->minimumHeight = h;
+        d->dirty = true;
+        
+        if (d->complete) {
+            emit changed();
+        }
+    }
+}
+
+int BoxStyle::maximumHeight() const {
+    Q_D(const BoxStyle);
+    
+    return d->maximumHeight;
+}
+
+void BoxStyle::setMaximumHeight(int h) {
+    if (h != this->maximumHeight()) {
+        Q_D(BoxStyle);
+        d->maximumHeight = h;
         d->dirty = true;
         
         if (d->complete) {

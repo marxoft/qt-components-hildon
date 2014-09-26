@@ -58,6 +58,11 @@ public:
     int marginBottom;
     int marginLeft;
     
+    int minimumWidth;
+    int maximumWidth;
+    int minimumHeight;
+    int maximumHeight;
+    
     int padding;
     int paddingTop;
     int paddingRight;

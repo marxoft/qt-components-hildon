@@ -50,6 +50,10 @@ class BoxStyle : public Style
     Q_PROPERTY(int marginRight READ marginRight WRITE setMarginRight NOTIFY changed)
     Q_PROPERTY(int marginBottom READ marginBottom WRITE setMarginBottom NOTIFY changed)
     Q_PROPERTY(int marginLeft READ marginLeft WRITE setMarginLeft NOTIFY changed)
+    Q_PROPERTY(int minimumWidth READ minimumWidth WRITE setMinimumWidth NOTIFY changed)
+    Q_PROPERTY(int maximumWidth READ maximumWidth WRITE setMaximumWidth NOTIFY changed)
+    Q_PROPERTY(int minimumHeight READ minimumHeight WRITE setMinimumHeight NOTIFY changed)
+    Q_PROPERTY(int maximumHeight READ maximumHeight WRITE setMaximumHeight NOTIFY changed)
     Q_PROPERTY(int padding READ padding WRITE setPadding NOTIFY changed)
     Q_PROPERTY(int paddingTop READ paddingTop WRITE setPaddingTop NOTIFY changed)
     Q_PROPERTY(int paddingRight READ paddingRight WRITE setPaddingRight NOTIFY changed)
@@ -132,6 +136,15 @@ public:
     void setMarginBottom(int m);
     int marginLeft() const;
     void setMarginLeft(int m);
+    
+    int minimumWidth() const;
+    void setMinimumWidth(int w);
+    int maximumWidth() const;
+    void setMaximumWidth(int w);
+    int minimumHeight() const;
+    void setMinimumHeight(int h);
+    int maximumHeight() const;
+    void setMaximumHeight(int h);
     
     int padding() const;
     void setPadding(int p);
