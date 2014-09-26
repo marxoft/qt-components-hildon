@@ -107,11 +107,5 @@ void TextFieldStyle::setSelectionColor(const QColor &color) {
     }
 }
 
-QString TextFieldStyle::toStyleSheet() const {
-    Q_D(const TextFieldStyle);
-    
-    return d->complete ? d->mainBody() : QString();
-}
-
 #include "moc_textfieldstyle_p.cpp"
 

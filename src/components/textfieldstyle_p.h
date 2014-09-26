@@ -43,8 +43,6 @@ public:
     QColor selectionColor() const;
     void setSelectionColor(const QColor &color);
     
-    virtual QString toStyleSheet() const;
-    
 protected:
     TextFieldStyle(TextFieldStylePrivate &dd, QObject *parent = 0);
     
