@@ -39,6 +39,8 @@ HEADERS += \
     filesystemmodel_p.h \
     flickable_p.h \
     flickable_p_p.h \
+    flickablestyle_p.h \
+    flickablestyle_p_p.h \
     flow_p.h \
     flow_p_p.h \
     grid_p.h \
@@ -76,6 +78,8 @@ HEADERS += \
     listselector_p_p.h \
     listview_p.h \
     listview_p_p.h \
+    listviewstyle_p.h \
+    listviewstyle_p_p.h \
     loader_p.h \
     loader_p_p.h \
     menu_p.h \
@@ -163,6 +167,7 @@ SOURCES += \
     editbar.cpp \
     filesystemmodel.cpp \
     flickable.cpp \
+    flickablestyle.cpp \
     flow.cpp \
     grid.cpp \
     headerview.cpp \
@@ -186,6 +191,7 @@ SOURCES += \
     listmodel.cpp \
     listselector.cpp \
     listview.cpp \
+    listviewstyle.cpp \
     loader.cpp \
     menu.cpp \
     mousearea.cpp \

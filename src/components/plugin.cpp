@@ -33,6 +33,7 @@
 #include "editbar_p.h"
 #include "filesystemmodel_p.h"
 #include "flickable_p.h"
+#include "flickablestyle_p.h"
 #include "flow_p.h"
 #include "grid_p.h"
 #include "headerview_p.h"
@@ -57,6 +58,7 @@
 #include "listmodel_p.h"
 #include "listselector_p.h"
 #include "listview_p.h"
+#include "listviewstyle_p.h"
 #include "loader_p.h"
 #include "menu_p.h"
 #include "modelindex_p.h"
@@ -150,6 +152,7 @@ void Plugin::registerTypes(const char *uri) {
     qmlRegisterType<EditBar>(uri, 1, 0, "EditBar");
     qmlRegisterType<FileSystemModel>(uri, 1, 0, "FileSystemModel");
     qmlRegisterType<Flickable>(uri, 1, 0, "Flickable");
+    qmlRegisterType<FlickableStyle>(uri, 1, 0, "FlickableStyle");
     qmlRegisterType<Flow>(uri, 1, 0, "Flow");
     qmlRegisterType<Gradient>(uri, 1, 0, "Gradient");
     qmlRegisterType<GradientStop>(uri, 1, 0, "GradientStop");
@@ -173,6 +176,7 @@ void Plugin::registerTypes(const char *uri) {
     qmlRegisterType<ListModel>(uri, 1, 0, "ListModel");
     qmlRegisterType<ListSelector>(uri, 1, 0, "ListSelector");
     qmlRegisterType<ListView>(uri, 1, 0, "ListView");
+    qmlRegisterType<ListViewStyle>(uri, 1, 0, "ListViewStyle");
     qmlRegisterType<Loader>(uri, 1, 0, "Loader");
     qmlRegisterType<Menu>(uri, 1, 0, "Menu");
     qmlRegisterType<MouseArea>(uri, 1, 0, "MouseArea");
