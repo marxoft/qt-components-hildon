@@ -86,6 +86,7 @@
 #include "textbrowser_p.h"
 #include "textedit_p.h"
 #include "textfield_p.h"
+#include "textfieldstyle_p.h"
 #include "textstyle_p.h"
 #include "timeselector_p.h"
 #include "toolbar_p.h"
@@ -201,6 +202,7 @@ void Plugin::registerTypes(const char *uri) {
     qmlRegisterType<TextBrowser>(uri, 1, 0, "TextBrowser");
     qmlRegisterType<TextEdit>(uri, 1, 0, "TextEdit");
     qmlRegisterType<TextField>(uri, 1, 0, "TextField");
+    qmlRegisterType<TextFieldStyle>(uri, 1, 0, "TextFieldStyle");
     qmlRegisterType<TextStyle>(uri, 1, 0, "TextStyle");
     qmlRegisterType<TimeSelector>(uri, 1, 0, "TimeSelector");
     qmlRegisterType<ToolBar>(uri, 1, 0, "ToolBar");
