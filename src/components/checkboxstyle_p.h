@@ -26,11 +26,15 @@ class CheckBoxStyle : public ButtonStyle
 {
     Q_OBJECT
     
+    Q_PROPERTY(QString indicatorImage READ indicatorImage WRITE setIndicatorImage NOTIFY changed)
     Q_PROPERTY(int spacing READ spacing WRITE setSpacing NOTIFY changed)
     
 public:
     explicit CheckBoxStyle(QObject *parent = 0);
     ~CheckBoxStyle();
+    
+    QString indicatorImage() const;
+    void setIndicatorImage(const QString &source);
     
     int spacing() const;
     void setSpacing(int s);

@@ -18,6 +18,235 @@
 #include "boxstyle_p.h"
 #include "boxstyle_p_p.h"
 
+BoxStylePrivate::BoxStylePrivate(BoxStyle *parent) :
+    StylePrivate(parent),
+    borderRadius(0),
+    borderRadiusTopLeft(0),
+    borderRadiusTopRight(0),
+    borderRadiusBottomRight(0),
+    borderRadiusBottomLeft(0),
+    borderStyle(BoxStyle::None),
+    borderWidth(0),
+    borderWidthTop(0),
+    borderWidthRight(0),
+    borderWidthBottom(0),
+    borderWidthLeft(0),
+    imagePosition(0),
+    margin(0),
+    marginTop(0),
+    marginRight(0),
+    marginBottom(0),
+    marginLeft(0),
+    padding(0),
+    paddingTop(0),
+    paddingRight(0),
+    paddingBottom(0),
+    paddingLeft(0)
+{
+}
+
+QString BoxStylePrivate::mainBody() const {
+    QString body = StylePrivate::mainBody();
+    
+    if (borderColor.isValid()) {
+        body += "border-color: " + borderColor.name() + ";";
+    }
+    else {
+        if (borderColorTop.isValid()) {
+            body += "border-top-color: " + borderColorTop.name() + ";";
+        }
+        
+        if (borderColorRight.isValid()) {
+            body += "border-right-color: " + borderColorRight.name() + ";";
+        }
+        
+        if (borderColorBottom.isValid()) {
+            body += "border-bottom-color: " + borderColorBottom.name() + ";";
+        }
+        
+        if (borderColorLeft.isValid()) {
+            body += "border-left-color: " + borderColorLeft.name() + ";";
+        }
+    }
+    
+    if (!borderImage.isEmpty()) {
+        body += "border-image: url(" + borderImage + ");";
+    }
+    
+    if (borderRadius) {
+        body += "border-radius: " + QString::number(borderRadius) + "px;";
+    }
+    else {
+        if (borderRadiusTopLeft) {
+            body += "border-top-left-radius: " + QString::number(borderRadiusTopLeft) + "px;";
+        }
+        
+        if (borderRadiusTopRight) {
+            body += "border-top-right-radius: " + QString::number(borderRadiusTopRight) + "px;";
+        }
+        
+        if (borderRadiusBottomRight) {
+            body += "border-bottom-right-radius: " + QString::number(borderRadiusBottomRight) + "px;";
+        }
+        
+        if (borderRadiusBottomLeft) {
+            body += "border-bottom-left-radius: " + QString::number(borderRadiusBottomLeft) + "px;";
+        }
+    }
+    
+    bool useBorderStyle = false;
+    
+    if (borderWidth) {
+        body += "border-width: " + QString::number(borderWidth) + "px;";
+        useBorderStyle = true;
+    }
+    else {
+        if (borderWidthTop) {
+            body += "border-top-width: " + QString::number(borderWidthTop) + "px;";
+            useBorderStyle = true;
+        }
+        
+        if (borderWidthRight) {
+            body += "border-right-width: " + QString::number(borderWidthRight) + "px;";
+            useBorderStyle = true;
+        }
+        
+        if (borderWidthBottom) {
+            body += "border-bottom-width: " + QString::number(borderWidthBottom) + "px;";
+            useBorderStyle = true;
+        }
+        
+        if (borderWidthLeft) {
+            body += "border-left-width: " + QString::number(borderWidthLeft) + "px;";
+            useBorderStyle = true;
+        }
+    }
+    
+    if (useBorderStyle) {
+        switch (borderStyle) {
+        case BoxStyle::Dashed:
+            body += "border-style: dashed;";
+            break;
+        case BoxStyle::DotDash:
+            body += "border-style: dot-dash;";
+            break;
+        case BoxStyle::DotDotDash:
+            body += "border-style: dot-dot-dash;";
+            break;
+        case BoxStyle::Dotted:
+            body += "border-style: dotted;";
+            break;
+        case BoxStyle::Double:
+            body += "border-style: double;";
+            break;
+        case BoxStyle::Groove:
+            body += "border-style: groove;";
+            break;
+        case BoxStyle::Inset:
+            body += "border-style: inset;";
+            break;
+        case BoxStyle::Outset:
+            body += "border-style: outset;";
+            break;
+        case BoxStyle::Ridge:
+            body += "border-style: ridge;";
+            break;
+        case BoxStyle::Solid:
+            body += "border-style: solid;";
+            break;
+        case BoxStyle::None:
+            body += "border-style: none;";
+            break;
+        default:
+            body += "border-style: none;";
+            break;
+        }
+    }
+    
+    if (!image.isEmpty()) {
+        body += "image: url(" + image + ");";
+        
+        if (imagePosition) {
+            body += "image-position:";
+            
+            if (backgroundPosition & Qt::AlignCenter) {
+                body += " center;";
+            }
+            else {
+                if (backgroundPosition & Qt::AlignTop) {
+                    body += " top";
+                }
+                else if (backgroundPosition & Qt::AlignBottom) {
+                    body += " bottom";
+                }
+                else if (backgroundPosition & Qt::AlignVCenter) {
+                    body += " center";
+                }
+                
+                if (backgroundPosition & Qt::AlignLeft) {
+                    body += " left";
+                }
+                else if (backgroundPosition & Qt::AlignRight) {
+                    body += " right";
+                }
+                else if (backgroundPosition & Qt::AlignHCenter) {
+                    body += " center";
+                }
+                
+                body += ";";
+            }
+        }
+    }
+    
+    if (margin) {
+        body += "margin: " + QString::number(margin) + "px;";
+    }
+    else {
+        if (marginTop) {
+            body += "margin-top: " + QString::number(marginTop) + "px;";
+        }
+        
+        if (marginRight) {
+            body += "margin-right: " + QString::number(marginRight) + "px;";
+        }
+        
+        if (marginBottom) {
+            body += "margin-bottom: " + QString::number(marginBottom) + "px;";
+        }
+        
+        if (marginLeft) {
+            body += "margin-left: " + QString::number(marginLeft) + "px;";
+        }
+    }
+    
+    if (padding) {
+        body += "padding: " + QString::number(padding) + "px;";
+    }
+    else {
+        if (paddingTop) {
+            body += "padding-top: " + QString::number(paddingTop) + "px;";
+        }
+        
+        if (paddingRight) {
+            body += "padding-right: " + QString::number(marginRight) + "px;";
+        }
+        
+        if (paddingBottom) {
+            body += "padding-bottom: " + QString::number(paddingBottom) + "px;";
+        }
+        
+        if (paddingLeft) {
+            body += "padding-left: " + QString::number(paddingLeft) + "px;";
+        }
+    }
+    
+    if (textColor.isValid()) {
+        body += "color: " + textColor.name() + ";";
+    }
+    
+    return body;
+}
+
 BoxStyle::BoxStyle(QObject *parent) :
     Style(*new BoxStylePrivate(this), parent)
 {
@@ -354,6 +583,24 @@ void BoxStyle::setImage(const QString &source) {
     }
 }
 
+Qt::Alignment BoxStyle::imagePosition() const {
+    Q_D(const BoxStyle);
+    
+    return d->imagePosition;
+}
+
+void BoxStyle::setImagePosition(Qt::Alignment align) {
+    if (align != this->imagePosition()) {
+        Q_D(BoxStyle);
+        d->imagePosition = align;
+        d->dirty = true;
+        
+        if (d->complete) {
+            emit changed();
+        }
+    }
+}
+
 int BoxStyle::margin() const {
     Q_D(const BoxStyle);
     
@@ -555,178 +802,7 @@ void BoxStyle::setTextColor(const QColor &color) {
 QString BoxStyle::toStyleSheet() const {
     Q_D(const BoxStyle);
     
-    if (!d->complete) {
-        return QString();
-    }
-    
-    QString s = Style::toStyleSheet();
-    
-    if (d->borderColor.isValid()) {
-        s += "border-color: " + d->borderColor.name() + ";";
-    }
-    else {
-        if (d->borderColorTop.isValid()) {
-            s += "border-top-color: " + d->borderColorTop.name() + ";";
-        }
-        
-        if (d->borderColorRight.isValid()) {
-            s += "border-right-color: " + d->borderColorRight.name() + ";";
-        }
-        
-        if (d->borderColorBottom.isValid()) {
-            s += "border-bottom-color: " + d->borderColorBottom.name() + ";";
-        }
-        
-        if (d->borderColorLeft.isValid()) {
-            s += "border-left-color: " + d->borderColorLeft.name() + ";";
-        }
-    }
-    
-    if (!d->borderImage.isEmpty()) {
-        s += "border-image: url(" + d->borderImage + ");";
-    }
-    
-    if (d->borderRadius) {
-        s += "border-radius: " + QString::number(d->borderRadius) + "px;";
-    }
-    else {
-        if (d->borderRadiusTopLeft) {
-            s += "border-top-left-radius: " + QString::number(d->borderRadiusTopLeft) + "px;";
-        }
-        
-        if (d->borderRadiusTopRight) {
-            s += "border-top-right-radius: " + QString::number(d->borderRadiusTopRight) + "px;";
-        }
-        
-        if (d->borderRadiusBottomRight) {
-            s += "border-bottom-right-radius: " + QString::number(d->borderRadiusBottomRight) + "px;";
-        }
-        
-        if (d->borderRadiusBottomLeft) {
-            s += "border-bottom-left-radius: " + QString::number(d->borderRadiusBottomLeft) + "px;";
-        }
-    }
-    
-    bool useBorderStyle = false;
-    
-    if (d->borderWidth) {
-        s += "border-width: " + QString::number(d->borderWidth) + "px;";
-        useBorderStyle = true;
-    }
-    else {
-        if (d->borderWidthTop) {
-            s += "border-top-width: " + QString::number(d->borderWidthTop) + "px;";
-            useBorderStyle = true;
-        }
-        
-        if (d->borderWidthRight) {
-            s += "border-right-width: " + QString::number(d->borderWidthRight) + "px;";
-            useBorderStyle = true;
-        }
-        
-        if (d->borderWidthBottom) {
-            s += "border-bottom-width: " + QString::number(d->borderWidthBottom) + "px;";
-            useBorderStyle = true;
-        }
-        
-        if (d->borderWidthLeft) {
-            s += "border-left-width: " + QString::number(d->borderWidthLeft) + "px;";
-            useBorderStyle = true;
-        }
-    }
-    
-    if (useBorderStyle) {
-        switch (d->borderStyle) {
-        case Dashed:
-            s += "border-style: dashed;";
-            break;
-        case DotDash:
-            s += "border-style: dot-dash;";
-            break;
-        case DotDotDash:
-            s += "border-style: dot-dot-dash;";
-            break;
-        case Dotted:
-            s += "border-style: dotted;";
-            break;
-        case Double:
-            s += "border-style: double;";
-            break;
-        case Groove:
-            s += "border-style: groove;";
-            break;
-        case Inset:
-            s += "border-style: inset;";
-            break;
-        case Outset:
-            s += "border-style: outset;";
-            break;
-        case Ridge:
-            s += "border-style: ridge;";
-            break;
-        case Solid:
-            s += "border-style: solid;";
-            break;
-        case None:
-            s += "border-style: none;";
-            break;
-        default:
-            s += "border-style: none;";
-            break;
-        }
-    }
-    
-    if (!d->image.isEmpty()) {
-        s += "image: url(" + d->image + ");";
-    }
-    
-    if (d->margin) {
-        s += "margin: " + QString::number(d->margin) + "px;";
-    }
-    else {
-        if (d->marginTop) {
-            s += "margin-top: " + QString::number(d->marginTop) + "px;";
-        }
-        
-        if (d->marginRight) {
-            s += "margin-right: " + QString::number(d->marginRight) + "px;";
-        }
-        
-        if (d->marginBottom) {
-            s += "margin-bottom: " + QString::number(d->marginBottom) + "px;";
-        }
-        
-        if (d->marginLeft) {
-            s += "margin-left: " + QString::number(d->marginLeft) + "px;";
-        }
-    }
-    
-    if (d->padding) {
-        s += "padding: " + QString::number(d->padding) + "px;";
-    }
-    else {
-        if (d->paddingTop) {
-            s += "padding-top: " + QString::number(d->paddingTop) + "px;";
-        }
-        
-        if (d->paddingRight) {
-            s += "padding-right: " + QString::number(d->marginRight) + "px;";
-        }
-        
-        if (d->paddingBottom) {
-            s += "padding-bottom: " + QString::number(d->paddingBottom) + "px;";
-        }
-        
-        if (d->paddingLeft) {
-            s += "padding-left: " + QString::number(d->paddingLeft) + "px;";
-        }
-    }
-    
-    if (d->textColor.isValid()) {
-        s += "color: " + d->textColor.name() + ";";
-    }
-    
-    return s;
+    return d->complete ? d->mainBody() : QString();
 }
 
 #include "moc_boxstyle_p.cpp"

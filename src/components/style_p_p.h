@@ -22,18 +22,9 @@ class StylePrivate
 {
 
 public:
-    StylePrivate(Style *parent) :
-        q_ptr(parent),
-        complete(false),
-        dirty(false),
-        backgroundClip(Style::Border),
-        backgroundOrigin(Style::Padding),
-        backgroundPosition(Qt::AlignTop | Qt::AlignLeft),
-        backgroundRepeat(Style::RepeatXandY)
-    {
-    }
+    StylePrivate(Style *parent);
     
-    virtual ~StylePrivate() {}
+    virtual QString mainBody() const;
     
     Style *q_ptr;
     

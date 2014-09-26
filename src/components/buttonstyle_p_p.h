@@ -22,11 +22,9 @@ class ButtonStylePrivate : public BoxStylePrivate
 {
 
 public:
-    ButtonStylePrivate(ButtonStyle *parent) :
-        BoxStylePrivate(parent),
-        textAlignment(0)
-    {
-    }
+    ButtonStylePrivate(ButtonStyle *parent);
+    
+    virtual QString mainBody() const;
     
     Qt::Alignment textAlignment;
     

@@ -22,31 +22,9 @@ class BoxStylePrivate : public StylePrivate
 {
 
 public:
-    BoxStylePrivate(BoxStyle *parent) :
-        StylePrivate(parent),
-        borderRadius(0),
-        borderRadiusTopLeft(0),
-        borderRadiusTopRight(0),
-        borderRadiusBottomRight(0),
-        borderRadiusBottomLeft(0),
-        borderStyle(BoxStyle::None),
-        borderWidth(0),
-        borderWidthTop(0),
-        borderWidthRight(0),
-        borderWidthBottom(0),
-        borderWidthLeft(0),
-        margin(0),
-        marginTop(0),
-        marginRight(0),
-        marginBottom(0),
-        marginLeft(0),
-        padding(0),
-        paddingTop(0),
-        paddingRight(0),
-        paddingBottom(0),
-        paddingLeft(0)
-    {
-    }
+    BoxStylePrivate(BoxStyle *parent);
+    
+    virtual QString mainBody() const;
     
     QColor borderColor;
     QColor borderColorTop;
@@ -71,6 +49,8 @@ public:
     int borderWidthLeft;
     
     QString image;
+    
+    Qt::Alignment imagePosition;
     
     int margin;
     int marginTop;

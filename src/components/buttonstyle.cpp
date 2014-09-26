@@ -18,6 +18,49 @@
 #include "buttonstyle_p.h"
 #include "buttonstyle_p_p.h"
 
+ButtonStylePrivate::ButtonStylePrivate(ButtonStyle *parent) :
+    BoxStylePrivate(parent),
+    textAlignment(0)
+{
+}
+
+QString ButtonStylePrivate::mainBody() const {
+    QString body = BoxStylePrivate::mainBody();
+    
+    if (textAlignment) {
+        body += "text-align:";
+        
+        if (textAlignment & Qt::AlignCenter) {
+            body += " center;";
+        }
+        else {
+            if (textAlignment & Qt::AlignTop) {
+                body += " top";
+            }
+            else if (textAlignment & Qt::AlignBottom) {
+                body += " bottom";
+            }
+            else if (textAlignment & Qt::AlignVCenter) {
+                body += " center";
+            }
+            
+            if (textAlignment & Qt::AlignLeft) {
+                body += " left";
+            }
+            else if (textAlignment & Qt::AlignRight) {
+                body += " right";
+            }
+            else if (textAlignment & Qt::AlignHCenter) {
+                body += " center";
+            }
+            
+            body += ";";
+        }
+    }
+    
+    return body;
+}
+
 ButtonStyle::ButtonStyle(QObject *parent) :
     BoxStyle(*new ButtonStylePrivate(this), parent)
 {
@@ -51,44 +94,7 @@ void ButtonStyle::setTextAlignment(Qt::Alignment align) {
 QString ButtonStyle::toStyleSheet() const {
     Q_D(const ButtonStyle);
     
-    if (!d->complete) {
-        return QString();
-    }
-    
-    QString s = BoxStyle::toStyleSheet();
-    
-    if (d->textAlignment) {
-        s += "text-align:";
-        
-        if (d->textAlignment & Qt::AlignCenter) {
-            s += " center;";
-        }
-        else {
-            if (d->textAlignment & Qt::AlignTop) {
-                s += " top";
-            }
-            else if (d->textAlignment & Qt::AlignBottom) {
-                s += " bottom";
-            }
-            else if (d->textAlignment & Qt::AlignVCenter) {
-                s += " center";
-            }
-            
-            if (d->textAlignment & Qt::AlignLeft) {
-                s += " left";
-            }
-            else if (d->textAlignment & Qt::AlignRight) {
-                s += " right";
-            }
-            else if (d->textAlignment & Qt::AlignHCenter) {
-                s += " center";
-            }
-            
-            s += ";";
-        }
-    }
-    
-    return s;
+    return d->complete ? d->mainBody() : QString();
 }
 
 #include "moc_buttonstyle_p.cpp"

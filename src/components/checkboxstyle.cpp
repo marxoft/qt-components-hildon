@@ -18,6 +18,32 @@
 #include "checkboxstyle_p.h"
 #include "checkboxstyle_p_p.h"
 
+CheckBoxStylePrivate::CheckBoxStylePrivate(CheckBoxStyle *parent) :
+    ButtonStylePrivate(parent),
+    spacing(-1)
+{
+}
+
+QString CheckBoxStylePrivate::mainBody() const {
+    QString body = ButtonStylePrivate::mainBody();
+    
+    if (spacing != -1) {
+        body += "spacing: " + QString::number(spacing) + "px;";
+    }
+    
+    return body;
+}
+
+QString CheckBoxStylePrivate::indicatorBody() const {
+    QString body;
+    
+    if (!indicatorImage.isEmpty()) {
+        body += "image: url(" + indicatorImage + ")";
+    }
+    
+    return body;
+}
+
 CheckBoxStyle::CheckBoxStyle(QObject *parent) :
     ButtonStyle(*new CheckBoxStylePrivate(this), parent)
 {
@@ -29,6 +55,24 @@ CheckBoxStyle::CheckBoxStyle(CheckBoxStylePrivate &dd, QObject *parent) :
 }
 
 CheckBoxStyle::~CheckBoxStyle() {}
+
+QString CheckBoxStyle::indicatorImage() const {
+    Q_D(const CheckBoxStyle);
+    
+    return d->indicatorImage;
+}
+
+void CheckBoxStyle::setIndicatorImage(const QString &source) {
+    if (source != this->indicatorImage()) {
+        Q_D(CheckBoxStyle);
+        d->indicatorImage = source;
+        d->dirty = true;
+        
+        if (d->complete) {
+            emit changed();
+        }
+    }
+}
 
 int CheckBoxStyle::spacing() const {
     Q_D(const CheckBoxStyle);
@@ -55,13 +99,14 @@ QString CheckBoxStyle::toStyleSheet() const {
         return QString();
     }
     
-    QString s = ButtonStyle::toStyleSheet();
+    QString main = d->mainBody();
+    QString indicator = d->indicatorBody();
     
-    if (d->spacing != -1) {
-        s += "spacing: " + QString::number(d->spacing) + "px;";
-    }
-    
-    return s;
+    return indicator.isEmpty() ? main : "QCheckBox { " 
+                                        + main 
+                                        + " } QCheckBox::indicator { " 
+                                        + indicator 
+                                        + " }";
 }
 
 #include "moc_checkboxstyle_p.cpp"

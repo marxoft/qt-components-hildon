@@ -22,11 +22,12 @@ class CheckBoxStylePrivate : public ButtonStylePrivate
 {
 
 public:
-    CheckBoxStylePrivate(CheckBoxStyle *parent) :
-        ButtonStylePrivate(parent),
-        spacing(-1)
-    {
-    }
+    CheckBoxStylePrivate(CheckBoxStyle *parent);
+    
+    virtual QString mainBody() const;
+    virtual QString indicatorBody() const;
+    
+    QString indicatorImage;
     
     int spacing;
     

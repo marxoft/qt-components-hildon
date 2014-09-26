@@ -44,6 +44,7 @@ class BoxStyle : public Style
     Q_PROPERTY(int borderWidthBottom READ borderWidthBottom WRITE setBorderWidthBottom NOTIFY changed)
     Q_PROPERTY(int borderWidthLeft READ borderWidthLeft WRITE setBorderWidthLeft NOTIFY changed)
     Q_PROPERTY(QString image READ image WRITE setImage NOTIFY changed)
+    Q_PROPERTY(Qt::Alignment imagePosition READ imagePosition WRITE setImagePosition NOTIFY changed)
     Q_PROPERTY(int margin READ margin WRITE setMargin NOTIFY changed)
     Q_PROPERTY(int marginTop READ marginTop WRITE setMarginTop NOTIFY changed)
     Q_PROPERTY(int marginRight READ marginRight WRITE setMarginRight NOTIFY changed)
@@ -117,6 +118,9 @@ public:
     
     QString image() const;
     void setImage(const QString &source);
+    
+    Qt::Alignment imagePosition() const;
+    void setImagePosition(Qt::Alignment align);
     
     int margin() const;
     void setMargin(int m);

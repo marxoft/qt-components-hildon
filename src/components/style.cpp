@@ -18,6 +18,112 @@
 #include "style_p.h"
 #include "style_p_p.h"
 
+StylePrivate::StylePrivate(Style *parent) :
+    q_ptr(parent),
+    complete(false),
+    dirty(false),
+    backgroundClip(Style::Border),
+    backgroundOrigin(Style::Padding),
+    backgroundPosition(Qt::AlignTop | Qt::AlignLeft),
+    backgroundRepeat(Style::RepeatXandY)
+{
+}
+
+QString StylePrivate::mainBody() const {
+    QString body;
+    
+    switch (backgroundClip) {
+    case Style::Margin:
+        body += "background-clip: margin;";
+        break;
+    case Style::Border:
+        body += "background-clip: border;";
+        break;
+    case Style::Padding:
+        body += "background-clip: padding;";
+        break;
+    case Style::Content:
+        body += "background-clip: content;";
+        break;
+    default:
+        body += "background-clip: border;";
+        break;
+    }
+        
+    switch (backgroundOrigin) {
+    case Style::Margin:
+        body += "background-origin: margin;";
+        break;
+    case Style::Border:
+        body += "background-origin: border;";
+        break;
+    case Style::Padding:
+        body += "background-origin: padding;";
+        break;
+    case Style::Content:
+        body += "background-origin: content;";
+        break;
+    default:
+        body += "background-origin: padding;";
+        break;
+    }
+    
+    if (backgroundColor.isValid()) {
+        body += "background-color: " + backgroundColor.name() + ";";
+    }
+    
+    if (!backgroundImage.isEmpty()) {
+        body += "background-image: url(" + backgroundImage + ");";
+        
+        if (backgroundPosition & Qt::AlignCenter) {
+            body += " center;";
+        }
+        else {
+            if (backgroundPosition & Qt::AlignTop) {
+                body += " top";
+            }
+            else if (backgroundPosition & Qt::AlignBottom) {
+                body += " bottom";
+            }
+            else if (backgroundPosition & Qt::AlignVCenter) {
+                body += " center";
+            }
+            
+            if (backgroundPosition & Qt::AlignLeft) {
+                body += " left";
+            }
+            else if (backgroundPosition & Qt::AlignRight) {
+                body += " right";
+            }
+            else if (backgroundPosition & Qt::AlignHCenter) {
+                body += " center";
+            }
+            
+            body += ";";
+        }
+        
+        switch(backgroundRepeat) {
+        case Style::RepeatX:
+            body += "background-repeat: repeat-x;";
+            break;
+        case Style::RepeatY:
+            body += "background-repeat: repeat-y;";
+            break;
+        case Style::RepeatXandY:
+            body += "background-repeat: repeat;";
+            break;
+        case Style::NoRepeat:
+            body += "background-repeat: no-repeat;";
+            break;
+        default:
+            body += "background-repeat: repeat;";
+            break;
+        }
+    }
+    
+    return body;
+}
+
 Style::Style(QObject *parent) :
     QObject(parent),
     d_ptr(new StylePrivate(this))
@@ -143,102 +249,7 @@ void Style::setBackgroundRepeat(Repeat r) {
 QString Style::toStyleSheet() const {
     Q_D(const Style);
     
-    if (!d->complete) {
-        return QString();
-    }
-    
-    QString s;
-    
-    switch (d->backgroundClip) {
-    case Margin:
-        s += "background-clip: margin;";
-        break;
-    case Border:
-        s += "background-clip: border;";
-        break;
-    case Padding:
-        s += "background-clip: padding;";
-        break;
-    case Content:
-        s += "background-clip: content;";
-        break;
-    default:
-        s += "background-clip: border;";
-        break;
-    }
-        
-    switch (d->backgroundOrigin) {
-    case Margin:
-        s += "background-origin: margin;";
-        break;
-    case Border:
-        s += "background-origin: border;";
-        break;
-    case Padding:
-        s += "background-origin: padding;";
-        break;
-    case Content:
-        s += "background-origin: content;";
-        break;
-    default:
-        s += "background-origin: padding;";
-        break;
-    }
-    
-    if (d->backgroundColor.isValid()) {
-        s += "background-color: " + d->backgroundColor.name() + ";";
-    }
-    
-    if (!d->backgroundImage.isEmpty()) {
-        s += "background-image: url(" + d->backgroundImage + ");";
-        
-        if (d->backgroundPosition & Qt::AlignCenter) {
-            s += " center;";
-        }
-        else {
-            if (d->backgroundPosition & Qt::AlignTop) {
-                s += " top";
-            }
-            else if (d->backgroundPosition & Qt::AlignBottom) {
-                s += " bottom";
-            }
-            else if (d->backgroundPosition & Qt::AlignVCenter) {
-                s += " center";
-            }
-            
-            if (d->backgroundPosition & Qt::AlignLeft) {
-                s += " left";
-            }
-            else if (d->backgroundPosition & Qt::AlignRight) {
-                s += " right";
-            }
-            else if (d->backgroundPosition & Qt::AlignHCenter) {
-                s += " center";
-            }
-            
-            s += ";";
-        }
-        
-        switch(d->backgroundRepeat) {
-        case RepeatX:
-            s += "background-repeat: repeat-x;";
-            break;
-        case RepeatY:
-            s += "background-repeat: repeat-y;";
-            break;
-        case RepeatXandY:
-            s += "background-repeat: repeat;";
-            break;
-        case NoRepeat:
-            s += "background-repeat: no-repeat;";
-            break;
-        default:
-            s += "background-repeat: repeat;";
-            break;
-        }
-    }
-    
-    return s;
+    return d->complete ? d->mainBody() : QString();
 }
 
 void Style::classBegin() {}
