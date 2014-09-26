@@ -20,6 +20,8 @@
 
 CheckBoxStylePrivate::CheckBoxStylePrivate(CheckBoxStyle *parent) :
     ButtonStylePrivate(parent),
+    indicatorWidth(-1),
+    indicatorHeight(-1),
     spacing(-1)
 {
 }
@@ -37,8 +39,16 @@ QString CheckBoxStylePrivate::mainBody() const {
 QString CheckBoxStylePrivate::indicatorBody() const {
     QString body;
     
+    if (indicatorWidth != -1) {
+        body += "width: " + QString::number(indicatorWidth) + "px;";
+    }
+    
+    if (indicatorHeight != -1) {
+        body += "height: " + QString::number(indicatorHeight) + "px;";
+    }
+    
     if (!indicatorImage.isEmpty()) {
-        body += "image: url(" + indicatorImage + ")";
+        body += "image: url(" + indicatorImage + ");";
     }
     
     return body;
@@ -66,6 +76,42 @@ void CheckBoxStyle::setIndicatorImage(const QString &source) {
     if (source != this->indicatorImage()) {
         Q_D(CheckBoxStyle);
         d->indicatorImage = source;
+        d->dirty = true;
+        
+        if (d->complete) {
+            emit changed();
+        }
+    }
+}
+
+int CheckBoxStyle::indicatorWidth() const {
+    Q_D(const CheckBoxStyle);
+    
+    return d->indicatorWidth;
+}
+
+void CheckBoxStyle::setIndicatorWidth(int width) {
+    if (width != this->indicatorWidth()) {
+        Q_D(CheckBoxStyle);
+        d->indicatorWidth = width;
+        d->dirty = true;
+        
+        if (d->complete) {
+            emit changed();
+        }
+    }
+}
+
+int CheckBoxStyle::indicatorHeight() const {
+    Q_D(const CheckBoxStyle);
+    
+    return d->indicatorHeight;
+}
+
+void CheckBoxStyle::setIndicatorHeight(int height) {
+    if (height != this->indicatorHeight()) {
+        Q_D(CheckBoxStyle);
+        d->indicatorHeight = height;
         d->dirty = true;
         
         if (d->complete) {

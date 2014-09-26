@@ -29,6 +29,9 @@ public:
     
     QString indicatorImage;
     
+    int indicatorWidth;
+    int indicatorHeight;
+    
     int spacing;
     
     Q_DECLARE_PUBLIC(CheckBoxStyle)
