@@ -78,7 +78,6 @@
 #include "slider_p.h"
 #include "spinbox_p.h"
 #include "sortfilterproxymodel_p.h"
-#include "style_p.h"
 #include "tabbar_p.h"
 #include "tabgroup_p.h"
 #include "tableview_p.h"
@@ -130,6 +129,7 @@ void Plugin::registerTypes(const char *uri) {
     qmlRegisterUncreatableType<KeyEvent>(uri, 1, 0, "KeyEvent", "");
     qmlRegisterUncreatableType<MouseDrag>(uri, 1, 0, "Drag", "");
     qmlRegisterUncreatableType<PageStack>(uri, 1, 0, "PageStack", "");
+    qmlRegisterUncreatableType<Style>(uri, 1, 0, "StyleBase", "");
     qmlRegisterUncreatableType<QWidget>(uri, 1, 0, "Widget", "");
     qmlRegisterUncreatableType<QAbstractButton>(uri, 1, 0, "AbstractButton", "");
     qmlRegisterUncreatableType<QHeaderView>(uri, 1, 0, "QHeaderView", "");
@@ -137,6 +137,7 @@ void Plugin::registerTypes(const char *uri) {
     qmlRegisterType<Action>(uri, 1, 0, "Action");
     qmlRegisterType<ActionGroup>(uri, 1, 0, "ActionGroup");
     qmlRegisterType<BorderImage>(uri, 1, 0, "BorderImage");
+    qmlRegisterType<BoxStyle>(uri, 1, 0, "Style");
     qmlRegisterType<Button>(uri, 1, 0, "Button");
     qmlRegisterType<ButtonRow>(uri, 1, 0, "ButtonRow");
     qmlRegisterType<ButtonStyle>(uri, 1, 0, "ButtonStyle");
@@ -193,7 +194,6 @@ void Plugin::registerTypes(const char *uri) {
     qmlRegisterType<Slider>(uri, 1, 0, "Slider");
     qmlRegisterType<SortFilterProxyModel>(uri, 1, 0, "SortFilterProxyModel");
     qmlRegisterType<SpinBox>(uri, 1, 0, "SpinBox");
-    qmlRegisterType<Style>(uri, 1, 0, "Style");
     qmlRegisterType<TabBar>(uri, 1, 0, "TabBar");
     qmlRegisterType<TabButton>(uri, 1, 0, "TabButton");
     qmlRegisterType<TabGroup>(uri, 1, 0, "TabGroup");
