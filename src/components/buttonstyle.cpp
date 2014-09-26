@@ -94,6 +94,7 @@ void ButtonStyle::setIndicator(Style *style) {
         }
         
         d->indicator = style;
+        d->dirty = true;
         
         if (d->indicator) {
             this->connect(d->indicator, SIGNAL(changed()), this, SIGNAL(changed()));
