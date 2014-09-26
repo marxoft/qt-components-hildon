@@ -44,6 +44,7 @@
 #include "itemaction_p.h"
 #include "keys_p.h"
 #include "label_p.h"
+#include "labelstyle_p.h"
 //#include "listelement_p.h"
 #include "listitem_p.h"
 #include "listitemborderimage_p.h"
@@ -85,6 +86,7 @@
 #include "textbrowser_p.h"
 #include "textedit_p.h"
 #include "textfield_p.h"
+#include "textstyle_p.h"
 #include "timeselector_p.h"
 #include "toolbar_p.h"
 #include "toolbutton_p.h"
@@ -157,6 +159,7 @@ void Plugin::registerTypes(const char *uri) {
     qmlRegisterType<Item>(uri, 1, 0, "Item");
     qmlRegisterType<ItemAction>(uri, 1, 0, "ItemAction");
     qmlRegisterType<Label>(uri, 1, 0, "Label");
+    qmlRegisterType<LabelStyle>(uri, 1, 0, "LabelStyle");
     qmlRegisterType<ListItem>(uri, 1, 0, "ListItem");
     qmlRegisterType<ListItemBorderImage>(uri, 1, 0, "ListItemBorderImage");
     qmlRegisterType<ListItemImage>(uri, 1, 0, "ListItemImage");
@@ -198,6 +201,7 @@ void Plugin::registerTypes(const char *uri) {
     qmlRegisterType<TextBrowser>(uri, 1, 0, "TextBrowser");
     qmlRegisterType<TextEdit>(uri, 1, 0, "TextEdit");
     qmlRegisterType<TextField>(uri, 1, 0, "TextField");
+    qmlRegisterType<TextStyle>(uri, 1, 0, "TextStyle");
     qmlRegisterType<TimeSelector>(uri, 1, 0, "TimeSelector");
     qmlRegisterType<ToolBar>(uri, 1, 0, "ToolBar");
     qmlRegisterType<ToolButton>(uri, 1, 0, "ToolButton");

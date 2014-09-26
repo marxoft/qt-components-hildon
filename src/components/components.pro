@@ -58,6 +58,7 @@ HEADERS += \
     itemaction_p.h \
     keys_p.h \
     label_p.h \
+    labelstyle_p.h \
     listitem_p.h \
     listitemborderimage_p.h \
     listitemcontent_p.h \
@@ -125,6 +126,7 @@ HEADERS += \
     texteditautoresizer_p.h \
     textfield_p.h \
     textfield_p_p.h \
+    textstyle_p.h \
     timeselector_p.h \
     toolbar_p.h \
     toolbar_p_p.h \
