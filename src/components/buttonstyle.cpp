@@ -20,8 +20,14 @@
 
 ButtonStylePrivate::ButtonStylePrivate(ButtonStyle *parent) :
     BoxStylePrivate(parent),
+    indicator(0),
     textAlignment(0)
 {
+}
+
+QString ButtonStylePrivate::indicatorBody() const {
+    return indicator ? indicator->toStyleSheet()
+                     : QString();
 }
 
 QString ButtonStylePrivate::mainBody() const {
@@ -73,6 +79,36 @@ ButtonStyle::ButtonStyle(ButtonStylePrivate &dd, QObject *parent) :
 
 ButtonStyle::~ButtonStyle() {}
 
+Style* ButtonStyle::indicator() const {
+    Q_D(const ButtonStyle);
+    
+    return d->indicator;
+}
+
+void ButtonStyle::setIndicator(Style *style) {
+    if (style != this->indicator()) {
+        Q_D(ButtonStyle);
+        
+        if (d->indicator) {
+            this->disconnect(d->indicator, SIGNAL(changed()), this, SIGNAL(changed()));
+        }
+        
+        d->indicator = style;
+        
+        if (d->indicator) {
+            this->connect(d->indicator, SIGNAL(changed()), this, SIGNAL(changed()));
+        }
+        
+        if (d->complete) {
+            emit changed();
+        }
+    }
+}
+
+void ButtonStyle::resetIndicator() {
+    this->setIndicator(0);
+}
+
 Qt::Alignment ButtonStyle::textAlignment() const {
     Q_D(const ButtonStyle);
     
@@ -94,7 +130,12 @@ void ButtonStyle::setTextAlignment(Qt::Alignment align) {
 QString ButtonStyle::toStyleSheet() const {
     Q_D(const ButtonStyle);
     
-    return d->complete ? d->mainBody() : QString();
+    if (!d->complete) {
+        return QString();
+    }
+    
+    return d->indicator ? "QPushButton { " + d->mainBody() + " } QPushButton::menu-indicator { " + d->indicatorBody() + " }" 
+                        : d->mainBody();
 }
 
 #include "moc_buttonstyle_p.cpp"

@@ -26,11 +26,16 @@ class ButtonStyle : public BoxStyle
 {
     Q_OBJECT
     
+    Q_PROPERTY(Style* indicator READ indicator WRITE setIndicator RESET resetIndicator NOTIFY changed)
     Q_PROPERTY(Qt::Alignment textAlignment READ textAlignment WRITE setTextAlignment NOTIFY changed)
     
 public:
     explicit ButtonStyle(QObject *parent = 0);
     ~ButtonStyle();
+    
+    Style* indicator() const;
+    void setIndicator(Style *style);
+    void resetIndicator();
     
     Qt::Alignment textAlignment() const;
     void setTextAlignment(Qt::Alignment align);

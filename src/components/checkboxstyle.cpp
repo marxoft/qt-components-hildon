@@ -20,8 +20,6 @@
 
 CheckBoxStylePrivate::CheckBoxStylePrivate(CheckBoxStyle *parent) :
     ButtonStylePrivate(parent),
-    indicatorWidth(-1),
-    indicatorHeight(-1),
     spacing(-1)
 {
 }
@@ -31,24 +29,6 @@ QString CheckBoxStylePrivate::mainBody() const {
     
     if (spacing != -1) {
         body += "spacing: " + QString::number(spacing) + "px;";
-    }
-    
-    return body;
-}
-
-QString CheckBoxStylePrivate::indicatorBody() const {
-    QString body;
-    
-    if (indicatorWidth != -1) {
-        body += "width: " + QString::number(indicatorWidth) + "px;";
-    }
-    
-    if (indicatorHeight != -1) {
-        body += "height: " + QString::number(indicatorHeight) + "px;";
-    }
-    
-    if (!indicatorImage.isEmpty()) {
-        body += "image: url(" + indicatorImage + ");";
     }
     
     return body;
@@ -65,60 +45,6 @@ CheckBoxStyle::CheckBoxStyle(CheckBoxStylePrivate &dd, QObject *parent) :
 }
 
 CheckBoxStyle::~CheckBoxStyle() {}
-
-QString CheckBoxStyle::indicatorImage() const {
-    Q_D(const CheckBoxStyle);
-    
-    return d->indicatorImage;
-}
-
-void CheckBoxStyle::setIndicatorImage(const QString &source) {
-    if (source != this->indicatorImage()) {
-        Q_D(CheckBoxStyle);
-        d->indicatorImage = source;
-        d->dirty = true;
-        
-        if (d->complete) {
-            emit changed();
-        }
-    }
-}
-
-int CheckBoxStyle::indicatorWidth() const {
-    Q_D(const CheckBoxStyle);
-    
-    return d->indicatorWidth;
-}
-
-void CheckBoxStyle::setIndicatorWidth(int width) {
-    if (width != this->indicatorWidth()) {
-        Q_D(CheckBoxStyle);
-        d->indicatorWidth = width;
-        d->dirty = true;
-        
-        if (d->complete) {
-            emit changed();
-        }
-    }
-}
-
-int CheckBoxStyle::indicatorHeight() const {
-    Q_D(const CheckBoxStyle);
-    
-    return d->indicatorHeight;
-}
-
-void CheckBoxStyle::setIndicatorHeight(int height) {
-    if (height != this->indicatorHeight()) {
-        Q_D(CheckBoxStyle);
-        d->indicatorHeight = height;
-        d->dirty = true;
-        
-        if (d->complete) {
-            emit changed();
-        }
-    }
-}
 
 int CheckBoxStyle::spacing() const {
     Q_D(const CheckBoxStyle);
@@ -145,14 +71,8 @@ QString CheckBoxStyle::toStyleSheet() const {
         return QString();
     }
     
-    QString main = d->mainBody();
-    QString indicator = d->indicatorBody();
-    
-    return indicator.isEmpty() ? main : "QCheckBox { " 
-                                        + main 
-                                        + " } QCheckBox::indicator { " 
-                                        + indicator 
-                                        + " }";
+    return d->indicator ? "QCheckBox { " + d->mainBody() + " } QCheckBox::indicator { " + d->indicatorBody() + " }" 
+                        : d->mainBody();
 }
 
 #include "moc_checkboxstyle_p.cpp"

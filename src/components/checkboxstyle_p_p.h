@@ -25,12 +25,6 @@ public:
     CheckBoxStylePrivate(CheckBoxStyle *parent);
     
     virtual QString mainBody() const;
-    virtual QString indicatorBody() const;
-    
-    QString indicatorImage;
-    
-    int indicatorWidth;
-    int indicatorHeight;
     
     int spacing;
     

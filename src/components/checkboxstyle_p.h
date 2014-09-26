@@ -25,23 +25,12 @@ class CheckBoxStylePrivate;
 class CheckBoxStyle : public ButtonStyle
 {
     Q_OBJECT
-    
-    Q_PROPERTY(QString indicatorImage READ indicatorImage WRITE setIndicatorImage NOTIFY changed)
-    Q_PROPERTY(int indicatorWidth READ indicatorWidth WRITE setIndicatorWidth NOTIFY changed)
-    Q_PROPERTY(int indicatorHeight READ indicatorHeight WRITE setIndicatorHeight NOTIFY changed)
+
     Q_PROPERTY(int spacing READ spacing WRITE setSpacing NOTIFY changed)
     
 public:
     explicit CheckBoxStyle(QObject *parent = 0);
     ~CheckBoxStyle();
-    
-    QString indicatorImage() const;
-    void setIndicatorImage(const QString &source);
-    
-    int indicatorWidth() const;
-    void setIndicatorWidth(int width);
-    int indicatorHeight() const;
-    void setIndicatorHeight(int height);
     
     int spacing() const;
     void setSpacing(int s);

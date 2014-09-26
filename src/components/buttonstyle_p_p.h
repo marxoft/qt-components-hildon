@@ -24,7 +24,10 @@ class ButtonStylePrivate : public BoxStylePrivate
 public:
     ButtonStylePrivate(ButtonStyle *parent);
     
+    virtual QString indicatorBody() const;
     virtual QString mainBody() const;
+    
+    Style *indicator;
     
     Qt::Alignment textAlignment;
     
