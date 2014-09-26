@@ -74,7 +74,7 @@ public:
         None
     };
     
-    explicit BoxStyle(QObject *parent);
+    explicit BoxStyle(QObject *parent = 0);
     ~BoxStyle();
     
     QColor borderColor() const;
