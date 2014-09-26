@@ -27,6 +27,8 @@ class TextFieldStyle : public BoxStyle
     Q_OBJECT
     
     Q_PROPERTY(QString passwordCharacter READ passwordCharacter WRITE setPasswordCharacter NOTIFY changed)
+    Q_PROPERTY(QColor selectionBackgroundColor READ selectionBackgroundColor WRITE setSelectionBackgroundColor NOTIFY changed)
+    Q_PROPERTY(QColor selectionColor READ selectionColor WRITE setSelectionColor NOTIFY changed)
     
 public:
     explicit TextFieldStyle(QObject *parent = 0);
@@ -34,6 +36,12 @@ public:
     
     QString passwordCharacter() const;
     void setPasswordCharacter(const QString &c);
+    
+    QColor selectionBackgroundColor() const;
+    void setSelectionBackgroundColor(const QColor &color);
+    
+    QColor selectionColor() const;
+    void setSelectionColor(const QColor &color);
     
     virtual QString toStyleSheet() const;
     

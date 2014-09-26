@@ -28,6 +28,9 @@ public:
     
     QString passwordCharacter;
     
+    QColor selectionBackgroundColor;
+    QColor selectionColor;
+    
     Q_DECLARE_PUBLIC(TextFieldStyle)
 };
 

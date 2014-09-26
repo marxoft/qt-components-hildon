@@ -30,6 +30,14 @@ QString TextFieldStylePrivate::mainBody() const {
         body += "lineedit-password-character: " + QString::number(passwordCharacter.at(0).unicode()) + ";";
     }
     
+    if (selectionBackgroundColor.isValid()) {
+        body += "selection-background-color: " + selectionBackgroundColor.name() + ";";
+    }
+    
+    if (selectionColor.isValid()) {
+        body += "selection-color: " + selectionColor.name() + ";";
+    }
+    
     return body;
 }
 
@@ -55,6 +63,42 @@ void TextFieldStyle::setPasswordCharacter(const QString &c) {
     if (c != this->passwordCharacter()) {
         Q_D(TextFieldStyle);
         d->passwordCharacter = c;
+        d->dirty = true;
+        
+        if (d->complete) {
+            emit changed();
+        }
+    }
+}
+
+QColor TextFieldStyle::selectionBackgroundColor() const {
+    Q_D(const TextFieldStyle);
+    
+    return d->selectionBackgroundColor;
+}
+
+void TextFieldStyle::setSelectionBackgroundColor(const QColor &color) {
+    if (color != this->selectionBackgroundColor()) {
+        Q_D(TextFieldStyle);
+        d->selectionBackgroundColor = color;
+        d->dirty = true;
+        
+        if (d->complete) {
+            emit changed();
+        }
+    }
+}
+
+QColor TextFieldStyle::selectionColor() const {
+    Q_D(const TextFieldStyle);
+    
+    return d->selectionColor;
+}
+
+void TextFieldStyle::setSelectionColor(const QColor &color) {
+    if (color != this->selectionColor()) {
+        Q_D(TextFieldStyle);
+        d->selectionColor = color;
         d->dirty = true;
         
         if (d->complete) {
