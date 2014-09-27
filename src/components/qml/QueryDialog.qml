@@ -36,7 +36,7 @@ Dialog {
         anchors {
             fill: parent
             leftMargin: screen.currentOrientation == Screen.PortraitOrientation ? 40 : 100
-            rightMargin: leftMargin
+            rightMargin: screen.currentOrientation == Screen.PortraitOrientation ? 40 : 100
         }
         wordWrap: true
     }
