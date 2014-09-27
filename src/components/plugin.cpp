@@ -61,6 +61,7 @@
 #include "listviewstyle_p.h"
 #include "loader_p.h"
 #include "menu_p.h"
+#include "menustyle_p.h"
 #include "modelindex_p.h"
 #include "mousearea_p.h"
 #include "multilistselector_p.h"
@@ -179,6 +180,7 @@ void Plugin::registerTypes(const char *uri) {
     qmlRegisterType<ListViewStyle>(uri, 1, 0, "ListViewStyle");
     qmlRegisterType<Loader>(uri, 1, 0, "Loader");
     qmlRegisterType<Menu>(uri, 1, 0, "Menu");
+    qmlRegisterType<MenuStyle>(uri, 1, 0, "MenuStyle");
     qmlRegisterType<MouseArea>(uri, 1, 0, "MouseArea");
     qmlRegisterType<MultiListSelector>(uri, 1, 0, "MultiListSelector");
     qmlRegisterType<Page>(uri, 1, 0, "Page");

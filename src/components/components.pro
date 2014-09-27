@@ -84,6 +84,8 @@ HEADERS += \
     loader_p_p.h \
     menu_p.h \
     menu_p_p.h \
+    menustyle_p.h \
+    menustyle_p_p.h \
     modelindex_p.h \
     mousearea_p.h \
     mousearea_p_p.h \
@@ -194,6 +196,7 @@ SOURCES += \
     listviewstyle.cpp \
     loader.cpp \
     menu.cpp \
+    menustyle.cpp \
     mousearea.cpp \
     multilistselector.cpp \
     page.cpp \
