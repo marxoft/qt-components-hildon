@@ -100,6 +100,7 @@
 #include "toolbar_p.h"
 #include "toolbarstyle_p.h"
 #include "toolbutton_p.h"
+#include "toolbuttonstyle_p.h"
 #include "valuebutton_p.h"
 #include "valueselector_p.h"
 #include "window_p.h"
@@ -227,6 +228,7 @@ void Plugin::registerTypes(const char *uri) {
     qmlRegisterType<ToolBar>(uri, 1, 0, "ToolBar");
     qmlRegisterType<ToolBarStyle>(uri, 1, 0, "ToolBarStyle");
     qmlRegisterType<ToolButton>(uri, 1, 0, "ToolButton");
+    qmlRegisterType<ToolButtonStyle>(uri, 1, 0, "ToolButtonStyle");
     qmlRegisterType<ValueButton>(uri, 1, 0, "ValueButton");
     qmlRegisterType<ValueSelector>(uri, 1, 0, "ValueSelector");
     qmlRegisterType<Window>(uri, 1, 0, "Window");

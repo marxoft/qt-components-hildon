@@ -154,6 +154,8 @@ HEADERS += \
     toolbarstyle_p_p.h \
     toolbutton_p.h \
     toolbutton_p_p.h \
+    toolbuttonstyle_p.h \
+    toolbuttonstyle_p_p.h \
     valuebutton_p.h \
     valuebutton_p_p.h \
     valueselector_p.h \
@@ -246,6 +248,7 @@ SOURCES += \
     toolbar.cpp \
     toolbarstyle.cpp \
     toolbutton.cpp \
+    toolbuttonstyle.cpp \
     valuebutton.cpp \
     valueselector.cpp \
     variantlistmodel.cpp \
