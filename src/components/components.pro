@@ -150,6 +150,8 @@ HEADERS += \
     timeselector_p.h \
     toolbar_p.h \
     toolbar_p_p.h \
+    toolbarstyle_p.h \
+    toolbarstyle_p_p.h \
     toolbutton_p.h \
     toolbutton_p_p.h \
     valuebutton_p.h \
@@ -242,6 +244,7 @@ SOURCES += \
     textfieldstyle.cpp \
     timeselector.cpp \
     toolbar.cpp \
+    toolbarstyle.cpp \
     toolbutton.cpp \
     valuebutton.cpp \
     valueselector.cpp \

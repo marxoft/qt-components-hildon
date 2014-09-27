@@ -98,6 +98,7 @@
 #include "textstyle_p.h"
 #include "timeselector_p.h"
 #include "toolbar_p.h"
+#include "toolbarstyle_p.h"
 #include "toolbutton_p.h"
 #include "valuebutton_p.h"
 #include "valueselector_p.h"
@@ -224,6 +225,7 @@ void Plugin::registerTypes(const char *uri) {
     qmlRegisterType<TextStyle>(uri, 1, 0, "TextStyle");
     qmlRegisterType<TimeSelector>(uri, 1, 0, "TimeSelector");
     qmlRegisterType<ToolBar>(uri, 1, 0, "ToolBar");
+    qmlRegisterType<ToolBarStyle>(uri, 1, 0, "ToolBarStyle");
     qmlRegisterType<ToolButton>(uri, 1, 0, "ToolButton");
     qmlRegisterType<ValueButton>(uri, 1, 0, "ValueButton");
     qmlRegisterType<ValueSelector>(uri, 1, 0, "ValueSelector");
