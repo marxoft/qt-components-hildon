@@ -116,6 +116,8 @@ HEADERS += \
     separator_p.h \
     slider_p.h \
     slider_p_p.h \
+    sliderstyle_p.h \
+    sliderstyle_p_p.h \
     sortfilterproxymodel_p.h \
     spinbox_p.h \
     spinbox_p_p.h \
@@ -214,6 +216,7 @@ SOURCES += \
     screen.cpp \
     separator.cpp \
     slider.cpp \
+    sliderstyle.cpp \
     spinbox.cpp \
     sortfilterproxymodel.cpp \
     style.cpp \

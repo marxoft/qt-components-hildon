@@ -80,6 +80,7 @@
 #include "screen_p.h"
 #include "separator_p.h"
 #include "slider_p.h"
+#include "sliderstyle_p.h"
 #include "spinbox_p.h"
 #include "sortfilterproxymodel_p.h"
 #include "tabbar_p.h"
@@ -200,6 +201,7 @@ void Plugin::registerTypes(const char *uri) {
     qmlRegisterType<Row>(uri, 1, 0, "Row");
     qmlRegisterType<Separator>(uri, 1, 0, "MenuSeparator");
     qmlRegisterType<Slider>(uri, 1, 0, "Slider");
+    qmlRegisterType<SliderStyle>(uri, 1, 0, "SliderStyle");
     qmlRegisterType<SortFilterProxyModel>(uri, 1, 0, "SortFilterProxyModel");
     qmlRegisterType<SpinBox>(uri, 1, 0, "SpinBox");
     qmlRegisterType<TabBar>(uri, 1, 0, "TabBar");
