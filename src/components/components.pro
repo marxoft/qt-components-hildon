@@ -98,6 +98,8 @@ HEADERS += \
     platformstyle_p.h \
     progressbar_p.h \
     progressbar_p_p.h \
+    progressbarstyle_p.h \
+    progressbarstyle_p_p.h \
     qdeclarativebind_p.h \
     qdeclarativeconnections_p.h \
     qdeclarativetimer_p.h \
@@ -203,6 +205,7 @@ SOURCES += \
     pagestack.cpp \
     platformstyle.cpp \
     progressbar.cpp \
+    progressbarstyle.cpp \
     radiobutton.cpp \
     rectangle.cpp \
     rectangleproperties.cpp \

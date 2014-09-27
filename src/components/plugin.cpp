@@ -69,6 +69,7 @@
 #include "pagestack_p.h"
 #include "platformstyle_p.h"
 #include "progressbar_p.h"
+#include "progressbarstyle_p.h"
 #include "qdeclarativebind_p.h"
 #include "qdeclarativeconnections_p.h"
 #include "qdeclarativetimer_p.h"
@@ -185,6 +186,7 @@ void Plugin::registerTypes(const char *uri) {
     qmlRegisterType<MultiListSelector>(uri, 1, 0, "MultiListSelector");
     qmlRegisterType<Page>(uri, 1, 0, "Page");
     qmlRegisterType<ProgressBar>(uri, 1, 0, "ProgressBar");
+    qmlRegisterType<ProgressBarStyle>(uri, 1, 0, "ProgressBarStyle");
     qmlRegisterType<QDeclarativeBind>(uri, 1, 0, "Binding");
     qmlRegisterType<QDeclarativeComponent>(uri, 1, 0, "Component");
     qmlRegisterType<QDeclarativeTimer>(uri, 1, 0, "Timer");
