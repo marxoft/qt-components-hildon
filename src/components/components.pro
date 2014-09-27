@@ -140,6 +140,8 @@ HEADERS += \
     textbrowser_p.h \
     textedit_p.h \
     texteditautoresizer_p.h \
+    texteditstyle_p.h \
+    texteditstyle_p_p.h \
     textfield_p.h \
     textfield_p_p.h \
     textfieldstyle_p.h \
@@ -235,6 +237,7 @@ SOURCES += \
     text.cpp \
     textbrowser.cpp \
     textedit.cpp \
+    texteditstyle.cpp \
     textfield.cpp \
     textfieldstyle.cpp \
     timeselector.cpp \

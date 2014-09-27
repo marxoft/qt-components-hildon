@@ -92,6 +92,7 @@
 #include "text_p.h"
 #include "textbrowser_p.h"
 #include "textedit_p.h"
+#include "texteditstyle_p.h"
 #include "textfield_p.h"
 #include "textfieldstyle_p.h"
 #include "textstyle_p.h"
@@ -217,6 +218,7 @@ void Plugin::registerTypes(const char *uri) {
     qmlRegisterType<Text>(uri, 1, 0, "Text");
     qmlRegisterType<TextBrowser>(uri, 1, 0, "TextBrowser");
     qmlRegisterType<TextEdit>(uri, 1, 0, "TextEdit");
+    qmlRegisterType<TextEditStyle>(uri, 1, 0, "TextEditStyle");
     qmlRegisterType<TextField>(uri, 1, 0, "TextField");
     qmlRegisterType<TextFieldStyle>(uri, 1, 0, "TextFieldStyle");
     qmlRegisterType<TextStyle>(uri, 1, 0, "TextStyle");
