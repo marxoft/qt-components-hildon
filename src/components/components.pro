@@ -133,6 +133,8 @@ HEADERS += \
     tabgroup_p_p.h \
     tableview_p.h \
     tableview_p_p.h \
+    tableviewstyle_p.h \
+    tableviewstyle_p_p.h \
     text_p.h \
     text_p_p.h \
     textbrowser_p.h \
@@ -229,6 +231,7 @@ SOURCES += \
     tabbarstyle.cpp \
     tabgroup.cpp \
     tableview.cpp \
+    tableviewstyle.cpp \
     text.cpp \
     textbrowser.cpp \
     textedit.cpp \

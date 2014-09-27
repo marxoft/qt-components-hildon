@@ -88,6 +88,7 @@
 #include "tabbarstyle_p.h"
 #include "tabgroup_p.h"
 #include "tableview_p.h"
+#include "tableviewstyle_p.h"
 #include "text_p.h"
 #include "textbrowser_p.h"
 #include "textedit_p.h"
@@ -212,6 +213,7 @@ void Plugin::registerTypes(const char *uri) {
     qmlRegisterType<TabButton>(uri, 1, 0, "TabButton");
     qmlRegisterType<TabGroup>(uri, 1, 0, "TabGroup");
     qmlRegisterType<TableView>(uri, 1, 0, "TableView");
+    qmlRegisterType<TableViewStyle>(uri, 1, 0, "TableViewStyle");
     qmlRegisterType<Text>(uri, 1, 0, "Text");
     qmlRegisterType<TextBrowser>(uri, 1, 0, "TextBrowser");
     qmlRegisterType<TextEdit>(uri, 1, 0, "TextEdit");
