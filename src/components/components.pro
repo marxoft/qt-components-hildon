@@ -127,6 +127,8 @@ HEADERS += \
     style_p_p.h \
     tabbar_p.h \
     tabbar_p_p.h \
+    tabbarstyle_p.h \
+    tabbarstyle_p_p.h \
     tabgroup_p.h \
     tabgroup_p_p.h \
     tableview_p.h \
@@ -224,6 +226,7 @@ SOURCES += \
     sortfilterproxymodel.cpp \
     style.cpp \
     tabbar.cpp \
+    tabbarstyle.cpp \
     tabgroup.cpp \
     tableview.cpp \
     text.cpp \
