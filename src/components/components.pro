@@ -61,6 +61,7 @@ HEADERS += \
     keys_p.h \
     label_p.h \
     labelstyle_p.h \
+    listelement_p.h \
     listitem_p.h \
     listitemborderimage_p.h \
     listitemcontent_p.h \
@@ -156,6 +157,10 @@ HEADERS += \
     toolbutton_p_p.h \
     toolbuttonstyle_p.h \
     toolbuttonstyle_p_p.h \
+    treeview_p.h \
+    treeview_p_p.h \
+    treeviewstyle_p.h \
+    treeviewstyle_p_p.h \
     valuebutton_p.h \
     valuebutton_p_p.h \
     valueselector_p.h \
@@ -197,6 +202,7 @@ SOURCES += \
     item.cpp \
     itemaction.cpp \
     keys.cpp \
+    listelement.cpp \
     listitem.cpp \
     listitemborderimage.cpp \
     listitemcontent.cpp \
@@ -249,6 +255,8 @@ SOURCES += \
     toolbarstyle.cpp \
     toolbutton.cpp \
     toolbuttonstyle.cpp \
+    treeview.cpp \
+    treeviewstyle.cpp \
     valuebutton.cpp \
     valueselector.cpp \
     variantlistmodel.cpp \

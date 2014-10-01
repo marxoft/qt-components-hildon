@@ -46,7 +46,7 @@
 #include "keys_p.h"
 #include "label_p.h"
 #include "labelstyle_p.h"
-//#include "listelement_p.h"
+#include "listelement_p.h"
 #include "listitem_p.h"
 #include "listitemborderimage_p.h"
 #include "listitemimage_p.h"
@@ -101,6 +101,8 @@
 #include "toolbarstyle_p.h"
 #include "toolbutton_p.h"
 #include "toolbuttonstyle_p.h"
+#include "treeview_p.h"
+#include "treeviewstyle_p.h"
 #include "valuebutton_p.h"
 #include "valueselector_p.h"
 #include "window_p.h"
@@ -174,6 +176,7 @@ void Plugin::registerTypes(const char *uri) {
     qmlRegisterType<ItemAction>(uri, 1, 0, "ItemAction");
     qmlRegisterType<Label>(uri, 1, 0, "Label");
     qmlRegisterType<LabelStyle>(uri, 1, 0, "LabelStyle");
+    qmlRegisterType<ListElement>(uri, 1, 0, "ListElement");
     qmlRegisterType<ListItem>(uri, 1, 0, "ListItem");
     qmlRegisterType<ListItemBorderImage>(uri, 1, 0, "ListItemBorderImage");
     qmlRegisterType<ListItemImage>(uri, 1, 0, "ListItemImage");
@@ -229,6 +232,8 @@ void Plugin::registerTypes(const char *uri) {
     qmlRegisterType<ToolBarStyle>(uri, 1, 0, "ToolBarStyle");
     qmlRegisterType<ToolButton>(uri, 1, 0, "ToolButton");
     qmlRegisterType<ToolButtonStyle>(uri, 1, 0, "ToolButtonStyle");
+    qmlRegisterType<TreeView>(uri, 1, 0, "TreeView");
+    qmlRegisterType<TreeViewStyle>(uri, 1, 0, "TreeViewStyle");
     qmlRegisterType<ValueButton>(uri, 1, 0, "ValueButton");
     qmlRegisterType<ValueSelector>(uri, 1, 0, "ValueSelector");
     qmlRegisterType<Window>(uri, 1, 0, "Window");
