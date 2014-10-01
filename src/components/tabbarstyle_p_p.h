@@ -15,6 +15,9 @@
  * Inc., 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#ifndef TABBARSTYLE_P_P_H
+#define TABBARSTYLE_P_P_H
+
 #include "tabbarstyle_p.h"
 #include "boxstyle_p_p.h"
 
@@ -42,4 +45,6 @@ public:
     
     Q_DECLARE_PUBLIC(TabBarStyle)
 };
+
+#endif // TABBARSTYLE_P_P_H
 

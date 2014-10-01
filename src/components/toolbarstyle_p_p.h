@@ -15,6 +15,9 @@
  * Inc., 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#ifndef TOOLBARSTYLE_P_P_H
+#define TOOLBARSTYLE_P_P_H
+
 #include "toolbarstyle_p.h"
 #include "boxstyle_p_p.h"
 
@@ -32,4 +35,6 @@ public:
     
     Q_DECLARE_PUBLIC(ToolBarStyle)
 };
+
+#endif // TOOLBARSTYLE_P_P_H
 

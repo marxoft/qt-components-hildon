@@ -15,6 +15,9 @@
  * Inc., 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#ifndef CHECKBOXSTYLE_P_P_H
+#define CHECKBOXSTYLE_P_P_H
+
 #include "checkboxstyle_p.h"
 #include "buttonstyle_p_p.h"
 
@@ -30,4 +33,6 @@ public:
     
     Q_DECLARE_PUBLIC(CheckBoxStyle)
 };
+
+#endif // CHECKBOXSTYLE_P_P_H
 

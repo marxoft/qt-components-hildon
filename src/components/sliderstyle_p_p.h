@@ -15,6 +15,9 @@
  * Inc., 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#ifndef SLIDERSTYLE_P_P_H
+#define SLIDERSTYLE_P_P_H
+
 #include "sliderstyle_p.h"
 #include "boxstyle_p_p.h"
 
@@ -32,4 +35,6 @@ public:
     
     Q_DECLARE_PUBLIC(SliderStyle)
 };
+
+#endif // SLIDERSTYLE_P_P_H
 

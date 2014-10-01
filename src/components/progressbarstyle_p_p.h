@@ -15,6 +15,9 @@
  * Inc., 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#ifndef PROGRESSBARSTYLE_P_P_H
+#define PROGRESSBARSTYLE_P_P_H
+
 #include "progressbarstyle_p.h"
 #include "boxstyle_p_p.h"
 
@@ -33,4 +36,6 @@ public:
     
     Q_DECLARE_PUBLIC(ProgressBarStyle)
 };
+
+#endif // PROGRESSBARSTYLE_P_P_H
 

@@ -15,6 +15,9 @@
  * Inc., 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#ifndef LISTVIEWSTYLE_P_P_H
+#define LISTVIEWSTYLE_P_P_H
+
 #include "listviewstyle_p.h"
 #include "flickablestyle_p_p.h"
 
@@ -37,4 +40,6 @@ public:
     
     Q_DECLARE_PUBLIC(ListViewStyle)
 };
+
+#endif // LISTVIEWSTYLE_P_P_H
 

@@ -15,6 +15,9 @@
  * Inc., 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#ifndef TABLEVIEWSTYLE_P_P_H
+#define TABLEVIEWSTYLE_P_P_H
+
 #include "tableviewstyle_p.h"
 #include "listviewstyle_p_p.h"
 
@@ -30,4 +33,6 @@ public:
     
     Q_DECLARE_PUBLIC(TableViewStyle)
 };
+
+#endif // TABLEVIEWSTYLE_P_P_H
 

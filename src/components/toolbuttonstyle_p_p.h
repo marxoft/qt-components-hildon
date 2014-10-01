@@ -15,6 +15,9 @@
  * Inc., 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#ifndef TOOLBUTTONSTYLE_P_P_H
+#define TOOLBUTTONSTYLE_P_P_H
+
 #include "toolbuttonstyle_p.h"
 #include "boxstyle_p_p.h"
 
@@ -40,4 +43,6 @@ public:
     
     Q_DECLARE_PUBLIC(ToolButtonStyle)
 };
+
+#endif // TOOLBUTTONSTYLE_P_P_H
 

@@ -14,6 +14,9 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
  */
+ 
+#ifndef BUTTONSTYLE_P_P_H
+#define BUTTONSTYLE_P_P_H
 
 #include "buttonstyle_p.h"
 #include "boxstyle_p_p.h"
@@ -34,3 +37,4 @@ public:
     Q_DECLARE_PUBLIC(ButtonStyle)
 };
 
+#endif // BUTTONSTYLE_P_P_H
