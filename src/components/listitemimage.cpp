@@ -40,10 +40,10 @@ public:
                 return;
             }
             
-            int w = q->width() > 0 ? q->width() : pix.width();
-            int widthScale = w / pix.width();
-            int h = q->height() > 0 ? q->height() : pix.height();
-            int heightScale = h / pix.height();
+            qreal w = q->width() > 0 ? q->width() : pix.width();
+            qreal widthScale = w / pix.width();
+            qreal h = q->height() > 0 ? q->height() : pix.height();
+            qreal heightScale = h / pix.height();
             
             if (widthScale <= heightScale) {
                 paintedWidth = w;
@@ -59,8 +59,8 @@ public:
                 return;
             }
             
-            int widthScale = q->width() / pix.width();
-            int heightScale = q->height() / pix.height();
+            qreal widthScale = qreal (q->width()) / pix.width();
+            qreal heightScale = qreal (q->height()) / pix.height();
             
             if (widthScale < heightScale) {
                 widthScale = heightScale;

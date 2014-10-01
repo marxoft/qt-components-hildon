@@ -195,8 +195,8 @@ void ImagePrivate::updatePaintedGeometry() {
             return;
         }
         
-        qreal widthScale = qreal(q->width()) / pix.width();
-        qreal heightScale = qreal(q->height()) / pix.height();
+        qreal widthScale = qreal (q->width()) / pix.width();
+        qreal heightScale = qreal (q->height()) / pix.height();
         
         if (widthScale < heightScale) {
             widthScale = heightScale;
