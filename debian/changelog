@@ -1,3 +1,17 @@
+qt-components-hildon (0.11.0) unstable; urgency=low
+
+  * Add documentation at http://marxoft.co.uk/doc/qt-components-hildon
+  * Add TextBrowser component to the org.hildon.components module.
+  * Add 'style' property to visual items and Style components to the org.hildon.components module.
+  * Add 'autoClose' property to the Page component.
+  * Fix volume keys in the Keys attached property.
+  * Remove org.hildon.network module.
+  * Remove org.hildon.filesystemmodel module and move FileSystemModel to org.hildon.components.
+  * Add org.hildon.settings module with GConfItem and move Settings to org.hildon.settings.
+  * Don't ship examples.
+
+ -- Stuart Howarth <showarth@marxoft.co.uk>  Sun, 12 Oct 2014 21:23:14 +0100
+
 qt-components-hildon (0.10.0) unstable; urgency=low
 
   * Added org.hildon.tracker module.
