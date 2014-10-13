@@ -100,6 +100,7 @@ private:
     Q_DISABLE_COPY(MouseDrag)
 };
 
+class MouseEvent;
 class MouseAreaPrivate;
 
 class MouseArea : public Item
@@ -129,17 +130,17 @@ public:
 
 signals:
     void canceled();
-    void clicked();
+    void clicked(MouseEvent *event);
     void containsMouseChanged();
-    void doubleClicked();
+    void doubleClicked(MouseEvent *event);
     void entered();
     void exited();
-    void positionChanged();
-    void pressAndHold();
-    void pressed();
+    void positionChanged(MouseEvent *event);
+    void pressAndHold(MouseEvent *event);
+    void pressed(MouseEvent *event);
     void pressedChanged();
     void preventStealingChanged();
-    void released();
+    void released(MouseEvent *event);
 
 protected:
     MouseArea(MouseAreaPrivate &dd, QWidget *parent = 0);

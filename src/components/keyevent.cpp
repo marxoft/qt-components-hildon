@@ -15,24 +15,41 @@
  * Inc., 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
  */
  
-#ifndef LABELSTYLE_P_H
-#define LABELSTYLE_P_H
+#include "keyevent_p.h"
 
-#include "textstyle_p.h"
-
-/*!
-    \class LabelStyle
-    
-    \ingroup org-hildon-components
-    \ingroup qml-style-components
-*/
-
-class LabelStyle : public TextStyle
+KeyEvent::KeyEvent(const QKeyEvent &event, QObject *parent) :
+    QObject(parent),
+    m_event(event)
 {
-    Q_OBJECT
-};
+}
 
-QML_DECLARE_TYPE(LabelStyle)
+KeyEvent::~KeyEvent() {}
 
-#endif // LABELSTYLE_P_H
+bool KeyEvent::isAccepted() const {
+    return m_event.isAccepted();
+}
+
+void KeyEvent::setAccepted(bool accepted) {
+    m_event.setAccepted(accepted);
+}
+
+bool KeyEvent::isAutoRepeat() const {
+    return m_event.isAutoRepeat();
+}
+
+int KeyEvent::count() const {
+    return m_event.count();
+}
+
+int KeyEvent::key() const {
+    return m_event.key();
+}
+
+int KeyEvent::modifiers() const {
+    return m_event.modifiers();
+}
+
+QString KeyEvent::text() const {
+    return m_event.text();
+}
 

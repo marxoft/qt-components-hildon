@@ -127,7 +127,7 @@ bool Directory::mkdir(const QString &dirName) const {
     return m_dir.mkdir(dirName);
 }
 
-bool Directory::mkPath(const QString &dirPath) const {
+bool Directory::mkpath(const QString &dirPath) const {
     return m_dir.mkpath(dirPath);
 }
 

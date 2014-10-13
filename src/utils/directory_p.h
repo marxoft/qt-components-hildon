@@ -115,7 +115,7 @@ public:
     Q_INVOKABLE bool makeAbsolute();
 
     Q_INVOKABLE bool mkdir(const QString &dirName) const;
-    Q_INVOKABLE bool mkPath(const QString &dirPath) const;
+    Q_INVOKABLE bool mkpath(const QString &dirPath) const;
     Q_INVOKABLE bool remove(const QString &fileName);
     Q_INVOKABLE bool rename(const QString &oldName, const QString &newName);
     Q_INVOKABLE bool rmdir(const QString &dirName) const;

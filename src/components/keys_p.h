@@ -19,45 +19,11 @@
 #define KEYS_P_H
 
 #include <QObject>
-#include <QKeyEvent>
 #include <QDeclarativeListProperty>
 #include <qdeclarative.h>
 
+class KeyEvent;
 class KeysPrivate;
-
-class KeyEvent : public QObject
-{
-    Q_OBJECT
-
-    Q_PROPERTY(bool accepted READ isAccepted WRITE setAccepted)
-    Q_PROPERTY(bool isAutoRepeat READ isAutoRepeat CONSTANT)
-    Q_PROPERTY(int count READ count CONSTANT)
-    Q_PROPERTY(int key READ key CONSTANT)
-    Q_PROPERTY(int modifiers READ modifiers CONSTANT)
-    Q_PROPERTY(QString text READ text CONSTANT)
-
-public:
-    explicit KeyEvent(QKeyEvent *event, QObject *parent = 0);
-    ~KeyEvent();
-
-    bool isAccepted() const;
-    void setAccepted(bool accept);
-
-    bool isAutoRepeat() const;
-
-    int count() const;
-
-    int key() const;
-
-    int modifiers() const;
-
-    QString text() const;
-
-private:
-    QKeyEvent *m_event;
-
-    Q_DISABLE_COPY(KeyEvent)
-};
 
 class Keys : public QObject
 {
@@ -146,7 +112,6 @@ private:
     Q_DISABLE_COPY(Keys)
 };
 
-QML_DECLARE_TYPE(KeyEvent)
 QML_DECLARE_TYPE(Keys)
 QML_DECLARE_TYPEINFO(Keys, QML_HAS_ATTACHED_PROPERTIES)
 

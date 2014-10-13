@@ -76,4 +76,3 @@ QString CheckBoxStyle::toStyleSheet() const {
 }
 
 #include "moc_checkboxstyle_p.cpp"
-

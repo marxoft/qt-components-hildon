@@ -141,16 +141,18 @@ void SortFilterProxyModel::setSortProperty(const QString &property) {
     }
 }
 
-QModelIndex SortFilterProxyModel::mapFromSource(const QModelIndex &sourceIndex) const {
+QVariant SortFilterProxyModel::mapFromSourceModelIndex(const QModelIndex &sourceIndex) const {
     Q_D(const SortFilterProxyModel);
     
-    return d->complete ? QSortFilterProxyModel::mapFromSource(sourceIndex) : QModelIndex();
+    return d->complete ? QVariant::fromValue(QSortFilterProxyModel::mapFromSource(sourceIndex))
+                       : QVariant();
 }
 
-QModelIndex SortFilterProxyModel::mapToSource(const QModelIndex &proxyIndex) const {
+QVariant SortFilterProxyModel::mapToSourceModelIndex(const QModelIndex &proxyIndex) const {
     Q_D(const SortFilterProxyModel);
     
-    return d->complete ? QSortFilterProxyModel::mapToSource(proxyIndex) : QModelIndex();
+    return d->complete ? QVariant::fromValue(QSortFilterProxyModel::mapToSource(proxyIndex))
+                       : QVariant();
 }
 
 void SortFilterProxyModel::sort(int column, Qt::SortOrder order) {

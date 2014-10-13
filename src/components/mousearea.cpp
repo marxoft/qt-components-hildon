@@ -17,6 +17,7 @@
 
 #include "mousearea_p.h"
 #include "mousearea_p_p.h"
+#include "mouseevent_p.h"
 #include <QMouseEvent>
 
 static const int PRESS_AND_HOLD_DURATION = 800;
@@ -184,9 +185,10 @@ void MouseArea::mousePressEvent(QMouseEvent *event) {
         d->pressed = true;
         d->mouseX = event->x();
         d->mouseY = event->y();
-        emit pressed();
+        MouseEvent me(event->x(), event->y(), event->button(), event->buttons(), event->modifiers());
+        emit pressed(&me);
         emit pressedChanged();
-        emit positionChanged();
+        emit positionChanged(&me);
 
         if (!d->timerId) {
             d->timerId = this->startTimer(PRESS_AND_HOLD_DURATION);
@@ -205,13 +207,14 @@ void MouseArea::mouseReleaseEvent(QMouseEvent *event) {
 
     if (this->isPressed()) {
         d->pressed = false;
+        MouseEvent me(event->x(), event->y(), event->button(), event->buttons(), event->modifiers(),
+                      ((this->rect().contains(event->pos())) && (d->timerId)));
+                      
         emit pressedChanged();
-        emit released();
+        emit released(&me);
 
-        if (this->rect().contains(event->pos())) {
-            if (d->timerId) {
-                emit clicked();
-            }
+        if (me.isClick()) {
+            emit clicked(&me);
         }
     }
 
@@ -223,7 +226,7 @@ void MouseArea::mouseReleaseEvent(QMouseEvent *event) {
     if (d->_drag) {
         d->_drag->setActive(false);
     }
-
+    
     if (this->preventStealing()) {
         event->accept();
     }
@@ -277,8 +280,9 @@ void MouseArea::mouseMoveEvent(QMouseEvent *event) {
 
         d->mouseY = event->y();
     }
-
-    emit positionChanged();
+    
+    MouseEvent me(event->x(), event->y(), event->button(), event->buttons(), event->modifiers());
+    emit positionChanged(&me);
 
     if (this->rect().contains(event->pos())) {
         if (!this->containsMouse()) {
@@ -307,7 +311,8 @@ void MouseArea::mouseMoveEvent(QMouseEvent *event) {
 
 void MouseArea::mouseDoubleClickEvent(QMouseEvent *event) {
     if (this->rect().contains(event->pos())) {
-        emit doubleClicked();
+        MouseEvent me(event->x(), event->y(), event->button(), event->buttons(), event->modifiers(), true);
+        emit doubleClicked(&me);
     }
 
     if (this->preventStealing()) {
@@ -320,7 +325,8 @@ void MouseArea::mouseDoubleClickEvent(QMouseEvent *event) {
 void MouseArea::timerEvent(QTimerEvent *event) {
     if (this->isPressed()) {
         Q_D(MouseArea);
-        emit pressAndHold();
+        MouseEvent me(this->mouseX(), this->mouseY(), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier, false, true);
+        emit pressAndHold(&me);
 
         if (d->timerId) {
             this->killTimer(d->timerId);

@@ -53,12 +53,32 @@ Window::Window(WindowPrivate &dd, QWidget *parent) :
 
 Window::~Window() {}
 
+/*!
+    \property Window::pageStack
+    \brief The Window's PageStack instance
+    
+    Each Window instance in an application has a PageStack. 
+    Instances of Page can be pushed/popped to/from the PageStack, 
+    in order to set which Page is currently visible.
+*/
 PageStack* Window::pageStack() const {
     Q_D(const Window);
     
     return d->pageStack;
 }
 
+/*!
+    \property Window::orientationLock
+    
+    Sets the allowed orientations of the Window.
+    Child Pages inherit the orientation lock of the Window.
+    
+    Possible values are:
+    
+    \li \c Screen.LandscapeOrientation - Locks Window to landscape
+    \li \c Screen.PortraitOrientation - Locks Window to portrait
+    \li \c Screen.AutoOrientation - Window is rotated when the device rotation changes
+*/
 Screen::Orientation Window::orientationLock() const {
     Q_D(const Window);
 
@@ -74,6 +94,12 @@ void Window::setOrientationLock(Screen::Orientation orientation) {
     }
 }
 
+/*!
+    \property Window::inPortrait
+    
+    This property is \e true if the current orientation of 
+    the device is \c Screen.PortraitOrientation.
+*/
 bool Window::inPortrait() const {
     return Screen::instance()->currentOrientation() == Screen::PortraitOrientation;
 }
@@ -91,6 +117,12 @@ void Window::setFullScreen(bool fullScreen) {
     }
 }
 
+/*!
+    \property showProgressIndicator
+    
+    Sets whether the progress indicator is visible 
+    in the menu area.
+*/
 bool Window::showingProgressIndicator() const {
     return this->testAttribute(Qt::WA_Maemo5ShowProgressIndicator);
 }

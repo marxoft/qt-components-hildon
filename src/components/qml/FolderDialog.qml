@@ -31,11 +31,11 @@ Dialog {
     signal selected(string folder)
 
     function cd(path) {
-        view.rootIndex = fileModel.index(path);
+        view.rootIndex = fileModel.modelIndex(path);
     }
 
     function cdUp() {
-        view.rootIndex = fileModel.index(fileModel.filePath(view.rootIndex).substring(0, fileModel.filePath(view.rootIndex).lastIndexOf("/") + 1));
+        view.rootIndex = fileModel.modelIndex(fileModel.filePath(view.rootIndex).substring(0, fileModel.filePath(view.rootIndex).lastIndexOf("/") + 1));
     }
 
     height: screen.currentOrientation === Screen.PortraitOrientation ? 680 : 360
@@ -78,7 +78,7 @@ Dialog {
                 filterRegExp: filterEdit.text ? eval("(/" + filterEdit.text + "/i)") : /^/
                 onDirectoryLoaded: noFilesLabel.visible = (count(view.rootIndex) == 0)
             }
-            rootIndex: fileModel.index("/home/user/MyDocs")
+            rootIndex: fileModel.modelIndex("/home/user/MyDocs")
             horizontalScrollMode: ListView.ScrollPerItem
             horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff
             onRootIndexChanged: {

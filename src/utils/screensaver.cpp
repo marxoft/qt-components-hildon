@@ -16,8 +16,8 @@
  */
 
 #include "screensaver_p.h"
+#include <QApplication>
 #include <QWidget>
-#include <QDeclarativeContext>
 #include <QDeclarativeInfo>
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
@@ -103,18 +103,14 @@ void ScreenSaver::classBegin() {}
 void ScreenSaver::componentComplete() {
     Q_D(ScreenSaver);
     d->complete = true;
-
-    if (QDeclarativeContext *context = qmlContext(this)) {
-        if (QObject *pageStack = qvariant_cast<QObject*>(context->contextProperty("pageStack"))) {
-            if (QWidget *currentPage = qvariant_cast<QWidget*>(pageStack->property("currentPage"))) {
-                d->windowId = currentPage->winId();
-                this->setScreenSaverInhibited(d->inhibited);
-                return;
-            }
-        }
+    
+    if (QWidget *window = QApplication::activeWindow()) {
+        d->windowId = window->winId();
+        this->setScreenSaverInhibited(d->inhibited);
     }
-
-    qmlInfo(this) << tr("Could not find window id");
+    else {
+        qmlInfo(this) << tr("Could not find window id");
+    }
 }
 
 #include "moc_screensaver_p.cpp"

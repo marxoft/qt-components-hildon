@@ -114,3 +114,4 @@ QDeclarativeListProperty<QWidget> ColumnPrivate::children() {
 }
 
 #include "moc_column_p.cpp"
+

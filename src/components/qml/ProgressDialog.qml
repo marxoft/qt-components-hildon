@@ -25,16 +25,14 @@ Dialog {
     property alias minimum: progressBar.minimum
     property alias maximum: progressBar.maximum
     property alias value: progressBar.value
-
     property alias labelText: label.text
-
     property alias cancelButtonText: cancelButton.text
 
-    signal cancelled
+    signal canceled
 
     function cancel() {
-        cancelled();
         close();
+        canceled();
     }
 
     function reset() {
@@ -42,7 +40,7 @@ Dialog {
             close();
         }
 
-        progressBar.value = 0;
+        progressBar.value = progressBar.minimum;
     }
 
     content: Column {

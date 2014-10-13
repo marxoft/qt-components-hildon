@@ -22,6 +22,14 @@
 #include <QModelIndex>
 #include <qdeclarative.h>
 
+/*!
+    \class ModelIndex
+    \brief Insert description here
+
+    \ingroup org-hildon-components
+    \ingroup qml-data-components
+*/
+
 class ModelIndex : public QObject
 {
     Q_OBJECT

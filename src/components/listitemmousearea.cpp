@@ -18,6 +18,7 @@
 
 #include "listitemmousearea_p.h"
 #include "listitemcontent_p_p.h"
+#include "mouseevent_p.h"
 #include <QMouseEvent>
 
 static const int PRESS_AND_HOLD_DURATION = 800;
@@ -142,7 +143,8 @@ bool ListItemMouseArea::mousePressEvent(QMouseEvent *event) {
 
     if ((!this->isPressed()) && (d->rect.contains(event->pos()))) {
         d->pressed = true;
-        emit pressed();
+        MouseEvent me(event->x(), event->y(), event->button(), event->buttons(), event->modifiers());
+        emit pressed(&me);
         emit pressedChanged();
 
         if (!d->timerId) {
@@ -163,13 +165,13 @@ bool ListItemMouseArea::mouseReleaseEvent(QMouseEvent *event) {
     if (this->isPressed()) {
         accept = true;
         d->pressed = false;
+        MouseEvent me(event->x(), event->y(), event->button(), event->buttons(), event->modifiers(),
+                      ((d->rect.contains(event->pos())) && (d->timerId)));
         emit pressedChanged();
-        emit released();
+        emit released(&me);
 
-        if (d->rect.contains(event->pos())) {
-            if (d->timerId) {
-                emit clicked();
-            }
+        if (me.isClick()) {
+            emit clicked(&me);
         }
     }
 
@@ -187,16 +189,11 @@ bool ListItemMouseArea::mouseMoveEvent(QMouseEvent *event) {
     }
 
     Q_D(ListItemMouseArea);
-
-    if (event->x() != this->mouseX()) {
-        d->mouseX = event->x();
-        emit mouseXChanged();
-    }
-
-    if (event->y() != this->mouseY()) {
-        d->mouseY = event->y();
-        emit mouseYChanged();
-    }
+    
+    d->mouseX = event->x();
+    d->mouseY = event->y();
+    MouseEvent me(event->x(), event->y(), event->button(), event->buttons(), event->modifiers());
+    emit positionChanged(&me);
 
     if (d->rect.contains(event->pos())) {
         if (!this->containsMouse()) {
@@ -223,7 +220,8 @@ bool ListItemMouseArea::mouseDoubleClickEvent(QMouseEvent *event) {
     Q_D(const ListItemMouseArea);
 
     if (d->rect.contains(event->pos())) {
-        emit doubleClicked();
+        MouseEvent me(event->x(), event->y(), event->button(), event->buttons(), event->modifiers(), true);
+        emit doubleClicked(&me);
         return true;
     }
 
@@ -233,7 +231,8 @@ bool ListItemMouseArea::mouseDoubleClickEvent(QMouseEvent *event) {
 void ListItemMouseArea::timerEvent(QTimerEvent *event) {
     if (this->isPressed()) {
         Q_D(ListItemMouseArea);
-        emit pressAndHold();
+        MouseEvent me(this->mouseX(), this->mouseY(), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier, false, true);
+        emit pressAndHold(&me);
 
         if (d->timerId) {
             this->killTimer(d->timerId);

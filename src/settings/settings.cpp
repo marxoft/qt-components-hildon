@@ -70,6 +70,7 @@ public:
     Settings *q_ptr;
     int timerId;
     bool initialized;
+    QString fileName;
     QString category;
     mutable QPointer<QSettings> settings;
     QHash<const char *, QVariant> changedProperties;
@@ -83,7 +84,8 @@ SettingsPrivate::SettingsPrivate()
 QSettings* SettingsPrivate::instance() const {
     if (!settings) {
         Settings *q = const_cast<Settings*>(q_func());
-        settings = new QSettings(q);
+        settings = fileName.isEmpty() ? new QSettings(q)
+                                      : new QSettings(fileName, QSettings::NativeFormat, q);
 
         if (!category.isEmpty()) {
             settings->beginGroup(category);
@@ -184,6 +186,11 @@ void SettingsPrivate::_q_propertyChanged() {
     timerId = q->startTimer(settingsWriteDelay);
 }
 
+/*!
+    \class Settings
+    \ingroup org-hildon-settings
+*/
+
 Settings::Settings(QObject *parent)
     : QObject(parent), d_ptr(new SettingsPrivate)
 {
@@ -195,6 +202,25 @@ Settings::~Settings()
 {
     Q_D(Settings);
     d->reset(); // flush pending changes
+}
+
+QString Settings::fileName() const {
+    Q_D(const Settings);
+    
+    return d->fileName;
+}
+
+void Settings::setFileName(const QString &fileName) {
+    Q_D(Settings);
+    
+    if (d->fileName != fileName) {
+        d->reset();
+        d->fileName = fileName;
+        
+        if (d->initialized) {
+            d->load();
+        }
+    }
 }
 
 QString Settings::category() const {

@@ -58,6 +58,7 @@ HEADERS += \
     item_p.h \
     item_p_p.h \
     itemaction_p.h \
+    keyevent_p.h \
     keys_p.h \
     label_p.h \
     labelstyle_p.h \
@@ -90,6 +91,7 @@ HEADERS += \
     modelindex_p.h \
     mousearea_p.h \
     mousearea_p_p.h \
+    mouseevent_p.h \
     multilistselector_p.h \
     multilistselector_p_p.h \
     page_p.h \
@@ -201,6 +203,7 @@ SOURCES += \
     informationbox.cpp \
     item.cpp \
     itemaction.cpp \
+    keyevent.cpp \
     keys.cpp \
     listelement.cpp \
     listitem.cpp \
@@ -220,6 +223,7 @@ SOURCES += \
     menu.cpp \
     menustyle.cpp \
     mousearea.cpp \
+    mouseevent.cpp \
     multilistselector.cpp \
     page.cpp \
     pagestack.cpp \

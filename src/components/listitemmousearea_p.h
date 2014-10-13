@@ -22,6 +22,7 @@
 #include "listitemcontent_p.h"
 
 class QMouseEvent;
+class MouseEvent;
 class ListItemMouseAreaPrivate;
 
 class ListItemMouseArea : public ListItemContent
@@ -29,8 +30,8 @@ class ListItemMouseArea : public ListItemContent
     Q_OBJECT
 
     Q_PROPERTY(bool containsMouse READ containsMouse NOTIFY containsMouseChanged)
-    Q_PROPERTY(int mouseX READ mouseX NOTIFY mouseXChanged)
-    Q_PROPERTY(int mouseY READ mouseY NOTIFY mouseYChanged)
+    Q_PROPERTY(int mouseX READ mouseX NOTIFY positionChanged)
+    Q_PROPERTY(int mouseY READ mouseY NOTIFY positionChanged)
     Q_PROPERTY(bool pressed READ isPressed NOTIFY pressedChanged)
     Q_PROPERTY(bool preventStealing READ preventStealing WRITE setPreventStealing NOTIFY preventStealingChanged)
 
@@ -51,19 +52,17 @@ public:
 
 signals:
     void canceled();
-    void clicked();
+    void clicked(MouseEvent *event);
     void containsMouseChanged();
-    void doubleClicked();
+    void doubleClicked(MouseEvent *event);
     void entered();
     void exited();
-    void mouseXChanged();
-    void mouseYChanged();
-    void positionChanged();
-    void pressAndHold();
-    void pressed();
+    void positionChanged(MouseEvent *event);
+    void pressAndHold(MouseEvent *event);
+    void pressed(MouseEvent *event);
     void pressedChanged();
     void preventStealingChanged();
-    void released();
+    void released(MouseEvent *event);
 
 protected:
     ListItemMouseArea(ListItemMouseAreaPrivate &dd, QObject *parent = 0);

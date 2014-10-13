@@ -18,6 +18,7 @@
 #ifndef FILESYSTEMMODEL_P_H
 #define FILESYSTEMMODEL_P_H
 
+#include "modelindex_p.h"
 #include <QSortFilterProxyModel>
 #include <qdeclarative.h>
 
@@ -95,7 +96,7 @@ public:
     Q_INVOKABLE QVariant data(const QModelIndex &index, int role = FileNameRole) const;
     Q_INVOKABLE bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
 
-    Q_INVOKABLE QModelIndex index(const QString &path, int column = 0) const;
+    Q_INVOKABLE QVariant modelIndex(const QString &path, int column = 0) const;
 
     Q_INVOKABLE QString filePath(const QModelIndex &index) const;
     Q_INVOKABLE bool isDir(const QModelIndex &index) const;
@@ -103,7 +104,7 @@ public:
     Q_INVOKABLE QString type(const QModelIndex &index) const;
     Q_INVOKABLE QDateTime lastModified(const QModelIndex &index) const;
 
-    Q_INVOKABLE QModelIndex mkdir(const QModelIndex &parent, const QString &name);
+    Q_INVOKABLE QVariant mkdir(const QModelIndex &parent, const QString &name);
     Q_INVOKABLE bool rmdir(const QModelIndex &index) const;
     Q_INVOKABLE QString fileName(const QModelIndex &index) const;
     Q_INVOKABLE QString fileIcon(const QModelIndex &index) const;

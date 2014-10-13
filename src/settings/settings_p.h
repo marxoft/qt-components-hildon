@@ -52,11 +52,15 @@ class Settings : public QObject, public QDeclarativeParserStatus
 {
     Q_OBJECT
     Q_INTERFACES(QDeclarativeParserStatus)
+    Q_PROPERTY(QString fileName READ fileName WRITE setFileName FINAL)
     Q_PROPERTY(QString category READ category WRITE setCategory FINAL)
 
 public:
     explicit Settings(QObject *parent = 0);
     ~Settings();
+    
+    QString fileName() const;
+    void setFileName(const QString &fileName);
 
     QString category() const;
     void setCategory(const QString &category);

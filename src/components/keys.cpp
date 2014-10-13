@@ -16,6 +16,7 @@
  */
 
 #include "keys_p.h"
+#include "keyevent_p.h"
 #include <QDeclarativeEngine>
 #include <QDeclarativeContext>
 #include <QDeclarativeInfo>
@@ -62,44 +63,6 @@ static const QList<int> KEYS = QList<int>() << Qt::Key_Asterisk
                                             << Qt::Key_F8 // Volume Down
                                             << Qt::Key_F7 // Volume Up
                                             << Qt::Key_Yes;
-
-KeyEvent::KeyEvent(QKeyEvent *event, QObject *parent) :
-    QObject(parent),
-    m_event(event)
-{
-}
-
-KeyEvent::~KeyEvent() {}
-
-bool KeyEvent::isAccepted() const {
-    return (m_event) && (m_event->isAccepted());
-}
-
-void KeyEvent::setAccepted(bool accept) {
-    if (m_event) {
-        m_event->setAccepted(accept);
-    }
-}
-
-bool KeyEvent::isAutoRepeat() const {
-    return (m_event) && (m_event->isAutoRepeat());
-}
-
-int KeyEvent::count() const {
-    return m_event ? m_event->count() : 0;
-}
-
-int KeyEvent::key() const {
-    return m_event ? m_event->key() : 0;
-}
-
-int KeyEvent::modifiers() const {
-    return m_event ? m_event->modifiers() : Qt::NoModifier;
-}
-
-QString KeyEvent::text() const {
-    return m_event ? m_event->text() : QString();
-}
 
 class KeysPrivate
 {
@@ -309,8 +272,7 @@ bool Keys::eventFilter(QObject *obj, QEvent *event) {
         switch (keyEvent->type()) {
         case 7: // QKeyEvent::KeyPress
         {
-            KeyEvent *ke = new KeyEvent(keyEvent);
-            QDeclarativeEngine::setObjectOwnership(ke, QDeclarativeEngine::JavaScriptOwnership);
+            KeyEvent ke(*keyEvent);
             const int key = keyEvent->key();
 
             if (d->connections.contains(key)) {
@@ -319,12 +281,12 @@ bool Keys::eventFilter(QObject *obj, QEvent *event) {
 
                 if (this->receivers("2" + signature) > 0) {
                     keyEvent->accept();
-                    signal.invoke(this, Q_ARG(KeyEvent*, ke));
+                    signal.invoke(this, Q_ARG(KeyEvent*, &ke));
                 }
             }
 
             if (this->receivers(SIGNAL(pressed(KeyEvent*)))) {
-                emit pressed(ke);
+                emit pressed(&ke);
             }
 
             if (keyEvent->isAccepted()) {
@@ -335,9 +297,8 @@ bool Keys::eventFilter(QObject *obj, QEvent *event) {
         }
         case 8: // QKeyEvent::KeyRelease
             if (this->receivers(SIGNAL(released(KeyEvent*)))) {
-                KeyEvent *ke = new KeyEvent(keyEvent);
-                QDeclarativeEngine::setObjectOwnership(ke, QDeclarativeEngine::JavaScriptOwnership);
-                emit released(ke);
+                KeyEvent ke(*keyEvent);
+                emit released(&ke);
             }
 
             break;

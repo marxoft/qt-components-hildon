@@ -253,10 +253,10 @@ bool FileSystemModel::setData(const QModelIndex &index, const QVariant &value, i
     return QSortFilterProxyModel::setData(index, value, role);
 }
 
-QModelIndex FileSystemModel::index(const QString &path, int column) const {
+QVariant FileSystemModel::modelIndex(const QString &path, int column) const {
     Q_D(const FileSystemModel);
 
-    return this->mapFromSource(d->model->index(path, column));
+    return QVariant::fromValue(this->mapFromSource(d->model->index(path, column)));
 }
 
 QString FileSystemModel::filePath(const QModelIndex &index) const {
@@ -289,10 +289,10 @@ QDateTime FileSystemModel::lastModified(const QModelIndex &index) const {
     return d->model->lastModified(this->mapToSource(index));
 }
 
-QModelIndex FileSystemModel::mkdir(const QModelIndex &parent, const QString &name) {
+QVariant FileSystemModel::mkdir(const QModelIndex &parent, const QString &name) {
     Q_D(FileSystemModel);
 
-    return this->mapFromSource(d->model->mkdir(this->mapToSource(parent), name));
+    return QVariant::fromValue(this->mapFromSource(d->model->mkdir(this->mapToSource(parent), name)));
 }
 
 bool FileSystemModel::rmdir(const QModelIndex &index) const {
