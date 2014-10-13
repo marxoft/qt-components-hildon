@@ -1,6 +1,5 @@
 TEMPLATE = subdirs
 SUBDIRS = \
-    network \
     utils \
     webkit \
     dbus \
