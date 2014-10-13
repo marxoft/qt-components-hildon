@@ -116,7 +116,7 @@ Dialog {
             
             Action {
                 icon: "general_close"
-                onTriggered: toolBar.visible = false
+                onTriggered: filterEdit.clear()
             }
             
             onVisibleChanged: if (visible) filterEdit.focus = true;
