@@ -31,12 +31,16 @@ ValueButton::ValueButton(QWidget *parent) :
     QMaemo5ValueButton(parent),
     d_ptr(new ValueButtonPrivate(this))
 {
+    this->connect(this, SIGNAL(pressed()), this, SIGNAL(pressedChanged()));
+    this->connect(this, SIGNAL(released()), this, SIGNAL(pressedChanged()));
 }
 
 ValueButton::ValueButton(ValueButtonPrivate &dd, QWidget *parent) :
     QMaemo5ValueButton(parent),
     d_ptr(&dd)
 {
+    this->connect(this, SIGNAL(pressed()), this, SIGNAL(pressedChanged()));
+    this->connect(this, SIGNAL(released()), this, SIGNAL(pressedChanged()));
 }
 
 ValueButton::~ValueButton() {}

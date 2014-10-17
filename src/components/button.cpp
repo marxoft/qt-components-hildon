@@ -26,12 +26,16 @@ Button::Button(QWidget *parent) :
     QPushButton(parent),
     d_ptr(new ButtonPrivate(this))
 {
+    this->connect(this, SIGNAL(pressed()), this, SIGNAL(pressedChanged()));
+    this->connect(this, SIGNAL(released()), this, SIGNAL(pressedChanged()));
 }
 
 Button::Button(ButtonPrivate &dd, QWidget *parent) :
     QPushButton(parent),
     d_ptr(&dd)
 {
+    this->connect(this, SIGNAL(pressed()), this, SIGNAL(pressedChanged()));
+    this->connect(this, SIGNAL(released()), this, SIGNAL(pressedChanged()));
 }
 
 Button::~Button() {}

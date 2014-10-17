@@ -26,12 +26,16 @@ ToolButton::ToolButton(QWidget *parent) :
     QToolButton(parent),
     d_ptr(new ToolButtonPrivate(this))
 {
+    this->connect(this, SIGNAL(pressed()), this, SIGNAL(pressedChanged()));
+    this->connect(this, SIGNAL(released()), this, SIGNAL(pressedChanged()));
 }
 
 ToolButton::ToolButton(ToolButtonPrivate &dd, QWidget *parent) :
     QToolButton(parent),
     d_ptr(&dd)
 {
+    this->connect(this, SIGNAL(pressed()), this, SIGNAL(pressedChanged()));
+    this->connect(this, SIGNAL(released()), this, SIGNAL(pressedChanged()));
 }
 
 ToolButton::~ToolButton() {}

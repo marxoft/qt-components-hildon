@@ -26,12 +26,16 @@ RadioButton::RadioButton(QWidget *parent) :
     QRadioButton(parent),
     d_ptr(new RadioButtonPrivate(this))
 {
+    this->connect(this, SIGNAL(pressed()), this, SIGNAL(pressedChanged()));
+    this->connect(this, SIGNAL(released()), this, SIGNAL(pressedChanged()));
 }
 
 RadioButton::RadioButton(RadioButtonPrivate &dd, QWidget *parent) :
     QRadioButton(parent),
     d_ptr(&dd)
 {
+    this->connect(this, SIGNAL(pressed()), this, SIGNAL(pressedChanged()));
+    this->connect(this, SIGNAL(released()), this, SIGNAL(pressedChanged()));
 }
 
 RadioButton::~RadioButton() {}

@@ -36,6 +36,7 @@ class ToolButton : public QToolButton, public QDeclarativeParserStatus
     Q_PROPERTY(int height READ height WRITE setFixedHeight NOTIFY heightChanged)
     Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity NOTIFY opacityChanged)
     Q_PROPERTY(bool enabled READ isEnabled WRITE setEnabled NOTIFY enabledChanged)
+    Q_PROPERTY(bool pressed READ isDown WRITE setDown NOTIFY pressedChanged)
     Q_PROPERTY(QString icon READ iconSource WRITE setIconSource NOTIFY iconChanged)
     Q_PROPERTY(QString shortcut READ shortcutString WRITE setShortcutString NOTIFY shortcutChanged)
     Q_PRIVATE_PROPERTY(ToolButton::d_func(), Anchors* anchors READ anchors CONSTANT FINAL)
@@ -88,6 +89,7 @@ signals:
     void opacityChanged();
     void visibleChanged();
     void enabledChanged();
+    void pressedChanged();
     void focusChanged();
     void iconChanged();
     void shortcutChanged();

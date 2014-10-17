@@ -36,6 +36,7 @@ class Slider : public QSlider, public QDeclarativeParserStatus
     Q_PROPERTY(int height READ height WRITE setFixedHeight NOTIFY heightChanged)
     Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity NOTIFY opacityChanged)
     Q_PROPERTY(bool enabled READ isEnabled WRITE setEnabled NOTIFY enabledChanged)
+    Q_PROPERTY(bool sliderPressed READ isSliderDown WRITE setSliderDown NOTIFY sliderPressedChanged)
     Q_PRIVATE_PROPERTY(Slider::d_func(), Anchors* anchors READ anchors CONSTANT FINAL)
     Q_PROPERTY(AnchorLine left READ left CONSTANT FINAL)
     Q_PROPERTY(AnchorLine right READ right CONSTANT FINAL)
@@ -80,6 +81,7 @@ signals:
     void opacityChanged();
     void visibleChanged();
     void enabledChanged();
+    void sliderPressedChanged();
     void focusChanged();
 
 protected:

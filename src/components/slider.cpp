@@ -26,12 +26,16 @@ Slider::Slider(QWidget *parent) :
     QSlider(Qt::Horizontal, parent),
     d_ptr(new SliderPrivate(this))
 {
+    this->connect(this, SIGNAL(sliderPressed()), this, SIGNAL(sliderPressedChanged()));
+    this->connect(this, SIGNAL(sliderReleased()), this, SIGNAL(sliderPressedChanged()));
 }
 
 Slider::Slider(SliderPrivate &dd, QWidget *parent) :
     QSlider(Qt::Horizontal, parent),
     d_ptr(&dd)
 {
+    this->connect(this, SIGNAL(sliderPressed()), this, SIGNAL(sliderPressedChanged()));
+    this->connect(this, SIGNAL(sliderReleased()), this, SIGNAL(sliderPressedChanged()));
 }
 
 Slider::~Slider() {}

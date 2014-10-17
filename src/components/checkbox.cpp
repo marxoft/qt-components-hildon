@@ -26,12 +26,16 @@ CheckBox::CheckBox(QWidget *parent) :
     QCheckBox(parent),
     d_ptr(new CheckBoxPrivate(this))
 {
+    this->connect(this, SIGNAL(pressed()), this, SIGNAL(pressedChanged()));
+    this->connect(this, SIGNAL(released()), this, SIGNAL(pressedChanged()));
 }
 
 CheckBox::CheckBox(CheckBoxPrivate &dd, QWidget *parent) :
     QCheckBox(parent),
     d_ptr(&dd)
 {
+    this->connect(this, SIGNAL(pressed()), this, SIGNAL(pressedChanged()));
+    this->connect(this, SIGNAL(released()), this, SIGNAL(pressedChanged()));
 }
 
 CheckBox::~CheckBox() {}
