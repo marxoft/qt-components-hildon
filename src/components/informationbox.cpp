@@ -18,7 +18,8 @@
 #include "informationbox_p.h"
 #include "informationbox_p_p.h"
 #include <QActionGroup>
-#include <QEvent>
+#include <QMoveEvent>
+#include <QResizeEvent>
 #include <QGraphicsOpacityEffect>
 
 InformationBox::InformationBox(QWidget *parent) :
@@ -76,6 +77,30 @@ void InformationBox::changeEvent(QEvent *event) {
     }
 
     QMaemo5InformationBox::changeEvent(event);
+}
+
+void InformationBox::moveEvent(QMoveEvent *event) {
+    if (event->pos().x() != event->oldPos().x()) {
+        emit xChanged();
+    }
+
+    if (event->pos().y() != event->oldPos().y()) {
+        emit yChanged();
+    }
+
+    QMaemo5InformationBox::moveEvent(event);
+}
+
+void InformationBox::resizeEvent(QResizeEvent *event) {
+    if (event->size().width() != event->oldSize().width()) {
+        emit widthChanged();
+    }
+
+    if (event->size().height() != event->oldSize().height()) {
+        emit heightChanged();
+    }
+
+    QMaemo5InformationBox::resizeEvent(event);
 }
 
 void InformationBox::showEvent(QShowEvent *event) {

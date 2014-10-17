@@ -29,6 +29,8 @@ class InformationBox : public QMaemo5InformationBox, public QDeclarativeParserSt
     Q_OBJECT
 
     Q_PROPERTY(QWidget* parent READ parentWidget WRITE setParent NOTIFY parentChanged)
+    Q_PROPERTY(int width READ width WRITE setFixedWidth NOTIFY widthChanged)
+    Q_PROPERTY(int height READ height WRITE setFixedHeight NOTIFY heightChanged)
     Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity NOTIFY opacityChanged)
     Q_PROPERTY(bool visible READ isVisible WRITE setVisible NOTIFY visibleChanged)
     Q_PROPERTY(bool enabled READ isEnabled WRITE setEnabled NOTIFY enabledChanged)
@@ -60,6 +62,10 @@ public:
 
 signals:
     void parentChanged();
+    void xChanged();
+    void yChanged();
+    void widthChanged();
+    void heightChanged();
     void opacityChanged();
     void visibleChanged();
     void enabledChanged();
@@ -69,6 +75,8 @@ protected:
     InformationBox(InformationBoxPrivate &dd, QWidget *parent = 0);
     
     virtual void changeEvent(QEvent *event);
+    virtual void moveEvent(QMoveEvent *event);
+    virtual void resizeEvent(QResizeEvent *event);
     virtual void showEvent(QShowEvent *event);
     virtual void hideEvent(QHideEvent *event);
     virtual void focusInEvent(QFocusEvent *event);
