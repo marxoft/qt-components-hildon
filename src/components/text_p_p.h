@@ -20,15 +20,13 @@
 
 #include "item_p_p.h"
 #include "text_p.h"
-#include "platformstyle_p.h"
 
 class TextPrivate : public ItemPrivate
 {
 
 public:
     TextPrivate(Text *parent) :
-        ItemPrivate(parent),
-        color(PlatformStyle::defaultTextColor())
+        ItemPrivate(parent)
     {
     }
 
@@ -43,10 +41,6 @@ public:
     QDeclarativeListProperty<QWidget> children();
 
     QDeclarativeListProperty<QObject> actions();
-
-    QString text;
-
-    QColor color;
 
     Q_DECLARE_PUBLIC(Text)
 };

@@ -66,7 +66,6 @@ public:
     qreal opacity() const;
     void setOpacity(qreal opacity);
 
-    QString text() const;
     void setText(const QString &text);
 
     QColor color() const;

@@ -70,32 +70,22 @@ void Text::setOpacity(qreal opacity) {
     }
 }
 
-QString Text::text() const {
-    Q_D(const Text);
-
-    return d->text;
-}
-
 void Text::setText(const QString &text) {
     if (text != this->text()) {
-        Q_D(Text);
-        d->text = text;
-        QLabel::setText(QString("<font color='%1'>%2</font>").arg(this->color().name()).arg(text));
+        QLabel::setText(text);
         emit textChanged();
     }
 }
 
 QColor Text::color() const {
-    Q_D(const Text);
-
-    return d->color;
+    return this->palette().color(QPalette::WindowText);
 }
 
 void Text::setColor(const QColor &color) {
     if (color != this->color()) {
-        Q_D(Text);
-        d->color = color;
-        QLabel::setText(QString("<font color='%1'>%2</font>").arg(color.name()).arg(this->text()));
+        QPalette palette(this->palette());
+        palette.setColor(QPalette::WindowText, color);
+        this->setPalette(palette);
         emit colorChanged();
     }
 }
