@@ -120,10 +120,9 @@ public:
     void setHeader(QHeaderView *header);
 
 public slots:
-    void positionViewAtBeginning();
-    void positionViewAtEnd();
-    void positionViewAtIndex(const QModelIndex &index, ScrollHint mode);
-    void positionViewAtIndex(int index, ScrollHint mode);
+    void positionViewAtBeginning(bool immediate = true);
+    void positionViewAtEnd(bool immediate = true);
+    void positionViewAtIndex(const QModelIndex &index, ScrollHint mode, bool immediate = true);
 
 signals:
     void parentChanged();

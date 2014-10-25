@@ -221,25 +221,60 @@ void ListView::setMaximumFlickVelocity(qreal maximum) {
     }
 }
 
-void ListView::positionViewAtBeginning() {
+void ListView::positionViewAtBeginning(bool immediate) {
     if (this->model()) {
-        this->scrollTo(this->model()->index(0, 0, this->rootIndex()), QListView::PositionAtTop);
+        if (immediate) {
+            this->scrollTo(this->model()->index(0, 0, this->rootIndex()), QListView::PositionAtTop);
+        }
+        else {
+            Q_D(ListView);
+            d->kineticScroller->scrollTo(QPoint(this->horizontalScrollBar()->minimum(), this->verticalScrollBar()->minimum()));
+        }
     }
 }
 
-void ListView::positionViewAtEnd() {
+void ListView::positionViewAtEnd(bool immediate) {
     if (this->model()) {
-        this->scrollTo(this->model()->index(model()->rowCount() - 1, 0, this->rootIndex()), QListView::PositionAtBottom);
+        if (immediate) {
+            this->scrollTo(this->model()->index(model()->rowCount() - 1, 0, this->rootIndex()), QListView::PositionAtBottom);
+        }
+        else {
+            Q_D(ListView);
+            d->kineticScroller->scrollTo(QPoint(this->horizontalScrollBar()->maximum(), this->verticalScrollBar()->maximum()));
+        }
     }
 }
 
-void ListView::positionViewAtIndex(const QModelIndex &index, ScrollHint mode) {
-    this->scrollTo(index, mode);
-}
-
-void ListView::positionViewAtIndex(int index, ScrollHint mode) {
-    if (this->model()) {
-        this->positionViewAtIndex(this->model()->index(index, 0, this->rootIndex()), mode);
+void ListView::positionViewAtIndex(const QModelIndex &index, ScrollHint mode, bool immediate) {
+    if (immediate) {
+        this->scrollTo(index, mode);
+    }
+    else {
+        Q_D(ListView);
+        const int spacing = this->spacing();
+        QRect rect = this->visualRect(index).adjusted(-spacing, -spacing, spacing, spacing);
+        const QRect viewRect = this->viewport()->rect();
+        const int wDiff = viewRect.width() - rect.width();
+        const int hDiff = viewRect.height() - rect.height();
+        
+        switch (mode) {
+        case PositionAtTop:
+            break;
+        case PositionAtBottom:
+            rect.translate(-wDiff, -hDiff);
+            break;
+        case PositionAtCenter:
+            rect.translate(wDiff ? -(wDiff / 2) : 0, hDiff ? -(hDiff / 2) : 0);
+            break;
+        default:
+            d->kineticScroller->ensureVisible(rect.topLeft(), rect.height(), rect.height());
+            return;
+        }
+        
+        d->kineticScroller->scrollTo(QPoint(qBound(0, rect.left() + this->horizontalScrollBar()->value(),
+                                                   this->horizontalScrollBar()->maximum()),
+                                            qBound(0, rect.top() + this->verticalScrollBar()->value(), 
+                                                   this->verticalScrollBar()->maximum())));
     }
 }
 
