@@ -102,7 +102,8 @@ public:
     SortFlags sorting() const;
     void setSorting(SortFlags sorting);
     void resetSorting();
-
+    
+    Q_INVOKABLE bool fileExists(const QString &fileName) const;
     Q_INVOKABLE QString absoluteFilePath(const QString &fileName) const;
     Q_INVOKABLE QString filePath(const QString &fileName) const;
     Q_INVOKABLE QString relativeFilePath(const QString &fileName) const;

@@ -95,6 +95,10 @@ void Directory::resetSorting() {
     }
 }
 
+bool Directory::fileExists(const QString &fileName) const {
+    return m_dir.exists(fileName);
+}
+
 QString Directory::absoluteFilePath(const QString &fileName) const {
     return m_dir.absoluteFilePath(fileName);
 }
