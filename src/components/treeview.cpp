@@ -251,8 +251,7 @@ void TreeView::positionViewAtIndex(const QModelIndex &index, ScrollHint mode, bo
     }
     else {
         Q_D(TreeView);
-        const int spacing = this->spacing();
-        QRect rect = this->visualRect(index).adjusted(-spacing, -spacing, spacing, spacing);
+        QRect rect = this->visualRect(index);
         const QRect viewRect = this->viewport()->rect();
         const int wDiff = viewRect.width() - rect.width();
         const int hDiff = viewRect.height() - rect.height();
