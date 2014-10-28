@@ -5,4 +5,5 @@ SUBDIRS = \
     dbus \
     settings \
     tracker \
+    multimedia \
     components

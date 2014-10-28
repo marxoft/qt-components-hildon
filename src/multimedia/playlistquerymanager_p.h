@@ -1,0 +1,43 @@
+#ifndef PLAYLISTQUERYMANAGER_P_H
+#define PLAYLISTQUERYMANAGER_P_H
+
+#include <QObject>
+#include <QList>
+
+#include "mafw/mafwplaylistadapter.h"
+
+class PlaylistQueryManager : public QObject
+{
+    Q_OBJECT
+
+public:
+    explicit PlaylistQueryManager(QObject *parent, MafwPlaylistAdapter *playlist, MafwPlaylist *mafwplaylist = NULL);
+    ~PlaylistQueryManager();
+    void getItems(int first, int last);
+    void itemsInserted(int from, int amount);
+    void itemsRemoved(int from, int amount);
+
+signals:
+    void onGetItems(QString objectId, GHashTable *metadata, guint index);
+
+public slots:
+    void setPriority(int position);
+
+private:
+    void mergeRequest(int first, int last);
+    void queryPlaylist();
+    void restart();
+
+    MafwPlaylistAdapter *playlist;
+    MafwPlaylist *mafwplaylist;
+    QList<int*> requests;
+    gpointer getItemsOp;
+    int priority;
+    int* rangeInProgress;
+
+private slots:
+    void onGetItems(QString objectId, GHashTable *metadata, guint index, gpointer op);
+    void onRequestComplete(gpointer op);
+};
+
+#endif // PLAYLISTQUERYMANAGER_P_H
