@@ -56,8 +56,20 @@ FileSystemModel::FileSystemModel(QObject *parent) :
     d_ptr(new FileSystemModelPrivate(this))
 {
     Q_D(const FileSystemModel);
+    
+    QHash<int, QByteArray> roles;
+    roles[Qt::DisplayRole] = "display";
+    roles[FileIconRole] = "icon";
+    roles[FilePathRole] = "filePath";
+    roles[FileNameRole] = "fileName";
+    roles[FilePermissionsRole] = "permissions";
+    roles[IsDirRole] = "isDir";
+    roles[SizeRole] = "size";
+    roles[TypeRole] = "type";
+    roles[LastModifiedRole] = "lastModified";
 
     this->setSourceModel(d->model);
+    this->setRoleNames(roles);
     this->setFilterRole(FileNameRole);
     this->setDynamicSortFilter(true);
     this->connect(d->model, SIGNAL(rootPathChanged(QString)), this, SIGNAL(rootPathChanged()));
@@ -69,8 +81,20 @@ FileSystemModel::FileSystemModel(FileSystemModelPrivate &dd, QObject *parent) :
     d_ptr(&dd)
 {
     Q_D(const FileSystemModel);
+    
+    QHash<int, QByteArray> roles;
+    roles[Qt::DisplayRole] = "display";
+    roles[FileIconRole] = "icon";
+    roles[FilePathRole] = "filePath";
+    roles[FileNameRole] = "fileName";
+    roles[FilePermissionsRole] = "permissions";
+    roles[IsDirRole] = "isDir";
+    roles[SizeRole] = "size";
+    roles[TypeRole] = "type";
+    roles[LastModifiedRole] = "lastModified";
 
     this->setSourceModel(d->model);
+    this->setRoleNames(roles);
     this->setFilterRole(FileNameRole);
     this->setDynamicSortFilter(true);
     this->connect(d->model, SIGNAL(rootPathChanged(QString)), this, SIGNAL(rootPathChanged()));
@@ -246,11 +270,18 @@ int FileSystemModel::count(const QModelIndex &parent) const {
 }
 
 QVariant FileSystemModel::data(const QModelIndex &index, int role) const {
-    return QSortFilterProxyModel::data(index, role);
-}
-
-bool FileSystemModel::setData(const QModelIndex &index, const QVariant &value, int role) {
-    return QSortFilterProxyModel::setData(index, value, role);
+    switch (role) {
+    case IsDirRole:
+        return this->isDir(index);
+    case SizeRole:
+        return this->size(index);
+    case TypeRole:
+        return this->type(index);
+    case LastModifiedRole:
+        return this->lastModified(index);
+    default:
+        return QSortFilterProxyModel::data(index, role);
+    }
 }
 
 QVariant FileSystemModel::modelIndex(const QString &path, int column) const {

@@ -48,7 +48,11 @@ public:
         FileIconRole = Qt::DecorationRole,
         FilePathRole = Qt::UserRole + 1,
         FileNameRole = Qt::UserRole + 2,
-        FilePermissionsRole = Qt::UserRole + 3
+        FilePermissionsRole = Qt::UserRole + 3,
+        IsDirRole = Qt::UserRole + 4,
+        SizeRole = Qt::UserRole + 5,
+        TypeRole = Qt::UserRole + 6,
+        LastModifiedRole = Qt::UserRole + 7
     };
 
     explicit FileSystemModel(QObject *parent = 0);
@@ -93,8 +97,7 @@ public:
     
     Q_INVOKABLE int count(const QModelIndex &parent = QModelIndex()) const;
 
-    Q_INVOKABLE QVariant data(const QModelIndex &index, int role = FileNameRole) const;
-    Q_INVOKABLE bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
+    QVariant data(const QModelIndex &index, int role = FileNameRole) const;
 
     Q_INVOKABLE QVariant modelIndex(const QString &path, int column = 0) const;
 
