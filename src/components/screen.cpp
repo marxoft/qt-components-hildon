@@ -119,13 +119,13 @@ void ScreenPrivate::_q_onResized() {
 void ScreenPrivate::_q_onLockStateChanged(const QString &state) {
     Q_Q(Screen);
 
-    if (state == "locked") {
-        covered = true;
-        emit q->coveredChanged(true);
-    }
-    else if (state == "unlocked") {
+    if (state.endsWith("unlocked")) {
         covered = false;
         emit q->coveredChanged(false);
+    }
+    else {
+        covered = true;
+        emit q->coveredChanged(true);
     }
 }
 
