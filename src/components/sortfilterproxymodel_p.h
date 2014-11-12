@@ -29,8 +29,9 @@ class SortFilterProxyModel : public QSortFilterProxyModel, public QDeclarativePa
 {
     Q_OBJECT
     
-    Q_PROPERTY(QString filterProperty READ filterProperty WRITE setFilterProperty)
-    Q_PROPERTY(QString sortProperty READ sortProperty WRITE setSortProperty)
+    Q_PROPERTY(QString filterProperty READ filterProperty WRITE setFilterProperty NOTIFY filterPropertyChanged)
+    Q_PROPERTY(QRegExp filterRegExp READ filterRegExp WRITE setQmlFilterRegExp RESET resetQmlFilterRegExp NOTIFY filterRegExpChanged)
+    Q_PROPERTY(QString sortProperty READ sortProperty WRITE setSortProperty NOTIFY sortPropertyChanged)
     Q_PRIVATE_PROPERTY(SortFilterProxyModel::d_func(), QVariant sourceModel READ sourceModel WRITE setSourceModel NOTIFY sourceModelChanged)
     
     Q_INTERFACES(QDeclarativeParserStatus)
@@ -42,6 +43,9 @@ public:
     QString filterProperty() const;
     void setFilterProperty(const QString &property);
     
+    void setQmlFilterRegExp(const QRegExp &regExp);
+    void resetQmlFilterRegExp();
+    
     QString sortProperty() const;
     void setSortProperty(const QString &property);
     
@@ -51,6 +55,9 @@ public:
     Q_INVOKABLE virtual void sort(int column, Qt::SortOrder order = Qt::AscendingOrder);
     
 signals:
+    void filterPropertyChanged();
+    void filterRegExpChanged();
+    void sortPropertyChanged();
     void sourceModelChanged();
     
 protected:

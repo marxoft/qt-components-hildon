@@ -117,11 +117,23 @@ void SortFilterProxyModel::setFilterProperty(const QString &property) {
     if (property != this->filterProperty()) {
         Q_D(SortFilterProxyModel);
         d->filterProperty = property;
+        emit filterPropertyChanged();
         
         if (this->sourceModel()) {
             this->setFilterRole(this->roleNames().key(property.toUtf8()));
         }
     }
+}
+
+void SortFilterProxyModel::setQmlFilterRegExp(const QRegExp &regExp) {
+    if (regExp != this->filterRegExp()) {
+        this->setFilterRegExp(regExp);
+        emit filterRegExpChanged();
+    }
+}
+
+void SortFilterProxyModel::resetQmlFilterRegExp() {
+    this->setQmlFilterRegExp(QRegExp());
 }
 
 QString SortFilterProxyModel::sortProperty() const {
@@ -134,6 +146,7 @@ void SortFilterProxyModel::setSortProperty(const QString &property) {
     if (property != this->sortProperty()) {
         Q_D(SortFilterProxyModel);
         d->sortProperty = property;
+        emit sortPropertyChanged();
         
         if (this->sourceModel()) {
             this->setSortRole(this->roleNames().key(property.toUtf8()));
