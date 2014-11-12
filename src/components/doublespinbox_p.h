@@ -36,6 +36,7 @@ class DoubleSpinBox : public QDoubleSpinBox, public QDeclarativeParserStatus
     Q_PROPERTY(int height READ height WRITE setFixedHeight NOTIFY heightChanged)
     Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity NOTIFY opacityChanged)
     Q_PROPERTY(bool enabled READ isEnabled WRITE setEnabled NOTIFY enabledChanged)
+    Q_PROPERTY(bool acceptableInput READ hasAcceptableInput NOTIFY acceptableInputChanged)
     Q_PRIVATE_PROPERTY(DoubleSpinBox::d_func(), Anchors* anchors READ anchors CONSTANT FINAL)
     Q_PROPERTY(AnchorLine left READ left CONSTANT FINAL)
     Q_PROPERTY(AnchorLine right READ right CONSTANT FINAL)
@@ -81,6 +82,7 @@ signals:
     void visibleChanged();
     void enabledChanged();
     void focusChanged();
+    void acceptableInputChanged();
 
 protected:
     DoubleSpinBox(DoubleSpinBoxPrivate &dd, QWidget *parent = 0);

@@ -26,12 +26,14 @@ SpinBox::SpinBox(QWidget *parent) :
     QSpinBox(parent),
     d_ptr(new SpinBoxPrivate(this))
 {
+    this->connect(this, SIGNAL(editingFinished()), this, SIGNAL(acceptableInputChanged()));
 }
 
 SpinBox::SpinBox(SpinBoxPrivate &dd, QWidget *parent) :
     QSpinBox(parent),
     d_ptr(&dd)
 {
+    this->connect(this, SIGNAL(editingFinished()), this, SIGNAL(acceptableInputChanged()));
 }
 
 SpinBox::~SpinBox() {}

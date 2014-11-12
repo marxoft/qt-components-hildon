@@ -26,12 +26,14 @@ DoubleSpinBox::DoubleSpinBox(QWidget *parent) :
     QDoubleSpinBox(parent),
     d_ptr(new DoubleSpinBoxPrivate(this))
 {
+    this->connect(this, SIGNAL(editingFinished()), this, SIGNAL(acceptableInputChanged()));
 }
 
 DoubleSpinBox::DoubleSpinBox(DoubleSpinBoxPrivate &dd, QWidget *parent) :
     QDoubleSpinBox(parent),
     d_ptr(&dd)
 {
+    this->connect(this, SIGNAL(editingFinished()), this, SIGNAL(acceptableInputChanged()));
 }
 
 DoubleSpinBox::~DoubleSpinBox() {}
