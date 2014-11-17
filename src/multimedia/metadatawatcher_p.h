@@ -27,6 +27,7 @@ class MetadataWatcher: public QObject
     Q_PROPERTY(QString lastThumbnailUrl READ lastThumbnailUrl NOTIFY metadataChanged)
     Q_PROPERTY(QString lyrics READ lyrics NOTIFY metadataChanged)
     Q_PROPERTY(QString mimeType READ mimeType NOTIFY metadataChanged)
+    Q_PROPERTY(QString organization READ organization NOTIFY metadataChanged)
     Q_PROPERTY(int playCount READ playCount NOTIFY metadataChanged)
     Q_PROPERTY(QSize resolution READ resolution NOTIFY metadataChanged)
     Q_PROPERTY(int resumePosition READ resumePosition NOTIFY metadataChanged)
@@ -58,6 +59,7 @@ public:
     QString lastThumbnailUrl() const;
     QString lyrics() const;
     QString mimeType() const;
+    QString organization() const;
     int playCount() const;
     QSize resolution() const;
     int resumePosition() const;
