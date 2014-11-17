@@ -59,6 +59,7 @@ public:
         LastThumbnailUrlRole,
         LyricsRole,
         MimeTypeRole,
+        OrganizationRole,
         PlayCountRole,
         ResolutionRole,
         ResumePositionRole,
