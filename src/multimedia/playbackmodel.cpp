@@ -196,6 +196,7 @@ public:
         QString lastThumbnailUrl;
         QString lyrics;
         QString mimeType;
+        QString organization;
         int playCount;
         int resX;
         int resY;
@@ -262,6 +263,9 @@ public:
         v = mafw_metadata_first(metadata, MAFW_METADATA_KEY_MIME);
         mimeType = v ? QString::fromUtf8(g_value_get_string(v)) : "";
         
+        v = mafw_metadata_first(metadata, MAFW_METADATA_KEY_ORGANIZATION);
+        organization = v ? QString::fromUtf8(g_value_get_string(v)) : "";
+        
         v = mafw_metadata_first(metadata, MAFW_METADATA_KEY_PLAY_COUNT);
         playCount = v ? g_value_get_int (v) : 0;
         
@@ -320,6 +324,7 @@ public:
         item->setData(lastThumbnailUrl, PlaybackModel::LastThumbnailUrlRole);
         item->setData(lyrics, PlaybackModel::LyricsRole);
         item->setData(mimeType, PlaybackModel::MimeTypeRole);
+        item->setData(organization, PlaybackModel::OrganizationRole);
         item->setData(playCount, PlaybackModel::PlayCountRole);
         item->setData(QSize(resX, resY), PlaybackModel::ResolutionRole);
         item->setData(resumePosition, PlaybackModel::ResumePositionRole);
@@ -450,6 +455,7 @@ PlaybackModel::PlaybackModel(QObject *parent) :
     roles[LastThumbnailUrlRole] = "lastThumbnailUrl";
     roles[LyricsRole] = "lyrics";
     roles[MimeTypeRole] = "mimeType";
+    roles[OrganizationRole] = "organization";
     roles[PlayCountRole] = "playCount";
     roles[ResolutionRole] = "resolution";
     roles[ResumePositionRole] = "resumePosition";

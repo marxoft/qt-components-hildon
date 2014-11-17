@@ -110,6 +110,11 @@ QString MetadataWatcher::mimeType() const
     return currentMetadata.value(MAFW_METADATA_KEY_MIME).toString();
 }
 
+QString MetadataWatcher::organization() const
+{
+    return currentMetadata.value(MAFW_METADATA_KEY_ORGANIZATION).toString();
+}
+
 int MetadataWatcher::playCount() const
 {
     return currentMetadata.value(MAFW_METADATA_KEY_PLAY_COUNT).toInt();
@@ -304,6 +309,7 @@ void MetadataWatcher::onMediaChanged(int, char *objectId)
                                                               MAFW_METADATA_KEY_COMPOSER,
                                                               MAFW_METADATA_KEY_FILESIZE,
                                                               MAFW_METADATA_KEY_COPYRIGHT,
+                                                              MAFW_METADATA_KEY_ORGANIZATION,
                                                               MAFW_METADATA_KEY_AUDIO_BITRATE,
                                                               MAFW_METADATA_KEY_AUDIO_CODEC,
                                                               MAFW_METADATA_KEY_ALBUM_ART_URI,
