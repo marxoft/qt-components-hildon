@@ -1,3 +1,13 @@
+qt-components-hildon (0.12.1) unstable; urgency=low
+
+  * Add RESET function for the 'filterRegExp' of SortFilterProxyModel.
+  * Make the 'filterProperty', 'filterRegExp' and 'sortProperty' properties of SortFilterProxyModel NOTIFY-able.
+  * Make the 'acceptableInput' property of DoubleSpinBox, SpinBox and TextField NOTIFY-able.
+  * Add 'organization' property for multimedia metadata.
+  * Bug fixes in Audio/Video components.
+
+ -- Stuart Howarth <showarth@marxoft.co.uk>  Sun, 16 Nov 2014 23:21:24 +0100
+
 qt-components-hildon (0.12.0) unstable; urgency=low
 
   * Add org.hildon.multimedia module. Thanks to OMP team for MAFW code.
