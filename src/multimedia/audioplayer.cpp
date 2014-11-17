@@ -381,6 +381,7 @@ AudioPlayer::AudioPlayer(QObject *parent) :
                   this, SLOT(_q_onStatusReady(MafwPlaylist*,uint,MafwPlayState,const char*,QString)));
     this->connect(d->mafwRenderer, SIGNAL(signalGetPosition(int,QString)), this, SLOT(_q_onPositionChanged(int)));
     this->connect(d->mafwRenderer, SIGNAL(signalGetVolume(int)), this, SLOT(_q_onVolumeChanged(int)));
+    this->connect(d->mafwRenderer, SIGNAL(bufferingInfo(float)), this, SLOT(_q_onBufferProgressChanged(float)));
             
     QDBusConnection::sessionBus().connect("com.nokia.mafw.renderer.Mafw-Gst-Renderer-Plugin.gstrenderer",
                                           "/com/nokia/mafw/renderer/gstrenderer",
