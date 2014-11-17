@@ -155,9 +155,11 @@ public:
         
         switch (state) {
         case Transitioning:
+            readyToPlay = false;
             status = MediaStatus::Loading;
             break;
         case Playing:
+            readyToPlay = false;
             status = MediaStatus::Playing;
             
             if (tickInterval > 0) {
@@ -210,6 +212,7 @@ public:
             
             break;
         default:
+            readyToPlay = false;
             break;
         }
         
@@ -577,10 +580,6 @@ void AudioPlayer::setTickInterval(int interval) {
 }
 
 void AudioPlayer::play() {
-    if (this->isPlaying()) {
-        return;
-    }
-    
     Q_D(AudioPlayer);
     
     if (this->isPaused()) {

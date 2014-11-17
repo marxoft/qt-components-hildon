@@ -160,9 +160,11 @@ public:
         
         switch (state) {
         case Transitioning:
+            readyToPlay = false;
             status = MediaStatus::Loading;
             break;
         case Playing:
+            readyToPlay = false;
             status = MediaStatus::Playing;
             
             if (tickInterval > 0) {
@@ -215,6 +217,7 @@ public:
             
             break;
         default:
+            readyToPlay = false;
             break;
         }
         
@@ -590,10 +593,6 @@ void VideoPlayer::setTickInterval(int interval) {
 }
 
 void VideoPlayer::play() {
-    if (this->isPlaying()) {
-        return;
-    }
-    
     Q_D(VideoPlayer);
     
     if (this->isPaused()) {
