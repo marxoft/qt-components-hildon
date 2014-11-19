@@ -54,6 +54,9 @@ public:
     
     virtual QString toStyleSheet() const;
     
+signals:
+    void changed();
+    
 protected:
     ListViewStyle(ListViewStylePrivate &dd, QObject *parent = 0);
     

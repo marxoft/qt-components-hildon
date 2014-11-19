@@ -40,7 +40,7 @@ class ValueButton : public QMaemo5ValueButton, public QDeclarativeParserStatus
     Q_PROPERTY(bool pressed READ isDown WRITE setDown NOTIFY pressedChanged)
     Q_PROPERTY(ValueSelector* selector READ selector WRITE setSelector)
     Q_PROPERTY(QString icon READ iconSource WRITE setIconSource NOTIFY iconChanged)
-    Q_PROPERTY(QString shortcut READ shortcutString WRITE setShortcutString NOTIFY shorcutChanged)
+    Q_PROPERTY(QString shortcut READ shortcutString WRITE setShortcutString NOTIFY shortcutChanged)
     Q_PRIVATE_PROPERTY(ValueButton::d_func(), Anchors* anchors READ anchors CONSTANT FINAL)
     Q_PROPERTY(AnchorLine left READ left CONSTANT FINAL)
     Q_PROPERTY(AnchorLine right READ right CONSTANT FINAL)

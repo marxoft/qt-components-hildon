@@ -68,6 +68,9 @@ public:
     
     virtual QString toStyleSheet() const;
     
+signals:
+    void changed();
+    
 protected:
     TabBarStyle(TabBarStylePrivate &dd, QObject *parent = 0);
     

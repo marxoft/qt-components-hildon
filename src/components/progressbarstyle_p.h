@@ -42,6 +42,9 @@ public:
     
     virtual QString toStyleSheet() const;
     
+signals:
+    void changed();
+    
 protected:
     ProgressBarStyle(ProgressBarStylePrivate &dd, QObject *parent = 0);
     

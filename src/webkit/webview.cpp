@@ -172,10 +172,6 @@ AnchorLine WebView::verticalCenter() const {
     return d->verticalCenter;
 }
 
-QString WebView::iconSource() const {
-    return this->icon().name();
-}
-
 QString WebView::toHtml() const {
     return this->page()->mainFrame()->toHtml();
 }

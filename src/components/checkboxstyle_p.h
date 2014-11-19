@@ -36,6 +36,9 @@ public:
     void setSpacing(int s);
     
     virtual QString toStyleSheet() const;
+
+signals:
+    void changed();
     
 protected:
     CheckBoxStyle(CheckBoxStylePrivate &dd, QObject *parent = 0);

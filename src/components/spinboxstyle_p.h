@@ -53,6 +53,9 @@ public:
     
     virtual QString toStyleSheet() const;
     
+signals:
+    void changed();
+    
 protected:
     SpinBoxStyle(SpinBoxStylePrivate &dd, QObject *parent = 0);
     

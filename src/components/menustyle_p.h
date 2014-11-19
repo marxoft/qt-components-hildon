@@ -68,6 +68,9 @@ public:
     
     virtual QString toStyleSheet() const;
     
+signals:
+    void changed();
+    
 protected:
     MenuStyle(MenuStylePrivate &dd, QObject *parent = 0);
     

@@ -50,7 +50,6 @@ class WebView : public QWebView, public QDeclarativeParserStatus
     Q_PROPERTY(AnchorLine verticalCenter READ verticalCenter CONSTANT FINAL)
     Q_PROPERTY(QString title READ title NOTIFY titleChanged)
     Q_PROPERTY(QUrl url READ url WRITE setUrl NOTIFY urlChanged)
-    Q_PROPERTY(QString icon READ iconSource NOTIFY iconChanged)
     Q_PROPERTY(QString html READ toHtml WRITE setHtml NOTIFY urlChanged)
     Q_PROPERTY(QString text READ toPlainText WRITE setText NOTIFY urlChanged)
     Q_PROPERTY(bool interactive READ interactive WRITE setInteractive NOTIFY interactiveChanged)
@@ -115,8 +114,6 @@ public:
     AnchorLine bottom() const;
     AnchorLine horizontalCenter() const;
     AnchorLine verticalCenter() const;
-
-    QString iconSource() const;
 
     QString toHtml() const;
 

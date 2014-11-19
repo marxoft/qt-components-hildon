@@ -35,6 +35,9 @@ public:
     QColor gridlineColor() const;
     void setGridlineColor(const QColor &color);
     
+signals:
+    void changed();
+    
 protected:
     TableViewStyle(TableViewStylePrivate &dd, QObject *parent = 0);
     

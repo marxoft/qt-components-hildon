@@ -63,6 +63,9 @@ public:
     
     virtual QString toStyleSheet() const;
     
+signals:
+    void changed();
+    
 protected:
     ToolButtonStyle(ToolButtonStylePrivate &dd, QObject *parent = 0);
     

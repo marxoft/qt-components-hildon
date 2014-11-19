@@ -39,6 +39,9 @@ public:
     QColor selectionColor() const;
     void setSelectionColor(const QColor &color);
     
+signals:
+    void changed();
+    
 protected:
     TextEditStyle(TextEditStylePrivate &dd, QObject *parent = 0);
     

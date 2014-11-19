@@ -43,6 +43,9 @@ public:
     
     virtual QString toStyleSheet() const;
     
+signals:
+    void changed();
+    
 protected:
     SliderStyle(SliderStylePrivate &dd, QObject *parent = 0);
     

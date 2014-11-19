@@ -36,6 +36,9 @@ public:
     void setBranch(Style *style);
     void resetBranch();
     
+signals:
+    void changed();
+    
 protected:
     TreeViewStyle(TreeViewStylePrivate &dd, QObject *parent = 0);
     

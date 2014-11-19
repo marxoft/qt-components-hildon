@@ -43,6 +43,9 @@ public:
     QColor selectionColor() const;
     void setSelectionColor(const QColor &color);
     
+signals:
+    void changed();
+    
 protected:
     TextFieldStyle(TextFieldStylePrivate &dd, QObject *parent = 0);
     

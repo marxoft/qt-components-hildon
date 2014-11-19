@@ -43,6 +43,9 @@ public:
     
     virtual QString toStyleSheet() const;
     
+signals:
+    void changed();
+    
 protected:
     ToolBarStyle(ToolBarStylePrivate &dd, QObject *parent = 0);
     

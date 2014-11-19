@@ -162,6 +162,9 @@ public:
     
     virtual QString toStyleSheet() const;
     
+signals:
+    void changed();
+    
 protected:
     BoxStyle(BoxStylePrivate &dd, QObject *parent = 0);
     

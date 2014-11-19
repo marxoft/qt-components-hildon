@@ -42,6 +42,9 @@ public:
     Attachment backgroundAttachment() const;
     void setBackgroundAttachment(Attachment a);
     
+signals:
+    void changed();
+    
 protected:
     FlickableStyle(FlickableStylePrivate &dd, QObject *parent = 0);
     
