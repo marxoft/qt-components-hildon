@@ -117,7 +117,7 @@ protected:
     QScopedPointer<ValueButtonPrivate> d_ptr;
 
     Q_DECLARE_PRIVATE(ValueButton)
-    
+
     Q_PRIVATE_SLOT(d_func(), void _q_onStyleChanged())
 
 private:

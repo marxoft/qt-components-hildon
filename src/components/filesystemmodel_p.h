@@ -60,7 +60,7 @@ public:
 
     QString rootPath() const;
     void setRootPath(const QString &path);
-    
+
     QString filterPath() const;
     void setFilterPath(const QString &path);
 
@@ -90,11 +90,11 @@ public:
 
     QStringList nameFilters() const;
     void setNameFilters(const QStringList &filters);
-    
+
     QStringList loadedDirectories() const;
-    
+
     Q_INVOKABLE bool directoryIsLoaded(const QString &directory) const;
-    
+
     Q_INVOKABLE int count(const QModelIndex &parent = QModelIndex()) const;
 
     QVariant data(const QModelIndex &index, int role = FileNameRole) const;
@@ -125,13 +125,13 @@ signals:
 
 protected:
     FileSystemModel(FileSystemModelPrivate &dd, QObject *parent = 0);
-    
+
     bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const;
 
     QScopedPointer<FileSystemModelPrivate> d_ptr;
 
     Q_DECLARE_PRIVATE(FileSystemModel)
-    
+
     Q_PRIVATE_SLOT(d_func(), void _q_onDirectoryLoaded(QString))
 
 private:
