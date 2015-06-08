@@ -11,6 +11,8 @@
 
 CFLAGS += -mthumb
 export CFLAGS
+CXXFLAGS += -mthumb
+export CXXFLAGS
 
 configure: configure-stamp
 configure-stamp:
