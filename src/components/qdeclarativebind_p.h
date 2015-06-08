@@ -65,23 +65,25 @@ class Q_AUTOTEST_EXPORT QDeclarativeBind : public QObject, public QDeclarativePa
 
 public:
     QDeclarativeBind(QObject *parent=0);
-    ~QDeclarativeBind();
 
-    bool when() const;
-    void setWhen(bool);
+public:
+    virtual bool when() const {};
+    virtual void setWhen(bool) {};
 
-    QObject *object();
-    void setObject(QObject *);
+    virtual QObject *object() {};
+    virtual void setObject(QObject *) {};
 
-    QString property() const;
-    void setProperty(const QString &);
+    virtual QString property() const {};
+    virtual void setProperty(const QString &) {};
 
-    QVariant value() const;
-    void setValue(const QVariant &);
+    virtual QVariant value() const {};
+    virtual void setValue(const QVariant &) {};
+
+    virtual ~QDeclarativeBind() {};
 
 protected:
-    virtual void classBegin();
-    virtual void componentComplete();
+    virtual void classBegin() {};
+    virtual void componentComplete() {};
 
 private:
     void eval();
