@@ -1,4 +1,4 @@
-qt-components-hildon (0.12.1) unstable; urgency=low
+qt-components-hildon (0.12.1+thumb0) unstable; urgency=low
 
   * Add RESET function for the 'filterRegExp' of SortFilterProxyModel.
   * Make the 'filterProperty', 'filterRegExp' and 'sortProperty' properties of SortFilterProxyModel NOTIFY-able.
