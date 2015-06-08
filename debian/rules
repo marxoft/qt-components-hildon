@@ -9,9 +9,8 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
-
-
-
+CFLAGS += -mthumb
+export CFLAGS
 
 configure: configure-stamp
 configure-stamp:
