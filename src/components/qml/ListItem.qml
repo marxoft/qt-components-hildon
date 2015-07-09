@@ -26,7 +26,7 @@ Item {
     signal clicked
     signal pressAndHold
     
-    width: ListView.view ? ListView.view.width : screen.width
+    width: parent ? parent.width : screen.width
     height: style.itemHeight
     
     Image {
