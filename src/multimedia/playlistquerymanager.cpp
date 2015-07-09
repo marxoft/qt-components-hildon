@@ -1,4 +1,4 @@
-#include "playlistquerymanager_p.h"
+#include "playlistquerymanager.h"
 
 #define FIRST 0
 #define LAST 1

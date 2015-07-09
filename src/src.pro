@@ -1,9 +1,7 @@
 TEMPLATE = subdirs
 SUBDIRS = \
-    utils \
-    webkit \
+    components \
     dbus \
-    settings \
-    tracker \
     multimedia \
-    components
+    settings \
+    utils

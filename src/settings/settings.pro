@@ -7,19 +7,19 @@ LIBS += -lgq-gconf
 TARGET = hildonsettings
 
 HEADERS += \
-    qmlgconfitem_p.h \
-    settings_p.h \
-    plugin_p.h
+    qchgconfitem.h \
+    qchsettings.h \
+    qchplugin.h
 
 SOURCES += \
-    qmlgconfitem.cpp \
-    settings.cpp \
-    plugin.cpp
+    qchgconfitem.cpp \
+    qchsettings.cpp \
+    qchplugin.cpp
 
-qdeclarativesources.files += \
+qml.files += \
     qml/qmldir
 
-qdeclarativesources.path = /opt/lib/qt4/imports/org/hildon/settings
+qml.path = /opt/lib/qt4/imports/org/hildon/settings
 target.path = /opt/lib/qt4/imports/org/hildon/settings
 
-INSTALLS += qdeclarativesources target
+INSTALLS += qml target

@@ -1,4 +1,4 @@
-#include "missioncontrol_p.h"
+#include "missioncontrol.h"
 #include <QDateTime>
 
 #define HAL_PATH_RX51_JACK "/org/freedesktop/Hal/devices/platform_soc_audio_logicaldev_input"

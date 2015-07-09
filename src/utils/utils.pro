@@ -5,27 +5,23 @@ QT += declarative
 TARGET = hildonutils
 
 HEADERS += \
-    clipboard_p.h \
-    directory_p.h \
-    process_p.h \
-    process_p_p.h \
-    screensaver_p.h \
-    screenshot_p.h \
-    screenshot_p_p.h \
-    plugin_p.h
+    qchclipboard.h \
+    qchdirectory.h \
+    qchprocess.h \
+    qchscreensaver.h \
+    qchplugin.h
 
 SOURCES += \
-    clipboard.cpp \
-    directory.cpp \
-    process.cpp \
-    screensaver.cpp \
-    screenshot.cpp \
-    plugin.cpp
+    qchclipboard.cpp \
+    qchdirectory.cpp \
+    qchprocess.cpp \
+    qchscreensaver.cpp \
+    qchplugin.cpp
 
-qdeclarativesources.files += \
+qml.files += \
     qml/qmldir
 
-qdeclarativesources.path = /opt/lib/qt4/imports/org/hildon/utils
+qml.path = /opt/lib/qt4/imports/org/hildon/utils
 target.path = /opt/lib/qt4/imports/org/hildon/utils
 
-INSTALLS += qdeclarativesources target
+INSTALLS += qml target

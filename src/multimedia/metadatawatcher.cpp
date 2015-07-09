@@ -1,4 +1,4 @@
-#include "metadatawatcher_p.h"
+#include "metadatawatcher.h"
 #include <QImage>
 #include <QCryptographicHash>
 
