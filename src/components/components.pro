@@ -56,6 +56,7 @@ qml.files += \
     qml/CheckBoxStyle.qml \
     qml/DatePickSelector.qml \
     qml/DialogButtonStyle.qml \
+    qml/DoubleSpinBox.qml \
     qml/EditBar.qml \
     qml/EditButtonStyle.qml \
     qml/Flickable.qml \
@@ -72,6 +73,8 @@ qml.files += \
     qml/ScrollBarStyle.qml \
     qml/Slider.qml \
     qml/SliderStyle.qml \
+    qml/SpinBox.qml \
+    qml/SpinBoxStyle.qml \
     qml/Style.qml \
     qml/TextArea.qml \
     qml/TextAreaStyle.qml \
