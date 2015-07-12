@@ -11,6 +11,7 @@ CheckBox 1.0 CheckBox.qml
 CheckBoxStyle 1.0 CheckBoxStyle.qml
 DatePickSelector 1.0 DatePickSelector.qml
 DialogButtonStyle 1.0 DialogButtonStyle.qml
+DoubleSpinBox 1.0 DoubleSpinBox.qml
 EditBar 1.0 EditBar.qml
 EditButtonStyle 1.0 EditButtonStyle.qml
 Flickable 1.0 Flickable.qml
@@ -27,6 +28,8 @@ ScrollBar 1.0 ScrollBar.qml
 ScrollBarStyle 1.0 ScrollBarStyle.qml
 Slider 1.0 Slider.qml
 SliderStyle 1.0 SliderStyle.qml
+SpinBox 1.0 SpinBox.qml
+SpinBoxStyle 1.0 SpinBoxStyle.qml
 Style 1.0 Style.qml
 TextArea 1.0 TextArea.qml
 TextAreaStyle 1.0 TextAreaStyle.qml
