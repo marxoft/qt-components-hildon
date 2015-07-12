@@ -22,7 +22,8 @@ AbstractPickSelector {
     id: root
     
     property alias model: view.model
-    property alias selectedIndex: view.currentIndex
+    property alias currentIndex: view.currentIndex
+    property alias delegate: view.delegate
     property string textRole
     
     minimumHeight: 350
@@ -32,8 +33,9 @@ AbstractPickSelector {
         
         property bool modelIsArray: false
         
-        focus: true
         anchors.fill: parent
+        focus: true
+        navigationMode: NavigationMode.KeyNavigation
         delegate: defaultDelegate
         onModelChanged: modelIsArray = !!model ? model.constructor === Array : false
     }
@@ -69,8 +71,8 @@ AbstractPickSelector {
         }
     }
     
-    onStatusChanged: if (status == DialogStatus.Open) view.positionViewAtIndex(selectedIndex, ListView.Center);
-    onSelectedIndexChanged: if (view.currentItem) currentValueText = view.currentItem.text;
+    onStatusChanged: if (status == DialogStatus.Open) view.positionViewAtIndex(currentIndex, ListView.Center);
+    onCurrentIndexChanged: if (view.currentItem) currentValueText = view.currentItem.text;
     onSelected: accept()
 }
         

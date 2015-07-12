@@ -24,8 +24,57 @@ class QchMenuBarPrivate
 
 public:
     QchMenuBarPrivate(QchMenuBar *parent) :
-        q_ptr(parent)
+        q_ptr(parent),
+        menuBar(0)
     {
+    }
+    
+    QMenuBar* findMenuBar() const {
+        Q_Q(const QchMenuBar);
+        
+        QObject *p = q->parent();
+        
+        while (p) {
+            if (QMainWindow *window = qobject_cast<QMainWindow*>(p)) {
+                return window->menuBar();
+            }
+            
+            p = p->parent();
+        }
+        
+        return 0;
+    }
+    
+    void init() {
+        menuBar = findMenuBar();
+        
+        if (menuBar) {
+            Q_Q(const QchMenuBar);
+            
+            const QObjectList list = q->children();
+            
+            for (int i = 0; i < list.size(); i++) {
+                addAction(list.at(i));
+            }
+        }
+    }
+    
+    void addAction(QObject *obj) {
+        if (!menuBar) {
+            return;
+        }
+                
+        if (QchMenuItem *item = qobject_cast<QchMenuItem*>(obj)) {
+            if (QAction *action = item->toQAction()) {
+                menuBar->addAction(action);
+            }
+        }
+        else if (QAction *action = qobject_cast<QAction*>(obj)) {
+            menuBar->addAction(action);
+        }
+        else if (QActionGroup *group = qobject_cast<QActionGroup*>(obj)) {
+            menuBar->addActions(group->actions());
+        }
     }
     
     static void data_append(QDeclarativeListProperty<QObject> *list, QObject *obj) {        
@@ -34,31 +83,16 @@ public:
         }
         
         if (QchMenuBar *menu = qobject_cast<QchMenuBar*>(list->object)) {
-            obj->setParent(obj);
+            obj->setParent(menu);
             
-            QObject *p = menu->parent();
-            
-            while (p) {
-                if (QMainWindow *window = qobject_cast<QMainWindow*>(p)) {
-                    if (QchMenuItem *item = qobject_cast<QchMenuItem*>(obj)) {
-                        window->menuBar()->addAction(item->toQAction());
-                    }
-                    else if (QAction *action = qobject_cast<QAction*>(obj)) {
-                        window->menuBar()->addAction(action);
-                    }
-                    else if (QActionGroup *group = qobject_cast<QActionGroup*>(obj)) {
-                        window->menuBar()->addActions(group->actions());
-                    }
-                    
-                    return;
-                }
-                
-                p = p->parent();
+            if (menu->d_func()->menuBar) {
+                menu->d_func()->addAction(obj);
             }
         }
     }
         
     QchMenuBar *q_ptr;
+    QMenuBar *menuBar;
     
     Q_DECLARE_PUBLIC(QchMenuBar)
 };
@@ -73,6 +107,13 @@ QchMenuBar::~QchMenuBar() {}
 
 QDeclarativeListProperty<QObject> QchMenuBar::data() {
     return QDeclarativeListProperty<QObject>(this, 0, QchMenuBarPrivate::data_append);
+}
+
+void QchMenuBar::classBegin() {}
+
+void QchMenuBar::componentComplete() {
+    Q_D(QchMenuBar);
+    d->init();
 }
 
 #include "moc_qchmenubar.cpp"

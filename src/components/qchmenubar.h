@@ -18,15 +18,18 @@
 #define QCHMENUBAR_H
 
 #include <QObject>
+#include <QDeclarativeParserStatus>
 #include <qdeclarative.h>
 
 class QchMenuBarPrivate;
 
-class QchMenuBar : public QObject
+class QchMenuBar : public QObject, public QDeclarativeParserStatus
 {
     Q_OBJECT
     
     Q_PROPERTY(QDeclarativeListProperty<QObject> data READ data)
+    
+    Q_INTERFACES(QDeclarativeParserStatus)
     
     Q_CLASSINFO("DefaultProperty", "data")
     
@@ -37,6 +40,9 @@ public:
     QDeclarativeListProperty<QObject> data();
     
 protected:    
+    virtual void classBegin();
+    virtual void componentComplete();
+    
     QScopedPointer<QchMenuBarPrivate> d_ptr;
 
     Q_DECLARE_PRIVATE(QchMenuBar)

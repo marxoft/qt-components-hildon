@@ -18,11 +18,12 @@
 #define QCHMENU_H
 
 #include <QMenu>
+#include <QDeclarativeParserStatus>
 #include <qdeclarative.h>
 
 class QchMenuPrivate;
 
-class QchMenu : public QMenu
+class QchMenu : public QMenu, public QDeclarativeParserStatus
 {
     Q_OBJECT
     
@@ -39,7 +40,10 @@ public:
 public Q_SLOTS:
     void popup();
     
-protected:    
+protected:
+    virtual void classBegin();
+    virtual void componentComplete();
+    
     QScopedPointer<QchMenuPrivate> d_ptr;
 
     Q_DECLARE_PRIVATE(QchMenu)

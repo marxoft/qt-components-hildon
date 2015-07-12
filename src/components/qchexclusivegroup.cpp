@@ -32,7 +32,7 @@ public:
         }
         
         if (QchExclusiveGroup *group = qobject_cast<QchExclusiveGroup*>(list->object)) {
-            obj->setParent(obj);
+            obj->setParent(group);
             
             if (QchMenuItem *item = qobject_cast<QchMenuItem*>(obj)) {
                 item->setCheckable(true);

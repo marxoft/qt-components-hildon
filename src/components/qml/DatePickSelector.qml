@@ -169,7 +169,10 @@ AbstractPickSelector {
             
             PropertyChanges {
                 target: row
-                anchors.bottomMargin: platformStyle.paddingMedium
+                anchors {
+                    rightMargin: 0
+                    bottomMargin: platformStyle.paddingMedium
+                }
             }
             
             PropertyChanges {

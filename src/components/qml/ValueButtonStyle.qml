@@ -19,7 +19,4 @@ import org.hildon.components 1.0
 
 ButtonStyle {
     property int valueLayout: ValueLayout.ValueUnderText
-    
-    iconWidth: 24
-    iconHeight: 24
 }

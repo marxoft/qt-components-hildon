@@ -23,8 +23,36 @@ class QchMenuPrivate
 
 public:
     QchMenuPrivate(QchMenu *parent) :
-        q_ptr(parent)
+        q_ptr(parent),
+        complete(false)
     {
+    }
+    
+    void init() {
+        complete = true;
+        Q_Q(const QchMenu);
+        
+        const QObjectList list = q->children();
+        
+        for (int i = 0; i < list.size(); i++) {
+            addAction(list.at(i));
+        }
+    }
+    
+    void addAction(QObject *obj) {
+        Q_Q(QchMenu);
+        
+        if (QchMenuItem *item = qobject_cast<QchMenuItem*>(obj)) {
+            if (QAction *action = item->toQAction()) {
+                q->addAction(action);
+            }
+        }
+        else if (QAction *action = qobject_cast<QAction*>(obj)) {
+            q->addAction(action);
+        }
+        else if (QActionGroup *group = qobject_cast<QActionGroup*>(obj)) {
+            q->addActions(group->actions());
+        }
     }
     
     static void data_append(QDeclarativeListProperty<QObject> *list, QObject *obj) {        
@@ -33,21 +61,17 @@ public:
         }
         
         if (QchMenu *menu = qobject_cast<QchMenu*>(list->object)) {
-            obj->setParent(obj);
+            obj->setParent(menu);
             
-            if (QchMenuItem *item = qobject_cast<QchMenuItem*>(obj)) {
-                menu->addAction(item->toQAction());
-            }
-            else if (QAction *action = qobject_cast<QAction*>(obj)) {
-                menu->addAction(action);
-            }
-            else if (QActionGroup *group = qobject_cast<QActionGroup*>(obj)) {
-                menu->addActions(group->actions());
+            if (menu->d_func()->complete) {
+                menu->d_func()->addAction(obj);
             }
         }
     }
         
     QchMenu *q_ptr;
+    
+    bool complete;
     
     Q_DECLARE_PUBLIC(QchMenu)
 };
@@ -66,6 +90,13 @@ QDeclarativeListProperty<QObject> QchMenu::data() {
 
 void QchMenu::popup() {
     QMenu::popup(QCursor::pos());
+}
+
+void QchMenu::classBegin() {}
+
+void QchMenu::componentComplete() {
+    Q_D(QchMenu);
+    d->init();
 }
 
 #include "moc_qchmenu.cpp"
