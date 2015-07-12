@@ -9,6 +9,7 @@ HEADERS += \
     qchdirectory.h \
     qchprocess.h \
     qchscreensaver.h \
+    qchscreenshot.h \
     qchplugin.h
 
 SOURCES += \
@@ -16,6 +17,7 @@ SOURCES += \
     qchdirectory.cpp \
     qchprocess.cpp \
     qchscreensaver.cpp \
+    qchscreenshot.cpp \
     qchplugin.cpp
 
 qml.files += \

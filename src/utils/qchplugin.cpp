@@ -19,6 +19,7 @@
 #include "qchdirectory.h"
 #include "qchprocess.h"
 #include "qchscreensaver.h"
+#include "qchscreenshot.h"
 #include <QDeclarativeEngine>
 #include <QDeclarativeContext>
 
@@ -38,6 +39,7 @@ void QchPlugin::registerTypes(const char *uri) {
     qmlRegisterType<QchDirectory>(uri, 1, 0, "Directory");
     qmlRegisterType<QchProcess>(uri, 1, 0, "Process");
     qmlRegisterType<QchScreenSaver>(uri, 1, 0, "ScreenSaver");
+    qmlRegisterType<QchScreenShot>(uri, 1, 0, "ScreenShot");
 }
 
 Q_EXPORT_PLUGIN2(hildonutils, QchPlugin)
