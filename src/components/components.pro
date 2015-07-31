@@ -76,6 +76,10 @@ qml.files += \
     qml/SpinBox.qml \
     qml/SpinBoxStyle.qml \
     qml/Style.qml \
+    qml/Tab.qml \
+    qml/TabButton.qml \
+    qml/TabButtonStyle.qml \
+    qml/TabView.qml \
     qml/TextArea.qml \
     qml/TextAreaStyle.qml \
     qml/TextField.qml \
