@@ -19,4 +19,6 @@ import org.hildon.components 1.0
 
 ButtonStyle {
     property int valueLayout: ValueLayout.ValueUnderText
+    
+    property color valueTextColor: platformStyle.activeTextColor
 }

@@ -36,6 +36,8 @@ Style {
     // Icon
     property int iconWidth: platformStyle.iconSizeLarge
     property int iconHeight: platformStyle.iconSizeLarge
+    property real iconOpacity: platformStyle.enabledOpacity
+    property real disabledIconOpacity: platformStyle.disabledOpacity
     
     // Padding
     property int paddingLeft: platformStyle.paddingMedium

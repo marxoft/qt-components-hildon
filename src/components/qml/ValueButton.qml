@@ -92,8 +92,9 @@ AbstractButton {
         }
         elide: Text.ElideRight
         font.pointSize: platformStyle.fontSizeSmall
-        color: !root.enabled ? root.style.disabledTextColor : root.pickSelector
-               ? platformStyle.activeTextColor : platformStyle.secondaryTextColor
+        color: root.pressed ? root.style.pressedTextColor : root.checked ? root.style.checkedTextColor
+               : !root.enabled ? root.style.disabledTextColor : root.pickSelector ? root.style.valueTextColor
+               : platformStyle.secondaryTextColor
         text: root.valueText
     }
     

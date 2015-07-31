@@ -52,6 +52,7 @@ AbstractButton {
         }
         smooth: true
         source: root.iconSource ? root.iconSource : iconName ? "image://icon/" + root.iconName : ""
+        opacity: root.enabled ? root.style.iconOpacity : root.style.disabledIconOpacity
         visible: source != ""
     }
     

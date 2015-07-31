@@ -112,6 +112,7 @@ FocusScope {
         color: root.style.textColor
         selectedTextColor: root.style.selectedTextColor
         selectionColor: root.style.selectionColor
+        selectByMouse: true
 
         Label {
             id: placeholder
