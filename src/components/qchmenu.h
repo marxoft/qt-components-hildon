@@ -17,13 +17,13 @@
 #ifndef QCHMENU_H
 #define QCHMENU_H
 
-#include <QMenu>
+#include <QObject>
 #include <QDeclarativeParserStatus>
 #include <qdeclarative.h>
 
 class QchMenuPrivate;
 
-class QchMenu : public QMenu, public QDeclarativeParserStatus
+class QchMenu : public QObject, public QDeclarativeParserStatus
 {
     Q_OBJECT
     
@@ -32,7 +32,7 @@ class QchMenu : public QMenu, public QDeclarativeParserStatus
     Q_CLASSINFO("DefaultProperty", "data")
     
 public:
-    explicit QchMenu(QWidget *parent = 0);
+    explicit QchMenu(QObject *parent = 0);
     ~QchMenu();
     
     QDeclarativeListProperty<QObject> data();

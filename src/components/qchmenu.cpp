@@ -16,6 +16,7 @@
 
 #include "qchmenu.h"
 #include "qchmenuitem.h"
+#include <QMenu>
 #include <QCursor>
 
 class QchMenuPrivate
@@ -24,12 +25,29 @@ class QchMenuPrivate
 public:
     QchMenuPrivate(QchMenu *parent) :
         q_ptr(parent),
+        menu(0),
         complete(false)
     {
     }
     
+    QWidget *findParentWidget() const {
+        Q_Q(const QchMenu);
+        QObject *p = q->parent();
+        
+        while (p) {
+            if (p->isWidgetType()) {
+                return qobject_cast<QWidget*>(p);
+            }
+            
+            p = p->parent();
+        }
+        
+        return 0;
+    }
+    
     void init() {
         complete = true;
+        menu = new QMenu(findParentWidget());
         Q_Q(const QchMenu);
         
         const QObjectList list = q->children();
@@ -40,18 +58,20 @@ public:
     }
     
     void addAction(QObject *obj) {
-        Q_Q(QchMenu);
-        
+        if (!menu) {
+            return;
+        }
+          
         if (QchMenuItem *item = qobject_cast<QchMenuItem*>(obj)) {
             if (QAction *action = item->toQAction()) {
-                q->addAction(action);
+                menu->addAction(action);
             }
         }
         else if (QAction *action = qobject_cast<QAction*>(obj)) {
-            q->addAction(action);
+            menu->addAction(action);
         }
         else if (QActionGroup *group = qobject_cast<QActionGroup*>(obj)) {
-            q->addActions(group->actions());
+            menu->addActions(group->actions());
         }
     }
     
@@ -70,26 +90,38 @@ public:
     }
         
     QchMenu *q_ptr;
+    QMenu *menu;
     
     bool complete;
     
     Q_DECLARE_PUBLIC(QchMenu)
 };
 
-QchMenu::QchMenu(QWidget *parent) :
-    QMenu(parent),
+QchMenu::QchMenu(QObject *parent) :
+    QObject(parent),
     d_ptr(new QchMenuPrivate(this))
 {
 }
 
-QchMenu::~QchMenu() {}
+QchMenu::~QchMenu() {
+    Q_D(QchMenu);
+    
+    if (d->menu) {
+        delete d->menu;
+        d->menu = 0;
+    }
+}
 
 QDeclarativeListProperty<QObject> QchMenu::data() {
     return QDeclarativeListProperty<QObject>(this, 0, QchMenuPrivate::data_append);
 }
 
 void QchMenu::popup() {
-    QMenu::popup(QCursor::pos());
+    Q_D(QchMenu);
+    
+    if (d->menu) {
+        d->menu->popup(QCursor::pos());
+    }
 }
 
 void QchMenu::classBegin() {}
