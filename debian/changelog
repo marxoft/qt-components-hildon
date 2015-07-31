@@ -1,3 +1,10 @@
+qt-components-hildon (0.14.0) unstable; urgency=low
+
+  * Add Tab, TabButton and TabView components.
+  * Fix empty action in Menu.
+
+ -- Stuart Howarth <showarth@marxoft.co.uk>  Wed, 29 Jul 2015 21:04:12 +0100
+
 qt-components-hildon (0.13.0) unstable; urgency=low
 
   * Use widgets for top-level items (Window, Dialog, Menu) only.
