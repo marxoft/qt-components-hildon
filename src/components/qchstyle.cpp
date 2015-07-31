@@ -55,6 +55,14 @@ int QchStyle::iconSizeLarge() {
     return 48;
 }
 
+qreal QchStyle::enabledOpacity() {
+    return 1.0;
+}
+
+qreal QchStyle::disabledOpacity() {
+    return 0.3;
+}
+
 QColor QchStyle::defaultTextColor() {
     return QMaemo5Style::standardColor("DefaultTextColor");
 }
