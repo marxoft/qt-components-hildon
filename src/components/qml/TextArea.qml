@@ -114,7 +114,8 @@ FocusScope {
             bottomMargin: platformStyle.paddingLarge
         }
         clip: true
-        horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff
+        horizontalScrollBarPolicy: contentWidth > width ? Qt.ScrollBarAsNeeded : Qt.ScrollBarAlwaysOff
+        contentWidth: textEdit.paintedWidth
         contentHeight: textEdit.height + platformStyle.paddingLarge
         
         TextEdit {
