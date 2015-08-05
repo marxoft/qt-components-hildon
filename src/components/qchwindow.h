@@ -33,6 +33,7 @@ class QchWindow : public QMainWindow
     Q_PROPERTY(QDeclarativeListProperty<QDeclarativeItem> children READ children)
     Q_PROPERTY(QDeclarativeListProperty<QObject> data READ data)
     Q_PROPERTY(QDeclarativeItem* contentItem READ contentItem CONSTANT)
+    Q_PROPERTY(bool fullScreen READ isFullScreen NOTIFY windowStateChanged)
     Q_PROPERTY(int height READ height WRITE setFixedHeight NOTIFY sizeChanged)
     Q_PROPERTY(int orientationLock READ orientationLock WRITE setOrientationLock
                NOTIFY orientationLockChanged)
@@ -42,6 +43,7 @@ class QchWindow : public QMainWindow
     Q_PROPERTY(QString title READ windowTitle WRITE setWindowTitle NOTIFY titleChanged)
     Q_PROPERTY(bool visible READ isVisible WRITE setVisible NOTIFY visibleChanged)
     Q_PROPERTY(int width READ width WRITE setFixedWidth NOTIFY sizeChanged)
+    Q_PROPERTY(Qt::WindowStates windowState READ windowState WRITE setWindowState NOTIFY windowStateChanged)
     Q_PRIVATE_PROPERTY(QchWindow::d_func(), QchMenuBar* menuBar READ menuBar WRITE setMenuBar)
     
     Q_CLASSINFO("DefaultProperty", "data")
@@ -54,7 +56,7 @@ public:
     QDeclarativeListProperty<QObject> data();
     
     QDeclarativeItem* contentItem() const;
-        
+            
     int orientationLock() const;
         
     bool showProgressIndicator() const;
@@ -74,6 +76,7 @@ Q_SIGNALS:
     void statusChanged();
     void titleChanged();
     void visibleChanged();
+    void windowStateChanged();
     
 protected:
     virtual void showEvent(QShowEvent *e);

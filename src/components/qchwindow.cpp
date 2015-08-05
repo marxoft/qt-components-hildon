@@ -201,8 +201,15 @@ void QchWindow::resizeEvent(QResizeEvent *e) {
 void QchWindow::changeEvent(QEvent *e) {
     QMainWindow::changeEvent(e);
     
-    if (e->type() == QEvent::WindowTitleChange) {
+    switch (e->type()) {
+    case QEvent::WindowStateChange:
+        emit windowStateChanged();
+        break;
+    case QEvent::WindowTitleChange:
         emit titleChanged();
+        break;
+    default:
+        break;
     }
 }
 
