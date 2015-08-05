@@ -4,4 +4,5 @@ SUBDIRS = \
     dbus \
     multimedia \
     settings \
-    utils
+    utils \
+    webkit
