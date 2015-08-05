@@ -43,7 +43,7 @@ public:
     
     QString getFileName() {
         if (overwrite) {
-        return fileName;
+            return fileName;
         }
 
         QString name = fileName.remove(QRegExp("\\(\\d+\\)(?=(\\.\\w+|$))"));
@@ -283,7 +283,7 @@ bool QchScreenShot::grab() {
             styleOption.rect = rect;
             
             d->pixmap = QPixmap(rect.size());
-            d->pixmap.fill(QColor(0, 0, 0).rgb());
+            d->pixmap.fill(Qt::transparent);
             
             QPainter painter(&d->pixmap);
             go->paint(&painter, &styleOption);
@@ -305,9 +305,7 @@ bool QchScreenShot::grab() {
             setFileName(name);
 
             if ((width() > 0) && (height() > 0)) {
-                d->pixmap = d->pixmap.scaled(width(),
-                                             height(),
-                                             Qt::IgnoreAspectRatio,
+                d->pixmap = d->pixmap.scaled(width(), height(), Qt::IgnoreAspectRatio,
                                              smooth() ? Qt::SmoothTransformation : Qt::FastTransformation);
             }
 

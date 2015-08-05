@@ -151,7 +151,7 @@ public:
     Q_INVOKABLE static void addSearchPath(const QString &prefix, const QString &path);
     Q_INVOKABLE static void setSearchPaths(const QString &prefix, const QStringList &searchPaths);
 
-signals:
+Q_SIGNALS:
     void pathChanged();
     void currentPathChanged();
     void filterChanged();
