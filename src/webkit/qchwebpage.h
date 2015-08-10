@@ -129,6 +129,8 @@ public Q_SLOTS:
     void copy();
     void cut();
     void paste();
+    
+    virtual void triggerAction(QWebPage::WebAction action, bool checked = false);
 
 Q_SIGNALS:
     void urlChanged();

@@ -22,6 +22,7 @@
 #include <QDeclarativeComponent>
 #include <QDeclarativeInfo>
 #include <QNetworkReply>
+#include <QApplication>
 
 class QchWebPagePrivate
 {
@@ -74,7 +75,7 @@ public:
         Q_Q(QchWebPage);
 
         if (!webHistory) {
-            webHistory = new QchWebHistory(q->history(), q);
+            webHistory = new QchWebHistory(q);
         }
 
         return webHistory;
@@ -84,7 +85,7 @@ public:
         Q_Q(QchWebPage);
 
         if (!webSettings) {
-            webSettings = new QchWebSettings(q->settings(), q);
+            webSettings = new QchWebSettings(q);
         }
 
         return webSettings;
@@ -194,6 +195,8 @@ QchWebPage::QchWebPage(QObject *parent) :
         setNetworkAccessManager(engine->networkAccessManager());
     }
 
+    setPalette(QApplication::palette("QWebView"));
+    
     mainFrame()->setScrollBarPolicy(Qt::Horizontal, Qt::ScrollBarAlwaysOff);
     mainFrame()->setScrollBarPolicy(Qt::Vertical, Qt::ScrollBarAlwaysOff);
 
@@ -218,6 +221,8 @@ QchWebPage::QchWebPage(QchWebPagePrivate &dd, QObject *parent) :
         setNetworkAccessManager(engine->networkAccessManager());
     }
 
+    setPalette(QApplication::palette("QWebView"));
+    
     mainFrame()->setScrollBarPolicy(Qt::Horizontal, Qt::ScrollBarAlwaysOff);
     mainFrame()->setScrollBarPolicy(Qt::Vertical, Qt::ScrollBarAlwaysOff);
 
@@ -443,6 +448,10 @@ void QchWebPage::cut() {
 
 void QchWebPage::paste() {
     triggerAction(QWebPage::Paste);
+}
+
+void QchWebPage::triggerAction(QWebPage::WebAction action, bool checked) {
+    QWebPage::triggerAction(action, checked);
 }
 
 QWebPage* QchWebPage::createWindow(WebWindowType type) {
