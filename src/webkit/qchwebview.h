@@ -19,7 +19,6 @@
 
 #include "qchwebpage.h"
 #include <QGraphicsWebView>
-#include <QWebPage>
 #include <qdeclarative.h>
 
 class QDeclarativeComponent;
@@ -32,6 +31,8 @@ class QchWebView : public QGraphicsWebView
 {
     Q_OBJECT
 
+    Q_PROPERTY(Qt::ContextMenuPolicy contextMenuPolicy READ contextMenuPolicy WRITE setContextMenuPolicy
+               NOTIFY contextMenuPolicyChanged)
     Q_PROPERTY(int preferredWidth READ preferredWidth WRITE setPreferredWidth NOTIFY preferredWidthChanged)
     Q_PROPERTY(int preferredHeight READ preferredHeight WRITE setPreferredHeight NOTIFY preferredHeightChanged)
     Q_PROPERTY(QString html READ toHtml WRITE setHtml NOTIFY statusChanged)
@@ -56,7 +57,7 @@ class QchWebView : public QGraphicsWebView
     Q_PRIVATE_PROPERTY(QchWebView::d_func(), QDeclarativeListProperty<QObject> data READ data)
     Q_PRIVATE_PROPERTY(QchWebView::d_func(), QDeclarativeListProperty<QObject> javaScriptWindowObjects READ jsObjects)    
 
-    Q_ENUMS(Status QWebPage::LinkDelegationPolicy)
+    Q_ENUMS(Status)
 
     Q_CLASSINFO("DefaultProperty", "data")
 
@@ -70,6 +71,9 @@ public:
 
     explicit QchWebView(QGraphicsItem *parent = 0);
     ~QchWebView();
+    
+    Qt::ContextMenuPolicy contextMenuPolicy() const;
+    void setContextMenuPolicy(Qt::ContextMenuPolicy policy);
     
     int preferredWidth() const;
     void setPreferredWidth(int w);
@@ -116,8 +120,11 @@ public Q_SLOTS:
     void copy();
     void cut();
     void paste();
+    
+    void triggerAction(int action, bool checked = false);
 
 Q_SIGNALS:
+    void contextMenuPolicyChanged();
     void preferredWidthChanged();
     void preferredHeightChanged();
     void selectedTextChanged();
@@ -130,6 +137,7 @@ Q_SIGNALS:
     void newWindowComponentChanged();
     void newWindowParentChanged();
     void pageChanged();
+    void customContextMenuRequested(int menuX, int menuY);
     void downloadRequested(const QVariant &request);
     void unsupportedContent(const QVariant &content);
 
@@ -137,7 +145,8 @@ protected:
     QchWebView(QchWebViewPrivate &dd, QGraphicsItem *parent = 0);
 
     virtual QGraphicsWebView* createWindow(QWebPage::WebWindowType type);
-
+    
+    virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
     virtual void keyPressEvent(QKeyEvent *event);
 
     QScopedPointer<QchWebViewPrivate> d_ptr;

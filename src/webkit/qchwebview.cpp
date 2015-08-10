@@ -24,6 +24,9 @@
 #include <QDeclarativeItem>
 #include <QDeclarativeInfo>
 #include <QNetworkReply>
+#include <QApplication>
+#include <QGraphicsSceneContextMenuEvent>
+#include <QMenu>
 
 class QchWebViewPrivate
 {
@@ -36,6 +39,7 @@ public:
         webSettings(0),
         windowComponent(0),
         windowParent(0),
+        contextMenuPolicy(Qt::DefaultContextMenu),
         progress(0),
         status(QchWebView::Null)
     {
@@ -96,20 +100,16 @@ public:
     }
 
     QchWebHistory* history() {
-        Q_Q(QchWebView);
-
         if (!webHistory) {
-            webHistory = new QchWebHistory(q->history(), q);
+            webHistory = new QchWebHistory(page());
         }
 
         return webHistory;
     }
 
     QchWebSettings* settings() {
-        Q_Q(QchWebView);
-
         if (!webSettings) {
-            webSettings = new QchWebSettings(q->settings(), q);
+            webSettings = new QchWebSettings(page());
         }
 
         return webSettings;
@@ -194,6 +194,8 @@ public:
     QDeclarativeComponent *windowComponent;
 
     QDeclarativeItem *windowParent;
+    
+    Qt::ContextMenuPolicy contextMenuPolicy;
 
     int progress;
 
@@ -215,6 +217,8 @@ QchWebView::QchWebView(QGraphicsItem *parent) :
     d->webPage = new QchWebPage(this);
     setPage(d->webPage);
     setResizesToContents(true);
+    setAttribute(Qt::WA_OpaquePaintEvent, true);
+    setPalette(QApplication::palette("QWebView"));
 
     if (QDeclarativeEngine *engine = qmlEngine(this)) {
         d->webPage->setNetworkAccessManager(engine->networkAccessManager());
@@ -245,6 +249,8 @@ QchWebView::QchWebView(QchWebViewPrivate &dd, QGraphicsItem *parent) :
     d->webPage = new QchWebPage(this);
     setPage(d->webPage);
     setResizesToContents(true);
+    setAttribute(Qt::WA_OpaquePaintEvent, true);
+    setPalette(QApplication::palette("QWebView"));
 
     if (QDeclarativeEngine *engine = qmlEngine(this)) {
         d->webPage->setNetworkAccessManager(engine->networkAccessManager());
@@ -267,6 +273,20 @@ QchWebView::QchWebView(QchWebViewPrivate &dd, QGraphicsItem *parent) :
 }
 
 QchWebView::~QchWebView() {}
+
+Qt::ContextMenuPolicy QchWebView::contextMenuPolicy() const {
+    Q_D(const QchWebView);
+    
+    return d->contextMenuPolicy;
+}
+
+void QchWebView::setContextMenuPolicy(Qt::ContextMenuPolicy policy) {
+    if (policy != contextMenuPolicy()) {
+        Q_D(QchWebView);
+        d->contextMenuPolicy = policy;
+        emit contextMenuPolicyChanged();
+    }
+}
 
 int QchWebView::preferredWidth() const {
     Q_D(const QchWebView);
@@ -436,6 +456,10 @@ void QchWebView::paste() {
     triggerPageAction(QWebPage::Paste);
 }
 
+void QchWebView::triggerAction(int action, bool checked) {
+    triggerPageAction(QWebPage::WebAction(action), checked);
+}
+
 QGraphicsWebView* QchWebView::createWindow(QWebPage::WebWindowType type) {
     Q_UNUSED(type);
     Q_D(QchWebView);
@@ -469,6 +493,34 @@ QGraphicsWebView* QchWebView::createWindow(QWebPage::WebWindowType type) {
     }
 
     return view;
+}
+
+void QchWebView::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
+    switch (contextMenuPolicy()) {
+    case Qt::DefaultContextMenu:
+        QGraphicsWebView::contextMenuEvent(event);
+        return;
+    case Qt::CustomContextMenu:
+        emit customContextMenuRequested(event->pos().x(), event->pos().y());
+        break;
+    case Qt::ActionsContextMenu: {
+        QMenu menu;
+        
+        foreach (QAction *action, actions()) {
+            menu.addAction(action);
+        }
+        
+        menu.exec(event->screenPos());
+        break;
+    }
+    case Qt::NoContextMenu:
+        event->ignore();
+        return;
+    default:
+        break;
+    }
+    
+    event->accept();
 }
 
 void QchWebView::keyPressEvent(QKeyEvent *event) {
