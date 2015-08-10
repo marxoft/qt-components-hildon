@@ -30,24 +30,13 @@ public:
     {
     }
     
-    QWidget *findParentWidget() const {
-        Q_Q(const QchMenu);
-        QObject *p = q->parent();
-        
-        while (p) {
-            if (p->isWidgetType()) {
-                return qobject_cast<QWidget*>(p);
-            }
-            
-            p = p->parent();
+    void init() {
+        if (complete) {
+            return;
         }
         
-        return 0;
-    }
-    
-    void init() {
         complete = true;
-        menu = new QMenu(findParentWidget());
+        menu = new QMenu;
         Q_Q(const QchMenu);
         
         const QObjectList list = q->children();

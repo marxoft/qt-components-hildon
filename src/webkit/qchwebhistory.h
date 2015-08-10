@@ -20,7 +20,7 @@
 #include <QObject>
 #include <qdeclarative.h>
 
-class QWebHistory;
+class QWebPage;
 
 class QchWebHistory : public QObject
 {
@@ -40,7 +40,7 @@ class QchWebHistory : public QObject
     Q_PROPERTY(QString storageFileName READ storageFileName WRITE setStorageFileName NOTIFY storageFileNameChanged)
 
 public:
-    explicit QchWebHistory(QWebHistory *history, QObject *parent = 0);
+    explicit QchWebHistory(QWebPage *parent);
     
     QVariantList backItems() const;
     QVariantList forwardItems() const;
@@ -77,8 +77,6 @@ Q_SIGNALS:
     void storageFileNameChanged();
 
 private:
-    QWebHistory *m_history;
-
     QString m_fileName;
 
     Q_DISABLE_COPY(QchWebHistory)

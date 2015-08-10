@@ -15,16 +15,11 @@
  */
 
 #include "qchwebhistory.h"
+#include <QWebPage>
 #include <QWebHistory>
 #include <QFile>
 #include <QDataStream>
 #include <QDeclarativeInfo>
-
-QchWebHistory::QchWebHistory(QWebHistory *history, QObject *parent) :
-    QObject(parent),
-    m_history(history)
-{
-}
 
 static QVariant itemToVariant(const QWebHistoryItem &item) {
     QVariantMap map;
@@ -39,11 +34,28 @@ static QVariant itemToVariant(const QWebHistoryItem &item) {
     return map;
 }
 
+static QWebHistory* qWebHistory(const QchWebHistory *qwh) {
+    if (QWebPage *page = qobject_cast<QWebPage*>(qwh->parent())) {
+        if (QWebHistory *history = page->history()) {
+            return history;
+        }
+    }
+    
+    return 0;
+}
+
+QchWebHistory::QchWebHistory(QWebPage *parent) :
+    QObject(parent)
+{
+}
+
 QVariantList QchWebHistory::backItems() const {
     QVariantList list;
-
-    foreach (QWebHistoryItem item, m_history->backItems(m_history->count())) {
-        list << itemToVariant(item);
+    
+    if (QWebHistory *history = qWebHistory(this)) {
+        foreach (QWebHistoryItem item, history->backItems(history->count())) {
+            list << itemToVariant(item);
+        }
     }
 
     return list;
@@ -52,8 +64,10 @@ QVariantList QchWebHistory::backItems() const {
 QVariantList QchWebHistory::forwardItems() const {
     QVariantList list;
 
-    foreach (QWebHistoryItem item, m_history->forwardItems(m_history->count())) {
-        list << itemToVariant(item);
+    if (QWebHistory *history = qWebHistory(this)) {
+        foreach (QWebHistoryItem item, history->forwardItems(history->count())) {
+            list << itemToVariant(item);
+        }
     }
 
     return list;
@@ -62,61 +76,103 @@ QVariantList QchWebHistory::forwardItems() const {
 QVariantList QchWebHistory::items() const {
     QVariantList list;
 
-    foreach (QWebHistoryItem item, m_history->items()) {
-        list << itemToVariant(item);
+    if (QWebHistory *history = qWebHistory(this)) {
+        foreach (QWebHistoryItem item, history->items()) {
+            list << itemToVariant(item);
+        }
     }
 
     return list;
 }
 
 QVariant QchWebHistory::backItem() const {
-    return itemToVariant(m_history->backItem());
+    if (QWebHistory *history = qWebHistory(this)) {
+        return itemToVariant(history->backItem());
+    }
+    
+    return QVariant();
 }
 
 QVariant QchWebHistory::forwardItem() const {
-    return itemToVariant(m_history->forwardItem());
+    if (QWebHistory *history = qWebHistory(this)) {
+        return itemToVariant(history->forwardItem());
+    }
+    
+    return QVariant();
 }
 
 QVariant QchWebHistory::currentItem() const {
-    return itemToVariant(m_history->currentItem());
+    if (QWebHistory *history = qWebHistory(this)) {
+        return itemToVariant(history->currentItem());
+    }
+    
+    return QVariant();
 }
 
 QVariant QchWebHistory::itemAt(int index) const {
-    return itemToVariant(m_history->itemAt(index));
+    if (QWebHistory *history = qWebHistory(this)) {
+        return itemToVariant(history->itemAt(index));
+    }
+    
+    return QVariant();
 }
 
 int QchWebHistory::currentIndex() const {
-    return m_history->currentItemIndex();
+    if (QWebHistory *history = qWebHistory(this)) {
+        return history->currentItemIndex();
+    }
+    
+    return -1;
 }
 
 void QchWebHistory::setCurrentIndex(int index) {
     if (index != currentIndex()) {
-        m_history->goToItem(m_history->itemAt(index));
-        emit currentIndexChanged();
+        if (QWebHistory *history = qWebHistory(this)) {
+            history->goToItem(history->itemAt(index));
+            emit currentIndexChanged();
+        }
     }
 }
 
 int QchWebHistory::maximumItemCount() const {
-    return m_history->maximumItemCount();
+    if (QWebHistory *history = qWebHistory(this)) {
+        return history->maximumItemCount();
+    }
+    
+    return -1;
 }
 
 void QchWebHistory::setMaximumItemCount(int count) {
     if (count != maximumItemCount()) {
-        m_history->setMaximumItemCount(count);
-        emit maximumItemCountChanged();
+        if (QWebHistory *history = qWebHistory(this)) {
+            history->setMaximumItemCount(count);
+            emit maximumItemCountChanged();
+        }
     }
 }
 
 int QchWebHistory::count() const {
-    return m_history->count();
+    if (QWebHistory *history = qWebHistory(this)) {
+        return history->count();
+    }
+    
+    return -1;
 }
 
 bool QchWebHistory::canGoBack() const {
-    return m_history->canGoBack();
+    if (QWebHistory *history = qWebHistory(this)) {
+        return history->canGoBack();
+    }
+    
+    return false;
 }
 
 bool QchWebHistory::canGoForward() const {
-    return m_history->canGoForward();
+    if (QWebHistory *history = qWebHistory(this)) {
+        return history->canGoForward();
+    }
+    
+    return false;
 }
 
 QString QchWebHistory::storageFileName() const {
@@ -131,32 +187,39 @@ void QchWebHistory::setStorageFileName(const QString &fileName) {
 }
 
 bool QchWebHistory::save() {
-    QFile file(storageFileName());
+    if (QWebHistory *history = qWebHistory(this)) {
+        QFile file(storageFileName());
 
-    if (file.open(QIODevice::WriteOnly)) {
-        QDataStream out(&file);
-        out << *m_history;
-        file.close();
-        return true;
+        if (file.open(QIODevice::WriteOnly)) {
+            QDataStream out(&file);
+            out << *history;
+            file.close();
+            return true;
+        }
+        
+        qmlInfo(this) << tr("Cannot save web history to %1: %2").arg(file.fileName()).arg(file.errorString());
     }
-
-    qmlInfo(this) << tr("Cannot save web history to %1: %2").arg(file.fileName()).arg(file.errorString());
 }
 
 bool QchWebHistory::load() {
     clear();
-    QFile file(storageFileName());
-
-    if (file.open(QIODevice::ReadOnly)) {
-        QDataStream in(&file);
-        in >> *m_history;
-        file.close();
-        return true;
-    }
-
-    qmlInfo(this) << tr("Cannot load web history from %1: %2").arg(file.fileName()).arg(file.errorString());
+    
+    if (QWebHistory *history = qWebHistory(this)) {
+        QFile file(storageFileName());
+        
+        if (file.open(QIODevice::ReadOnly)) {
+            QDataStream in(&file);
+            in >> *history;
+            file.close();
+            return true;
+        }
+        
+        qmlInfo(this) << tr("Cannot load web history from %1: %2").arg(file.fileName()).arg(file.errorString());
+    }    
 }
 
 void QchWebHistory::clear() {
-    m_history->clear();
+    if (QWebHistory *history = qWebHistory(this)) {
+        history->clear();
+    }
 }

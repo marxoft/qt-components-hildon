@@ -21,8 +21,6 @@
 #include <QUrl>
 #include <qdeclarative.h>
 
-class QWebSettings;
-
 class QchWebSettings : public QObject
 {
     Q_OBJECT
@@ -87,7 +85,6 @@ class QchWebSettings : public QObject
 
 public:
     explicit QchWebSettings(QObject *parent = 0);
-    explicit QchWebSettings(QWebSettings *settings, QObject *parent = 0);
     
     bool autoLoadImages() const;
     void setAutoLoadImages(bool load);
@@ -229,8 +226,6 @@ signals:
     void userStyleSheetUrlChanged();
 
 private:
-    QWebSettings *m_settings;
-
     Q_DISABLE_COPY(QchWebSettings)
 };
 
