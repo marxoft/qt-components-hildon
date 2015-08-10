@@ -1,3 +1,11 @@
+qt-components-hildon (0.16.0) unstable; urgency=low
+
+  * Set palette of WebView and WebPage to provide white background.
+  * Add triggerAction() methods to WebView and WebPage.
+  * Add 'contextMenuPolicy' property to WebView.
+
+ -- Stuart Howarth <showarth@marxoft.co.uk>  Mon, 10 Aug 2015 21:24:34 +0100
+
 qt-components-hildon (0.15.0) unstable; urgency=low
 
   * Add org.hildon.webkit module.
