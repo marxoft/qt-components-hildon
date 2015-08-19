@@ -40,6 +40,7 @@ class QchWindow : public QMainWindow
     Q_PROPERTY(bool showProgressIndicator READ showProgressIndicator WRITE setShowProgressIndicator
                NOTIFY showProgressIndicatorChanged)
     Q_PROPERTY(QchWindowStatus::Status status READ status NOTIFY statusChanged)
+    Q_PROPERTY(QString styleSheet READ styleSheet CONSTANT FINAL)
     Q_PROPERTY(QString title READ windowTitle WRITE setWindowTitle NOTIFY titleChanged)
     Q_PROPERTY(bool visible READ isVisible WRITE setVisible NOTIFY visibleChanged)
     Q_PROPERTY(int width READ width WRITE setFixedWidth NOTIFY sizeChanged)
@@ -65,6 +66,8 @@ public:
     QchWindowStatus::Status status() const;
 
 public Q_SLOTS:
+    void activate();
+    
     void setOrientationLock(int orientation);
 
 Q_SIGNALS:

@@ -159,6 +159,10 @@ QchWindowStatus::Status QchWindow::status() const {
     return d->status;
 }
 
+void QchWindow::activate() {
+    activateWindow();
+}
+
 void QchWindow::showEvent(QShowEvent *e) {
     Q_D(QchWindow);
     d->status = QchWindowStatus::Activating;
