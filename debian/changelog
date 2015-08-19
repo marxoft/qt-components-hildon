@@ -1,3 +1,9 @@
+qt-components-hildon (0.17.1) unstable; urgency=low
+
+  * Add org.hildon.desktop module with HomescreenWidget and Notification components.
+
+ -- Stuart Howarth <showarth@marxoft.co.uk>  Wed, 19 Aug 2015 01:34:41 +0100
+
 qt-components-hildon (0.16.0) unstable; urgency=low
 
   * Set palette of WebView and WebPage to provide white background.
