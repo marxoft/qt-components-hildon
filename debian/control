@@ -2,7 +2,7 @@ Source: qt-components-hildon
 Section: libs
 Priority: optional
 Maintainer: Stuart Howarth <showarth@marxoft.co.uk>
-Build-Depends: debhelper (>= 5), libqt4-dev, libgq-gconf-dev, libx11-dev, libplayback-1-dev, libmafw0-dev, libmafw-shared0-dev, libglib2.0-dev, libosso-gnomevfs2-dev
+Build-Depends: debhelper (>= 5), libqt4-dev, libgq-gconf-dev, libx11-dev, libplayback-1-dev, libmafw0-dev, libmafw-shared0-dev, libglib2.0-dev, libosso-gnomevfs2-dev, libhildonnotify-dev
 Standards-Version: 3.7.3
 Homepage: http://marxoft.co.uk/doc/qt-components-hildon
 
