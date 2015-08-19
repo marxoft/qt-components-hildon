@@ -29,6 +29,8 @@ class QchMenu : public QObject, public QDeclarativeParserStatus
     
     Q_PROPERTY(QDeclarativeListProperty<QObject> data READ data)
     
+    Q_INTERFACES(QDeclarativeParserStatus)
+    
     Q_CLASSINFO("DefaultProperty", "data")
     
 public:
