@@ -42,4 +42,4 @@ void QchPlugin::registerTypes(const char *uri) {
     qmlRegisterType<QchScreenShot>(uri, 1, 0, "ScreenShot");
 }
 
-Q_EXPORT_PLUGIN2(hildonutils, QchPlugin)
+Q_EXPORT_PLUGIN2(qchutils, QchPlugin)

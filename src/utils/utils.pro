@@ -2,7 +2,7 @@ TEMPLATE = lib
 CONFIG = qt plugin
 QT += declarative
 
-TARGET = hildonutils
+TARGET = qchutils
 
 HEADERS += \
     qchclipboard.h \
