@@ -41,4 +41,4 @@ void QchPlugin::registerTypes(const char *uri) {
     qmlRegisterType<QchNowPlayingModel>(uri, 1, 0, "NowPlayingModel");
 }
 
-Q_EXPORT_PLUGIN2(hildonmultimedia, QchPlugin)
+Q_EXPORT_PLUGIN2(qchmultimedia, QchPlugin)

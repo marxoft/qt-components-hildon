@@ -9,7 +9,7 @@ LIBS += -lgq-gconf
 
 DEFINES += MAFW_WORKAROUNDS
 
-TARGET = hildonmultimedia
+TARGET = qchmultimedia
 
 INCLUDEPATH += \
     /usr/include/gq
