@@ -71,4 +71,4 @@ void QchPlugin::registerTypes(const char *uri) {
     qmlRegisterUncreatableType<QchWindowStatus>(uri, 1, 0, "WindowStatus", "");
 }
 
-Q_EXPORT_PLUGIN2(hildoncomponents, QchPlugin)
+Q_EXPORT_PLUGIN2(qchcomponents, QchPlugin)

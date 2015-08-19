@@ -2,7 +2,7 @@ TEMPLATE = lib
 CONFIG = qt plugin
 QT += declarative dbus maemo5
 
-TARGET = hildoncomponents
+TARGET = qchcomponents
 
 HEADERS += \
     qchcloseevent.h \

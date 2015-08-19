@@ -1,4 +1,4 @@
-plugin hildoncomponents
+plugin qchcomponents
 
 AbstractButton 1.0 AbstractButton.qml
 AbstractPickSelector 1.0 AbstractPickSelector.qml
