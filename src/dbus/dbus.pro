@@ -2,7 +2,7 @@ TEMPLATE = lib
 CONFIG = qt plugin
 QT += declarative dbus
 
-TARGET = hildondbus
+TARGET = qchdbus
 
 HEADERS += \
     qchdbusadaptor.h \

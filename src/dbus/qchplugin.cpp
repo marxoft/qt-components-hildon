@@ -25,4 +25,4 @@ void QchPlugin::registerTypes(const char *uri) {
     qmlRegisterType<QchDBusMessage>(uri, 1, 0, "DBusMessage");    
 }
 
-Q_EXPORT_PLUGIN2(hildondbus, QchPlugin)
+Q_EXPORT_PLUGIN2(qchdbus, QchPlugin)
