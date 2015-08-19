@@ -97,6 +97,8 @@ QchWindow* QchWindowStack::push(QDeclarativeComponent* component, const QVariant
             XChangeProperty(QX11Info::display(), window->winId(), 
                             XInternAtom(QX11Info::display() , "_HILDON_STACKABLE_WINDOW", True), 
                             XA_INTEGER, 32, PropModeReplace, (unsigned char *) &pos, 1);
+                        
+            component->completeCreate();
             
             if (!properties.isEmpty()) {
                 QMapIterator<QString, QVariant> iterator(properties);
@@ -107,7 +109,6 @@ QchWindow* QchWindowStack::push(QDeclarativeComponent* component, const QVariant
                 }
             }
             
-            component->completeCreate();
             d->stack.append(window);
             window->show();
             connect(window, SIGNAL(hidden(QchWindow*)), this, SLOT(_q_onWindowHidden(QchWindow*)));
