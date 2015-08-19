@@ -25,4 +25,4 @@ void QchPlugin::registerTypes(const char *uri) {
     qmlRegisterType<QchSettings>(uri, 1, 0, "Settings");
 }
 
-Q_EXPORT_PLUGIN2(hildonsettings, QchPlugin)
+Q_EXPORT_PLUGIN2(qchsettings, QchPlugin)

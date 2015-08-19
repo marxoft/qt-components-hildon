@@ -4,7 +4,7 @@ QT += declarative
 INCLUDEPATH += /usr/include/gq
 LIBS += -lgq-gconf
 
-TARGET = hildonsettings
+TARGET = qchsettings
 
 HEADERS += \
     qchgconfitem.h \
