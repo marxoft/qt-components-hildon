@@ -51,7 +51,6 @@ public:
     QchDialogStatus::Status status() const;
 
 Q_SIGNALS:
-    void showProgressIndicatorChanged();
     void sizeChanged();
     void statusChanged();
     void visibleChanged();
