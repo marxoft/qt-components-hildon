@@ -2,7 +2,7 @@ TEMPLATE = lib
 CONFIG = qt plugin
 QT += declarative webkit network
 
-TARGET = hildonwebkit
+TARGET = qchwebkit
 
 HEADERS += \
     qchwebhistory.h \

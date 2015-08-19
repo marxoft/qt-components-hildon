@@ -45,4 +45,4 @@ void QchPlugin::registerTypes(const char *uri) {
     qmlRegisterType<QchWebView>(uri, 1, 0, "WebView");
 }
 
-Q_EXPORT_PLUGIN2(hildonwebkit, QchPlugin)
+Q_EXPORT_PLUGIN2(qchwebkit, QchPlugin)
