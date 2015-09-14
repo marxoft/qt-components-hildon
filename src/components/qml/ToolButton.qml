@@ -19,7 +19,7 @@ import QtQuick 1.0
 AbstractButton {
     id: root
     
-    property ToolButtonStyle style: ToolButtonStyle {}
+    property QtObject style: ToolButtonStyle {}
     
     width: style.buttonWidth
     height: style.buttonHeight

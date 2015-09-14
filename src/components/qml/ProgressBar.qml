@@ -24,7 +24,7 @@ Item {
     property int value
     property string text
     property bool textVisible: false
-    property ProgressBarStyle style: ProgressBarStyle {}
+    property QtObject style: ProgressBarStyle {}
     
     height: 70
     

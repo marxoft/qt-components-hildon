@@ -22,7 +22,7 @@ Item {
     property Flickable flickableItem
     property int orientation: Qt.Vertical
     property int scrollBarPolicy: Qt.ScrollBarAsNeeded
-    property ScrollBarStyle style: ScrollBarStyle {}
+    property QtObject style: ScrollBarStyle {}
     
     anchors.fill: flickableItem ? flickableItem : undefined
     

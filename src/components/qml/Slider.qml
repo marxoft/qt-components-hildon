@@ -26,7 +26,7 @@ Item {
     property bool tracking: false
     property alias pressed: mouseArea.pressed
     
-    property SliderStyle style: SliderStyle {}
+    property QtObject style: SliderStyle {}
         
     width: 250
     height: 60

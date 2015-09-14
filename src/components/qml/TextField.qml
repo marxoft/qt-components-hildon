@@ -37,7 +37,7 @@ FocusScope {
 
     property alias echoMode: textInput.echoMode
     
-    property TextFieldStyle style: TextFieldStyle {}
+    property QtObject style: TextFieldStyle {}
     
     signal accepted
     

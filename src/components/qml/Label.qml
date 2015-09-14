@@ -19,7 +19,7 @@ import QtQuick 1.0
 Text {
     id: root
     
-    property LabelStyle style: LabelStyle {}
+    property QtObject style: LabelStyle {}
     
     color: style.textColor
     font.pointSize: Math.max(1, style.fontPointSize)

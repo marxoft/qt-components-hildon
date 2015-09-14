@@ -21,7 +21,7 @@ Item {
     id: root
     
     property alias pressed: mouseArea.pressed
-    property Style style: ListItemStyle {}
+    property QtObject style: ListItemStyle {}
     
     signal clicked
     signal pressAndHold

@@ -26,7 +26,7 @@ Item {
     property bool tracking: false
     property alias pressed: mouseArea.pressed
     
-    property BiDirectionalSliderStyle style: BiDirectionalSliderStyle {}
+    property QtObject style: BiDirectionalSliderStyle {}
         
     width: 250
     height: 60

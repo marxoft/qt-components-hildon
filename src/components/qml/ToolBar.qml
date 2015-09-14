@@ -20,7 +20,7 @@ Item {
     id: root
     
     default property alias tools: row.data
-    property ToolBarStyle style: ToolBarStyle {}
+    property QtObject style: ToolBarStyle {}
     
     width: screen.width
     height: 70

@@ -21,7 +21,7 @@ AbstractButton {
     id: root
     
     property AbstractPickSelector pickSelector
-    property ValueButtonStyle style: ValueButtonStyle {}
+    property QtObject style: ValueButtonStyle {}
     property string valueText
     
     width: style.buttonWidth

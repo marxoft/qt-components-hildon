@@ -39,7 +39,7 @@ FocusScope {
     
     property alias inputMethodHints: textEdit.inputMethodHints
     
-    property TextAreaStyle style: TextAreaStyle {}
+    property QtObject style: TextAreaStyle {}
         
     function copy() {
         textEdit.copy()

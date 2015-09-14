@@ -37,7 +37,7 @@ FocusScope {
     property alias font: textInput.font
     property alias readOnly: textInput.readOnly
     
-    property SpinBoxStyle style: SpinBoxStyle {}
+    property QtObject style: SpinBoxStyle {}
     
     signal accepted
     
