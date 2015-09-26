@@ -1,3 +1,15 @@
+qt-components-hildon (0.18.0) unstable; urgency=low
+
+  * Add Action component.
+  * Add 'action' property to MenuItem and AbstractButton.
+  * Add 'filters' property to MenuBar.
+  * Add addFilter() and addItem() functions to MenuBar.
+  * Add addItem() and addMenu() functions to Menu.
+  * Add addCheckable() and removeCheckable() functions to ExclusiveGroup.
+  * Update documentation and examples.
+
+ -- Stuart Howarth <showarth@marxoft.co.uk>  Sat, 26 Sep 2015 17:02:12 +0100
+
 qt-components-hildon (0.17.1) unstable; urgency=low
 
   * Add org.hildon.desktop module with HomescreenWidget and Notification components.
