@@ -32,7 +32,6 @@ SpinBox 1.0 SpinBox.qml
 SpinBoxStyle 1.0 SpinBoxStyle.qml
 Style 1.0 Style.qml
 Tab 1.0 Tab.qml
-TabButton 1.0 TabButton.qml
 TabButtonStyle 1.0 TabButtonStyle.qml
 TabView 1.0 TabView.qml
 TextArea 1.0 TextArea.qml

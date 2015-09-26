@@ -15,6 +15,7 @@
  */
 
 #include "qchplugin.h"
+#include "qchaction.h"
 #include "qchcloseevent.h"
 #include "qchdialog.h"
 #include "qchexclusivegroup.h"
@@ -54,6 +55,7 @@ void QchPlugin::registerTypes(const char *uri) {
     
     qRegisterMetaType<QchCloseEvent*>("QchCloseEvent*");
     
+    qmlRegisterType<QchAction>(uri, 1, 0, "Action");
     qmlRegisterType<QchDialog>(uri, 1, 0, "Dialog");
     qmlRegisterType<QchExclusiveGroup>(uri, 1, 0, "ExclusiveGroup");
     qmlRegisterType<QchFileDialog>(uri, 1, 0, "FileDialog");

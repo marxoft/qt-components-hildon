@@ -16,6 +16,17 @@
 
 import QtQuick 1.0
 
+/*!
+    \class TextAreaStyle
+    \brief Provides styling properties for a TextArea.
+    
+    \ingroup components
+    
+    \sa TextArea
+*/
 TextFieldStyle {
+    /*!
+        \brief The default height of the TextArea.
+    */
     property int defaultHeight: 120
 }

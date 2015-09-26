@@ -18,11 +18,38 @@ import QtQuick 1.0
 import org.hildon.components 1.0
 import "."
 
+/*!
+    \class DatePickSelector
+    \brief A pick selector for choosing a date value.
+    
+    \ingroup components
+    
+    \snippet selectors.qml DatePickSelector
+    
+    \sa ListPickSelector, TimePickSelector, ValueButton
+*/  
 AbstractPickSelector {
     id: root
     
+    /*!
+        \brief The minimum year that can be chosen.
+        
+        The default value is \c 2009
+    */
     property int minimumYear: 2009
-    property int maximumYear: 2084
+    
+    /*!
+        \brief The maximum year that can be chosen.
+        
+        The default value is \c 2037
+    */
+    property int maximumYear: 2037
+    
+    /*!
+        \brief The current chosen date.
+        
+        The default value is the current date.
+    */
     property variant currentDate: new Date()
     
     minimumHeight: 350
@@ -142,9 +169,9 @@ AbstractPickSelector {
                 
                 anchors {
                     left: parent.left
-                    leftMargin: item.style.paddingLeft
+                    leftMargin: platformStyle.paddingMedium
                     right: parent.right
-                    rightMargin: item.style.paddingRight
+                    rightMargin: platformStyle.paddingMedium
                     verticalCenter: parent.verticalCenter
                 }
                 horizontalAlignment: Text.AlignHCenter

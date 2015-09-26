@@ -1,0 +1,19 @@
+/*! 
+    \example actions.qml
+    \example audio.qml
+    \example buttons.qml
+    \example dbus.qml
+    \example directory.qml
+    \example gconf.qml
+    \example helloworld.qml
+    \example menus.qml
+    \example notification.qml
+    \example process.qml
+    \example screenshot.qml
+    \example selectors.qml
+    \example settings.qml
+    \example tabs.qml
+    \example webview.qml
+    \example widget.qml
+    \example window.qml
+*/

@@ -21,23 +21,41 @@
 #include <QDeclarativeParserStatus>
 #include <qdeclarative.h>
 
+class QchMenuItem;
 class QchMenuBarPrivate;
 
 class QchMenuBar : public QObject, public QDeclarativeParserStatus
 {
     Q_OBJECT
     
-    Q_PROPERTY(QDeclarativeListProperty<QObject> data READ data)
+    Q_PROPERTY(bool filtersExclusive READ filtersExclusive WRITE setFiltersExclusive NOTIFY filtersExclusiveChanged)
+    Q_PROPERTY(QDeclarativeListProperty<QObject> filters READ filters)
+    Q_PROPERTY(QDeclarativeListProperty<QObject> items READ items)
     
     Q_INTERFACES(QDeclarativeParserStatus)
     
-    Q_CLASSINFO("DefaultProperty", "data")
+    Q_CLASSINFO("DefaultProperty", "items")
     
 public:
     explicit QchMenuBar(QObject *parent = 0);
     ~QchMenuBar();
     
-    QDeclarativeListProperty<QObject> data();
+    bool filtersExclusive() const;
+    void setFiltersExclusive(bool exclusive);
+    
+    QDeclarativeListProperty<QObject> filters();
+    QDeclarativeListProperty<QObject> items();
+
+public Q_SLOTS:
+    QchMenuItem *addFilter(const QString &text);
+    QchMenuItem *insertFilter(int before, const QString &text);
+    
+    QchMenuItem* addItem(const QString &text);
+    QchMenuItem* insertItem(int before, const QString &text);
+    void removeItem(QObject *item);
+
+Q_SIGNALS:
+    void filtersExclusiveChanged();
     
 protected:    
     virtual void classBegin();

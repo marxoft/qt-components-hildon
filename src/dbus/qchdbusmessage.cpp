@@ -201,6 +201,16 @@ public:
     Q_DECLARE_PUBLIC(QchDBusMessage)
 };
 
+/*!
+    \class DBusMessage
+    \brief The DBusMessage components sends messages via DBus.
+    
+    \ingroup dbus
+    
+    \snippet dbus.qml DBusMessage
+    
+    \sa DBusAdaptor
+*/
 QchDBusMessage::QchDBusMessage(QObject *parent) :
     QObject(parent),
     d_ptr(new QchDBusMessagePrivate(this))
@@ -215,6 +225,9 @@ QchDBusMessage::QchDBusMessage(QchDBusMessagePrivate &dd, QObject *parent) :
 
 QchDBusMessage::~QchDBusMessage() {}
 
+/*!
+    \brief The DBus service on which the message will be sent.
+*/
 QString QchDBusMessage::serviceName() const {
     Q_D(const QchDBusMessage);
 
@@ -230,6 +243,9 @@ void QchDBusMessage::setServiceName(const QString &name) {
     }
 }
 
+/*!
+    \brief The DBus path on which the message will be sent.
+*/
 QString QchDBusMessage::path() const {
     Q_D(const QchDBusMessage);
 
@@ -245,6 +261,9 @@ void QchDBusMessage::setPath(const QString &path) {
     }
 }
 
+/*!
+    \brief The DBus interface on which the message will be sent.
+*/
 QString QchDBusMessage::interfaceName() const {
     Q_D(const QchDBusMessage);
 
@@ -260,6 +279,14 @@ void QchDBusMessage::setInterfaceName(const QString &name) {
     }
 }
 
+/*!
+    \brief The DBus method to be called.
+    
+    This property is only required if \link type\endlink 
+    is \c MethodCallMessage.
+    
+    \sa type
+*/
 QString QchDBusMessage::methodName() const {
     Q_D(const QchDBusMessage);
 
@@ -275,6 +302,9 @@ void QchDBusMessage::setMethodName(const QString &name) {
     }
 }
 
+/*!
+    \brief The DBus arguments to be sent with the message.
+*/
 QVariantList QchDBusMessage::arguments() const {
     Q_D(const QchDBusMessage);
 
@@ -288,6 +318,26 @@ void QchDBusMessage::setArguments(const QVariantList &args) {
     emit argumentsChanged();
 }
 
+/*!
+    \brief The bus on which the which the message will be sent.
+    
+    Possible values are:
+    
+    <table>
+        <tr>
+            <th>Value</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td>DBusAdaptor.SessionBus</td>
+            <td>Registers the target on the session bus (default).</td>
+        </tr>
+        <tr>
+            <td>DBusAdaptor.SystemBus</td>
+            <td>Registers the target on the system bus.</td>
+        </tr>
+    </table>
+*/
 QchDBusMessage::BusType QchDBusMessage::bus() const {
     Q_D(const QchDBusMessage);
 
@@ -303,6 +353,34 @@ void QchDBusMessage::setBus(QchDBusMessage::BusType bus) {
     }
 }
 
+/*!
+    \brief The message type.
+    
+    Possible values are:
+    
+    <table>
+        <tr>
+            <th>Value</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td>DBusMessage.MethodCallMessage</td>
+            <td>The message is a method call (default).</td>
+        </tr>
+        <tr>
+            <td>DBusMessage.SignalMessage</td>
+            <td>The message is a signal.</td>
+        </tr>
+        <tr>
+            <td>DBusMessage.ReplyMessage</td>
+            <td>The message is a reply.</td>
+        </tr>
+        <tr>
+            <td>DBusMessage.ErrorMessage</td>
+            <td>The message is an error.</td>
+        </tr>
+    </table>
+*/
 QchDBusMessage::MessageType QchDBusMessage::type() const {
     Q_D(const QchDBusMessage);
 
@@ -318,18 +396,56 @@ void QchDBusMessage::setType(MessageType type) {
     }
 }
 
+/*!
+    \brief The current status of the message.
+    
+    Possible values are:
+    
+    <table>
+        <tr>
+            <th>Value</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td>DBusMessage.Null</td>
+            <td>No message has been sent (default).</td>
+        </tr>
+        <tr>
+            <td>DBusMessage.Loading</td>
+            <td>A message is being sent.</td>
+        </tr>
+        <tr>
+            <td>DBusMessage.Ready</td>
+            <td>The message was sent successfully.</td>
+        </tr>
+        <tr>
+            <td>DBusMessage.Error</td>
+            <td>An error occured when sending the message.</td>
+        </tr>
+    </table>
+*/
 QchDBusMessage::Status QchDBusMessage::status() const {
     Q_D(const QchDBusMessage);
 
     return d->status;
 }
 
+/*!
+    \brief The message reply.
+    
+    \sa replyString
+*/
 QVariant QchDBusMessage::reply() const {
     Q_D(const QchDBusMessage);
 
     return d->reply;
 }
 
+/*!
+    \brief The messsage reply, formatted as a string.
+    
+    \sa reply
+*/
 QString QchDBusMessage::replyString() const {
     return QDBusUtil::argumentToString(reply());
 }

@@ -14,16 +14,46 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/*!
+    \class ListItem
+    \brief An item for use as a delegate in a ListView.
+    
+    \ingroup components
+    
+    The ListItem component is typically used as a delegate in a ListView. It provides a standard delegate appearance 
+    that can be customized using ListItemStyle.
+    
+    ListItem also handles key events to provide standard key navigation in a ListView. This behaviour can be overriden 
+    in ListView.
+    
+    \sa ListItemStyle, ListView
+*/
 import QtQuick 1.0
 import org.hildon.components 1.0
 
 Item {
     id: root
     
+    /*!
+        type:bool
+        \brief Whether the item is currently pressed
+    */
     property alias pressed: mouseArea.pressed
+    
+    /*!
+        type:ListItemStyle
+        \brief Provides styling properties for the item.
+    */
     property QtObject style: ListItemStyle {}
     
+    /*!
+        \brief Emitted when the item is clicked or the return key is pressed.
+    */
     signal clicked
+    
+    /*!
+        \brief Emitted following a long press on the item.
+    */
     signal pressAndHold
     
     width: parent ? parent.width : screen.width

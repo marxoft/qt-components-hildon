@@ -17,10 +17,33 @@
 import QtQuick 1.0
 import org.hildon.components 1.0
 
-Dialog {
-    id: root
+/*!
+    \class AbstractPickSelector
+    \brief The base class for pick selectors.
     
+    \ingroup components
+    
+    The AbstractPickSelector is used for creating custom pick selectors. Typically, a pick selector is assigned to a 
+    ValueButton, but can also be used standalone.
+    
+    \snippet selectors.qml AbstractPickSelector
+    
+    \sa ValueButton
+*/
+Dialog {
+    /*!
+        \brief This property should be set to the display text of the current selected value.        
+    */
     property string currentValueText
     
+    /*!
+        \brief This signal should be emitted when a value is selected.
+        
+        When the signal is emitted, \link currentValueText\endlink will be updated to \a text.
+        
+        \sa currentValueText
+    */
     signal selected(string text)
+    
+    onSelected: currentValueText = text
 }

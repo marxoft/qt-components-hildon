@@ -17,9 +17,26 @@
 import QtQuick 1.0
 import org.hildon.components 1.0
 
+/*!
+    \class ApplicationWindow
+    \brief A Window with a WindowStack.
+    
+    \ingroup components
+    
+    The ApplicationWindow component is a Window component that has a WindowStack. ApplicationWindow is typically used 
+    as the main window of the application.
+    
+    \include window.qml
+    
+    \sa WindowStack
+*/
 Window {
     id: root
     
+    /*!
+        type:WindowStack
+        \brief The WindowStack belonging to the window.
+    */
     property alias windowStack: stack
     
     WindowStack {

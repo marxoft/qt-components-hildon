@@ -16,19 +16,66 @@
 
 import QtQuick 1.0
 
+/*!
+    \class SliderStyle
+    \brief Provides styling properties for a Slider.
+    
+    \ingroup components
+    
+    \sa Slider
+*/
 Style {
     // Background
+    
+    /*!
+        \brief The url for the left background image.
+    */
     property url leftBackground: "image://theme/SliderLeftside"
+    
+    /*!
+        \brief The url for the left background image used when the Slider is disabled.
+    */
     property url leftBackgroundDisabled: "image://theme/SliderLeftsideDisabled"
+    
+    /*!
+        \brief The url for the left background image.
+    */
     property url rightBackground: "image://theme/SliderRightside"
+    
+    /*!
+        \brief The url for the right background image used when the Slider is disabled.
+    */
     property url rightBackgroundDisabled: "image://theme/SliderRightsideDisabled"
     
+    /*!
+        \brief The right margin for the background image, in pixels.
+    */
     property int backgroundMarginRight: 0
+    
+    /*!
+        \brief The left margin for the background image, in pixels.
+    */
     property int backgroundMarginLeft: 6
+    
+    /*!
+        \brief The top margin for the background image, in pixels.
+    */
     property int backgroundMarginTop: 25
+    
+    /*!
+        \brief The bottom margin for the background image, in pixels.
+    */
     property int backgroundMarginBottom: 25
 
     // Handle
+    
+    /*!
+        \brief The url for the handle image.
+    */
     property url handle: "image://theme/SliderThumb"
+    
+    /*!
+        \brief The url for the handle image used when the Slider is disabled.
+    */
     property url handleDisabled: "image://theme/SliderThumbDisabled"
 }

@@ -17,12 +17,23 @@
 #include "qchgconfitem.h"
 #include <GConfItem>
 
+/*!
+    \class GConfItem
+    \brief Enables access to GConf keys in QML.
+    
+    \include gconf.qml
+    
+    \ingroup settings
+*/
 QchGConfItem::QchGConfItem(QObject *parent) :
     QObject(parent),
     m_item(0)
 {
 }
 
+/*!
+    \brief The GConf key.
+*/
 QString QchGConfItem::key() const {
     return m_item ? m_item->key() : QString();
 }
@@ -49,6 +60,9 @@ void QchGConfItem::setKey(const QString &key) {
     }
 }
 
+/*!
+    \brief The value associated with the \link key\endlink.
+*/
 QVariant QchGConfItem::value() const {
     return m_item ? m_item->value() : m_initialValue;
 }
@@ -69,13 +83,26 @@ void QchGConfItem::resetValue() {
     setValue(QVariant::Invalid);
 }
 
+/*!
+    \brief The directories under the \link key\endlink.
+*/
 QStringList QchGConfItem::childDirectories() const {
     return m_item ? m_item->listDirs() : QStringList();
 }
 
+/*!
+    \brief The entries under the \link key\endlink.
+*/
 QStringList QchGConfItem::childEntries() const {
     return m_item ? m_item->listEntries() : QStringList();
 }
+
+/*!
+    \fn void GConfItem::subtreeChanged(QString key, QVariant value)
+    
+    This signal is emitted when an entry under the \link key\endlink changes. The changed \a key is passed along with 
+    its new \a value.
+*/
 
 void QchGConfItem::classBegin() {}
 

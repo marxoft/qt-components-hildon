@@ -48,6 +48,19 @@ public:
     Q_DECLARE_PUBLIC(QchWindowStack)
 };
 
+/*!
+    \class WindowStack
+    \brief A component for managing stacked windows.
+    
+    \ingroup components
+    
+    You do not normally need to instantiate this component, since you can simply use the ApplicationWindow component, 
+    which already has a window stack.
+    
+    \include window.qml
+    
+    \sa ApplicationWindow, Window
+*/
 QchWindowStack::QchWindowStack(QObject *parent) :
     QObject(parent),
     d_ptr(new QchWindowStackPrivate(this))
@@ -56,11 +69,17 @@ QchWindowStack::QchWindowStack(QObject *parent) :
 
 QchWindowStack::~QchWindowStack() {}
 
+/*!
+    \brief The window that is currently active.
+*/
 QchWindow* QchWindowStack::currentWindow() const {
     Q_D(const QchWindowStack);
     return d->stack.isEmpty() ? 0 : d->stack.last();
 }
 
+/*!
+    \brief The initial window on the stack.
+*/
 QchWindow* QchWindowStack::rootWindow() const {
     Q_D(const QchWindowStack);
     return d->stack.isEmpty() ? 0 : d->stack.first();
@@ -75,11 +94,17 @@ void QchWindowStack::setRootWindow(QchWindow *root) {
     }
 }
 
+/*!
+    \brief The number of windows on the stack.
+*/
 int QchWindowStack::depth() const {
     Q_D(const QchWindowStack);
     return d->stack.size();
 }
 
+/*!
+    \brief Pushes a window created from \a component onto the stack, and optionally sets \a properties.
+*/
 QchWindow* QchWindowStack::push(QDeclarativeComponent* component, const QVariantMap &properties) {
     QchWindow *current = currentWindow();    
     QDeclarativeContext *context = new QDeclarativeContext(qmlContext(current));
@@ -128,6 +153,9 @@ QchWindow* QchWindowStack::push(QDeclarativeComponent* component, const QVariant
     return 0;
 }
 
+/*!
+    \brief Pushes a window created from \a url onto the stack, and optionally sets \a properties.
+*/
 QchWindow* QchWindowStack::push(const QUrl &url, const QVariantMap &properties) {
     Q_D(QchWindowStack);
     QDeclarativeComponent *component = d->componentCache.value(url, 0);
@@ -145,6 +173,11 @@ QchWindow* QchWindowStack::push(const QUrl &url, const QVariantMap &properties) 
     return 0;
 }
 
+/*!
+    \brief Pops a window from the stack.
+    
+    If \a toWindow is specified, windows will be popped from the stack until \a toWindow becomes the current window.
+*/
 void QchWindowStack::pop(QchWindow* toWindow) {
     Q_D(QchWindowStack);
     const int start = d->stack.size() - 1;
@@ -157,6 +190,11 @@ void QchWindowStack::pop(QchWindow* toWindow) {
     }
 }
 
+/*!
+    \brief Pops all windows until the root window becomes the current window.
+    
+    \sa pop()
+*/
 void QchWindowStack::clear() {
     pop(rootWindow());
 }

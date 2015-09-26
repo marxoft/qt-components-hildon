@@ -17,11 +17,37 @@
 import QtQuick 1.0
 import org.hildon.components 1.0
 
+/*!
+    \class ValueButton
+    \brief A button used for displaying a value.
+    
+    \ingroup components
+    
+    \snippet selectors.qml ListPickSelector
+    
+    \sa DatePickSelector, ListPickSelector, TimePickSelector, ValueButtonStyle
+*/
 AbstractButton {
     id: root
     
+    /*!
+        \brief The pick selector to be displayed when the button is clicked.
+    */
     property AbstractPickSelector pickSelector
+    
+    /*!
+        type:ValueButtonStyle
+        \brief Provides styling properties for the button.
+    */
     property QtObject style: ValueButtonStyle {}
+    
+    /*!
+        \brief The value text displayed in the button.
+        
+        If a pick selector is set, this property will be updated when a value is chosen.
+        
+        \sa pickSelector
+    */
     property string valueText
     
     width: style.buttonWidth

@@ -36,11 +36,6 @@ public:
     {
     }
     
-    ~QchWindowPrivate() {
-        delete root;
-        root = 0;
-    }
-    
     static void children_append(QDeclarativeListProperty<QDeclarativeItem> *list, QDeclarativeItem *item) {        
         if (!item) {
             return;
@@ -77,6 +72,7 @@ public:
         view = new QchGraphicsView(q);
         root = new QDeclarativeItem;
         
+        root->setParent(view);
         view->addItem(root);
         q->setCentralWidget(view);
         q->setOrientationLock(QchScreen::instance()->orientationLock());
@@ -105,6 +101,14 @@ public:
     Q_DECLARE_PUBLIC(QchWindow)
 };
 
+/*!
+    \class Window
+    \brief A window component that can be stacked or used as a top-level window.
+    
+    \ingroup components
+    
+    \sa ApplicationWindow, WindowStack
+*/
 QchWindow::QchWindow(QWidget *parent) :
     QMainWindow(parent),
     d_ptr(new QchWindowPrivate(this))
@@ -116,19 +120,33 @@ QchWindow::QchWindow(QWidget *parent) :
 
 QchWindow::~QchWindow() {}
 
+/*!
+    \brief The visual children of the window.
+*/
 QDeclarativeListProperty<QDeclarativeItem> QchWindow::children() {
     return QDeclarativeListProperty<QDeclarativeItem>(this, 0, QchWindowPrivate::children_append);
 }
 
+/*!
+    \brief The children of the window.
+*/
 QDeclarativeListProperty<QObject> QchWindow::data() {
     return QDeclarativeListProperty<QObject>(this, 0, QchWindowPrivate::data_append);
 }
 
+/*!
+    \brief The window's content item.
+*/
 QDeclarativeItem* QchWindow::contentItem() const {
     Q_D(const QchWindow);
     return d->root;
 }
 
+/*!
+    \brief The current orientation lock of the window.
+    
+    \sa Screen::orientationLock
+*/
 int QchWindow::orientationLock() const {
     Q_D(const QchWindow);
     return d->orientationLock;
@@ -143,6 +161,11 @@ void QchWindow::setOrientationLock(int orientation) {
     }
 }
 
+/*!
+    \brief Whether the progress indicator should be visible.
+    
+    The default value is \c false.
+*/
 bool QchWindow::showProgressIndicator() const {
     return testAttribute(Qt::WA_Maemo5ShowProgressIndicator);
 }
@@ -154,11 +177,42 @@ void QchWindow::setShowProgressIndicator(bool enabled) {
     }
 }
 
+/*!
+    \brief The current status of the window.
+    
+    Possible values are:
+    
+    <table>
+        <tr>
+            <th>Value</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td>WindowStatus.Inactive</td>
+            <td>The window is inactive (default).</td>
+        </tr>
+        <tr>
+            <td>WindowStatus.Activating</td>
+            <td>The window is being activated.</td>
+        </tr>
+        <tr>
+            <td>WindowStatus.Active</td>
+            <td>The window is active, i.e. it is the current window.</td>
+        </tr>
+        <tr>
+            <td>WindowStatus.Deactivating</td>
+            <td>The window is being de-activated.</td>
+        </tr>
+    </table>
+*/
 QchWindowStatus::Status QchWindow::status() const {
     Q_D(const QchWindow);
     return d->status;
 }
 
+/*!
+    \brief Activates the window.
+*/
 void QchWindow::activate() {
     activateWindow();
 }

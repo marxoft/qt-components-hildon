@@ -15,46 +15,157 @@
  */
 
 import QtQuick 1.0
+import org.hildon.components 1.0
 
+/*!
+    \class AbstractButton
+    \brief The base class for buttons.
+    
+    AbstractButton provides functions, properties and signals common to interactive buttons. It does not draw any 
+    content.
+    
+    \include buttons.qml
+    
+    \ingroup components
+*/
 FocusScope {
     id: root
     
-    property bool autoRepeat: true
+    /*!
+        \brief The Action associated with the button.
+
+        The default value is \c null.
+
+        \sa Action
+    */
+    property Action action
+    
+    /*!
+        type:bool
+        \brief Whether the button should accept auto-repeated key events.
+    
+        The default value is \c true.
+    */
+    property alias autoRepeat: defaultAction.autoRepeat
+    
+    /*!
+        \brief Whether the button is checkable.
+    
+        The default value is \c false.
+    */
     property bool checkable: false
+    
+    /*!
+        \brief Whether the button is checked.
+    
+        The default value is \c false.
+    */
     property bool checked: false
+    
+    /*!
+        \brief The ExclusiveGroup to which the button belongs.
+    
+        The default value is \c null.
+    
+        \sa ExclusiveGroup
+    */
+    property ExclusiveGroup exclusiveGroup
+    
+    /*!
+        \brief The name of the icon to be used.
+    
+        \sa iconSource
+    */
     property string iconName
+    
+    /*!
+        \brief The source of the icon to be used.
+    
+        \sa iconName
+    */
     property string iconSource
+    
+    /*!
+        type:bool
+        \brief Whether the button is pressed.
+    
+        The default value is \c false.
+    */
     property alias pressed: mouseArea.pressed
+    
+    /*!
+        type:keysequence
+        \brief The keyboard shorcut used to click the button.
+    */
+    property alias shortcut: defaultAction.shortcut
+    
+    /*!
+        \brief The text to be displayed in the button.
+    */
     property string text
     
+    /*!
+        \brief Emitted when the button is clicked.
+    */
     signal clicked
-    signal pressAndHold    
+    
+    /*!
+        \brief Emitted when the button \link checked\endlink property is changed.
+    */
+    signal toggled(bool checked)
+    
+    Action {
+        id: defaultAction
+        
+        enabled: (root.enabled) && (!action)
+        onTriggered: root.clicked()
+    }
     
     MouseArea {
         id: mouseArea
         
         anchors.fill: parent
         enabled: root.enabled
-        onClicked: {
-            if (root.checkable) {
-                root.checked = !root.checked;
-            }
-            
-            root.clicked();
-        }
-        onPressAndHold: root.pressAndHold()
+        onClicked: action ? action.trigger() : defaultAction.trigger()
     }
     
     Keys.onEnterPressed: {
-        if ((autoRepeat) || (!event.isAutoRepeat)) {
-            if (checkable) {
-                checked = !root.checked;
+        if ((!event.autoRepeat) || (autoRepeat)) {
+            if (action) {
+                action.trigger();
+            }
+            else {
+                defaultAction.trigger();
             }
             
-            clicked();
             event.accepted = true;
         }
     }
     
-    onCheckableChanged: if (!checkable) checked = false;
+    Connections {
+        target: action
+        onCheckableChanged: root.checkable = action.checkable
+        onCheckedChanged: root.checked = action.checked
+        onEnabledChanged: root.enabled = action.enabled
+    }
+    
+    onActionChanged: {
+        if (action) {
+            if ((!iconName) && (!iconSource)) {
+                iconName = action.iconName;
+                iconSource = action.iconSource;
+            }
+            
+            if (!text) {
+                text = action.text;
+            }
+            
+            checkable = action.checkable;
+            checked = action.checked;
+            enabled = action.enabled;
+        }
+    }
+    onCheckedChanged: toggled(checked)
+    onClicked: if ((checkable) && ((!checked) || (!exclusiveGroup))) checked = !checked;
+    onExclusiveGroupChanged: if (exclusiveGroup) exclusiveGroup.addCheckable(root);
 }

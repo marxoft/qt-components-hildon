@@ -16,14 +16,31 @@
 
 import QtQuick 1.0
 
+/*!
+    \class ToolBar
+    \brief A container for ToolButton and other items.
+    
+    \ingroup components
+    
+    \sa ToolBarStyle, ToolButton
+*/
 Item {
     id: root
     
     default property alias tools: row.data
+    
+    /*!
+        type:ToolBarStyle
+        \brief Provides styling properties for the tool bar.
+    */
     property QtObject style: ToolBarStyle {}
     
     width: screen.width
     height: 70
+    
+    MouseArea {
+        anchors.fill: parent
+    }
     
     Image {
         id: background

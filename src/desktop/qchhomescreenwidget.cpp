@@ -330,6 +330,17 @@ public:
 
 int QchHomescreenWidgetPrivate::refCount = 0;
 
+/*!
+    \class HomescreenWidget
+    \brief A desktop widget displayed on the homescreen.
+    
+    \ingroup desktop
+    
+    Other than its appearance on the homescreen, HomescreenWidget is used like any other top-level component such as 
+    Dialog or Window.
+    
+    \include widget.qml
+*/
 QchHomescreenWidget::QchHomescreenWidget(QWidget *parent) :
     QWidget(parent),
     d_ptr(new QchHomescreenWidgetPrivate(this))
@@ -343,14 +354,23 @@ QchHomescreenWidget::~QchHomescreenWidget() {
     allDesktopItems.removeOne(this);
 }
 
+/*!
+    \brief The visual children of the widget.
+*/
 QDeclarativeListProperty<QDeclarativeItem> QchHomescreenWidget::children() {
     return QDeclarativeListProperty<QDeclarativeItem>(this, 0, QchHomescreenWidgetPrivate::children_append);
 }
 
+/*!
+    \brief The children of the widget.
+*/
 QDeclarativeListProperty<QObject> QchHomescreenWidget::data() {
     return QDeclarativeListProperty<QObject>(this, 0, QchHomescreenWidgetPrivate::data_append);
 }
 
+/*!
+    \brief The plugin id of the widget.
+*/
 QString QchHomescreenWidget::pluginId() const {
     Q_D(const QchHomescreenWidget);
     return d->pluginId;
@@ -369,11 +389,28 @@ void QchHomescreenWidget::setPluginId(const QString &id) {
     }
 }
 
+/*!
+    \brief Whether the widget is visible on the current homescreen.
+*/
 bool QchHomescreenWidget::isOnCurrentHomescreen() const {
     Q_D(const QchHomescreenWidget);
     return d->isOnCurrentHomescreen;
 }
 
+/*!
+    \fn void HomescreenWidget::settingsRequested()
+    \brief Emitted when the user requests settings.
+    
+    \sa settingsAvailable
+*/
+
+/*!
+    \brief Whether the widget has settings available.
+    
+    The default value is \c false.
+    
+    \sa settingsRequested()
+*/
 bool QchHomescreenWidget::settingsAvailable() const {
     Q_D(const QchHomescreenWidget);
     return d->settingsAvailable;
@@ -387,6 +424,9 @@ void QchHomescreenWidget::setSettingsAvailable(bool enabled) {
     }
 }
 
+/*!
+    \brief The write pipe of the widget.
+*/
 int QchHomescreenWidget::writePipe() const {
     Q_D(const QchHomescreenWidget);
     return d->writePipe;

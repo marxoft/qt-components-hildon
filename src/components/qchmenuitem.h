@@ -22,6 +22,7 @@
 
 class QAction;
 class QDeclarativeComponent;
+class QchAction;
 class QchExclusiveGroup;
 class QchMenuItemPrivate;
 
@@ -29,11 +30,14 @@ class QchMenuItem : public QObject
 {
     Q_OBJECT
     
+    Q_PROPERTY(QchAction* action READ action WRITE setAction NOTIFY actionChanged)
+    Q_PROPERTY(bool autoRepeat READ autoRepeat WRITE setAutoRepeat NOTIFY autoRepeatChanged)
     Q_PROPERTY(bool checkable READ isCheckable WRITE setCheckable NOTIFY checkableChanged)
     Q_PROPERTY(bool checked READ isChecked WRITE setChecked NOTIFY toggled)
     Q_PROPERTY(QDeclarativeComponent* component READ component WRITE setComponent NOTIFY componentChanged)
     Q_PROPERTY(bool enabled READ isEnabled WRITE setEnabled NOTIFY enabledChanged)
-    Q_PROPERTY(QchExclusiveGroup* exclusiveGroup READ exclusiveGroup WRITE setExclusiveGroup NOTIFY exclusiveGroupChanged)
+    Q_PROPERTY(QchExclusiveGroup* exclusiveGroup READ exclusiveGroup WRITE setExclusiveGroup
+               NOTIFY exclusiveGroupChanged)
     Q_PROPERTY(QString iconName READ iconName WRITE setIconName NOTIFY iconChanged)
     Q_PROPERTY(QString iconSource READ iconSource WRITE setIconSource NOTIFY iconChanged)
     Q_PROPERTY(QVariant shortcut READ shortcut WRITE setShortcut NOTIFY shortcutChanged)
@@ -45,6 +49,12 @@ class QchMenuItem : public QObject
 public:
     explicit QchMenuItem(QObject *parent = 0);
     ~QchMenuItem();
+    
+    QchAction* action() const;
+    void setAction(QchAction *a);
+    
+    bool autoRepeat() const;
+    void setAutoRepeat(bool a);
     
     bool isCheckable() const;
     void setCheckable(bool c);
@@ -83,6 +93,8 @@ public Q_SLOTS:
     void trigger();
 
 Q_SIGNALS:
+    void actionChanged();
+    void autoRepeatChanged();
     void checkableChanged();
     void componentChanged();
     void enabledChanged();
@@ -98,6 +110,15 @@ protected:
     QScopedPointer<QchMenuItemPrivate> d_ptr;
     
     Q_DECLARE_PRIVATE(QchMenuItem)
+    
+    Q_PRIVATE_SLOT(d_func(), void _q_onActionCheckableChanged())
+    Q_PRIVATE_SLOT(d_func(), void _q_onActionEnabledChanged())
+    Q_PRIVATE_SLOT(d_func(), void _q_onActionIconChanged())
+    Q_PRIVATE_SLOT(d_func(), void _q_onActionTextChanged())
+    Q_PRIVATE_SLOT(d_func(), void _q_onActionToggled(bool))
+    Q_PRIVATE_SLOT(d_func(), void _q_onActionVisibleChanged())
+    Q_PRIVATE_SLOT(d_func(), void _q_onQActionToggled(bool))
+    Q_PRIVATE_SLOT(d_func(), void _q_onQActionTriggered())
 
 private:
     Q_DISABLE_COPY(QchMenuItem)

@@ -16,6 +16,16 @@
 
 import QtQuick 1.0
 
+/*!
+    \class CheckBoxStyle
+    \brief Provides styling properties for CheckBox.
+    
+    \ingroup components
+    
+    The CheckBoxStyle component can be used to provide custom styling for a CheckBox.
+    
+    \sa CheckBox
+*/
 ButtonStyle {
     backgroundChecked: background
     iconWidth: 38

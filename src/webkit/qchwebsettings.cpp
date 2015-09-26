@@ -28,11 +28,28 @@ static QWebSettings* qWebSettings(const QchWebSettings *qws) {
     return QWebSettings::globalSettings();
 }
 
+/*!
+    \class WebSettings
+    \brief Provides access to the settings of a WebPage or WebView
+    
+    \ingroup webkit
+    
+    In addition, there is a 'webSettings' global content property that provides access to the global web settings.
+    
+    \note This component cannot be created in QML.
+    
+    \sa WebPage, WebView
+*/
 QchWebSettings::QchWebSettings(QObject *parent) :
     QObject(parent)
 {
 }
 
+/*!
+    \brief Whether images are automatically loaded in web pages
+    
+    This is enabled by default.
+*/
 bool QchWebSettings::autoLoadImages() const {
     return qWebSettings(this)->testAttribute(QWebSettings::AutoLoadImages);
 }
@@ -48,6 +65,11 @@ void QchWebSettings::resetAutoLoadImages() {
     qWebSettings(this)->resetAttribute(QWebSettings::AutoLoadImages);
 }
 
+/*!
+    \brief Whether Java is enabled.
+    
+    This is enabled by default.
+*/
 bool QchWebSettings::javaEnabled() const {
     return qWebSettings(this)->testAttribute(QWebSettings::JavaEnabled);
 }
@@ -63,6 +85,9 @@ void QchWebSettings::resetJavaEnabled() {
     qWebSettings(this)->resetAttribute(QWebSettings::JavaEnabled);
 }
 
+/*!
+    \brief Whether JavaScript code can access the system clipboard.
+*/
 bool QchWebSettings::javascriptCanAccessClipboard() const {
     return qWebSettings(this)->testAttribute(QWebSettings::JavascriptCanAccessClipboard);
 }
@@ -78,6 +103,9 @@ void QchWebSettings::resetJavascriptCanAccessClipboard() {
     qWebSettings(this)->resetAttribute(QWebSettings::JavascriptCanAccessClipboard);
 }
 
+/*!
+    \brief Whether JavaScript code can open new windows.
+*/
 bool QchWebSettings::javascriptCanOpenWindows() const {
     return qWebSettings(this)->testAttribute(QWebSettings::JavascriptCanOpenWindows);
 }
@@ -93,6 +121,11 @@ void QchWebSettings::resetJavascriptCanOpenWindows() {
     qWebSettings(this)->resetAttribute(QWebSettings::JavascriptCanOpenWindows);
 }
 
+/*!
+    \brief Whether JavaScript is enabled.
+    
+    This is enabled by default.
+*/
 bool QchWebSettings::javascriptEnabled() const {
     return qWebSettings(this)->testAttribute(QWebSettings::JavascriptEnabled);
 }
@@ -108,6 +141,11 @@ void QchWebSettings::resetJavascriptEnabled() {
     qWebSettings(this)->resetAttribute(QWebSettings::JavascriptEnabled);
 }
 
+/*!
+    \brief Whether hyperlinks should be included in the keyboard focus chain.
+    
+    This is enabled by default.
+*/
 bool QchWebSettings::linksIncludedInFocusChain() const {
     return qWebSettings(this)->testAttribute(QWebSettings::LinksIncludedInFocusChain);
 }
@@ -123,6 +161,11 @@ void QchWebSettings::resetLinksIncludedInFocusChain() {
     qWebSettings(this)->resetAttribute(QWebSettings::LinksIncludedInFocusChain);
 }
 
+/*!
+    \brief  Whether locally loaded documents are allowed to access remote urls.
+    
+    This is disabled by default.
+*/
 bool QchWebSettings::localContentCanAccessRemoteUrls() const {
     return qWebSettings(this)->testAttribute(QWebSettings::LocalContentCanAccessRemoteUrls);
 }
@@ -138,6 +181,11 @@ void QchWebSettings::resetLocalContentCanAccessRemoteUrls() {
     qWebSettings(this)->resetAttribute(QWebSettings::LocalContentCanAccessRemoteUrls);
 }
 
+/*!
+    \brief Whether support for the HTML 5 local storage feature is enabled or not
+    
+    This is disabled by default.
+*/
 bool QchWebSettings::localStorageDatabaseEnabled() const {
     return qWebSettings(this)->testAttribute(QWebSettings::LocalStorageDatabaseEnabled);
 }
@@ -153,6 +201,11 @@ void QchWebSettings::resetLocalStorageDatabaseEnabled() {
     qWebSettings(this)->resetAttribute(QWebSettings::LocalStorageDatabaseEnabled);
 }
 
+/*!
+    \brief Whether support for the HTML 5 offline storage feature is enabled or not
+    
+    This is disabled by default.
+*/
 bool QchWebSettings::offlineStorageDatabaseEnabled() const {
     return qWebSettings(this)->testAttribute(QWebSettings::OfflineStorageDatabaseEnabled);
 }
@@ -168,6 +221,11 @@ void QchWebSettings::resetOfflineStorageDatabaseEnabled() {
     qWebSettings(this)->resetAttribute(QWebSettings::OfflineStorageDatabaseEnabled);
 }
 
+/*!
+    \brief Whether support for the HTML 5 web application cache feature is enabled or not
+    
+    This is disabled by default.
+*/
 bool QchWebSettings::offlineWebApplicationCacheEnabled() const {
     return qWebSettings(this)->testAttribute(QWebSettings::OfflineWebApplicationCacheEnabled);
 }
@@ -183,6 +241,11 @@ void QchWebSettings::resetOfflineWebApplicationCacheEnabled() {
     qWebSettings(this)->resetAttribute(QWebSettings::OfflineWebApplicationCacheEnabled);
 }
 
+/*!
+    \brief Whether persisent settings storage is enabled or not.
+    
+    This is disabled by default.
+*/
 bool QchWebSettings::persistentStorageEnabled() const {
     QWebSettings *settings = qWebSettings(this);
     return (!settings->iconDatabasePath().isEmpty())
@@ -207,6 +270,13 @@ void QchWebSettings::setPersistentStorageEnabled(bool enabled) {
     emit persistentStorageEnabledChanged();
 }
 
+/*!
+    \brief Whether plugins are enabled in web pages.
+    
+    Qt plugins with a mimetype such as "application/x-qt-plugin" are not affected by this setting. 
+    
+    This is disabled by default.
+*/
 bool QchWebSettings::pluginsEnabled() const {
     return qWebSettings(this)->testAttribute(QWebSettings::PluginsEnabled);
 }
@@ -222,6 +292,11 @@ void QchWebSettings::resetPluginsEnabled() {
     qWebSettings(this)->resetAttribute(QWebSettings::PluginsEnabled);
 }
 
+/*!
+    \brief Whether the background color and images are also drawn when the page is printed
+    
+    This is enabled by default.
+*/
 bool QchWebSettings::printElementBackgrounds() const {
     return qWebSettings(this)->testAttribute(QWebSettings::PrintElementBackgrounds);
 }
@@ -237,6 +312,11 @@ void QchWebSettings::resetPrintElementBackgrounds() {
     qWebSettings(this)->resetAttribute(QWebSettings::PrintElementBackgrounds);
 }
 
+/*!
+    \brief Whether WebKit is prevented from recording visited pages in the history and storing web page icons
+    
+    This is disabled by default.
+*/
 bool QchWebSettings::privateBrowsingEnabled() const {
     return qWebSettings(this)->testAttribute(QWebSettings::PrivateBrowsingEnabled);
 }
@@ -252,6 +332,11 @@ void QchWebSettings::resetPrivateBrowsingEnabled() {
     qWebSettings(this)->resetAttribute(QWebSettings::PrivateBrowsingEnabled);
 }
 
+/*!
+    \brief Whether the zoom factor on a frame applies only to the text or to all content
+    
+    This is disabled by default.
+*/
 bool QchWebSettings::zoomTextOnly() const {
     return qWebSettings(this)->testAttribute(QWebSettings::ZoomTextOnly);
 }
@@ -267,6 +352,11 @@ void QchWebSettings::resetZoomTextOnly() {
     qWebSettings(this)->resetAttribute(QWebSettings::ZoomTextOnly);
 }
 
+/*!
+    \brief Whether extra tools are enabled for web developers.
+    
+    This is disabled by default.
+*/
 bool QchWebSettings::developerExtrasEnabled() const {
     return qWebSettings(this)->testAttribute(QWebSettings::DeveloperExtrasEnabled);
 }
@@ -282,6 +372,9 @@ void QchWebSettings::resetDeveloperExtrasEnabled() {
     qWebSettings(this)->resetAttribute(QWebSettings::DeveloperExtrasEnabled);
 }
 
+/*!
+    \brief The default text encoding system.
+*/
 QString QchWebSettings::defaultTextEncoding() const {
     return qWebSettings(this)->defaultTextEncoding();
 }
@@ -293,6 +386,9 @@ void QchWebSettings::setDefaultTextEncoding(const QString &encoding) {
     }
 }
 
+/*!
+    \brief The default font size for fixed-pitch text.
+*/
 int QchWebSettings::defaultFixedFontSize() const {
     return qWebSettings(this)->fontSize(QWebSettings::DefaultFixedFontSize);
 }
@@ -308,6 +404,9 @@ void QchWebSettings::resetDefaultFixedFontSize() {
     qWebSettings(this)->resetFontSize(QWebSettings::DefaultFixedFontSize);
 }
 
+/*!
+    \brief The default font size for regular text.
+*/
 int QchWebSettings::defaultFontSize() const {
     return qWebSettings(this)->fontSize(QWebSettings::DefaultFontSize);
 }
@@ -323,6 +422,9 @@ void QchWebSettings::resetDefaultFontSize() {
     qWebSettings(this)->resetFontSize(QWebSettings::DefaultFontSize);
 }
 
+/*!
+    \brief The hard minimum font size.
+*/
 int QchWebSettings::minimumFontSize() const {
     return qWebSettings(this)->fontSize(QWebSettings::MinimumFontSize);
 }
@@ -338,6 +440,9 @@ void QchWebSettings::resetMinimumFontSize() {
     qWebSettings(this)->resetFontSize(QWebSettings::MinimumFontSize);
 }
 
+/*!
+    \brief The minimum logical font size that is applied when zooming out.
+*/
 int QchWebSettings::minimumLogicalFontSize() const {
     return qWebSettings(this)->fontSize(QWebSettings::MinimumLogicalFontSize);
 }
@@ -353,6 +458,9 @@ void QchWebSettings::resetMinimumLogicalFontSize() {
     qWebSettings(this)->resetFontSize(QWebSettings::MinimumLogicalFontSize);
 }
 
+/*!
+    \brief The font family used for cursive font.
+*/
 QString QchWebSettings::cursiveFontFamily() const {
     return qWebSettings(this)->fontFamily(QWebSettings::CursiveFont);
 }
@@ -368,6 +476,9 @@ void QchWebSettings::resetCursiveFontFamily() {
     qWebSettings(this)->resetFontFamily(QWebSettings::CursiveFont);
 }
 
+/*!
+    \brief The font family used for fantasy font.
+*/
 QString QchWebSettings::fantasyFontFamily() const {
     return qWebSettings(this)->fontFamily(QWebSettings::FantasyFont);
 }
@@ -383,6 +494,9 @@ void QchWebSettings::resetFantasyFontFamily() {
     qWebSettings(this)->resetFontFamily(QWebSettings::FantasyFont);
 }
 
+/*!
+    \brief The font family used for fixed font.
+*/
 QString QchWebSettings::fixedFontFamily() const {
     return qWebSettings(this)->fontFamily(QWebSettings::FixedFont);
 }
@@ -398,6 +512,9 @@ void QchWebSettings::resetFixedFontFamily() {
     qWebSettings(this)->resetFontFamily(QWebSettings::FixedFont);
 }
 
+/*!
+    \brief The font family used for sans-serif font.
+*/
 QString QchWebSettings::sansSerifFontFamily() const {
     return qWebSettings(this)->fontFamily(QWebSettings::SansSerifFont);
 }
@@ -413,6 +530,9 @@ void QchWebSettings::resetSansSerifFontFamily() {
     qWebSettings(this)->resetFontFamily(QWebSettings::SansSerifFont);
 }
 
+/*!
+    \brief The font family used for serif font.
+*/
 QString QchWebSettings::serifFontFamily() const {
     return qWebSettings(this)->fontFamily(QWebSettings::SerifFont);
 }
@@ -428,6 +548,9 @@ void QchWebSettings::resetSerifFontFamily() {
     qWebSettings(this)->resetFontFamily(QWebSettings::SerifFont);
 }
 
+/*!
+    \brief The font family used for standard font.
+*/
 QString QchWebSettings::standardFontFamily() const {
     return qWebSettings(this)->fontFamily(QWebSettings::StandardFont);
 }
@@ -443,6 +566,16 @@ void QchWebSettings::resetStandardFontFamily() {
     qWebSettings(this)->resetFontFamily(QWebSettings::StandardFont);
 }
 
+/*!
+    \brief The location of a user stylesheet to load with every web page.
+
+    The \a location must be either a path on the local filesystem, or a data URL with UTF-8 and Base64 encoded data, 
+    such as:
+
+    "data:text/css;charset=utf-8;base64,cCB7IGJhY2tncm91bmQtY29sb3I6IHJlZCB9Ow=="
+
+    \note If the base64 data is not valid, the style will not be applied.
+*/
 QUrl QchWebSettings::userStyleSheetUrl() const {
     return qWebSettings(this)->userStyleSheetUrl();
 }

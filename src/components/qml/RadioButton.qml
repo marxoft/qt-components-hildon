@@ -16,6 +16,12 @@
 
 import QtQuick 1.0
 
+/*!
+    \class RadioButton
+    \brief A checkable Button.
+    
+    \ingroup components
+*/
 Button {
     checkable: true
 }

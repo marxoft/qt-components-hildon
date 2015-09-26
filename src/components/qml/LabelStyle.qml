@@ -16,11 +16,31 @@
 
 import QtQuick 1.0
 
+/*!
+    \class LabelStyle
+    \brief Provides styling properties for a Label.
+    
+    \ingroup components
+    
+    \sa Label
+*/
 Style {
     // Color
+    
+    /*!
+        \brief The text color.
+    */
     property color textColor: platformStyle.defaultTextColor
 
     // Font
+    
+    /*!
+        \brief The font family.
+    */
     property string fontFamily
+    
+    /*!
+        \brief The font point size.
+    */
     property int fontPointSize: platformStyle.fontSizeMedium
 }

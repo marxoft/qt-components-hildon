@@ -19,12 +19,25 @@
 #include <QClipboard>
 #include <QPixmap>
 
+/*!
+    \class Clipboard
+    \brief A global context property providing access to the system clipboard.
+    
+    \ingroup utils
+    
+    \note Clipboard is a context property and cannot be created in QML.
+*/
 QchClipboard::QchClipboard(QObject *parent) :
     QObject(parent)
 {
     connect(QApplication::clipboard(), SIGNAL(dataChanged()), this, SIGNAL(dataChanged()));
 }
 
+/*!
+    \brief The pixmap copied to the clipboard, if any.
+    
+    \sa dataChanged()
+*/
 QVariant QchClipboard::pixmap() const {
     return QVariant::fromValue(QApplication::clipboard()->pixmap());
 }
@@ -33,6 +46,11 @@ void QchClipboard::setPixmap(const QVariant &pixmap) {
     QApplication::clipboard()->setPixmap(pixmap.value<QPixmap>());
 }
 
+/*!
+    \brief The text copied to the clipboard, if any.
+    
+    \sa dataChanged()
+*/
 QString QchClipboard::text() const {
     return QApplication::clipboard()->text();
 }
@@ -41,10 +59,26 @@ void QchClipboard::setText(const QString &text) {
     QApplication::clipboard()->setText(text);
 }
 
+/*!
+    \brief Whether a pixmap is available.
+    
+    \sa dataChanged()
+*/
 bool QchClipboard::hasPixmap() const {
     return pixmap().isValid();
 }
 
+/*!
+    \brief Whether text is available.
+    
+    \sa dataChanged()
+*/
 bool QchClipboard::hasText() const {
     return !text().isEmpty();
 }
+
+/*!
+    \fn void Clipboard::dataChanged()
+    
+    This signal is emitted when the data of the clipboard changes.
+*/

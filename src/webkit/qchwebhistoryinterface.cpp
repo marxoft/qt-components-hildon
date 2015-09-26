@@ -19,6 +19,14 @@
 #include <QTextStream>
 #include <QDeclarativeInfo>
 
+/*!
+    \class WebHistoryInterface
+    \brief A global context property providing access to the global web history
+    
+    \ingroup webkit
+    
+    \note This component cannot be created in QML.
+*/
 QchWebHistoryInterface::QchWebHistoryInterface(QObject *parent) :
     QWebHistoryInterface(parent)
 {
@@ -35,14 +43,23 @@ bool QchWebHistoryInterface::historyContains(const QString &url) const {
     return m_urls.contains(url);
 }
 
+/*!
+    \brief The list of urls in the history.
+*/
 QStringList QchWebHistoryInterface::urls() const {
     return m_urls;
 }
 
+/*!
+    \brief The current number of items in the history.
+*/
 int QchWebHistoryInterface::count() const {
     return m_urls.size();
 }
 
+/*!
+    \brief The file name used to (re)store the history.
+*/
 QString QchWebHistoryInterface::storageFileName() const {
     return m_fileName;
 }
@@ -54,6 +71,9 @@ void QchWebHistoryInterface::setStorageFileName(const QString &fileName) {
     }
 }
 
+/*!    
+    Returns true if the history can be saved to \link storageFileName\endlink.
+*/
 bool QchWebHistoryInterface::save() {
     QFile file(this->storageFileName());
 
@@ -71,6 +91,9 @@ bool QchWebHistoryInterface::save() {
     qmlInfo(this) << tr("Cannot save web history to %1: %2").arg(file.fileName()).arg(file.errorString());
 }
 
+/*!    
+    Returns true if the history can be loaded from \link storageFileName\endlink.
+*/
 bool QchWebHistoryInterface::load() {
     this->clear();
     QFile file(this->storageFileName());
@@ -95,6 +118,9 @@ bool QchWebHistoryInterface::load() {
     qmlInfo(this) << tr("Cannot load web history from %1: %2").arg(file.fileName()).arg(file.errorString());
 }
 
+/*!    
+    Clears all items from the history.
+*/
 void QchWebHistoryInterface::clear() {
     m_urls.clear();
     emit urlsChanged();

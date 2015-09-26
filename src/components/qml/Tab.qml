@@ -16,8 +16,35 @@
 
 import QtQuick 1.0
 
-Item {
+/*!
+    \class Tab
+    \brief A Loader for use in a TabView.
+    
+    \ingroup components
+    
+    \snippet tabs.qml TabView
+    
+    \sa TabView
+*/
+Loader {
+    /*!
+        \brief Whether the tab should load its content immediately.
+        
+        The default value is \c false.
+    */
+    property bool active: false
+    
+    /*!
+        \brief The text that will be displayed in the tab button.
+    */
     property string title
     
+    default property Component component
+    
     anchors.fill: parent ? parent : undefined
+    visible: false
+    
+    onActiveChanged: if ((active) && (component)) sourceComponent = component;
+    onComponentChanged: if ((component) && (active)) sourceComponent = component;
+    onVisibleChanged: if (visible) active = true;
 }

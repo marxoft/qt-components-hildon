@@ -16,8 +16,46 @@
 
 import QtQuick 1.0
 
+/*!
+    \class ToolButtonStyle
+    \brief Provides custom styling properties for a ToolButton.
+    
+    \ingroup components
+    
+    \sa ToolButtonStyle
+*/
 ButtonStyle {
     // ToolButton style
+    
+    /*!
+        type:enumeration
+        \brief Specifies the layout used for the ToolButton text and icon.
+        
+        Possible values are:
+        
+        <table>
+            <tr>
+                <th>Value</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td>Qt.ToolButtonIconOnly</td>
+                <td>Only display the icon (default).</td>
+            </tr>
+            <tr>
+                <td>Qt.ToolButtonTextOnly</td>
+                <td>Only display the text.</td>
+            </tr>
+            <tr>
+                <td>Qt.ToolButtonTextBesideIcon</td>
+                <td>The text appears beside the icon.</td>
+            </tr>
+            <tr>
+                <td>Qt.ToolButtonTextUnderIcon</td>
+                <td>The text appears under the icon.</td>
+            </tr>
+        </table>
+    */
     property int toolButtonStyle: Qt.ToolButtonIconOnly
     
     background: "image://theme/toolbar_button_normal"

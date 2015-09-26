@@ -115,6 +115,18 @@ public:
 
 QHash<QString, int> QchDBusAdaptorPrivate::services;
 
+/*!
+    \class DBusAdaptor
+    \brief The DBusAdaptor component registers a target object with DBus.
+    
+    \ingroup dbus
+    
+    \snippet dbus.qml DBusAdaptor
+    
+    \note DBusAdaptor cannot currently register functions defined in JavaScript.
+    
+    \sa DBusMessage
+*/
 QchDBusAdaptor::QchDBusAdaptor(QObject *parent) :
     QObject(parent),
     d_ptr(new QchDBusAdaptorPrivate(this))
@@ -134,6 +146,26 @@ QchDBusAdaptor::~QchDBusAdaptor() {
     d->unregisterService();
 }
 
+/*!
+    \brief The bus on which the target is registered.
+    
+    Possible values are:
+    
+    <table>
+        <tr>
+            <th>Value</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td>DBusAdaptor.SessionBus</td>
+            <td>Registers the target on the session bus (default).</td>
+        </tr>
+        <tr>
+            <td>DBusAdaptor.SystemBus</td>
+            <td>Registers the target on the system bus.</td>
+        </tr>
+    </table>
+*/
 QchDBusAdaptor::BusType QchDBusAdaptor::bus() const {
     Q_D(const QchDBusAdaptor);
 
@@ -152,6 +184,9 @@ void QchDBusAdaptor::setBus(BusType bus) {
     }
 }
 
+/*!
+    \brief The DBus service on which the target is registered.
+*/
 QString QchDBusAdaptor::serviceName() const {
     Q_D(const QchDBusAdaptor);
 
@@ -170,6 +205,9 @@ void QchDBusAdaptor::setServiceName(const QString &name) {
     }
 }
 
+/*!
+    \brief The DBus path on which the target is registered.
+*/
 QString QchDBusAdaptor::path() const {
     Q_D(const QchDBusAdaptor);
 
@@ -188,6 +226,12 @@ void QchDBusAdaptor::setPath(const QString &path) {
     }
 }
 
+/*!
+    \brief The target object to be registered.
+    
+    When setting this property, any existing target object is unregistered. Set the property to \c null to reset the 
+    target.
+*/
 QObject* QchDBusAdaptor::target() const {
     Q_D(const QchDBusAdaptor);
 

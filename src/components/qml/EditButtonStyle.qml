@@ -16,6 +16,14 @@
 
 import QtQuick 1.0
 
+/*!
+    \class EditButtonStyle
+    \brief Provides Button styling suitable for use with an EditBar.
+    
+    \ingroup components
+    
+    \sa Button, EditBar
+*/
 ButtonStyle {
     background: "image://theme/wmEditModeButtonNormal"
     backgroundChecked: "image://theme/wmEditModeButtonPressed"

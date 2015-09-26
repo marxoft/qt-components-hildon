@@ -87,6 +87,14 @@ public:
     Q_DECLARE_PUBLIC(QchInformationBox)
 };
 
+/*!
+    \class InformationBox
+    \brief Displays a Hildon-style popup information banner.
+    
+    \ingroup components
+    
+    \sa Notification
+*/
 QchInformationBox::QchInformationBox(QWidget *parent) :
     QMaemo5InformationBox(parent),
     d_ptr(new QchInformationBoxPrivate(this))
@@ -97,14 +105,48 @@ QchInformationBox::QchInformationBox(QWidget *parent) :
 
 QchInformationBox::~QchInformationBox() {}
 
+/*!
+    \brief The visual children of the information box.
+*/
 QDeclarativeListProperty<QDeclarativeItem> QchInformationBox::children() {
     return QDeclarativeListProperty<QDeclarativeItem>(this, 0, QchInformationBoxPrivate::children_append);
 }
 
+/*!
+    \brief The visual children of the information box.
+*/
 QDeclarativeListProperty<QObject> QchInformationBox::data() {
     return QDeclarativeListProperty<QObject>(this, 0, QchInformationBoxPrivate::data_append);
 }
 
+/*!
+    \brief The current status of the information box.
+    
+    Possible values are:
+    
+    <table>
+        <tr>
+            <th>Value</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td>DialogStatus.Closed</td>
+            <td>The information box is closed (default).</td>
+        </tr>
+        <tr>
+            <td>DialogStatus.Opening</td>
+            <td>The information box is opening.</td>
+        </tr>
+        <tr>
+            <td>DialogStatus.Open</td>
+            <td>The information box is open.</td>
+        </tr>
+        <tr>
+            <td>DialogStatus.Closing</td>
+            <td>The information box is closing.</td>
+        </tr>
+    </table>
+*/
 QchDialogStatus::Status QchInformationBox::status() const {
     Q_D(const QchInformationBox);
     return d->status;

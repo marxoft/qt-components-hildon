@@ -16,11 +16,19 @@
 
 import QtQuick 1.0
 
+/*!
+    \class TabButtonStyle
+    \brief Provides appropriate styling properties for Button when used in a TabView.
+    
+    \ingroup components
+    
+    \sa Button, TabView
+*/
 ButtonStyle {
     background: "image://theme/qgn_plat_notebook_tab_passive"
     backgroundChecked: "image://theme/qgn_plat_notebook_tab_active"
     backgroundDisabled: "image://theme/qgn_plat_notebook_tab_passive"
-    backgroundPressed: "image://theme/qgn_plat_notebook_tab_passive"
+    backgroundPressed: "image://theme/qgn_plat_notebook_tab_active"
     
     backgroundMarginRight: 10
     backgroundMarginLeft: 10

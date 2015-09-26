@@ -18,10 +18,31 @@ import QtQuick 1.0
 import org.hildon.components 1.0
 import "."
 
+/*!
+    \class TimePickSelector
+    \brief A pick selector used for choosing a time value.
+    
+    \ingroup components
+    
+    \snippet selectors.qml TimePickSelector
+    
+    \sa DatePickSelector, TimePickSelector, ValueButton
+*/
 AbstractPickSelector {
     id: root
     
+    /*!
+        \brief The interval between each minute value displayed.
+        
+        The default value is \c 1.
+    */
     property int minuteStep: 1
+    
+    /*!
+        \brief The current chosen time.
+        
+        The default value is the current time.
+    */
     property variant currentTime: new Date()
     
     minimumHeight: 350
@@ -133,9 +154,9 @@ AbstractPickSelector {
                 
                 anchors {
                     left: parent.left
-                    leftMargin: item.style.paddingLeft
+                    leftMargin: platformStyle.paddingMedium
                     right: parent.right
-                    rightMargin: item.style.paddingRight
+                    rightMargin: platformStyle.paddingMedium
                     verticalCenter: parent.verticalCenter
                 }
                 horizontalAlignment: Text.AlignHCenter

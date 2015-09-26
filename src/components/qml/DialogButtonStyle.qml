@@ -16,6 +16,14 @@
 
 import QtQuick 1.0
 
+/*!
+    \class DialogButtonStyle
+    \brief Provides appropriate styling properties for Button when used in a Dialog.
+    
+    \ingroup components
+    
+    \sa Button, Dialog
+*/
 ButtonStyle {
     background: "image://theme/DialogButtonNormal"
     backgroundChecked: "image://theme/DialogButtonPressed"

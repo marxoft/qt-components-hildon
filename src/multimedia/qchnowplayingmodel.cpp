@@ -421,6 +421,64 @@ public:
     Q_DECLARE_PUBLIC(QchNowPlayingModel)
 };
 
+/*!
+    \class NowPlayingModel
+    \brief Provides a 'Now playing' playlist.
+    
+    \ingroup multimedia
+    
+    The NowPlayingModel component can be used with the Audio component to provide a 'Now playing' playlist. 
+    Items added to the playlist are used for playback by the MAFW multimedia backend.
+    
+    Example:
+    
+    \code
+    import QtQuick 1.0
+    import org.hildon.components 1.0
+    import org.hildon.multimedia 1.0
+    
+    Window {
+        id: window
+        
+        title: "Now playing"
+        visible: true
+        
+        Audio {
+            id: player
+        }
+        
+        ListView {
+            id: view
+            
+            anchors.fill: parent
+            model: NowPlayingModel {
+                id: playlist
+                
+                mediaType: MediaType.Audio
+                onReady: {
+                    appendSource("/home/user/MyDocs/music_file_1.mp3");
+                    appendSource("/home/user/MyDocs/music_file_2.mp3");
+                    appendSource("/home/user/MyDocs/music_file_3.mp3");
+                }
+            }
+            delegate: ListItem {
+                Label {
+                    anchors {
+                        fill: parent
+                        margins: platformStyle.paddingMedium
+                    }
+                    verticalAlignment: Text.AlignVCenter
+                    text: title
+                }
+                
+                onClicked: playlist.position = index
+            }            
+        }
+    }
+    \endcode
+    
+    \sa Audio
+*/
 QchNowPlayingModel::QchNowPlayingModel(QObject *parent) :
     QStandardItemModel(parent),
     d_ptr(new QchNowPlayingModelPrivate(this))
@@ -472,6 +530,38 @@ QchNowPlayingModel::QchNowPlayingModel(QObject *parent) :
 
 QchNowPlayingModel::~QchNowPlayingModel() {}
 
+/*!
+    \property int NowPlayingModel::count
+    \brief The number of items in the playlist.
+*/
+
+/*!
+    \brief The type of media used for the playlist.
+    
+    Possible values are:
+    
+    <table>
+        <tr>
+            <th>Value</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td>MediaType.Audio</td>
+            <td>Audio files (default).</td>
+        </tr>
+        <tr>
+            <td>MediaType.Radio</td>
+            <td>Internet radio streams.</td>
+        </tr>
+        <tr>
+            <td>MediaType.Video</td>
+            <td>Video files.</td>
+        </tr>
+    </table>
+    
+    Changing this property will clear the data in the model, but not the MAFW playlist. Call clearItems() to clear the 
+    MAFW playlist.
+*/
 QchMediaType::Type QchNowPlayingModel::mediaType() const {
     Q_D(const QchNowPlayingModel);
     
@@ -491,6 +581,11 @@ void QchNowPlayingModel::setMediaType(QchMediaType::Type type) {
     }
 }
 
+/*!
+    \brief The current position in the playlist.
+    
+    \sa next(), previous()
+*/
 int QchNowPlayingModel::position() const {
     Q_D(const QchNowPlayingModel);
     
@@ -505,6 +600,12 @@ void QchNowPlayingModel::setPosition(int pos) {
     }
 }
 
+/*!
+    \property bool NowPlayingModel::repeat
+    \brief Whether the playlist will be repeated.
+    
+    The default value is \c false.
+*/
 bool QchNowPlayingModel::isRepeat() const {
     Q_D(const QchNowPlayingModel);
     
@@ -519,6 +620,12 @@ void QchNowPlayingModel::setRepeat(bool repeat) {
     }
 }
 
+/*!
+    \property bool NowPlayingModel::shuffle
+    \brief Whether the playlist will be shuffled.
+    
+    The default value is \c false.
+*/
 bool QchNowPlayingModel::isShuffled() const {
     Q_D(const QchNowPlayingModel);
     
@@ -533,12 +640,26 @@ void QchNowPlayingModel::setShuffled(bool shuffled) {
     }
 }
 
+/*!
+    \brief Adds the source with the specifed \a uri to the playlist.
+    
+    If \a uri represents a local file, the metadata for the source will be loaded.
+    
+    \sa appendItem()
+*/
 void QchNowPlayingModel::appendSource(const QString &uri) {
     Q_D(QchNowPlayingModel);
     
     appendItem(d->uriToId(uri));
 }
 
+/*!
+    \brief Adds the source with the specifed \a id to the playlist.
+    
+    If \a id represents a local file, the metadata for the source will be loaded.
+    
+    \sa appendSource()
+*/
 void QchNowPlayingModel::appendItem(const QString &id) {
     Q_D(QchNowPlayingModel);
     
@@ -546,12 +667,26 @@ void QchNowPlayingModel::appendItem(const QString &id) {
     d->mafwPlaylist->appendItem(id);
 }
 
+/*!
+    \brief Inserts the with the specified \a uri before \a index.
+    
+    If \a uri represents a local file, the metadata for the source will be loaded.
+    
+    \sa insertItem()
+*/
 void QchNowPlayingModel::insertSource(int row, const QString &uri) {
     Q_D(QchNowPlayingModel);
     
     insertItem(row, d->uriToId(uri));
 }
 
+/*!
+    \brief Inserts the with the specified \a id before \a index.
+    
+    If \a id represents a local file, the metadata for the source will be loaded.
+    
+    \sa insertSource()
+*/
 void QchNowPlayingModel::insertItem(int row, const QString &id) {
     Q_D(QchNowPlayingModel);
     
@@ -559,6 +694,9 @@ void QchNowPlayingModel::insertItem(int row, const QString &id) {
     d->mafwPlaylist->insertItem(id, row);
 }
 
+/*!
+    \brief Moves the item at \a from to \a to.
+*/
 void QchNowPlayingModel::moveItem(int from, int to) {
     Q_D(QchNowPlayingModel);
     
@@ -566,6 +704,9 @@ void QchNowPlayingModel::moveItem(int from, int to) {
     d->mafwPlaylist->moveItem(from, to);
 }
 
+/*!
+    \brief Removes the item at \a row from the playlist.
+*/
 void QchNowPlayingModel::removeItem(int row) {
     Q_D(QchNowPlayingModel);
     
@@ -573,10 +714,117 @@ void QchNowPlayingModel::removeItem(int row) {
     d->mafwPlaylist->removeItem(row);
 }
 
+/*!
+    \brief Returns the value of the property with name \a name of the item at \a row.
+    
+    Valid property names are:
+    
+    <table>
+        <tr>
+            <th>Name</th>
+        </tr>
+        <tr>
+            <td>albumArtist</td>
+        </tr>
+        <tr>
+            <td>albumTitle</td>
+        </tr>
+        <tr>
+            <td>artist</td>
+        </tr>
+        <tr>
+            <td>audioBitRate</td>
+        </tr>
+        <tr>
+            <td>audioCodec</td>
+        </tr>
+        <tr>
+            <td>comment</td>
+        </tr>
+        <tr>
+            <td>composer</td>
+        </tr>
+        <tr>
+            <td>copyright</td>
+        </tr>
+        <tr>
+            <td>coverArtUrl</td>
+        </tr>
+        <tr>
+            <td>date</td>
+        </tr>
+        <tr>
+            <td>description</td>
+        </tr>
+        <tr>
+            <td>duration</td>
+        </tr>
+        <tr>
+            <td>genre</td>
+        </tr>
+        <tr>
+            <td>id</td>
+        </tr>
+        <tr>
+            <td>keywords</td>
+        </tr>
+        <tr>
+            <td>lastPlayed</td>
+        </tr>
+        <tr>
+            <td>lastThumbnailUrl</td>
+        </tr>
+        <tr>
+            <td>lyrics</td>
+        </tr>
+        <tr>
+            <td>mimeType</td>
+        </tr>
+        <tr>
+            <td>playCount</td>
+        </tr>
+        <tr>
+            <td>resolution</td>
+        </tr>
+        <tr>
+            <td>resumePosition</td>
+        </tr>
+        <tr>
+            <td>size</td>
+        </tr>
+        <tr>
+            <td>thumbnailUrl</td>
+        </tr>
+        <tr>
+            <td>title</td>
+        </tr>
+        <tr>
+            <td>trackNumber</td>
+        </tr>
+        <tr>
+            <td>url</td>
+        </tr>
+        <tr>
+            <td>videoBitRate</td>
+        </tr>
+        <tr>
+            <td>videoCodec</td>
+        </tr>
+        <tr>
+            <td>videoFrameRate</td>
+        </tr>
+        <tr>
+            <td>year</td>
+        </tr>
+    </table>
+*/
 QVariant QchNowPlayingModel::property(int row, const QString &name) {
     return data(index(row, 0), roleNames().key(name.toUtf8()));
 }
 
+/*!
+    \brief Clears all items from the playlist.
+*/
 void QchNowPlayingModel::clearItems() {
     Q_D(QchNowPlayingModel);
     
@@ -585,6 +833,9 @@ void QchNowPlayingModel::clearItems() {
     d->gconfItem->set(0);
 }
 
+/*!
+    \brief Loads items from the MAFW playlist into the model.
+*/
 void QchNowPlayingModel::loadItems() {
     Q_D(QchNowPlayingModel);
     
@@ -593,6 +844,11 @@ void QchNowPlayingModel::loadItems() {
     d->_q_onItemsChanged(-1, 0, 0);
 }
 
+/*!
+    \brief Moves to the next item in the playlist.
+    
+    \sa position
+*/
 void QchNowPlayingModel::next() {
     Q_D(QchNowPlayingModel);
     
@@ -600,12 +856,23 @@ void QchNowPlayingModel::next() {
     d->mafwRenderer->next();
 }
 
+/*!
+    \brief Moves to the previous item in the playlist.
+    
+    \sa position
+*/
 void QchNowPlayingModel::previous() {
     Q_D(QchNowPlayingModel);
     
     d->_q_assignPlaylist();
     d->mafwRenderer->previous();
 }
+
+/*!
+    \fn void NowPlayingModel::ready()
+    
+    This signal is emitted when MAFW playlist has been loaded and is ready to be accessed.
+*/
 
 void QchNowPlayingModel::classBegin() {}
 

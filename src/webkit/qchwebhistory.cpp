@@ -44,11 +44,24 @@ static QWebHistory* qWebHistory(const QchWebHistory *qwh) {
     return 0;
 }
 
+/*!
+    \class WebHistory
+    \brief Provides access to the web history of a WebPage or WebView.
+    
+    \ingroup webkit
+    
+    \note This component cannot be created in QML.
+    
+    \sa WebPage, WebView
+*/
 QchWebHistory::QchWebHistory(QWebPage *parent) :
     QObject(parent)
 {
 }
 
+/*!
+    \brief The list of back items in the history.
+*/
 QVariantList QchWebHistory::backItems() const {
     QVariantList list;
     
@@ -61,6 +74,9 @@ QVariantList QchWebHistory::backItems() const {
     return list;
 }
 
+/*!
+    \brief The list of forward items in the history.
+*/
 QVariantList QchWebHistory::forwardItems() const {
     QVariantList list;
 
@@ -73,6 +89,9 @@ QVariantList QchWebHistory::forwardItems() const {
     return list;
 }
 
+/*!
+    \brief The list of items in the history.
+*/
 QVariantList QchWebHistory::items() const {
     QVariantList list;
 
@@ -85,6 +104,9 @@ QVariantList QchWebHistory::items() const {
     return list;
 }
 
+/*!
+    \brief The most previous item in the history.
+*/
 QVariant QchWebHistory::backItem() const {
     if (QWebHistory *history = qWebHistory(this)) {
         return itemToVariant(history->backItem());
@@ -93,6 +115,9 @@ QVariant QchWebHistory::backItem() const {
     return QVariant();
 }
 
+/*!
+    \brief The next item in the history.
+*/
 QVariant QchWebHistory::forwardItem() const {
     if (QWebHistory *history = qWebHistory(this)) {
         return itemToVariant(history->forwardItem());
@@ -101,6 +126,9 @@ QVariant QchWebHistory::forwardItem() const {
     return QVariant();
 }
 
+/*!
+    \brief The current item in the history.
+*/
 QVariant QchWebHistory::currentItem() const {
     if (QWebHistory *history = qWebHistory(this)) {
         return itemToVariant(history->currentItem());
@@ -109,6 +137,9 @@ QVariant QchWebHistory::currentItem() const {
     return QVariant();
 }
 
+/*!    
+    Returns the history item at \a index.
+*/
 QVariant QchWebHistory::itemAt(int index) const {
     if (QWebHistory *history = qWebHistory(this)) {
         return itemToVariant(history->itemAt(index));
@@ -117,6 +148,9 @@ QVariant QchWebHistory::itemAt(int index) const {
     return QVariant();
 }
 
+/*!
+    \brief The index of the current item in the history.
+*/
 int QchWebHistory::currentIndex() const {
     if (QWebHistory *history = qWebHistory(this)) {
         return history->currentItemIndex();
@@ -134,6 +168,9 @@ void QchWebHistory::setCurrentIndex(int index) {
     }
 }
 
+/*!
+    \brief The maximum number of items in the history.
+*/
 int QchWebHistory::maximumItemCount() const {
     if (QWebHistory *history = qWebHistory(this)) {
         return history->maximumItemCount();
@@ -151,6 +188,9 @@ void QchWebHistory::setMaximumItemCount(int count) {
     }
 }
 
+/*!
+    \brief The current number of items in the history.
+*/
 int QchWebHistory::count() const {
     if (QWebHistory *history = qWebHistory(this)) {
         return history->count();
@@ -159,6 +199,9 @@ int QchWebHistory::count() const {
     return -1;
 }
 
+/*!
+    \brief Whether there is a back item available.
+*/
 bool QchWebHistory::canGoBack() const {
     if (QWebHistory *history = qWebHistory(this)) {
         return history->canGoBack();
@@ -166,6 +209,10 @@ bool QchWebHistory::canGoBack() const {
     
     return false;
 }
+
+/*!
+    \brief Whether there is a forward item available.
+*/
 
 bool QchWebHistory::canGoForward() const {
     if (QWebHistory *history = qWebHistory(this)) {
@@ -175,6 +222,9 @@ bool QchWebHistory::canGoForward() const {
     return false;
 }
 
+/*!
+    \brief The file name used to (re)store the history.
+*/
 QString QchWebHistory::storageFileName() const {
     return m_fileName;
 }
@@ -186,6 +236,9 @@ void QchWebHistory::setStorageFileName(const QString &fileName) {
     }
 }
 
+/*!    
+    Returns true if the history can be saved to \link storageFileName\endlink.
+*/
 bool QchWebHistory::save() {
     if (QWebHistory *history = qWebHistory(this)) {
         QFile file(storageFileName());
@@ -201,6 +254,9 @@ bool QchWebHistory::save() {
     }
 }
 
+/*!    
+    Returns true if the history can be loaded from \link storageFileName\endlink.
+*/
 bool QchWebHistory::load() {
     clear();
     
@@ -218,6 +274,9 @@ bool QchWebHistory::load() {
     }    
 }
 
+/*!    
+    Clears all items from the history.
+*/
 void QchWebHistory::clear() {
     if (QWebHistory *history = qWebHistory(this)) {
         history->clear();

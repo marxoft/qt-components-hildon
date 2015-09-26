@@ -187,10 +187,16 @@ void QchSettingsPrivate::_q_propertyChanged() {
 }
 
 /*!
-    \class QchSettings
-    \ingroup org-hildon-settings
+    \class Settings
+    \brief Exposes the QSettings API to QML.
+    
+    \ingroup settings
+    
+    Each Settings instance can have a \link fileName\endlink and a \link category\endlink.
+    Properties declared in QML will be automatically (re)stored.
+    
+    \include settings.qml
 */
-
 QchSettings::QchSettings(QObject *parent)
     : QObject(parent), d_ptr(new QchSettingsPrivate)
 {
@@ -204,6 +210,12 @@ QchSettings::~QchSettings()
     d->reset(); // flush pending changes
 }
 
+/*!
+    \brief The location of the file where the settings will be stored.
+    
+    By default, this property is an empty string, meaning that the location will be determined by 
+    QApplication::organizationName() and QApplication::applicationName().
+*/
 QString QchSettings::fileName() const {
     Q_D(const QchSettings);
     
@@ -223,6 +235,9 @@ void QchSettings::setFileName(const QString &fileName) {
     }
 }
 
+/*!
+    \brief The category under which settings will be (re)stored.
+*/
 QString QchSettings::category() const {
     Q_D(const QchSettings);
 

@@ -16,4 +16,10 @@
 
 import QtQuick 1.0
 
+/*!
+    \class Style
+    \brief The base class for styling components.
+    
+    \ingroup components
+*/
 QtObject {}

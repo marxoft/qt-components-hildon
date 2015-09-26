@@ -45,6 +45,35 @@ public:
     Q_DECLARE_PUBLIC(QchScreenSaver)
 };
 
+/*!
+    \class ScreenSaver
+    \brief Controls display dimming.
+    
+    \ingroup utils
+    
+    Example:
+    
+    \code
+    import QtQuick 1.0
+    import org.hildon.components 1.0
+    import org.hildon.utils 1.0
+    
+    Window {
+        title: "Screen saver window"
+        visible: true
+        
+        CheckBox {
+            anchors.centerIn: parent
+            text: "Prevent display dimming"
+            onCheckedChanged: screenSaver.screenSaverInhibited = checked
+        }
+        
+        ScreenSaver {
+            id: screenSaver
+        }
+    }
+    \endcode
+*/
 QchScreenSaver::QchScreenSaver(QObject *parent) :
     QObject(parent),
     d_ptr(new QchScreenSaverPrivate(this))
@@ -61,6 +90,11 @@ QchScreenSaver::~QchScreenSaver() {
     setScreenSaverInhibited(false);
 }
 
+/*!
+    \brief Whether the display should by prevented from dimming.
+    
+    The default value is \c false.
+*/
 bool QchScreenSaver::screenSaverInhibited() const {
     Q_D(const QchScreenSaver);
 

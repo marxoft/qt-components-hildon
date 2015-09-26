@@ -16,9 +16,26 @@
 
 import QtQuick 1.0
 
+/*!
+    \class Button
+    \brief A basic push button.
+    
+    \ingroup components
+    
+    The Button component provides a basic push button which can be styled to provide the correct appearance depending 
+    on the context in which it is used.
+    
+    \include buttons.qml
+    
+    \sa ButtonStyle
+*/
 AbstractButton {
     id: root
     
+    /*!
+        type:ButtonStyle
+        \brief Provides styling properties for the button.
+    */
     property QtObject style: ButtonStyle {}
     
     width: style.buttonWidth

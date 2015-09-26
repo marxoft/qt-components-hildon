@@ -16,14 +16,56 @@
 
 import QtQuick 1.0
 
+/*!
+    \class ProgressBar
+    \brief A component for displaying the progress of a process.
+    
+    \ingroup components
+    
+    \sa ProgressBarStyle, Slider
+*/
 Item {
     id: root
     
+    /*!
+        \brief The minimum value of the progress bar.
+        
+        The default value is \c 0.
+    */
     property int minimum: 0
+    
+    /*!
+        \brief The maximum value of the progress bar.
+        
+        The default value is \c 100.
+    */
     property int maximum: 100
+    
+    /*!
+        \brief The current value of the progress bar.
+        
+        The default value is 0.
+    */
     property int value
+    
+    /*!
+        \brief The text to be displayed in the progress bar.
+        
+        The default value is an empty string.
+    */
     property string text
+    
+    /*!
+        \brief Whether the text should be visible in the progress bar.
+        
+        The default value is \c false.
+    */
     property bool textVisible: false
+    
+    /*!
+        type:ProgressBarStyle
+        \brief Provides styling properties for the progress bar.        
+    */
     property QtObject style: ProgressBarStyle {}
     
     height: 70

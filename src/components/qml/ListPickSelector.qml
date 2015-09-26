@@ -18,12 +18,40 @@ import QtQuick 1.0
 import org.hildon.components 1.0
 import "."
 
+/*!
+    \class ListPickSelector
+    \brief A pick selector used for selecting an item from a list.
+    
+    \ingroup components
+    
+    \snippet selectors.qml ListPickSelector
+    
+    \sa DatePickSelector, TimePickSelector, ValueButton
+*/
 AbstractPickSelector {
     id: root
     
+    /*!
+        type:variant
+        \brief The model to be used by the view.
+    */
     property alias model: view.model
+    
+    /*!
+        type:int
+        \brief The current chosen index in the view.
+    */
     property alias currentIndex: view.currentIndex
+    
+    /*!
+        type:Component
+        \brief The delegate to be used by the view.
+    */
     property alias delegate: view.delegate
+    
+    /*!
+        \brief The name of the role that provides the text to be displayed in the delegate.
+    */
     property string textRole
     
     minimumHeight: 350
@@ -48,7 +76,7 @@ AbstractPickSelector {
             
             property alias text: label.text
             
-            style: ListItemStyle {
+            style: ListItemStyle {                
                 background: "image://theme/TouchListBackground" + (item.ListView.isCurrentItem ? "Pressed" : "Normal")
             }
             
@@ -57,9 +85,9 @@ AbstractPickSelector {
                 
                 anchors {
                     left: parent.left
-                    leftMargin: item.style.paddingLeft
+                    leftMargin: platformStyle.paddingMedium
                     right: parent.right
-                    rightMargin: item.style.paddingRight
+                    rightMargin: platformStyle.paddingMedium
                     verticalCenter: parent.verticalCenter
                 }
                 horizontalAlignment: Text.AlignHCenter

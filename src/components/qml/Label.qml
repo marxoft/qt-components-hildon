@@ -16,9 +16,21 @@
 
 import QtQuick 1.0
 
+/*!
+    \class Label
+    \brief A text label with standard font properties.
+    
+    \ingroup components
+    
+    \sa LabelStyle
+*/
 Text {
     id: root
     
+    /*!
+        type:LabelStyle
+        \brief Provides styling properties for the label.
+    */
     property QtObject style: LabelStyle {}
     
     color: style.textColor

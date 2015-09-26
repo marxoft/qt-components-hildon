@@ -32,10 +32,6 @@ public:
     {
     }
     
-    ~QchDialogPrivate() {
-        delete root;
-    }
-    
     static void children_append(QDeclarativeListProperty<QDeclarativeItem> *list, QDeclarativeItem *item) {        
         if (!item) {
             return;
@@ -72,6 +68,7 @@ public:
         view = new QchGraphicsView(q);
         root = new QDeclarativeItem;
         
+        root->setParent(view);
         view->addItem(root);
         
         QVBoxLayout *vbox = new QVBoxLayout(q);
@@ -88,6 +85,12 @@ public:
     Q_DECLARE_PUBLIC(QchDialog)
 };
 
+/*!
+    \class Dialog
+    \brief The base class for popup dialogs.
+    
+    \ingroup components
+*/
 QchDialog::QchDialog(QWidget *parent) :
     QDialog(parent),
     d_ptr(new QchDialogPrivate(this))
@@ -98,14 +101,25 @@ QchDialog::QchDialog(QWidget *parent) :
 
 QchDialog::~QchDialog() {}
 
+/*!
+    \brief The visual children of the dialog.
+*/
 QDeclarativeListProperty<QDeclarativeItem> QchDialog::children() {
     return QDeclarativeListProperty<QDeclarativeItem>(this, 0, QchDialogPrivate::children_append);
 }
 
+/*!
+    \brief The children of the dialog.
+*/
 QDeclarativeListProperty<QObject> QchDialog::data() {
     return QDeclarativeListProperty<QObject>(this, 0, QchDialogPrivate::data_append);
 }
 
+/*!
+    \brief Whether the progress indicator should be visible.
+    
+    The default value is \c false.
+*/
 bool QchDialog::showProgressIndicator() const {
     return testAttribute(Qt::WA_Maemo5ShowProgressIndicator);
 }
@@ -117,6 +131,34 @@ void QchDialog::setShowProgressIndicator(bool enabled) {
     }
 }
 
+/*!
+    \brief The current status of the dialog.
+    
+    Possible values are:
+    
+    <table>
+        <tr>
+            <th>Value</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td>DialogStatus.Closed</td>
+            <td>The dialog is closed (default).</td>
+        </tr>
+        <tr>
+            <td>DialogStatus.Opening</td>
+            <td>The dialog is opening.</td>
+        </tr>
+        <tr>
+            <td>DialogStatus.Open</td>
+            <td>The dialog is open.</td>
+        </tr>
+        <tr>
+            <td>DialogStatus.Closing</td>
+            <td>The dialog is closing.</td>
+        </tr>
+    </table>
+*/
 QchDialogStatus::Status QchDialog::status() const {
     Q_D(const QchDialog);
     return d->status;

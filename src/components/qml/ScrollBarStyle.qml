@@ -16,7 +16,22 @@
 
 import QtQuick 1.0
 
+/*!
+    \class ScrollBarStyle
+    \brief Provides styling properties for a ScrollBar.
+    
+    \ingroup components
+    
+    \sa ScrollBar
+*/
 Style {
+    /*!
+        \brief The color of the ScrollBar.
+    */
     property color scrollBarColor: platformStyle.secondaryTextColor
+    
+    /*!
+        \brief The width of the ScrollBar.
+    */
     property int scrollBarWidth: platformStyle.paddingMedium
 }

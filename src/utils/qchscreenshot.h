@@ -81,11 +81,10 @@ public:
     void resetTargetHeight();
 
 
-
-public slots:
+public Q_SLOTS:
     bool grab();
 
-signals:
+Q_SIGNALS:
     void targetChanged();
     void fileNameChanged();
     void overwriteExistingFileChanged();

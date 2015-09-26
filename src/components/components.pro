@@ -5,6 +5,7 @@ QT += declarative dbus maemo5
 TARGET = qchcomponents
 
 HEADERS += \
+    qchaction.h \
     qchcloseevent.h \
     qchdialog.h \
     qchdialogstatus.h \
@@ -27,6 +28,7 @@ HEADERS += \
     qchplugin.h
 
 SOURCES += \
+    qchaction.cpp \
     qchdialog.cpp \
     qchexclusivegroup.cpp \
     qchfiledialog.cpp \
@@ -77,7 +79,6 @@ qml.files += \
     qml/SpinBoxStyle.qml \
     qml/Style.qml \
     qml/Tab.qml \
-    qml/TabButton.qml \
     qml/TabButtonStyle.qml \
     qml/TabView.qml \
     qml/TextArea.qml \

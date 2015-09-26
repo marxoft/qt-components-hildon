@@ -16,10 +16,26 @@
 
 import QtQuick 1.0
 
+/*!
+    \class ToolBarStyle
+    \brief Provides styling properties for a ToolBar.
+    
+    \ingroup components
+    
+    \sa ToolBar
+*/
 Style {
     // Background
+    
+    /*!
+        \brief The url for the background image.
+    */
     property url background: "image://theme/ToolbarPrimaryBackground"
     
     // Item spacing
+    
+    /*!
+        \brief The space between each item in the ToolBar.
+    */
     property int spacing: 0
 }

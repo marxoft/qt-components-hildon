@@ -16,30 +16,100 @@
 
 import QtQuick 1.0
 
+/*!
+    \class SpinBox
+    \brief A text field used for choosing an integer value.
+    
+    \ingroup components
+    
+    \sa DoubleSpinBox, SpinBoxStyle
+*/
 FocusScope {
     id: root
     
+    /*!
+        \brief The minimum value that can be chosen.
+        
+        The default value is \c 0.
+    */
     property int minimum: 0
+    
+    /*!
+        \brief The maximum value that can be chosen.
+        
+        The default value is \c 99.
+    */
     property int maximum: 99
+    
+    /*!
+        \brief The step size used to increment/decrement the value.
+        
+        The default value is \c 1.
+    */
     property int singleStep: 1
+    
+    /*!
+        \brief The current value.
+        
+        The default value is \c 0.
+    */
     property int value
     
+    /*!
+        \brief The current text, including the prefix and suffix.        
+    */
     property string text
+    
+    /*!
+        \brief The current text without the prefix and suffix.        
+    */
     property string cleanText
+    
+    /*!
+        \brief The text to be displayed before the value.
+        
+        The default value is an empty string.
+    */
     property string prefix
+    
+    /*!
+        \brief The text to be displayed after the value.
+        
+        The default value is an empty string.
+    */
     property string suffix
     
+    /*!
+        \brief Whether incrementing/decrementing the value should wrap once the minimum/maximum is reached.
+        
+        The default value \c false.
+    */
     property bool wrapping: false
     
+    /*!
+        type:string
+        \brief The text to be displayed instead of a numeric value whenever the current value is equal to minimum.
+    */
     property alias specialValueText: placeholder.text
+    
     property alias inputMethodHints: textInput.inputMethodHints
     property alias font: textInput.font
     property alias readOnly: textInput.readOnly
     
+    /*!
+        type:SpinBoxStyle
+        \brief Provides styling properties for the spin box.
+    */
     property QtObject style: SpinBoxStyle {}
     
+    /*!
+        \brief Emitted when the return key is pressed.
+    */
     signal accepted
     
+    /*!
+        \brief Increments the value.
+    */
     function stepUp() {
         if (value <= (maximum - singleStep)) {
             value += singleStep;
@@ -49,6 +119,9 @@ FocusScope {
         }
     }
     
+    /*!
+        \brief Decrements the value.
+    */
     function stepDown() {
         if (value >= (minimum + singleStep)) {
             value -= singleStep;
@@ -58,14 +131,23 @@ FocusScope {
         }
     }
     
+    /*!
+        \brief Sets the value to the minimum.
+    */
     function clear() {
         value = minimum;
     }
     
+    /*!
+        \brief Selects the text.
+    */
     function selectAll() {
         textInput.selectAll()
     }
-
+    
+    /*!
+        \brief Forces the spin box to be the current focus item.
+    */
     function forceActiveFocus() {
         textInput.forceActiveFocus()
     }

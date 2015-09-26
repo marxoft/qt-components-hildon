@@ -55,6 +55,14 @@ public:
     Q_DECLARE_PUBLIC(QchFileDialog)
 };
 
+/*!
+    \class FileDialog
+    \brief A file dialog with native appearance.
+    
+    \ingroup components
+    
+    The FileDialog component is used to display a native file dialog.
+*/
 QchFileDialog::QchFileDialog(QObject *parent) :
     QObject(parent),
     d_ptr(new QchFileDialogPrivate(this))
@@ -63,11 +71,21 @@ QchFileDialog::QchFileDialog(QObject *parent) :
 
 QchFileDialog::~QchFileDialog() {}
 
+/*!
+    \brief The current chosen filepath.
+    
+    \sa accepted()
+*/
 QString QchFileDialog::filePath() const {
     Q_D(const QchFileDialog);
     return d->filePath;
 }
 
+/*!
+    \brief The current folder.
+    
+    The folder can be changed either programatically or by the user.
+*/
 QString QchFileDialog::folder() const {
     Q_D(const QchFileDialog);
     return d->folder;
@@ -81,6 +99,9 @@ void QchFileDialog::setFolder(const QString &f) {
     }
 }
 
+/*!
+    \brief A list of wildcard filters used to filter filenames.
+*/
 QStringList QchFileDialog::nameFilters() const {
     Q_D(const QchFileDialog);
     return d->nameFilters;
@@ -92,6 +113,11 @@ void QchFileDialog::setNameFilters(const QStringList &f) {
     emit nameFiltersChanged();
 }
 
+/*!
+    \brief Whether the dialog should be used to choose a folder.
+    
+    The default value is \c false.
+*/
 bool QchFileDialog::selectFolder() const {
     Q_D(const QchFileDialog);
     return d->selectFolder;
@@ -105,6 +131,23 @@ void QchFileDialog::setSelectFolder(bool s) {
     }
 }
 
+/*!
+    \fn void FileDialog::accepted()
+    \brief Emitted when the user chooses a file/folder.    
+*/
+
+/*!
+    \fn void FileDialog::rejected()
+    \brief Emitted when the user closes the dialog without choosing a file/folder.
+*/
+
+/*!
+    \brief Opens the dialog in accordance with the currently set properties.
+    
+    If a file/folder is chosen, the accepted() signal will be emitted, otherwise the rejected() signal will be emitted.
+    
+    \sa accepted(), rejected()
+*/
 void QchFileDialog::open() {
     Q_D(QchFileDialog);
     

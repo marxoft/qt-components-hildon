@@ -21,26 +21,63 @@
 #include <QDeclarativeParserStatus>
 #include <qdeclarative.h>
 
+class QchMenuItem;
 class QchMenuPrivate;
 
 class QchMenu : public QObject, public QDeclarativeParserStatus
 {
     Q_OBJECT
     
-    Q_PROPERTY(QDeclarativeListProperty<QObject> data READ data)
+    Q_PROPERTY(bool enabled READ isEnabled WRITE setEnabled NOTIFY enabledChanged)
+    Q_PROPERTY(QString iconName READ iconName WRITE setIconName NOTIFY iconChanged)
+    Q_PROPERTY(QString iconSource READ iconSource WRITE setIconSource NOTIFY iconChanged)
+    Q_PROPERTY(QDeclarativeListProperty<QObject> items READ items)
+    Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
+    Q_PROPERTY(bool visible READ isVisible WRITE setVisible NOTIFY visibleChanged)
     
     Q_INTERFACES(QDeclarativeParserStatus)
     
-    Q_CLASSINFO("DefaultProperty", "data")
+    Q_CLASSINFO("DefaultProperty", "items")
     
 public:
     explicit QchMenu(QObject *parent = 0);
     ~QchMenu();
     
-    QDeclarativeListProperty<QObject> data();
+    QDeclarativeListProperty<QObject> items();
+    
+    bool isEnabled() const;
+    void setEnabled(bool e);
+    
+    QString iconName() const;
+    void setIconName(const QString &name);
+    
+    QString iconSource() const;
+    void setIconSource(const QString &source);
+    
+    QString title() const;
+    void setTitle(const QString &t);
+    
+    bool isVisible() const;
+    void setVisible(bool v);
 
 public Q_SLOTS:
+    QchMenuItem* addItem(const QString &text);
+    QchMenuItem* insertItem(int before, const QString &text);
+    
+    QchMenu* addMenu(const QString &title);
+    QchMenu* insertMenu(int before, const QString &title);
+    
+    void removeItem(QObject *item);
+    
     void popup();
+
+Q_SIGNALS:
+    void aboutToHide();
+    void aboutToShow();
+    void enabledChanged();
+    void iconChanged();
+    void titleChanged();
+    void visibleChanged();
     
 protected:
     virtual void classBegin();

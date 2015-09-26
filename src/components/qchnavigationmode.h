@@ -24,10 +24,10 @@ class QchNavigationMode : public QObject
 {
     Q_OBJECT
     
-    Q_ENUMS(NavigationMode)
+    Q_ENUMS(Mode)
 
 public:
-    enum NavigationMode {
+    enum Mode {
         TouchNavigation = 0,
         KeyNavigation
     };

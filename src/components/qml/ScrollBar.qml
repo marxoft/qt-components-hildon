@@ -16,12 +16,76 @@
 
 import QtQuick 1.0
 
+/*!
+    \class ScrollBar
+    \brief Provides a scrolling indicator for a Flickable or ListView.
+    
+    \ingroup components
+    
+    \sa Flickable, ListView
+*/
 Item {
     id: root
     
+    /*!
+        \brief The flickable item to which the scroll bar is attached.
+    */
     property Flickable flickableItem
+    
+    /*
+        type:Qt.Orientation
+        \brief The orientation of the scroll bar.
+        
+        Possible values are:
+        
+        <table>
+            <tr>
+                <th>Value</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td>Qt.Horizontal</td>
+                <td>Horizontal orientation.</td>
+            </tr>
+            <tr>
+                <td>Qt.Vertical</td>
+                <td>Vertical orientation (default).</td>
+            </tr>
+        </table>        
+    */
     property int orientation: Qt.Vertical
+    
+    /*!
+        type:Qt.ScrollBarPolicy
+        \brief The policy used to determine whether the scroll bar should be visible.
+        
+        Possible values are:
+        
+        <table>
+            <tr>
+                <th>Value</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td>Qt.ScrollBarAlwaysOn</td>
+                <td>The scroll bar should always be visible.</td>
+            </tr>
+            <tr>
+                <td>Qt.ScrollBarAlwaysOff</td>
+                <td>The scroll bar should never be visible.</td>
+            </tr>
+            <tr>
+                <td>Qt.ScrollBarAsNeeded</td>
+                <td>The scroll bar should be visible when required (default).</td>
+            </tr>
+        </table>
+    */
     property int scrollBarPolicy: Qt.ScrollBarAsNeeded
+    
+    /*!
+        type:ScrollBarStyle
+        \brief Provides styling properties for the scroll bar.
+    */
     property QtObject style: ScrollBarStyle {}
     
     anchors.fill: flickableItem ? flickableItem : undefined

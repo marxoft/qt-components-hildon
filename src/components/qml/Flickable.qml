@@ -16,10 +16,74 @@
 
 import QtQuick 1.0
 
+/*!
+    \class Flickable
+    \brief A standard QtQuick Flickable element with scroll bars.
+    
+    \ingroup components
+    
+    The Flickable component behaves in the same way as the standard QtQuick Flickable element, but with optional 
+    scroll bars.
+    
+    \sa ScrollBar
+*/
 Flickable {
     id: root
+    
+    /*!
+        type:enumeration
+        \brief The policy used to determine whether the horizontal scroll bar should be visible.
         
+        Possible values are:
+        
+        <table>
+            <tr>
+                <th>Value</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td>Qt.ScrollBarAlwaysOn</td>
+                <td>The horizontal scroll bar should always be visible.</td>
+            </tr>
+            <tr>
+                <td>Qt.ScrollBarAlwaysOff</td>
+                <td>The horizontal scroll bar should never be visible.</td>
+            </tr>
+            <tr>
+                <td>Qt.ScrollBarAsNeeded</td>
+                <td>The horizontal scroll bar should be visible when the content width is greater than the width of the
+                flickable (default).</td>
+            </tr>
+        </table>
+    */
     property int horizontalScrollBarPolicy: Qt.ScrollBarAsNeeded
+    
+    /*!
+        type:enumeration
+        \brief The policy used to determine whether the vertical scroll bar should be visible.
+        
+        Possible values are:
+        
+        <table>
+            <tr>
+                <th>Value</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td>Qt.ScrollBarAlwaysOn</td>
+                <td>The vertical scroll bar should always be visible.</td>
+            </tr>
+            <tr>
+                <td>Qt.ScrollBarAlwaysOff</td>
+                <td>The vertical scroll bar should never be visible.</td>
+            </tr>
+            <tr>
+                <td>Qt.ScrollBarAsNeeded</td>
+                <td>The vertical scroll bar should be visible when the content height is greater than the height of the
+                flickable (default).</td>
+            </tr>
+        </table>
+    */
     property int verticalScrollBarPolicy: Qt.ScrollBarAsNeeded
     
     interactive: (contentWidth > width) || (contentHeight > height)

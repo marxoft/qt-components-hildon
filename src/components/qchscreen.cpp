@@ -1,18 +1,17 @@
 /*
- * Copyright (C) 2014 Stuart Howarth <showarth@marxoft.co.uk>
+ * Copyright (C) 2015 Stuart Howarth <showarth@marxoft.co.uk>
  *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms and conditions of the GNU Lesser General Public License,
- * version 3, as published by the Free Software Foundation.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 3 as
+ * published by the Free Software Foundation.
  *
- * This program is distributed in the hope it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for
- * more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
- * along with this program; if not, write to the Free Software Foundation,
- * Inc., 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "qchscreen.h"
@@ -74,6 +73,14 @@ public:
 
 QchScreen* QchScreen::self = 0;
 
+/*!
+    \class Screen
+    \brief Provides access to various screen properties.
+    
+    \ingroup components
+    
+    \note Screen is a context property and cannot be created in QML.
+*/  
 QchScreen::QchScreen(QObject *parent) :
     QObject(parent),
     d_ptr(new QchScreenPrivate(this))
@@ -102,14 +109,54 @@ QchScreen* QchScreen::instance() {
     return self;
 }
 
+/*!
+    \brief The current width of the screen.
+    
+    This property changes when the current orientation changes.
+    
+    \sa currentOrientation
+*/
 int QchScreen::width() const {
     return QApplication::desktop()->screenGeometry().width();
 }
 
+/*!
+    \brief The current height of the screen.
+    
+    This property changes when the current orientation changes.
+    
+    \sa currentOrientation
+*/
 int QchScreen::height() const {
     return QApplication::desktop()->screenGeometry().height();
 }
 
+/*!
+    \brief The current orientation lock of the screen.
+    
+    Possible values are:
+    
+    <table>
+        <tr>
+            <th>Value</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td>Qt.WA_Maemo5AutoOrientation</td>
+            <td>Application windows will rotate when the device is rotated.</td>
+        </tr>
+        <tr>
+            <td>Qt.WA_Maemo5LandscapeOrientation</td>
+            <td>Application windows will be locked to landscape orientation (default).</td>
+        </tr>
+        <tr>
+            <td>Qt.WA_Maemo5PortraitOrientation</td>
+            <td>Application windows will be locked to portrait orientation.</td>
+        </tr>
+    </table>
+    
+    \sa currentOrientation
+*/
 int QchScreen::orientationLock() const {
     Q_D(const QchScreen);
     return d->orientationLock;
@@ -123,11 +170,37 @@ void QchScreen::setOrientationLock(int lock) {
     }
 }
 
+/*!
+    \brief The current orientation of the screen.
+    
+    Possible values are:
+    
+    <table>
+        <tr>
+            <th>Value</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td>Qt.WA_Maemo5LandscapeOrientation</td>
+            <td>The current application window is in landscape orientation.</td>
+        </tr>
+        <tr>
+            <td>Qt.WA_Maemo5PortraitOrientation</td>
+            <td>The current application window is in portrait orientation.</td>
+        </tr>
+    </table>
+    
+    \sa orientationLock
+*/
 int QchScreen::currentOrientation() const {
     Q_D(const QchScreen);
     return d->currentOrientation;
 }
 
+/*!
+    \property bool Screen::covered
+    \brief Whether the screen is covered/blanked.
+*/
 bool QchScreen::isCovered() const {
     Q_D(const QchScreen);
     return d->covered;

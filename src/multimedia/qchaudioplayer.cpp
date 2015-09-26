@@ -365,6 +365,18 @@ public:
     Q_DECLARE_PUBLIC(QchAudioPlayer)
 };
 
+/*!
+    \class Audio
+    \brief Provides audio playback features.
+    
+    \ingroup multimedia
+    
+    The Audio component is suitable for playback of audio streams, such as music files and internet radio.
+    
+    \include audio.qml
+    
+    \sa NowPlayingModel
+*/
 QchAudioPlayer::QchAudioPlayer(QObject *parent) :
     QObject(parent),
     d_ptr(new QchAudioPlayerPrivate(this))
@@ -405,6 +417,11 @@ QchAudioPlayer::~QchAudioPlayer() {
     d->mafwRenderer->stop();
 }
 
+/*!
+    \brief Whether the source is set immediately.
+    
+    The default value is \c true.
+*/
 bool QchAudioPlayer::autoLoad() const {
     Q_D(const QchAudioPlayer);
     
@@ -419,24 +436,112 @@ void QchAudioPlayer::setAutoLoad(bool enable) {
     }
 }
 
+/*!
+    \brief The current progress of audio buffering.
+*/
 qreal QchAudioPlayer::bufferProgress() const {
     Q_D(const QchAudioPlayer);
     
     return d->bufferProgress;
 }
 
+/*!
+    \brief A description of the error that last occurred.
+*/
 QString QchAudioPlayer::errorString() const {
     Q_D(const QchAudioPlayer);
     
     return d->errorString;
 }
 
+/*!
+    \brief The metadata associated with the audio stream.
+    
+    Available properties are:
+    
+    <table>
+        <tr>
+            <th>Name</th>
+        </tr>
+        <tr>
+            <td>metaData.albumArtist</td>
+        </tr>
+        <tr>
+            <td>metaData.albumTitle</td>
+        </tr>
+        <tr>
+            <td>metaData.artist</td>
+        </tr>
+        <tr>
+            <td>metaData.audioBitRate</td>
+        </tr>
+        <tr>
+            <td>metaData.audioCodec</td>
+        </tr>
+        <tr>
+            <td>metaData.comment</td>
+        </tr>
+        <tr>
+            <td>metaData.composer</td>
+        </tr>
+        <tr>
+            <td>metaData.copyright</td>
+        </tr>
+        <tr>
+            <td>metaData.coverArtUrl</td>
+        </tr>
+        <tr>
+            <td>metaData.date</td>
+        </tr>
+        <tr>
+            <td>metaData.description</td>
+        </tr>
+        <tr>
+            <td>metaData.genre</td>
+        </tr>
+        <tr>
+            <td>metaData.keywords</td>
+        </tr>
+        <tr>
+            <td>metaData.lastPlayed</td>
+        </tr>
+        <tr>
+            <td>metaData.lyrics</td>
+        </tr>
+        <tr>
+            <td>metaData.mimeType</td>
+        </tr>
+        <tr>
+            <td>metaData.playCount</td>
+        </tr>
+        <tr>
+            <td>metaData.size</td>
+        </tr>
+        <tr>
+            <td>metaData.title</td>
+        </tr>
+        <tr>
+            <td>metaData.trackNumber</td>
+        </tr>
+        <tr>
+            <td>metaData.year</td>
+        </tr>
+    </table>
+*/
 MetadataWatcher* QchAudioPlayer::metaData() const {
     Q_D(const QchAudioPlayer);
     
     return d->metadataWatcher;
 }
 
+/*!
+    \property bool Audio::muted
+    \brief Whether the audio output is muted.
+    
+    The default value is \c false.
+    
+    \sa volume
+*/
 bool QchAudioPlayer::isMuted() const {
     Q_D(const QchAudioPlayer);
     
@@ -459,6 +564,14 @@ void QchAudioPlayer::setMuted(bool muted) {
     }
 }
 
+/*!
+    \property bool Audio::paused
+    \brief Whether the audio playback is paused.
+    
+    The default value is \c false.
+    
+    \sa pause(), paused()
+*/
 bool QchAudioPlayer::isPaused() const {
     return status() == QchMediaStatus::Paused;
 }
@@ -472,6 +585,14 @@ void QchAudioPlayer::setPaused(bool paused) {
     }
 }
 
+/*!
+    \property bool Audio::playing
+    \brief Whether the audio is playing.
+    
+    The default value is \c false.
+    
+    \sa play(), started(), resumed()
+*/
 bool QchAudioPlayer::isPlaying() const {
     switch (status()) {
     case QchMediaStatus::Loading:
@@ -491,12 +612,21 @@ void QchAudioPlayer::setPlaying(bool playing) {
     }
 }
 
+/*!
+    \property bool Audio::seekable
+    \brief Whether seeking in the audio stream is enabled.
+    
+    \sa position
+*/
 bool QchAudioPlayer::isSeekable() const {
     Q_D(const QchAudioPlayer);
     
     return d->seekable;
 }
 
+/*!
+    \brief The current position in the audio stream, in seconds.
+*/
 int QchAudioPlayer::position() const {
     Q_D(const QchAudioPlayer);
     
@@ -511,12 +641,18 @@ void QchAudioPlayer::setPosition(int pos) {
     }
 }
 
+/*!
+    \brief The duration of the audio stream, in seconds.
+*/
 int QchAudioPlayer::duration() const {
     Q_D(const QchAudioPlayer);
     
     return d->duration;
 }
 
+/*!
+    \brief The source of the audio stream
+*/
 QString QchAudioPlayer::source() const {
     Q_D(const QchAudioPlayer);
     
@@ -537,12 +673,53 @@ void QchAudioPlayer::setSource(const QString &uri) {
     }
 }
 
+/*!
+    \brief The current status of the audio stream.
+    
+    Possible values are:
+    
+    <table>
+        <tr>
+            <th>Value</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td>Audio.Stopped</td>
+            <td>The audio stream is stopped (default).</td>
+        </tr>
+        <tr>
+            <td>Audio.Loading</td>
+            <td>The audio stream is being loaded.</td>
+        </tr>
+        <tr>
+            <td>Audio.Playing</td>
+            <td>The audio stream is being played.</td>
+        </tr>
+        <tr>
+            <td>Audio.Paused</td>
+            <td>The audio stream is paused.</td>
+        </tr>
+        <tr>
+            <td>Audio.EndOfMedia</td>
+            <td>The end of the audio stream has been reached.</td>
+        </tr>
+        <tr>
+            <td>Audio.Error</td>
+            <td>An error occured when playing the audio stream.</td>
+        </tr>
+    </table>
+*/
 QchMediaStatus::Status QchAudioPlayer::status() const {
     Q_D(const QchAudioPlayer);
     
     return d->status;
 }
 
+/*!
+    \brief The current audio output volume.
+    
+    The available range is 0-100.
+*/
 int QchAudioPlayer::volume() const {
     Q_D(const QchAudioPlayer);
     
@@ -558,6 +735,13 @@ void QchAudioPlayer::setVolume(int vol) {
     }
 }
 
+/*!
+    \brief The frequency of position updates, in milliseconds.
+    
+    Setting this property to 0 will suspend updates.
+    
+    The default value is 1000.
+*/
 int QchAudioPlayer::tickInterval() const {
     Q_D(const QchAudioPlayer);
     
@@ -578,6 +762,11 @@ void QchAudioPlayer::setTickInterval(int interval) {
     }
 }
 
+/*!
+    \brief Starts or resumes audio playback
+    
+    \sa playing, started(), resumed()
+*/
 void QchAudioPlayer::play() {
     Q_D(QchAudioPlayer);
     
@@ -598,6 +787,11 @@ void QchAudioPlayer::play() {
     }
 }
 
+/*!
+    \brief Pauses audio playback.
+    
+    \sa paused, paused()
+*/
 void QchAudioPlayer::pause() {
     if (isPlaying()) {
         Q_D(QchAudioPlayer);
@@ -605,12 +799,50 @@ void QchAudioPlayer::pause() {
     }
 }
 
+/*!
+    \brief Stops audio playback.
+    
+    \sa stopped()
+*/
 void QchAudioPlayer::stop() {
     if ((isPlaying()) || (isPaused())) {
         Q_D(QchAudioPlayer);
         d->mafwRenderer->stop();
     }
 }
+
+/*!
+    \fn void Audio::error(QString errorString)
+    
+    This signal is emitted when an error occurs. \a errorString 
+    provides a description of the error.
+*/
+
+/*!
+    \fn void Audio::started()
+    
+    This signal is emitted when audio playback is started, 
+    i.e the previous status will be \c Audio.Stopped.
+*/
+
+/*!
+    \fn void Audio::paused()
+    
+    This signal is emitted when audio playback is paused.
+*/
+
+/*!
+    \fn void Audio::resumed()
+    
+    This signal is emitted when audio playback is resumed, 
+    i.e the previous status will be \c Paused.
+*/
+
+/*!
+    \fn void Audio::stopped()
+    
+    This signal is emitted when audio playback is stopped.
+*/
 
 void QchAudioPlayer::classBegin() {}
 

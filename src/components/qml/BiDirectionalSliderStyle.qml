@@ -16,21 +16,70 @@
 
 import QtQuick 1.0
 
+/*!
+    \class BiDirectionalSliderStyle
+    \brief Provides styling properties for BiDirectionalSlider
+    
+    \ingroup components
+    
+    The BiDirectionalSliderStyle component can be used to provide custom styling for a BiDirectionalSlider.
+    
+    \sa BiDirectionalSlider
+*/
 Style {
     // Background
+    
+    /*!
+        \brief The url for the background image.
+    */
     property url background: "image://theme/BiDirectionalSliderBackground"
+    
+    /*!
+        \brief The url for the background image used when the slider is disabled.
+    */
     property url backgroundDisabled: "image://theme/BiDirectionalSliderBackgroundDisabled"
     
+    /*!
+        \brief The right margin for the background image, in pixels.
+    */
     property int backgroundMarginRight: 10
+    
+    /*!
+        \brief The left margin for the background image, in pixels.
+    */
     property int backgroundMarginLeft: 10
+    
+    /*!
+        \brief The top margin for the background image, in pixels.
+    */
     property int backgroundMarginTop: 25
+    
+    /*!
+        \brief The bottom margin for the background image, in pixels.
+    */
     property int backgroundMarginBottom: 25
     
     // Center-point
+    
+    /*!
+        \brief The url for the center-point image.
+    */
     property url centerPoint: "image://theme/BiDirectionalSliderCenterPoint"
+    
+    /*!
+        \brief The url for the center-point image used when the slider is disabled.
+    */
     property url centerPointDisabled: "image://theme/BiDirectionalSliderCenterPointDisabled"
     
     // Handle
+    
+    /*!
+        \brief The url for the handle image.
+    */
     property url handle: "image://theme/SliderThumb"
+    
+    /*!
+        \brief The url for the handle image used when the slider is disabled.
+    */
     property url handleDisabled: "image://theme/SliderThumbDisabled"    
 }

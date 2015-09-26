@@ -86,6 +86,14 @@ public:
     Q_DECLARE_PUBLIC(QchScreenShot)
 };
 
+/*!
+    \class ScreenShot
+    \brief Grabs an snapshot from the screen and saves it to a file.
+    
+    \ingroup utils
+    
+    \include screenshot.qml
+*/
 QchScreenShot::QchScreenShot(QObject *parent) :
     QObject(parent),
     d_ptr(new QchScreenShotPrivate(this))
@@ -100,6 +108,11 @@ QchScreenShot::QchScreenShot(QchScreenShotPrivate &dd, QObject *parent) :
 
 QchScreenShot::~QchScreenShot() {}
 
+/*!
+    \brief The item of which a screen shot will be saved.
+    
+    The default value is \c null, meaning the screen shot will be of the entire screen.
+*/
 QObject* QchScreenShot::target() const {
     Q_D(const QchScreenShot);
     return d->target;
@@ -117,6 +130,9 @@ void QchScreenShot::resetTarget() {
     setTarget(0);
 }
 
+/*!
+    \brief The file to which the screen shot will be saved.
+*/
 QString QchScreenShot::fileName() const {
     Q_D(const QchScreenShot);
     return d->fileName;
@@ -130,6 +146,12 @@ void QchScreenShot::setFileName(const QString &name) {
     }
 }
 
+/*!
+    \brief Whether an existing file will be overwritten when a screen shot is saved.
+    
+    The default value is false, meaning that the screen shot will be saved to a file with "($NUMBER)" inserted before 
+    the file suffix.
+*/
 bool QchScreenShot::overwriteExistingFile() const {
     Q_D(const QchScreenShot);
     return d->overwrite;
@@ -143,6 +165,11 @@ void QchScreenShot::setOverwriteExistingFile(bool o) {
     }
 }
 
+/*!
+    \brief Whether smooth scaling should be used when saving the screen shot.
+    
+    \sa width, height
+*/
 bool QchScreenShot::smooth() const {
     Q_D(const QchScreenShot);
     return d->smooth;
@@ -156,6 +183,13 @@ void QchScreenShot::setSmooth(bool s) {
     }
 }
 
+/*!
+    \brief The width to be used when scaling the screen shot.
+    
+    By default, the screen shot is not scaled.
+    
+    \sa height, smooth
+*/
 int QchScreenShot::width() const {
     Q_D(const QchScreenShot);
     return d->width;
@@ -173,6 +207,13 @@ void QchScreenShot::resetWidth() {
     setWidth(-1);
 }
 
+/*!
+    \brief The height to be used when scaling the screen shot.
+    
+    By default, the screen shot is not scaled.
+    
+    \sa width, smooth
+*/
 int QchScreenShot::height() const {
     Q_D(const QchScreenShot);
     return d->height;
@@ -190,6 +231,13 @@ void QchScreenShot::resetHeight() {
     setHeight(-1);
 }
 
+/*!
+    \brief The x coordinate from where the screen shot will be taken.
+    
+    The default value is 0.
+    
+    \sa targetX
+*/
 int QchScreenShot::targetX() const {
     Q_D(const QchScreenShot);
     return d->targetX;
@@ -207,6 +255,13 @@ void QchScreenShot::resetTargetX() {
     setTargetX(0);
 }
 
+/*!
+    \brief The y coordinate from where the screen shot will be taken.
+    
+    The default value is 0.
+    
+    \sa targetY
+*/
 int QchScreenShot::targetY() const {
     Q_D(const QchScreenShot);
     return d->targetY;
@@ -224,6 +279,11 @@ void QchScreenShot::resetTargetY() {
     setTargetY(0);
 }
 
+/*!
+    \brief The number of pixels to be grabbed horizontally.
+    
+    The default value is equal to the width of \link target\endlink.
+*/
 int QchScreenShot::targetWidth() const {
     Q_D(const QchScreenShot);
     return d->targetWidth;
@@ -241,6 +301,11 @@ void QchScreenShot::resetTargetWidth() {
     setTargetWidth(-1);
 }
 
+/*!
+    \brief The number of pixels to be grabbed vertically.
+    
+    The default value is equal to the height of \link target\endlink.
+*/
 int QchScreenShot::targetHeight() const {
     Q_D(const QchScreenShot);
     return d->targetHeight;
@@ -258,6 +323,10 @@ void QchScreenShot::resetTargetHeight() {
     setHeight(-1);
 }
 
+/*!    
+    Takes a screen shot of \link target\endlink, and returns true if the screen shot is successfully saved 
+    to \link fileName\endlink.
+*/
 bool QchScreenShot::grab() {
     Q_D(QchScreenShot);
     d->pixmap = QPixmap();

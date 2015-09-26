@@ -173,6 +173,16 @@ public:
     Q_DECLARE_PUBLIC(QchNotification)
 };
 
+/*!
+    \class Notification
+    \brief A desktop popup notification.
+    
+    \ingroup desktop
+    
+    \include notification.qml
+    
+    \sa InformationBox
+*/
 QchNotification::QchNotification(QObject *parent) :
     QObject(parent),
     d_ptr(new QchNotificationPrivate(this))
@@ -181,6 +191,9 @@ QchNotification::QchNotification(QObject *parent) :
 
 QchNotification::~QchNotification() {}
 
+/*!
+    \brief The category of the notification.
+*/
 QString QchNotification::category() const {
     Q_D(const QchNotification);
     return d->category;
@@ -195,6 +208,9 @@ void QchNotification::setCategory(const QString &c) {
     }
 }
 
+/*!
+    \brief The hints provided by the notification.
+*/
 QVariantMap QchNotification::hints() const {
     Q_D(const QchNotification);
     return d->hints;
@@ -207,6 +223,9 @@ void QchNotification::setHints(const QVariantMap &h) {
     emit hintsChanged();
 }
 
+/*!
+    \brief The icon source of the notification.
+*/
 QString QchNotification::iconSource() const {
     Q_D(const QchNotification);
     return d->iconSource;
@@ -221,6 +240,9 @@ void QchNotification::setIconSource(const QString &i) {
     }
 }
 
+/*!
+    \brief The sound source of the notification.
+*/
 QString QchNotification::soundSource() const {
     Q_D(const QchNotification);
     return d->iconSource;
@@ -235,6 +257,9 @@ void QchNotification::setSoundSource(const QString &s) {
     }
 }
 
+/*!
+    \brief The text of the notification.
+*/
 QString QchNotification::text() const {
     Q_D(const QchNotification);
     return d->text;
@@ -249,6 +274,9 @@ void QchNotification::setText(const QString &t) {
     }
 }
 
+/*!
+    \brief The timeout of the notification.
+*/
 int QchNotification::timeout() const {
     Q_D(const QchNotification);
     return d->timeout;
@@ -275,6 +303,9 @@ void QchNotification::setTimeout(int t) {
     }
 }
 
+/*!
+    \brief The title of the notification.
+*/
 QString QchNotification::title() const {
     Q_D(const QchNotification);
     return d->title;
@@ -289,6 +320,12 @@ void QchNotification::setTitle(const QString &t) {
     }
 }
 
+/*!
+    \property bool Notification::visible
+    \brief Whether the notification is visible.
+    
+    The default value is \c false
+*/
 bool QchNotification::isVisible() const {
     Q_D(const QchNotification);
     return d->isVisible;
@@ -305,15 +342,30 @@ void QchNotification::setVisible(bool v) {
     }
 }
 
+/*!
+    \brief Hides the notification.
+    
+    Equvalent to visible = false.
+*/
 void QchNotification::hide() {
     Q_D(QchNotification);
     d->hideNotification();
 }
 
+/*!
+    \brief Opens the notification.
+    
+    Equvalent show().
+*/
 void QchNotification::open() {
     show();
 }
 
+/*!
+    \brief Displays the notification.
+    
+    Equvalent to visible = true.
+*/
 void QchNotification::show() {
     Q_D(QchNotification);
     d->showNotification();

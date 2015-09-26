@@ -208,6 +208,19 @@ public:
     Q_DECLARE_PUBLIC(QchWebView)
 };
 
+/*!
+    \class WebView
+    \brief Provides an item that is used to view and edit web documents.
+
+    \ingroup webkit
+
+    WebView is the main component of the org.hildon.webkit web browsing module. It can be used in various applications 
+    to display web content live from the internet.
+    
+    \include webview.qml
+    
+    \sa WebPage
+*/
 QchWebView::QchWebView(QGraphicsItem *parent) :
     QGraphicsWebView(parent),
     d_ptr(new QchWebViewPrivate(this))
@@ -288,6 +301,9 @@ void QchWebView::setContextMenuPolicy(Qt::ContextMenuPolicy policy) {
     }
 }
 
+/*!
+    \brief The preferred width of the web view.
+*/
 int QchWebView::preferredWidth() const {
     Q_D(const QchWebView);
     
@@ -300,6 +316,9 @@ void QchWebView::setPreferredWidth(int w) {
     d->webPage->setPreferredWidth(w);
 }
 
+/*!
+    \brief The preferred height of the web view.
+*/
 int QchWebView::preferredHeight() const {
     Q_D(const QchWebView);
     
@@ -312,10 +331,18 @@ void QchWebView::setPreferredHeight(int h) {
     d->webPage->setPreferredHeight(h);
 }
 
+/*!
+    \property string WebView::html
+    \brief The HTML of the web view.
+*/
 QString QchWebView::toHtml() const {
     return page()->mainFrame()->toHtml();
 }
 
+/*!
+    \property string WebView::text
+    \brief The HTML of the web view as plain text.
+*/
 QString QchWebView::toPlainText() const {
     return page()->mainFrame()->toPlainText();
 }
@@ -324,14 +351,45 @@ void QchWebView::setText(const QString &text) {
     page()->mainFrame()->setContent(text.toUtf8(), "text/plain");
 }
 
+/*!
+    \brief Whether any text is selected in the web view.
+*/
 bool QchWebView::hasSelection() const {
     return !selectedText().isEmpty();
 }
 
+/*!
+    \brief The selected text of the web view.
+*/
 QString QchWebView::selectedText() const {
     return page()->selectedText();
 }
 
+/*!
+    \brief The policy used to determine how to handle activated links.
+    
+    Possible values are:
+    
+    <table>
+        <tr>
+            <th>Value</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td>WebPage.DontDelegateLinks</td>
+            <td>No links are delegated (default).</td>
+        </tr>
+        <tr>
+            <td>WebPage.DelegateExternalLinks</td>
+            <td>When activating links that point to documents not stored on the local filesystem or an equivalent - 
+            such as the Qt resource system - then linkClicked() is emitted.</td>
+        </tr>
+        <tr>
+            <td>WebPage.DelegateAllLinks</td>
+            <td>Whenever a link is activated the linkClicked() signal is emitted.</td>
+        </tr>
+    </table>
+*/
 QWebPage::LinkDelegationPolicy QchWebView::linkDelegationPolicy() const {
     return page()->linkDelegationPolicy();
 }
@@ -343,6 +401,11 @@ void QchWebView::setLinkDelegationPolicy(QWebPage::LinkDelegationPolicy policy) 
     }
 }
 
+/*!
+    \brief Whether to forward content that is not supported.
+    
+    If this property is set to true, the unsupportedContent() signal will be emitted when unsupported content is found.
+*/
 bool QchWebView::forwardUnsupportedContent() const {
     return page()->forwardUnsupportedContent();
 }
@@ -354,24 +417,61 @@ void QchWebView::setForwardUnsupportedContent(bool forward) {
     }
 }
 
+/*!
+    \brief The loading progress of the web view.
+*/
 int QchWebView::progress() const {
     Q_D(const QchWebView);
 
     return d->progress;
 }
 
+/*!
+    \brief The current status of the web view.
+    
+    Possible values are:
+    
+    <table>
+        <tr>
+            <th>Value</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td>WebView.Null</td>
+            <td>No web page has been loaded (default).</td>
+        </tr>
+        <tr>
+            <td>WebView.Loading</td>
+            <td>The web page is being loaded.</td>
+        </tr>
+        <tr>
+            <td>WebView.Ready</td>
+            <td>The web page has been loaded.</td>
+        </tr>
+        <tr>
+            <td>WebView.Error</td>
+            <td>An error occured when loading the web page.</td>
+        </tr>
+    </table>
+*/
 QchWebView::Status QchWebView::status() const {
     Q_D(const QchWebView);
 
     return d->status;
 }
 
+/*!
+    \brief The status text of the web view.
+*/
 QString QchWebView::statusText() const {
     Q_D(const QchWebView);
 
     return d->statusText;
 }
 
+/*!
+    \brief The user-agent string used when loading a web page.
+*/
 QString QchWebView::userAgent() const {
     Q_D(const QchWebView);
 
@@ -384,6 +484,9 @@ void QchWebView::setUserAgent(const QString &agent) {
     d->webPage->setUserAgent(agent);
 }
 
+/*!
+    \brief The component used when a new window is requested.
+*/
 QDeclarativeComponent* QchWebView::newWindowComponent() const {
     Q_D(const QchWebView);
 
@@ -412,6 +515,9 @@ void QchWebView::setNewWindowParent(QDeclarativeItem *parent) {
     }
 }
 
+/*!    
+    Performs a hit test at \a x,\a y, and returns the result.
+*/
 QVariant QchWebView::hitTestContent(int x, int y) {
     QWebHitTestResult result = page()->currentFrame()->hitTestContent(QPoint(x, y));
     QVariantMap content;
@@ -436,22 +542,43 @@ QVariant QchWebView::hitTestContent(int x, int y) {
     return content;
 }
 
+/*!    
+    Searches for the next occurrance of \a text in the web page. Returns true if successful.
+*/
 bool QchWebView::findText(const QString &text) {
     return QGraphicsWebView::findText(text, QWebPage::FindWrapsAroundDocument);
 }
 
+/*!    
+    Searches for all occurrances of \a text in the web page. Returns true if successful.
+*/
 bool QchWebView::findAllText(const QString &text) {
     return QGraphicsWebView::findText(text, QWebPage::FindWrapsAroundDocument | QWebPage::HighlightAllOccurrences);
 }
 
+/*!    
+    Copies the selected HTML to the clipboard.
+    
+    \sa WebPage::copy()
+*/
 void QchWebView::copy() {
     triggerPageAction(QWebPage::Copy);
 }
 
+/*!    
+    Copies the selected HTML to the clipboard and removes it from the web page.
+    
+    \sa WebPage::cut()
+*/
 void QchWebView::cut() {
     triggerPageAction(QWebPage::Cut);
 }
 
+/*!    
+    Inserts the the clipboard's contents into the web page.
+    
+    \sa WebPage::paste()
+*/
 void QchWebView::paste() {
     triggerPageAction(QWebPage::Paste);
 }
@@ -555,5 +682,27 @@ void QchWebView::keyPressEvent(QKeyEvent *event) {
 
     QGraphicsWebView::keyPressEvent(event);
 }
+
+/*!
+    \fn void WebView::downloadRequested(QVariantMap request)
+
+    This signal is emitted when the user decides to download a link. The url of the link as well as additional 
+    meta-information is contained in \a request.
+
+    \sa unsupportedContent()
+*/
+
+/*!
+    \fn void WebView::unsupportedContent(QVariantMap content)
+
+    This signal is emitted when WebKit cannot handle a link the user navigated to or a web server's response includes 
+    a "Content-Disposition" header with the 'attachment' directive. If "Content-Disposition" is present in \a content, 
+    the web server is indicating that the client should prompt the user to save the content regardless of content-type. 
+    See RFC 2616 sections 19.5.1 for details about Content-Disposition.
+
+    \note This signal is only emitted if the \link forwardUnsupportedContent\endlink property is set to true.
+
+    \sa downloadRequested()
+*/
 
 #include "moc_qchwebview.cpp"

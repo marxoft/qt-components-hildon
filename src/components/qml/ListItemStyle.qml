@@ -16,16 +16,36 @@
 
 import QtQuick 1.0
 
+/*!
+    \class ListItemStyle
+    \brief Provides styling properties for a ListItem.
+    
+    \ingroup components
+    
+    \sa ListItem
+*/
 Style {
     // Background
+    
+    /*!
+        \brief The url for the background image.
+    */
     property url background: "image://theme/TouchListBackgroundNormal"
+    
+    /*!
+        \brief The url for the background image used when the ListItem is pressed.
+    */
     property url backgroundPressed: "image://theme/TouchListBackgroundPressed"
+    
+    /*!
+        \brief The url for the background image used when the ListItem is selected.
+    */
     property url backgroundSelected: "image://theme/TouchListBackgroundPressed"
     
     // Dimensions
-    property int itemHeight: 70
     
-    // Padding
-    property int paddingLeft: platformStyle.paddingMedium
-    property int paddingRight: platformStyle.paddingMedium
+    /*!
+        \brief The default height for the ListItem.
+    */
+    property int itemHeight: 70
 }

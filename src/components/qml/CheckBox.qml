@@ -16,6 +16,14 @@
 
 import QtQuick 1.0
 
+/*!
+    \class CheckBox
+    \brief A checkable Button with a visible indicator.
+    
+    \ingroup components
+    
+    \sa CheckBoxStyle
+*/
 Button {    
     checkable: true
     iconSource: "image://theme/CheckButton" + (checked ? "Checked" : "Unchecked") + (enabled ? "" : "Disabled")

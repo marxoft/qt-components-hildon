@@ -17,12 +17,43 @@
 import QtQuick 1.0
 import org.hildon.components 1.0
 
+/*!
+    \class EditBar
+    \brief Provides a container for Button used for confirming edit actions inside a Window.
+    
+    \brief components
+    
+    The EditBar component is intended for use inside a Window in fullscreen mode, in place of the status area.
+    
+    \sa Button, EditButtonStyle, Window
+*/
 Item {
     id: root
     
+    /*!
+        type:string
+        \brief The text to be displayed in the edit bar.
+    */
     property alias text: label.text
+    
+    /*!
+        type:list<Button>
+        \brief One or more buttons to be displayed in the edit bar.
+        
+        When a button is added, it will automatically be styled to suit the edit bar.
+    */
     property alias buttons: buttonRow.children
     
+    /*!
+        \brief This signal can be emitted when the user clicks the button that confirms the edit action.
+    */
+    signal accepted
+    
+    /*!
+        \brief This signal can be emitted when the user rejects the edit action.
+        
+        This signal is also emitted when the 'back' button is pressed.
+    */
     signal rejected
     
     z: 1000

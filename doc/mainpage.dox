@@ -1,0 +1,30 @@
+/*!
+    \mainpage notitle
+    
+    \section intro-section Introduction
+    
+    Qt Components Hildon is a set of QML components that enables 
+    programmers to create Maemo5 applications with Hildon styling 
+    using QML.
+    
+    \section start-section Getting Started
+    
+    \subsection source-section Source Code
+    
+    The source code can be found at <a href="https://github.com/marxoft/qt-components-hildon">GitHub</a>. 
+    
+    \subsection install-section Installation
+    
+    The latest version of Qt Components Hildon can be installed 
+    from the <a href="http://maemo.org/packages/view/qt-components-hildon">Extras-Devel repository</a>.
+    
+    \subsection example-section Hello World!
+    
+    Below is the classic 'Hello World!' using Qt Components Hildon:
+    
+    \include helloworld.qml
+    
+    More complete examples can be found in the 
+    <a href="https://github.com/marxoft/qt-components-hildon/tree/master/examples">examples</a> 
+    subdirectory of the source code at <a href="https://github.com/marxoft/qt-components-hildon">GitHub</a>.
+*/

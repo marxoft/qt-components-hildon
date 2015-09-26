@@ -16,4 +16,12 @@
 
 import QtQuick 1.0
 
+/*!
+    \class SpinBoxStyle
+    \brief Provides styling properties for a DoubleSpinBox or SpinBox.
+    
+    \ingroup components
+    
+    \sa SpinBox
+*/
 TextFieldStyle {}

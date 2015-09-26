@@ -187,6 +187,17 @@ public:
     Q_DECLARE_PUBLIC(QchWebPage)
 };
 
+/*!
+    \class WebPage
+    \brief Provides an object to view and edit web documents.
+
+    \ingroup webkit
+
+    WebPage holds a main frame responsible for web content, settings, the history of navigated links and actions. 
+    This class can be used to provide functionality like WebView in an item-less environment.
+    
+    \sa WebView
+*/
 QchWebPage::QchWebPage(QObject *parent) :
     QWebPage(parent),
     d_ptr(new QchWebPagePrivate(this))
@@ -241,6 +252,9 @@ QchWebPage::QchWebPage(QchWebPagePrivate &dd, QObject *parent) :
 
 QchWebPage::~QchWebPage() {}
 
+/*!
+    \brief The source url of the web page.
+*/
 QUrl QchWebPage::url() const {
     return mainFrame()->url();
 }
@@ -249,22 +263,38 @@ void QchWebPage::setUrl(const QUrl &url) {
     mainFrame()->setUrl(url);
 }
 
+/*!
+    \brief The base url of the web page.
+*/
 QUrl QchWebPage::baseUrl() const {
     return mainFrame()->baseUrl();
 }
 
+/*!
+    \brief The requested url used to load the page, before any redirects.
+*/
 QUrl QchWebPage::requestedUrl() const {
     return mainFrame()->requestedUrl();
 }
 
+/*!
+    \brief The source of the web page icon.
+*/
 QString QchWebPage::icon() const {
     return mainFrame()->icon().name();
 }
 
+/*!
+    \brief The title of the web page.
+*/
 QString QchWebPage::title() const {
     return mainFrame()->title();
 }
 
+/*!
+    \property QString WebPage::html
+    \brief The HTML of the web page.
+*/
 QString QchWebPage::toHtml() const {
     return mainFrame()->toHtml();
 }
@@ -273,6 +303,10 @@ void QchWebPage::setHtml(const QString &html, const QUrl &baseUrl) {
     mainFrame()->setHtml(html, baseUrl);
 }
 
+/*!
+    \property QString WebPage::text
+    \brief The HTML of the web page as plain text.
+*/
 QString QchWebPage::toPlainText() const {
     return mainFrame()->toPlainText();
 }
@@ -281,14 +315,23 @@ void QchWebPage::setText(const QString &text) {
     mainFrame()->setContent(text.toUtf8(), "text/plain");
 }
 
+/*!
+    \brief The width of the content of the web page.
+*/
 int QchWebPage::contentWidth() const {
     return mainFrame()->contentsSize().width();
 }
 
+/*!
+    \brief The height of the content of the web page.
+*/
 int QchWebPage::contentHeight() const {
     return mainFrame()->contentsSize().height();
 }
 
+/*!
+    \brief The preferred width of the web page.
+*/
 int QchWebPage::preferredWidth() const {
     return preferredContentsSize().width();
 }
@@ -300,6 +343,9 @@ void QchWebPage::setPreferredWidth(int width) {
     }
 }
 
+/*!
+    \brief The preferred height of the web page.
+*/
 int QchWebPage::preferredHeight() const {
     return preferredContentsSize().height();
 }
@@ -311,6 +357,9 @@ void QchWebPage::setPreferredHeight(int height) {
     }
 }
 
+/*!
+    \brief The zoom factor of the web page.
+*/
 qreal QchWebPage::zoomFactor() const {
     return currentFrame()->zoomFactor();
 }
@@ -322,28 +371,68 @@ void QchWebPage::setZoomFactor(qreal zoom) {
     }
 }
 
+/*!
+    \brief The loading progress of the web page.
+*/
 int QchWebPage::progress() const {
     Q_D(const QchWebPage);
 
     return d->progress;
 }
 
+/*!
+    \brief The current status of the web page.
+    
+    Possible values are:
+    
+    <table>
+        <tr>
+            <th>Value</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td>WebPage.Null</td>
+            <td>No web page has been loaded (default).</td>
+        </tr>
+        <tr>
+            <td>WebPage.Loading</td>
+            <td>The web page is being loaded.</td>
+        </tr>
+        <tr>
+            <td>WebPage.Ready</td>
+            <td>The web page has been loaded.</td>
+        </tr>
+        <tr>
+            <td>WebPage.Error</td>
+            <td>An error occured when loading the web page.</td>
+        </tr>
+    </table>
+*/
 QchWebPage::Status QchWebPage::status() const {
     Q_D(const QchWebPage);
 
     return d->status;
 }
 
+/*!
+    \brief The status text of the web page.
+*/
 QString QchWebPage::statusText() const {
     Q_D(const QchWebPage);
 
     return d->statusText;
 }
 
+/*!
+    \brief Whether any HTML is selected in the web page.
+*/
 bool QchWebPage::hasSelection() const {
     return !selectedText().isEmpty();
 }
 
+/*!
+    \brief The user-agent string used when loading a web page.
+*/
 QString QchWebPage::userAgent() const {
     Q_D(const QchWebPage);
 
@@ -358,6 +447,9 @@ void QchWebPage::setUserAgent(const QString &agent) {
     }
 }
 
+/*!
+    \brief The component used when a new window is requested.
+*/
 QDeclarativeComponent* QchWebPage::newWindowComponent() const {
     Q_D(const QchWebPage);
 
@@ -386,6 +478,9 @@ void QchWebPage::setNewWindowParent(QObject *parent) {
     }
 }
 
+/*!    
+    Performs a hit test at \a x,\a y, and returns the result.
+*/
 QVariant QchWebPage::hitTestContent(int x, int y) {
     QWebHitTestResult result = currentFrame()->hitTestContent(QPoint(x, y));
     QVariantMap content;
@@ -410,42 +505,84 @@ QVariant QchWebPage::hitTestContent(int x, int y) {
     return content;
 }
 
+/*!    
+    Searches for the next occurrance of \a text in the web page. Returns true if successful.
+*/
 bool QchWebPage::findText(const QString &text) {
     return QWebPage::findText(text, QWebPage::FindWrapsAroundDocument);
 }
 
+/*!    
+    Searches for all occurrances of \a text in the web page. Returns true if successful.
+*/
 bool QchWebPage::findAllText(const QString &text) {
     return QWebPage::findText(text, QWebPage::FindWrapsAroundDocument | QWebPage::HighlightAllOccurrences);
 }
 
+/*!    
+    Attempts to load the web page located at \a url.
+    
+    \sa url, baseUrl, requestedUrl
+*/
 void QchWebPage::load(const QUrl &url) {
     mainFrame()->load(url);
 }
 
+/*!    
+    Reloads the current web page.
+*/
 void QchWebPage::reload() {
     triggerAction(QWebPage::Reload);
 }
 
+/*!    
+    Aborts the loading of a web page.
+*/
 void QchWebPage::stop() {
     triggerAction(QWebPage::Stop);
 }
 
+/*!    
+    Navigates to the previous item in the history, if possible.
+    
+    \sa WebHistory::backItem, WebHistory::canGoBack
+*/
 void QchWebPage::back() {
     triggerAction(QWebPage::Back);
 }
 
+/*!    
+    Navigates to the next item in the history, if possible.
+    
+    \sa WebHistory::forwardItem, WebHistory::canGoForward
+*/
 void QchWebPage::forward() {
     triggerAction(QWebPage::Forward);
 }
 
+/*!    
+    Copies the selected HTML to the clipboard.
+    
+    \sa hasSelection, selectedHtml
+*/
 void QchWebPage::copy() {
     triggerAction(QWebPage::Copy);
 }
 
+/*!    
+    Copies the selected HTML to the clipboard and removes it from the web page.
+    
+    \sa hasSelection, selectedHtml, contentEditable
+*/
 void QchWebPage::cut() {
     triggerAction(QWebPage::Cut);
 }
 
+/*!    
+    Inserts the the clipboard's contents into the web page.
+    
+    \sa contentEditable
+*/
 void QchWebPage::paste() {
     triggerAction(QWebPage::Paste);
 }
@@ -492,5 +629,27 @@ QWebPage* QchWebPage::createWindow(WebWindowType type) {
 QString QchWebPage::userAgentForUrl(const QUrl &url) const {
     return userAgent().isEmpty() ? QWebPage::userAgentForUrl(url) : userAgent();
 }
+
+/*!
+    \fn void WebPage::downloadRequested(QVariantMap request)
+
+    This signal is emitted when the user decides to download a link. The url of the link as well as additional 
+    meta-information is contained in \a request.
+
+    \sa unsupportedContent()
+*/
+
+/*!
+    \fn void WebPage::unsupportedContent(QVariantMap content)
+
+    This signal is emitted when WebKit cannot handle a link the user navigated to or a web server's response includes 
+    a "Content-Disposition" header with the 'attachment' directive. If "Content-Disposition" is present in \a content, 
+    the web server is indicating that the client should prompt the user to save the content regardless of content-type. 
+    See RFC 2616 sections 19.5.1 for details about Content-Disposition.
+
+    \note This signal is only emitted if the \link forwardUnsupportedContent\endlink property is set to true.
+
+    \sa downloadRequested()
+*/
 
 #include "moc_qchwebpage.cpp"

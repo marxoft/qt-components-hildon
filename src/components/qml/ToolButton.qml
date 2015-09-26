@@ -16,9 +16,21 @@
 
 import QtQuick 1.0
 
+/*!
+    \class ToolButton
+    \brief A push button for use in a ToolBar.
+    
+    \ingroup components
+    
+    \sa ToolBar, ToolButtonStyle
+*/
 AbstractButton {
     id: root
     
+    /*!
+        type:ToolButtonStyle
+        \brief Provides styling properties for the button.
+    */
     property QtObject style: ToolButtonStyle {}
     
     width: style.buttonWidth

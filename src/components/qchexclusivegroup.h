@@ -17,16 +17,16 @@
 #ifndef QCHEXCLUSIVEGROUP_H
 #define QCHEXCLUSIVEGROUP_H
 
-#include <QActionGroup>
+#include <QObject>
 #include <qdeclarative.h>
 
 class QchExclusiveGroupPrivate;
 
-class QchExclusiveGroup : public QActionGroup
+class QchExclusiveGroup : public QObject
 {
     Q_OBJECT
     
-    Q_PROPERTY(QObject* current READ checkedAction NOTIFY currentChanged)
+    Q_PROPERTY(QObject* current READ current NOTIFY currentChanged)
     Q_PROPERTY(QDeclarativeListProperty<QObject> data READ data)
     
     Q_CLASSINFO("DefaultProperty", "data")
@@ -35,7 +35,14 @@ public:
     explicit QchExclusiveGroup(QObject *parent = 0);
     ~QchExclusiveGroup();
     
+    QObject* current() const;
+    void setCurrent(QObject *obj);
+    
     QDeclarativeListProperty<QObject> data();
+
+public Q_SLOTS:
+    void addCheckable(QObject *obj);
+    void removeCheckable(QObject *obj);
 
 Q_SIGNALS:
     void currentChanged();
@@ -44,6 +51,8 @@ protected:
     QScopedPointer<QchExclusiveGroupPrivate> d_ptr;
 
     Q_DECLARE_PRIVATE(QchExclusiveGroup)
+    
+    Q_PRIVATE_SLOT(d_func(), void _q_updateCurrent())
 
 private:
     Q_DISABLE_COPY(QchExclusiveGroup)

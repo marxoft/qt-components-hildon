@@ -1,0 +1,22 @@
+/*! 
+    \defgroup components org.hildon.components
+    \brief The components module
+    
+    \defgroup dbus org.hildon.dbus
+    \brief The DBus module
+    
+    \defgroup desktop org.hildon.desktop
+    \brief The desktop module
+    
+    \defgroup multimedia org.hildon.multimedia
+    \brief The mutimedia module
+    
+    \defgroup settings org.hildon.settings
+    \brief The settings module
+    
+    \defgroup utils org.hildon.utils
+    \brief The utils module
+    
+    \defgroup webkit org.hildon.webkit
+    \brief The webkit module
+*/
