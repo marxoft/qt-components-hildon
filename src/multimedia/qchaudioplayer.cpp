@@ -48,8 +48,7 @@ public:
         positionTimerId(-1),
         sourceLoaded(true),
         readyToPlay(false),
-        playWhenReady(false),
-        complete(false)
+        playWhenReady(false)
     {
     }
     
@@ -89,7 +88,6 @@ public:
     
     void _q_onStatusReady(MafwPlaylist*, uint index, MafwPlayState state, const char*, const QString &error) {
         Q_Q(QchAudioPlayer);
-        
         q->disconnect(mafwRenderer, SIGNAL(signalGetStatus(MafwPlaylist*,uint,MafwPlayState,const char*,QString)),
                       q, SLOT(_q_onStatusReady(MafwPlaylist*,uint,MafwPlayState,const char*,QString)));
 
@@ -104,7 +102,6 @@ public:
     
     void _q_onMetaDataChanged() {
         Q_Q(QchAudioPlayer);
-        
         int dur = metadataWatcher->metadata().value(MAFW_METADATA_KEY_DURATION).toInt();
         bool seek = metadataWatcher->metadata().value(MAFW_METADATA_KEY_IS_SEEKABLE).toBool();
         QString uri = metadataWatcher->metadata().value(MAFW_METADATA_KEY_URI).toString();
@@ -128,28 +125,24 @@ public:
     
     void _q_onBufferProgressChanged(float progress) {
         Q_Q(QchAudioPlayer);
-        
         bufferProgress = progress;
         emit q->bufferProgressChanged();
     }
     
     void _q_onPositionChanged(int pos) {
         Q_Q(QchAudioPlayer);
-        
         position = pos;
         emit q->positionChanged();
     }
     
     void _q_onVolumeChanged(int vol) {
         Q_Q(QchAudioPlayer);
-        
         volume = vol;
         emit q->volumeChanged();
     }
     
     void _q_onStateChanged(int state) {
         Q_Q(QchAudioPlayer);
-        
         QchMediaStatus::Status oldStatus = status;
         
         switch (state) {
@@ -359,9 +352,7 @@ public:
     
     bool readyToPlay;
     bool playWhenReady;
-    
-    bool complete;
-    
+        
     Q_DECLARE_PUBLIC(QchAudioPlayer)
 };
 
@@ -382,7 +373,6 @@ QchAudioPlayer::QchAudioPlayer(QObject *parent) :
     d_ptr(new QchAudioPlayerPrivate(this))
 {
     Q_D(QchAudioPlayer);
-    
     d->mafwRegistry = MafwRegistryAdapter::get();
     d->mafwRenderer = d->mafwRegistry->renderer();
     d->mafwPlaylist = d->mafwRegistry->playlist();
@@ -412,7 +402,6 @@ QchAudioPlayer::QchAudioPlayer(QObject *parent) :
 
 QchAudioPlayer::~QchAudioPlayer() {
     Q_D(QchAudioPlayer);
-    
     d->mafwRenderer->enablePlayback(false);
     d->mafwRenderer->stop();
 }
@@ -424,7 +413,6 @@ QchAudioPlayer::~QchAudioPlayer() {
 */
 bool QchAudioPlayer::autoLoad() const {
     Q_D(const QchAudioPlayer);
-    
     return d->autoLoad;
 }
 
@@ -441,7 +429,6 @@ void QchAudioPlayer::setAutoLoad(bool enable) {
 */
 qreal QchAudioPlayer::bufferProgress() const {
     Q_D(const QchAudioPlayer);
-    
     return d->bufferProgress;
 }
 
@@ -450,7 +437,6 @@ qreal QchAudioPlayer::bufferProgress() const {
 */
 QString QchAudioPlayer::errorString() const {
     Q_D(const QchAudioPlayer);
-    
     return d->errorString;
 }
 
@@ -530,7 +516,6 @@ QString QchAudioPlayer::errorString() const {
 */
 MetadataWatcher* QchAudioPlayer::metaData() const {
     Q_D(const QchAudioPlayer);
-    
     return d->metadataWatcher;
 }
 
@@ -544,7 +529,6 @@ MetadataWatcher* QchAudioPlayer::metaData() const {
 */
 bool QchAudioPlayer::isMuted() const {
     Q_D(const QchAudioPlayer);
-    
     return d->muted;
 }
 
@@ -620,7 +604,6 @@ void QchAudioPlayer::setPlaying(bool playing) {
 */
 bool QchAudioPlayer::isSeekable() const {
     Q_D(const QchAudioPlayer);
-    
     return d->seekable;
 }
 
@@ -629,7 +612,6 @@ bool QchAudioPlayer::isSeekable() const {
 */
 int QchAudioPlayer::position() const {
     Q_D(const QchAudioPlayer);
-    
     return d->position;
 }
 
@@ -646,7 +628,6 @@ void QchAudioPlayer::setPosition(int pos) {
 */
 int QchAudioPlayer::duration() const {
     Q_D(const QchAudioPlayer);
-    
     return d->duration;
 }
 
@@ -655,7 +636,6 @@ int QchAudioPlayer::duration() const {
 */
 QString QchAudioPlayer::source() const {
     Q_D(const QchAudioPlayer);
-    
     return d->source;
 }
 
@@ -711,28 +691,7 @@ void QchAudioPlayer::setSource(const QString &uri) {
 */
 QchMediaStatus::Status QchAudioPlayer::status() const {
     Q_D(const QchAudioPlayer);
-    
     return d->status;
-}
-
-/*!
-    \brief The current audio output volume.
-    
-    The available range is 0-100.
-*/
-int QchAudioPlayer::volume() const {
-    Q_D(const QchAudioPlayer);
-    
-    return d->volume;
-}
-
-void QchAudioPlayer::setVolume(int vol) {
-    if (vol != volume()) {
-        Q_D(QchAudioPlayer);
-        d->volume = qBound(0, vol, 100);
-        d->mafwRenderer->setVolume(d->volume);
-        d->mafwRenderer->getVolume();
-    }
 }
 
 /*!
@@ -744,7 +703,6 @@ void QchAudioPlayer::setVolume(int vol) {
 */
 int QchAudioPlayer::tickInterval() const {
     Q_D(const QchAudioPlayer);
-    
     return d->tickInterval;
 }
 
@@ -759,6 +717,25 @@ void QchAudioPlayer::setTickInterval(int interval) {
         if ((interval > 0) && (isPlaying())) {
             d->startPositionTimer();
         }
+    }
+}
+
+/*!
+    \brief The current audio output volume.
+    
+    The available range is 0-100.
+*/
+int QchAudioPlayer::volume() const {
+    Q_D(const QchAudioPlayer);
+    return d->volume;
+}
+
+void QchAudioPlayer::setVolume(int vol) {
+    if (vol != volume()) {
+        Q_D(QchAudioPlayer);
+        d->volume = qBound(0, vol, 100);
+        d->mafwRenderer->setVolume(d->volume);
+        d->mafwRenderer->getVolume();
     }
 }
 
@@ -848,9 +825,7 @@ void QchAudioPlayer::classBegin() {}
 
 void QchAudioPlayer::componentComplete() {
     Q_D(QchAudioPlayer);
-    
-    d->complete = true;
-    
+        
     if (d->mafwRenderer->isRendererReady()) {
         d->mafwRenderer->getStatus();
         d->mafwRenderer->getVolume();
@@ -863,7 +838,6 @@ void QchAudioPlayer::componentComplete() {
 
 void QchAudioPlayer::timerEvent(QTimerEvent *) {
     Q_D(QchAudioPlayer);
-    
     d->mafwRenderer->getPosition();
 }
 
