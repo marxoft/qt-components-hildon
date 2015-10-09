@@ -46,53 +46,94 @@ AbstractButton {
         
         anchors.fill: parent
         border {
-            left: style.backgroundMarginLeft
-            right: style.backgroundMarginRight
-            top: style.backgroundMarginTop
-            bottom: style.backgroundMarginBottom
+            left: root.style.backgroundMarginLeft
+            right: root.style.backgroundMarginRight
+            top: root.style.backgroundMarginTop
+            bottom: root.style.backgroundMarginBottom
         }
         smooth: true
         source: root.pressed ? root.style.backgroundPressed : root.checked ? root.style.backgroundChecked
                 : !root.enabled ? root.style.backgroundDisabled : root.style.background
     }
     
-    Image {
-        id: icon
+    Row {
+        id: row
         
-        width: Math.min(root.style.iconWidth, sourceSize.width)
-        height: Math.min(root.style.iconHeight, sourceSize.height)
         anchors {
-            left: label.visible ? parent.left : undefined
-            horizontalCenter: label.visible ? undefined : parent.horizontalCenter
+            horizontalCenter: parent.horizontalCenter
+            top: parent.top
+            bottom: parent.bottom
             leftMargin: root.style.paddingLeft
-            verticalCenter: parent.verticalCenter
+            rightMargin: root.style.paddingRight
         }
-        smooth: true
-        source: root.iconSource ? root.iconSource : iconName ? "image://icon/" + root.iconName : ""
-        opacity: root.enabled ? root.style.iconOpacity : root.style.disabledIconOpacity
-        visible: source != ""
+        spacing: platformStyle.paddingMedium
+
+        Image {
+            id: icon
+            
+            y: Math.floor((root.height - height) / 2)
+            width: Math.min(root.style.iconWidth, sourceSize.width)
+            height: Math.min(root.style.iconHeight, sourceSize.height)
+            smooth: true
+            source: root.iconSource ? root.iconSource : iconName ? "image://icon/" + root.iconName : ""
+            opacity: root.enabled ? root.style.iconOpacity : root.style.disabledIconOpacity
+            visible: source != ""
+        }
+        
+        Label {
+            id: label
+            
+            height: parent.height
+            font {
+                pointSize: Math.max(1, root.style.fontPointSize)
+                capitalization: root.style.fontCapitalization
+                weight: root.style.fontWeight
+            }
+            color: root.pressed ? root.style.pressedTextColor : root.checked ? root.style.checkedTextColor
+                   : !root.enabled ? root.style.disabledTextColor : root.style.textColor
+            verticalAlignment: Text.AlignVCenter
+            text: textMetrics.elidedText
+            visible: text != ""
+            
+            TextMetrics {
+                id: textMetrics
+                
+                font: label.font
+                elide: Qt.ElideRight
+                elideWidth: root.width - root.style.paddingLeft - root.style.paddingRight
+                            - (icon.visible ? icon.width + platformStyle.paddingMedium : 0)
+                text: root.text
+            }
+        }
     }
     
-    Label {
-        id: label
-        
-        anchors {
-            left: icon.visible ? icon.right : parent.left
-            leftMargin: root.style.paddingLeft
-            right: parent.right
-            rightMargin: root.style.paddingRight
-            verticalCenter: parent.verticalCenter
-        }
-        horizontalAlignment: icon.visible ? Text.AlignLeft : Text.AlignHCenter
-        elide: Text.ElideRight
-        font {
-            pointSize: Math.max(1, root.style.fontPointSize)
-            capitalization: root.style.fontCapitalization
-            weight: root.style.fontWeight
-        }
-        color: root.pressed ? root.style.pressedTextColor : root.checked ? root.style.checkedTextColor
-               : !root.enabled ? root.style.disabledTextColor : root.style.textColor
-        text: root.text
-        visible: text != ""
+    StateGroup {
+        states: [
+            State {
+                name: "AlignLeft"
+                when: root.style.horizontalAlignment == Qt.AlignLeft
+                
+                AnchorChanges {
+                    target: row
+                    anchors {
+                        left: parent.left
+                        horizontalCenter: undefined
+                    }
+                }
+            },
+            
+            State {
+                name: "AlignRight"
+                when: root.style.horizontalAlignment == Qt.AlignRight
+                
+                AnchorChanges {
+                    target: row
+                    anchors {
+                        right: parent.right
+                        horizontalCenter: undefined
+                    }
+                }
+            }
+        ]
     }
 }
