@@ -361,7 +361,7 @@ void QchAction::toggle() {
     
     \sa triggered()
 */
-void QchAction::trigger() {    
+void QchAction::trigger() {
     if (isCheckable()) {
         setChecked(!isChecked());
     }
