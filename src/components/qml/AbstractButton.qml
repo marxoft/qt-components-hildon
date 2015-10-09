@@ -21,12 +21,12 @@ import org.hildon.components 1.0
     \class AbstractButton
     \brief The base class for buttons.
     
+    \ingroup components
+    
     AbstractButton provides functions, properties and signals common to interactive buttons. It does not draw any 
     content.
     
-    \include buttons.qml
-    
-    \ingroup components
+    \include buttons.qml    
 */
 FocusScope {
     id: root
