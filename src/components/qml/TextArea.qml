@@ -53,6 +53,11 @@ FocusScope {
     property alias cursorPosition: textEdit.cursorPosition
     
     /*!
+        \brief The number of lines displayed in the text area.
+    */
+    property int lineCount
+    
+    /*!
         type:bool
         \brief Whether the text area is read only.
         
@@ -216,6 +221,22 @@ FocusScope {
     Flickable {
         id: flickable
         
+        function ensureVisible(r) {
+            if (contentX >= r.x) {
+                contentX = r.x;
+            }
+            else if (contentX + width <= r.x+r.width) {
+                contentX = r.x + r.width - width;
+            }
+            
+            if (contentY >= r.y) {
+                contentY = r.y;
+            }
+            else if (contentY + height <= r.y + r.height) {
+                contentY = r.y + r.height - height;
+            }
+        }
+        
         anchors {
             fill: parent
             leftMargin: root.style.paddingLeft
@@ -225,24 +246,21 @@ FocusScope {
         }
         clip: true
         horizontalScrollBarPolicy: contentWidth > width ? Qt.ScrollBarAsNeeded : Qt.ScrollBarAlwaysOff
-        contentWidth: textEdit.paintedWidth
-        contentHeight: textEdit.height + platformStyle.paddingLarge
+        contentWidth: textEdit.paintedWidth + platformStyle.paddingLarge
+        contentHeight: textEdit.paintedHeight + platformStyle.paddingLarge
         
         TextEdit {
             id: textEdit
+            
+            property int lineCount: Math.floor(height / lineHeight)
+            property int lineHeight: cursorRectangle.height
 
-            height: paintedHeight
-            anchors {
-                left: parent.left
-                right: parent.right
-                top: parent.top
-            }
+            width: flickable.width
             color: root.style.textColor
             selectedTextColor: root.style.selectedTextColor
             selectionColor: root.style.selectionColor
             wrapMode: Text.WordWrap
-            onCursorPositionChanged: flickable.contentY = Math.max(0, cursorRectangle.y + cursorRectangle.height
-                                                                   - flickable.height)
+            onCursorRectangleChanged: flickable.ensureVisible(cursorRectangle)
         
             Label {
                 id: placeholder
@@ -257,6 +275,14 @@ FocusScope {
                 anchors.fill: parent
                 enabled: !root.enabled
             }
+        }
+    }
+    
+    MouseArea {
+        anchors.fill: parent
+        onPressed: {
+            mouse.accepted = false;
+            textEdit.forceActiveFocus();
         }
     }
 }
