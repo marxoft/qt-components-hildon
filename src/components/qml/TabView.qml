@@ -24,12 +24,39 @@ import QtQuick 1.0
     
     \snippet tabs.qml TabView
     
-    \sa Tab, TabButton
+    \sa Tab, TabBar, TabButton
 */
 FocusScope {
     id: root
     
+    /*!
+        type:list<Tab>
+        \brief The tabs belonging to the tab view.
+    */
     default property alias tabs: tabItem.children
+    
+    /*!
+        type:Item
+        \brief The container for the tabs.
+    */
+    property alias contentItem: tabItem
+    
+    /*!
+        \brief The current tab count.
+    */
+    property int count
+    
+    /*!
+        \brief The index of the currently visible Tab.
+    */
+    property int currentIndex
+    
+    /*!
+        \brief Whether the frame should be visible
+        
+        The default value is \c true.
+    */
+    property bool frameVisible: true
     
     /*!
         \brief Whether the tab buttons should be visible.
@@ -39,78 +66,124 @@ FocusScope {
     property bool tabsVisible: true
     
     /*!
-        \brief The index of the currently visible Tab.
+        \brief Adds a new Tab with \a title with and optional \a Component. Returns the newly added Tab.
+        @param type:string title
+        @param type:Component component
+        @return type:Tab
     */
-    property int currentIndex
+    function addTab(title, component) {
+        if (!component) {
+            component = tabComponent;
+        }
+        
+        var tab = component.createObject(tabItem, {title: title});
+        return tab;
+    }
+    
+    /*!
+        \brief Returns the Tab at \a index.
+        @param type:int index
+        @return type:Tab
+    */
+    function getTab(index) {
+        return tabItem.children[index];
+    }
+    
+    /*!
+        \brief Removes and destroys a Tab at the given \a index.
+        @param type:int index
+    */
+    function removeTab(index) {
+        var tab = tabItem.children[index];
+        
+        if (tab) {
+            tab.destroy();
+        }
+    }
+    
+    Component {
+        id: tabComponent
+        
+        Tab {}
+    }
     
     Component {
         id: tabBarComponent
         
-        Item {
-            id: tabBar
-            
-            height: 35
-            
-            ExclusiveGroup {
-                id: tabButtonGroup
-            }
-            
-            TabButtonStyle {
-                id: tabButtonStyle
-            }
-        
-            Row {            
-                anchors.fill: parent
-            
-                Repeater {
-                    id: repeater
-                
-                    model: tabItem.children
-                
-                    Button {
-                        text: modelData.title
-                        checkable: true
-                        checked: root.currentIndex == index
-                        exclusiveGroup: tabButtonGroup
-                        style: tabButtonStyle
-                        onPressedChanged: if (pressed) root.currentIndex = index;
-                    }
-                }
-            }
+        TabBar {
+            model: tabItem.children
+            onCurrentIndexChanged: if (root.currentIndex != currentIndex) root.currentIndex = currentIndex;
         }
     }
     
     Loader {
         id: tabBarLoader
         
+        z: 1000
         height: 35
         anchors {
             left: parent.left
+            leftMargin: platformStyle.paddingMedium
             right: parent.right
+            rightMargin: platformStyle.paddingMedium
             top: parent.top
         }
         sourceComponent: root.tabsVisible ? tabBarComponent : undefined
     }
     
-    Item {
+    BorderImage {
         id: tabItem
+        
+        property bool completed: false
+                
+        function currentIndexChanged() {
+            if (!completed) {
+                return;
+            }
                         
+            if ((tabBarLoader.item) && (tabBarLoader.item.currentIndex != root.currentIndex)) {
+                tabBarLoader.item.currentIndex = root.currentIndex;
+            }
+            
+            updateCurrentTab();
+        }
+        
+        function updateCurrentTab() {
+            if (!completed) {
+                return;
+            }
+            
+            var index = Math.min(root.currentIndex, children.length - 1);
+                        
+            for (var i = 0; i < children.length; i++) {
+                children[i].visible = (i == index);
+            }
+        }
+             
         anchors {
             left: parent.left
             right: parent.right
             top: tabBarLoader.item ? tabBarLoader.bottom : parent.top
             bottom: parent.bottom
         }
-        
+        border {
+            left: 8
+            right: 8
+            top: 8
+            bottom: 8
+        }
+        smooth: true
+        source: root.frameVisible ? "image://theme/qgn_plat_notebook_tab_area_border" : ""        
         onChildrenChanged: {
-            var index = children.length - 1;
-            children[index].visible = (index == root.currentIndex);
+            root.count = children.length;
+            updateCurrentTab();
         }
     }
     
-    onCurrentIndexChanged: {
-        for (var i = 0; i < tabItem.children.length; i++) {
-            tabItem.children[i].visible = (i == currentIndex);
-        }
+    onCurrentIndexChanged: tabItem.currentIndexChanged()
+    
+    Component.onCompleted: {
+        tabItem.completed = true;
+        tabItem.currentIndexChanged();
     }
 }
