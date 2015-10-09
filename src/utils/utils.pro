@@ -7,6 +7,7 @@ TARGET = qchutils
 HEADERS += \
     qchclipboard.h \
     qchdirectory.h \
+    qchfile.h \
     qchprocess.h \
     qchscreensaver.h \
     qchscreenshot.h \
@@ -15,6 +16,7 @@ HEADERS += \
 SOURCES += \
     qchclipboard.cpp \
     qchdirectory.cpp \
+    qchfile.cpp \
     qchprocess.cpp \
     qchscreensaver.cpp \
     qchscreenshot.cpp \
