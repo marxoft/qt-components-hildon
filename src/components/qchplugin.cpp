@@ -20,6 +20,7 @@
 #include "qchdialog.h"
 #include "qchexclusivegroup.h"
 #include "qchfiledialog.h"
+#include "qchfontmetrics.h"
 #include "qchimageproviders.h"
 #include "qchinformationbox.h"
 #include "qchmenu.h"
@@ -28,6 +29,7 @@
 #include "qchnavigationmode.h"
 #include "qchscreen.h"
 #include "qchstyle.h"
+#include "qchtextmetrics.h"
 #include "qchvaluelayout.h"
 #include "qchwindow.h"
 #include "qchwindowstack.h"
@@ -59,10 +61,12 @@ void QchPlugin::registerTypes(const char *uri) {
     qmlRegisterType<QchDialog>(uri, 1, 0, "Dialog");
     qmlRegisterType<QchExclusiveGroup>(uri, 1, 0, "ExclusiveGroup");
     qmlRegisterType<QchFileDialog>(uri, 1, 0, "FileDialog");
+    qmlRegisterType<QchFontMetrics>(uri, 1, 0, "FontMetrics");
     qmlRegisterType<QchInformationBox>(uri, 1, 0, "InformationBox");
     qmlRegisterType<QchMenu>(uri, 1, 0, "Menu");
     qmlRegisterType<QchMenuBar>(uri, 1, 0, "MenuBar");
     qmlRegisterType<QchMenuItem>(uri, 1, 0, "MenuItem");
+    qmlRegisterType<QchTextMetrics>(uri, 1, 0, "TextMetrics");
     qmlRegisterType<QchWindow>(uri, 1, 0, "Window");
     qmlRegisterType<QchWindowStack>(uri, 1, 0, "WindowStack");
     
