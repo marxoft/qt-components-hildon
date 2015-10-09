@@ -17,6 +17,7 @@
 #include "qchplugin.h"
 #include "qchclipboard.h"
 #include "qchdirectory.h"
+#include "qchfile.h"
 #include "qchprocess.h"
 #include "qchscreensaver.h"
 #include "qchscreenshot.h"
@@ -37,6 +38,7 @@ void QchPlugin::registerTypes(const char *uri) {
     Q_ASSERT(uri == QLatin1String("org.hildon.utils"));
 
     qmlRegisterType<QchDirectory>(uri, 1, 0, "Directory");
+    qmlRegisterType<QchFile>(uri, 1, 0, "File");
     qmlRegisterType<QchProcess>(uri, 1, 0, "Process");
     qmlRegisterType<QchScreenSaver>(uri, 1, 0, "ScreenSaver");
     qmlRegisterType<QchScreenShot>(uri, 1, 0, "ScreenShot");
