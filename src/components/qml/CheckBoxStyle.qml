@@ -28,6 +28,7 @@ import QtQuick 1.0
 */
 ButtonStyle {
     backgroundChecked: background
+    horizontalAlignment: Qt.AlignLeft
     iconWidth: 38
     iconHeight: 38
     paddingLeft: platformStyle.paddingLarge
