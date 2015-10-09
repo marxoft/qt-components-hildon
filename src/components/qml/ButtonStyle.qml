@@ -28,6 +28,13 @@ import org.hildon.components 1.0
     \sa Button
 */
 Style {
+    // Alignment
+    
+    /*!
+        \brief The horizontal alignment of the button icon and text.
+    */
+    property int horizontalAlignment: Qt.AlignHCenter
+    
     // Background
     
     /*!
