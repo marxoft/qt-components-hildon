@@ -11,6 +11,7 @@ HEADERS += \
     qchdialogstatus.h \
     qchexclusivegroup.h \
     qchfiledialog.h \
+    qchfontmetrics.h \
     qchgraphicsview.h \
     qchimageproviders.h \
     qchinformationbox.h \
@@ -21,6 +22,7 @@ HEADERS += \
     qchnavigationmode.h \
     qchscreen.h \
     qchstyle.h \
+    qchtextmetrics.h \
     qchvaluelayout.h \
     qchwindow.h \
     qchwindowstack.h \
@@ -32,6 +34,7 @@ SOURCES += \
     qchdialog.cpp \
     qchexclusivegroup.cpp \
     qchfiledialog.cpp \
+    qchfontmetrics.cpp \
     qchgraphicsview.cpp \
     qchimageproviders.cpp \
     qchinformationbox.cpp \
@@ -41,6 +44,7 @@ SOURCES += \
     qchmenuitem.cpp \
     qchscreen.cpp \
     qchstyle.cpp \
+    qchtextmetrics.cpp \
     qchwindow.cpp \
     qchwindowstack.cpp \
     qchplugin.cpp
@@ -79,6 +83,7 @@ qml.files += \
     qml/SpinBoxStyle.qml \
     qml/Style.qml \
     qml/Tab.qml \
+    qml/TabBar.qml \
     qml/TabButtonStyle.qml \
     qml/TabView.qml \
     qml/TextArea.qml \
