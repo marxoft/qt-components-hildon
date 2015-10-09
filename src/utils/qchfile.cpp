@@ -24,6 +24,8 @@
     
     File provides a subset of the C++ QFile API.
     
+    \include file.qml
+    
     \sa Directory
 */
 QchFile::QchFile(QObject *parent) :
@@ -67,6 +69,67 @@ void QchFile::setFileName(const QString &name) {
         emit permissionsChanged();
         emit sizeChanged();
     }
+}
+
+/*!
+    \brief Whether the file is open.
+    
+    The default value is \c false.
+    
+    \sa close(), open()
+*/
+bool QchFile::isOpen() const {
+    return m_file.isOpen();
+}
+
+/*!
+    \brief The mode used to open the file.
+    
+    Possible values are:
+    
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td>File.NotOpen</td>
+            <td>The file is not open (default).</td>
+        </tr>
+        <tr>
+            <td>File.ReadOnly</td>
+            <td>The file is open for reading.</td>
+        </tr>
+        <tr>
+            <td>File.WriteOnly</td>
+            <td>The file is open for writing</td>
+        </tr>
+        <tr>
+            <td>File.ReadWrite</td>
+            <td>The file is open for reading and writing.</td>
+        </tr>
+        <tr>
+            <td>File.Append</td>
+            <td>The file is opened in append mode, so that all data is written to the end of the file.</td>
+        </tr>
+        <tr>
+            <td>File.Truncate</td>
+            <td>If possible, the file is truncated before it is opened.</td>
+        </tr>
+        <tr>
+            <td>File.Text</td>
+            <td>The end-of-line terminators are translated to '\\n'.</td>
+        </tr>
+        <tr>
+            <td>File.Unbuffered</td>
+            <td>Any buffer is bypassed.</td>
+        </tr>
+    </table>
+    
+    \sa isOpen, open()
+*/  
+QchFile::OpenMode QchFile::openMode() const {
+    return QchFile::OpenMode(int (m_file.openMode()));
 }
 
 /*!
@@ -139,67 +202,6 @@ void QchFile::setPermissions(QchFile::Permissions p) {
 }
 
 /*!
-    \brief Whether the file is open.
-    
-    The default value is \c false.
-    
-    \sa close(), open()
-*/
-bool QchFile::isOpen() const {
-    return m_file.isOpen();
-}
-
-/*!
-    \brief The mode used to open the file.
-    
-    Possible values are:
-    
-    <table>
-        <tr>
-            <th>Name</th>
-            <th>Description</th>
-        </tr>
-        <tr>
-            <td>File.NotOpen</td>
-            <td>The file is not open (default).</td>
-        </tr>
-        <tr>
-            <td>File.ReadOnly</td>
-            <td>The file is open for reading.</td>
-        </tr>
-        <tr>
-            <td>File.WriteOnly</td>
-            </td>The file is open for writing</td>
-        </tr>
-        <tr>
-            <td>File.ReadWrite</td>
-            <td>The file is open for reading and writing.</td>
-        </tr>
-        <tr>
-            <td>File.Append</td>
-            <td>The file is opened in append mode, so that all data is written to the end of the file.</td>
-        </tr>
-        <tr>
-            <td>File.Truncate</td>
-            <td>If possible, the file is truncated before it is opened.</td>
-        </tr>
-        <tr>
-            <td>File.Text</td>
-            <td>The end-of-line terminators are translated to '\n'.</td>
-        </tr>
-        <tr>
-            <td>File.Unbuffered</td>
-            <td>Any buffer is bypassed.</td>
-        </tr>
-    </table>
-    
-    \sa isOpen, open()
-*/  
-QchFile::OpenMode QchFile::openMode() const {
-    return QchFile::OpenMode(int (m_file.openMode()));
-}
-
-/*!
     \brief The current position in bytes.
 */
 qint64 QchFile::pos() const {
@@ -213,6 +215,11 @@ qint64 QchFile::size() const {
     return m_file.size();
 }
 
+/*!
+    \brief Closes the file.
+    
+    \sa isOpen, openMode, open()
+*/
 void QchFile::close() {
     if (m_file.isOpen()) {
         m_file.close();

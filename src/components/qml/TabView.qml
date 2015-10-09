@@ -66,7 +66,10 @@ FocusScope {
     property bool tabsVisible: true
     
     /*!
-        \brief Adds a new Tab with \a title with and optional \a Component. Returns the newly added Tab.
+        \brief Adds a new Tab with \a title and optional \a Component.
+        
+        Returns the newly added Tab.
+        
         @param type:string title
         @param type:Component component
         @return type:Tab

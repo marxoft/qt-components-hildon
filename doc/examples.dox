@@ -4,6 +4,7 @@
     \example buttons.qml
     \example dbus.qml
     \example directory.qml
+    \example file.qml
     \example gconf.qml
     \example helloworld.qml
     \example menus.qml

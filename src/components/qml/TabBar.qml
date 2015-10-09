@@ -18,13 +18,13 @@ import QtQuick 1.0
 
 /*!
     \class TabBar
-    \brief A row of TabButton.
+    \brief Provides a row of tab buttons used to switch between visual items.
     
     \ingroup components
     
-    \snippet tabs.qml TabBar
-    
-    \sa Tab, TabButton, TabView
+    TabBar can be used instead of TabView in cases where you need to fine-tune the behaviour.
+        
+    \sa Tab, TabView
 */
 FocusScope {
     id: root
