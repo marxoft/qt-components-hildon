@@ -116,7 +116,8 @@ ListView {
     contentItem.height: height - ((horizontalScrollBarPolicy == Qt.ScrollBarAlwaysOff) || (contentWidth < width)
                                   ? 0 : horizontalScrollBar.style.scrollBarWidth)
     
-    focus: true  
+    focus: true
+    highlightMoveDuration: 1
     interactive: (contentWidth > width) || (contentHeight > height)
     
     ScrollBar {
