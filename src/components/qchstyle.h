@@ -30,6 +30,9 @@ class QchStyle : public QObject
     Q_PROPERTY(int fontSizeSmall READ fontSizeSmall CONSTANT)
     Q_PROPERTY(int fontSizeMedium READ fontSizeMedium CONSTANT)
     Q_PROPERTY(int fontSizeLarge READ fontSizeLarge CONSTANT)
+    Q_PROPERTY(int fontSizeXLarge READ fontSizeXLarge CONSTANT)
+    Q_PROPERTY(int fontSizeXXLarge READ fontSizeXXLarge CONSTANT)
+    Q_PROPERTY(int fontSizeXXXLarge READ fontSizeXXXLarge CONSTANT)
     Q_PROPERTY(int iconSizeSmall READ iconSizeSmall CONSTANT)
     Q_PROPERTY(int iconSizeLarge READ iconSizeLarge CONSTANT)
     Q_PROPERTY(qreal enabledOpacity READ enabledOpacity CONSTANT)
@@ -74,6 +77,9 @@ public:
     static int fontSizeSmall();
     static int fontSizeMedium();
     static int fontSizeLarge();
+    static int fontSizeXLarge();
+    static int fontSizeXXLarge();
+    static int fontSizeXXXLarge();
     
     static int iconSizeSmall();
     static int iconSizeLarge();

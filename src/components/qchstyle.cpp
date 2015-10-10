@@ -52,24 +52,45 @@ int QchStyle::paddingLarge() {
 }
 
 /*!
-    \brief Small font size constant.
+    \brief Small font point size constant.
 */
 int QchStyle::fontSizeSmall() {
     return 13;
 }
 
 /*!
-    \brief Medium font size constant.
+    \brief Medium font point size constant.
 */
 int QchStyle::fontSizeMedium() {
     return 18;
 }
 
 /*!
-    \brief Large font size constant.
+    \brief Large font point size constant.
 */
 int QchStyle::fontSizeLarge() {
-    return 24;
+    return 26;
+}
+
+/*!
+    \brief XLarge font point size constant.
+*/
+int QchStyle::fontSizeXLarge() {
+    return 31;
+}
+
+/*!
+    \brief XXLarge font point size constant.
+*/
+int QchStyle::fontSizeXXLarge() {
+    return 52;
+}
+
+/*!
+    \brief XXXLarge font point size constant.
+*/
+int QchStyle::fontSizeXXXLarge() {
+    return 74;
 }
 
 /*!
