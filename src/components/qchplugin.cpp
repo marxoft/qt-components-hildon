@@ -23,6 +23,7 @@
 #include "qchfontmetrics.h"
 #include "qchimageproviders.h"
 #include "qchinformationbox.h"
+#include "qchinsertpolicy.h"
 #include "qchmenu.h"
 #include "qchmenubar.h"
 #include "qchmenuitem.h"
@@ -30,6 +31,7 @@
 #include "qchscreen.h"
 #include "qchstyle.h"
 #include "qchtextmetrics.h"
+#include "qchtheme.h"
 #include "qchvaluelayout.h"
 #include "qchwindow.h"
 #include "qchwindowstack.h"
@@ -49,6 +51,7 @@ void QchPlugin::initializeEngine(QDeclarativeEngine *engine, const char *uri) {
         QDeclarativeContext *context = engine->rootContext();
         context->setContextProperty("platformStyle", new QchStyle(engine));
         context->setContextProperty("screen", new QchScreen(engine));
+        context->setContextProperty("theme", new QchTheme(engine));
     }   
 }
 
@@ -72,6 +75,7 @@ void QchPlugin::registerTypes(const char *uri) {
     
     qmlRegisterUncreatableType<QchCloseEvent>(uri, 1, 0, "CloseEvent", "");
     qmlRegisterUncreatableType<QchDialogStatus>(uri, 1, 0, "DialogStatus", "");
+    qmlRegisterUncreatableType<QchInsertPolicy>(uri, 1, 0, "InsertPolicy", "");
     qmlRegisterUncreatableType<QchNavigationMode>(uri, 1, 0, "NavigationMode", "");
     qmlRegisterUncreatableType<QchValueLayout>(uri, 1, 0, "ValueLayout", "");
     qmlRegisterUncreatableType<QchWindowStatus>(uri, 1, 0, "WindowStatus", "");
