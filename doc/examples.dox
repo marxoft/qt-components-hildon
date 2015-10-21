@@ -2,6 +2,8 @@
     \example actions.qml
     \example audio.qml
     \example buttons.qml
+    \example checkbox.qml
+    \example combobox.qml
     \example dbus.qml
     \example directory.qml
     \example file.qml
@@ -10,10 +12,13 @@
     \example menus.qml
     \example notification.qml
     \example process.qml
+    \example radiobutton.qml
     \example screenshot.qml
     \example selectors.qml
     \example settings.qml
     \example tabs.qml
+    \example textarea.qml
+    \example textfield.qml
     \example webview.qml
     \example widget.qml
     \example window.qml
