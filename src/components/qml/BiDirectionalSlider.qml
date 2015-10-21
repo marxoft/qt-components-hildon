@@ -24,7 +24,7 @@ import QtQuick 1.0
     
     \sa BiDirectionalSliderStyle, Slider
 */
-Item {
+FocusScope {
     id: root
     
     /*
@@ -93,8 +93,8 @@ Item {
     */
     property QtObject style: BiDirectionalSliderStyle {}
         
-    width: 250
-    height: 60
+    width: style.sliderWidth
+    height: style.sliderHeight
     rotation: orientation == Qt.Vertical ? -90 : 0
     
     BorderImage {

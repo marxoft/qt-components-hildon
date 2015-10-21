@@ -22,9 +22,19 @@ import QtQuick 1.0
     
     \ingroup components
     
-    \sa TextArea
+    \sa TextArea, OssoTextAreaStyle
 */
 TextFieldStyle {
+    /*!
+        \brief The top padding of the text, in pixels.
+    */
+    property int paddingTop: platformStyle.paddingLarge
+    
+    /*!
+        \brief The bottom padding of the text, in pixels.
+    */
+    property int paddingBottom: platformStyle.paddingLarge
+    
     /*!
         \brief The default height of the TextArea.
     */

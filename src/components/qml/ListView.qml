@@ -26,7 +26,7 @@ import org.hildon.components 1.0
     The ListView component behaves in the same way as the standard QtQuick ListView element, but with optional 
     scroll bars.
     
-    \sa ListItem, ScrollBar
+    \sa ListItem, ListViewStyle, OssoListViewStyle
 */
 ListView {
     id: root        
@@ -110,29 +110,138 @@ ListView {
     */
     property int verticalScrollBarPolicy: Qt.ScrollBarAsNeeded
     
-    contentItem.width: width - ((verticalScrollBarPolicy == Qt.ScrollBarAlwaysOff) || (contentHeight < height)
-                                ? 0 : verticalScrollBar.style.scrollBarWidth)
-    
-    contentItem.height: height - ((horizontalScrollBarPolicy == Qt.ScrollBarAlwaysOff) || (contentWidth < width)
-                                  ? 0 : horizontalScrollBar.style.scrollBarWidth)
+    /*!
+        type:FlickableStyle
+        \brief Provides styling properties for the flickable.        
+    */
+    property QtObject style: FlickableStyle {}
     
     focus: true
     highlightMoveDuration: 1
-    interactive: (contentWidth > width) || (contentHeight > height)
+    interactive: (root.style.interactive) && ((contentWidth > width) || (contentHeight > height))
     
-    ScrollBar {
-        id: horizontalScrollBar
-    
-        flickableItem: root
-        orientation: Qt.Horizontal
-        scrollBarPolicy: root.horizontalScrollBarPolicy
-    }
+    QtObject {
+        id: internal
         
-    ScrollBar {
-        id: verticalScrollBar
+        property bool complete: false
+                
+        property Item horizontalScrollBar
+        property Item verticalScrollBar
+        
+        function setHorizontalScrollBar() {
+            if (!complete) {
+                return;
+            }
+            
+            switch (root.horizontalScrollBarPolicy) {
+            case Qt.ScrollBarAlwaysOn: {
+                if (!horizontalScrollBar) {
+                    horizontalScrollBar = root.style.scrollBar.createObject(root, {flickableItem: root,
+                                                                            orientation: Qt.Horizontal});
+                }
+                else {
+                    horizontalScrollBar.visible = true;
+                }
+                
+                root.contentItem.height = root.height - horizontalScrollBar.style.scrollBarWidth;
+                break;
+            }
+            case Qt.ScrollBarAlwaysOff: {
+                if (horizontalScrollBar) {
+                    horizontalScrollBar.visible = false;
+                }
+                
+                root.contentItem.height = root.height;
+                break;
+            }
+            default: {
+                if (root.contentWidth > root.width) {
+                    if (!horizontalScrollBar) {
+                        horizontalScrollBar = root.style.scrollBar.createObject(root, {flickableItem: root,
+                                                                                orientation: Qt.Horizontal});
+                    }
+                    else {
+                        horizontalScrollBar.visible = true;
+                    }
+                    
+                    root.contentItem.height = root.height - horizontalScrollBar.style.scrollBarWidth;
+                }
+                else {
+                    if (horizontalScrollBar) {
+                        horizontalScrollbar.visible = false;
+                    }
+                    
+                    root.contentItem.height = root.height;
+                }
+                                
+                break;
+            }
+            }
+        }
+        
+        function setVerticalScrollBar() {
+            if (!complete) {
+                return;
+            }
+            
+            switch (root.verticalScrollBarPolicy) {
+            case Qt.ScrollBarAlwaysOn: {
+                if (!verticalScrollBar) {
+                    verticalScrollBar = root.style.scrollBar.createObject(root, {flickableItem: root,
+                                                                          orientation: Qt.Vertical});
+                }
+                else {
+                    verticalScrollBar.visible = true;
+                }
+                
+                root.contentItem.width = root.width - verticalScrollBar.style.scrollBarWidth;
+                break;
+            }
+            case Qt.ScrollBarAlwaysOff: {
+                if (verticalScrollBar) {
+                    verticalScrollBar.visible = false;
+                }
+                
+                root.contentItem.width = root.width;
+                break;
+            }
+            default: {
+                if (root.contentHeight > root.height) {
+                    if (!verticalScrollBar) {
+                        verticalScrollBar = root.style.scrollBar.createObject(root, {flickableItem: root,
+                                                                              orientation: Qt.Vertical});
+                    }
+                    else {
+                        verticalScrollBar.visible = true;
+                    }
+                    
+                    root.contentItem.width = root.width - verticalScrollBar.style.scrollBarWidth;
+                }
+                else {
+                    if (verticalScrollBar) {
+                        verticalScrollBar.visible = false;
+                    }
+                    
+                    root.contentItem.width = root.width;
+                }
+                
+                break;
+            }
+            }
+        }
+    }
     
-        flickableItem: root
-        orientation: Qt.Vertical
-        scrollBarPolicy: root.verticalScrollBarPolicy
+    onContentWidthChanged: internal.setHorizontalScrollBar()
+    onWidthChanged: internal.setHorizontalScrollBar()
+    onHorizontalScrollBarPolicyChanged: internal.setHorizontalScrollBar()
+    
+    onContentHeightChanged: internal.setVerticalScrollBar()
+    onHeightChanged: internal.setVerticalScrollBar()
+    onVerticalScrollBarPolicyChanged: internal.setVerticalScrollBar()
+    
+    Component.onCompleted: {
+        internal.complete = true;
+        internal.setHorizontalScrollBar();
+        internal.setVerticalScrollBar();
     }
 }

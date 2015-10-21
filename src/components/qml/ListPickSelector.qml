@@ -38,10 +38,9 @@ AbstractPickSelector {
     property alias model: view.model
     
     /*!
-        type:int
         \brief The current chosen index in the view.
     */
-    property alias currentIndex: view.currentIndex
+    property int currentIndex
     
     /*!
         type:Component
@@ -95,12 +94,23 @@ AbstractPickSelector {
                 text: root.textRole === "" ?  modelData
                       : ((view.modelIsArray ? modelData[root.textRole] : model[root.textRole]) || "")
             }
-            onClicked: root.selected(text)
+            onClicked: {
+                root.currentIndex = index;
+                root.selected(text);
+            }
         }
     }
     
-    onStatusChanged: if (status == DialogStatus.Open) view.positionViewAtIndex(currentIndex, ListView.Center);
-    onCurrentIndexChanged: if (view.currentItem) currentValueText = view.currentItem.text;
+    onStatusChanged: if (status == DialogStatus.Opening) view.currentIndex = currentIndex;
+    onCurrentIndexChanged: {
+        if (currentIndex != view.currentIndex) {
+            view.currentIndex = currentIndex;
+        }
+        
+        if (view.currentItem) {
+            currentValueText = view.currentItem.text;
+        }
+    }
     onSelected: accept()
 }
         

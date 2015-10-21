@@ -35,22 +35,22 @@ Style {
     /*!
         \brief The right margin of the background image, in pixels.
     */
-    property int backgroundMarginRight: 25
+    property int backgroundMarginRight: 24
     
     /*!
         \brief The left margin of the background image, in pixels.
     */
-    property int backgroundMarginLeft: 25
+    property int backgroundMarginLeft: 24
     
     /*!
         \brief The top margin of the background image, in pixels.
     */
-    property int backgroundMarginTop: 25
+    property int backgroundMarginTop: 34
     
     /*!
         \brief The right margin of the background image, in pixels.
     */
-    property int backgroundMarginBottom: 25
+    property int backgroundMarginBottom: 34
     
     // Bar
     
@@ -62,22 +62,22 @@ Style {
     /*!
         \brief The right margin of the bar image, in pixels.
     */
-    property int barMarginRight: 10
+    property int barMarginRight: 2
     
     /*!
         \brief The left margin of the bar image, in pixels.
     */
-    property int barMarginLeft: 10
+    property int barMarginLeft: 2
     
     /*!
         \brief The top margin of the bar image, in pixels.
     */
-    property int barMarginTop: 25
+    property int barMarginTop: 31
     
     /*!
         \brief The bottom margin of the bar image, in pixels.
     */
-    property int barMarginBottom: 25
+    property int barMarginBottom: 31
     
     /*!
         \brief The left padding of the bar image, in pixels.
@@ -98,4 +98,16 @@ Style {
         \brief The left bottom of the bar image, in pixels.
     */
     property int barPaddingBottom: platformStyle.paddingSmall
+    
+    // Dimensions
+    
+    /*!
+        \brief The default width for the progress bar.
+    */
+    property int progressBarWidth: 150
+    
+    /*!
+        \brief The default height for the progress bar.
+    */
+    property int progressBarHeight: 70
 }

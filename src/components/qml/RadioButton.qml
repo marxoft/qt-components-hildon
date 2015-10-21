@@ -18,10 +18,12 @@ import QtQuick 1.0
 
 /*!
     \class RadioButton
-    \brief A checkable Button.
+    \brief A checkable button with a visible indicator.
     
     \ingroup components
+    
+    \include radiobutton.qml
+    
+    \sa RadioButtonStyle, OssoRadioButtonStyle
 */
-Button {
-    checkable: true
-}
+CheckBox {}

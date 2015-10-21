@@ -78,4 +78,16 @@ Style {
         \brief The url for the handle image used when the Slider is disabled.
     */
     property url handleDisabled: "image://theme/SliderThumbDisabled"
+    
+    // Dimensions
+    
+    /*!
+        \brief The default width for the Slider.
+    */
+    property int sliderWidth: 250
+    
+    /*!
+        \brief The default height for the Slider.
+    */
+    property int sliderHeight: 60
 }

@@ -59,10 +59,16 @@ Item {
     width: parent ? parent.width : screen.width
     height: style.itemHeight
     
-    Image {
+    BorderImage {
         id: background
         
         anchors.fill: parent
+        border {
+            left: root.style.backgroundMarginLeft
+            right: root.style.backgroundMarginRight
+            top: root.style.backgroundMarginTop
+            bottom: root.style.backgroundMarginBottom
+        }
         smooth: true
         source: mouseArea.pressed ? root.style.backgroundPressed :
                 (root.ListView.isCurrentItem) && (root.ListView.view.navigationMode == NavigationMode.KeyNavigation)

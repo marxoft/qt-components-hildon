@@ -30,6 +30,14 @@ Item {
     default property alias tools: row.data
     
     /*!
+        type:int
+        \brief The space between each item in the tool bar.
+        
+        The default value is \c 0.
+    */
+    property alias spacing: row.spacing
+    
+    /*!
         type:ToolBarStyle
         \brief Provides styling properties for the tool bar.
     */
@@ -53,7 +61,29 @@ Item {
     Row {
         id: row
         
+        property bool complete: false
+        
+        function positionTools() {
+            if (!complete) {
+                return;
+            }
+            
+            for (var i = 0; i < children.length; i++) {
+                var child = children[i];
+                
+                if (child.height < height) {
+                    child.y = Math.floor((height - child.height) / 2);
+                }
+            }
+        }
+        
         anchors.fill: parent
-        spacing: root.style.spacing
+        onChildrenChanged: positionTools()
+        onHeightChanged: positionTools()
+    }
+    
+    Component.onCompleted: {
+        row.complete = true;
+        row.positionTools();
     }
 }

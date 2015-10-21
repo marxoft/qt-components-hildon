@@ -31,11 +31,4 @@ Style {
         \brief The url for the background image.
     */
     property url background: "image://theme/ToolbarPrimaryBackground"
-    
-    // Item spacing
-    
-    /*!
-        \brief The space between each item in the ToolBar.
-    */
-    property int spacing: 0
 }

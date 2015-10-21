@@ -23,7 +23,9 @@ import "."
     
     \ingroup components
     
-    \sa Label, TextAreaStyle, TextField
+    \include textarea.qml
+    
+    \sa Label, OssoTextAreaStyle, TextAreaStyle, TextField
 */
 FocusScope {
     id: root
@@ -56,6 +58,11 @@ FocusScope {
         \brief The number of lines displayed in the text area.
     */
     property int lineCount
+    
+    /*!
+        \brief The maximum height of a line of text in the text area.
+    */
+    property int lineHeight
     
     /*!
         type:bool
@@ -217,72 +224,41 @@ FocusScope {
                 ? root.style.backgroundSelected : root.style.background
         smooth: true
     }
-    
-    Flickable {
-        id: flickable
+
+    TextEdit {
+        id: textEdit
         
-        function ensureVisible(r) {
-            if (contentX >= r.x) {
-                contentX = r.x;
-            }
-            else if (contentX + width <= r.x+r.width) {
-                contentX = r.x + r.width - width;
-            }
-            
-            if (contentY >= r.y) {
-                contentY = r.y;
-            }
-            else if (contentY + height <= r.y + r.height) {
-                contentY = r.y + r.height - height;
-            }
-        }
-        
+        property int lineCount: Math.floor(paintedHeight / lineHeight)
+        property int lineHeight: cursorRectangle.height
+
         anchors {
             fill: parent
             leftMargin: root.style.paddingLeft
             rightMargin: root.style.paddingRight
-            topMargin: platformStyle.paddingLarge
-            bottomMargin: platformStyle.paddingLarge
+            topMargin: root.style.paddingTop
+            bottomMargin: root.style.paddingBottom
         }
-        clip: true
-        horizontalScrollBarPolicy: contentWidth > width ? Qt.ScrollBarAsNeeded : Qt.ScrollBarAlwaysOff
-        contentWidth: textEdit.paintedWidth + platformStyle.paddingLarge
-        contentHeight: textEdit.paintedHeight + platformStyle.paddingLarge
-        
-        TextEdit {
-            id: textEdit
-            
-            property int lineCount: Math.floor(height / lineHeight)
-            property int lineHeight: cursorRectangle.height
-
-            width: flickable.width
-            color: root.style.textColor
-            selectedTextColor: root.style.selectedTextColor
-            selectionColor: root.style.selectionColor
-            wrapMode: Text.WordWrap
-            onCursorRectangleChanged: flickable.ensureVisible(cursorRectangle)
-        
-            Label {
-                id: placeholder
-
-                anchors.fill: parent
-                color: platformStyle.reversedSecondaryTextColor
-                wrapMode: textEdit.wrapMode
-                visible: (textEdit.text == "") && (!textEdit.activeFocus)
-            }
-
-            MouseArea {
-                anchors.fill: parent
-                enabled: !root.enabled
-            }
-        }
-    }
+        color: enabled ? root.style.textColor : platformStyle.reversedDisabledTextColor
+        enabled: root.enabled
+        selectedTextColor: root.style.selectedTextColor
+        selectionColor: root.style.selectionColor
+        selectByMouse: true
+        wrapMode: Text.WordWrap
+        onLineCountChanged: root.lineCount = lineCount
+        onLineHeightChanged: root.lineHeight = lineHeight
     
-    MouseArea {
-        anchors.fill: parent
-        onPressed: {
-            mouse.accepted = false;
-            textEdit.forceActiveFocus();
+        Label {
+            id: placeholder
+
+            anchors.fill: parent
+            color: platformStyle.reversedSecondaryTextColor
+            wrapMode: textEdit.wrapMode
+            visible: (textEdit.text == "") && (!textEdit.activeFocus)
+        }
+
+        MouseArea {
+            anchors.fill: parent
+            enabled: !root.enabled
         }
     }
 }

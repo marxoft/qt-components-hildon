@@ -22,7 +22,7 @@ import QtQuick 1.0
     
     \ingroup components
     
-    \sa ListItem
+    \sa ListItem, OssoListItemStyle
 */
 Style {
     // Background
@@ -41,6 +41,26 @@ Style {
         \brief The url for the background image used when the ListItem is selected.
     */
     property url backgroundSelected: "image://theme/TouchListBackgroundPressed"
+    
+    /*!
+        \brief The right margin for the background image, in pixels.
+    */
+    property int backgroundMarginRight: 4
+    
+    /*!
+        \brief The left margin for the background image, in pixels.
+    */
+    property int backgroundMarginLeft: 4
+    
+    /*!
+        \brief The top margin for the background image, in pixels.
+    */
+    property int backgroundMarginTop: 0
+    
+    /*!
+        \brief The bottom margin for the background image, in pixels.
+    */
+    property int backgroundMarginBottom: 0
     
     // Dimensions
     

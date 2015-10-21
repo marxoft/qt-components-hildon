@@ -22,6 +22,8 @@ import QtQuick 1.0
     
     \ingroup components
     
+    \include textfield.qml
+    
     \sa Label, TextArea, TextFieldStyle
 */
 FocusScope {
@@ -235,7 +237,7 @@ FocusScope {
     }
     
     width: style.defaultWidth
-    height: 70
+    height: style.defaultHeight
     
     BorderImage {
         id: background

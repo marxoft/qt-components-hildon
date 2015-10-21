@@ -22,7 +22,7 @@ import QtQuick 1.0
     
     \ingroup components
     
-    \sa TextField
+    \sa TextField, OssoTextFieldStyle
 */
 Style {
     // Colors
@@ -85,4 +85,9 @@ Style {
         \brief The default width of the TextField, in pixels.
     */
     property int defaultWidth: 250
+    
+    /*!
+        \brief The default height of the TextField, in pixels.
+    */
+    property int defaultHeight: 70
 }

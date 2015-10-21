@@ -68,7 +68,8 @@ Item {
     */
     property QtObject style: ProgressBarStyle {}
     
-    height: 70
+    width: style.progressBarWidth
+    height: style.progressBarHeight
     
     BorderImage {
         id: background

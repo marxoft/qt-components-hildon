@@ -24,9 +24,39 @@ import QtQuick 1.0
     
     The CheckBoxStyle component can be used to provide custom styling for a CheckBox.
     
-    \sa CheckBox
+    \sa CheckBox, OssoCheckBoxStyle
 */
 ButtonStyle {
+    /*!
+        \brief The url for the checkbox icon when the checkbox is unchecked.
+    */
+    property url icon: "image://theme/CheckButtonUnchecked"
+    
+    /*!
+        \brief The url for the checkbox icon when the checkbox is checked.
+    */
+    property url iconChecked: "image://theme/CheckButtonChecked"
+    
+    /*!
+        \brief The url for the checkbox icon when the checkbox is checked and disabled.
+    */
+    property url iconCheckedDisabled: "image://theme/CheckButtonCheckedDisabled"
+    
+    /*!
+        \brief The url for the checkbox icon when the checkbox is checked and pressed.
+    */
+    property url iconCheckedPressed: "image://theme/CheckButtonChecked"
+    
+    /*!
+        \brief The url for the checkbox icon when the checkbox is unchecked and disabled.
+    */
+    property url iconDisabled: "image://theme/CheckButtonUncheckedDisabled"
+    
+    /*!
+        \brief The url for the checkbox icon when the checkbox is unchecked and pressed.
+    */
+    property url iconPressed: "image://theme/CheckButtonUnchecked"
+    
     backgroundChecked: background
     horizontalAlignment: Qt.AlignLeft
     iconWidth: 38
