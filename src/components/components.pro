@@ -15,6 +15,7 @@ HEADERS += \
     qchgraphicsview.h \
     qchimageproviders.h \
     qchinformationbox.h \
+    qchinsertpolicy.h \
     qchitemaction.h \
     qchmenu.h \
     qchmenubar.h \
@@ -23,6 +24,7 @@ HEADERS += \
     qchscreen.h \
     qchstyle.h \
     qchtextmetrics.h \
+    qchtheme.h \
     qchvaluelayout.h \
     qchwindow.h \
     qchwindowstack.h \
@@ -45,6 +47,7 @@ SOURCES += \
     qchscreen.cpp \
     qchstyle.cpp \
     qchtextmetrics.cpp \
+    qchtheme.cpp \
     qchwindow.cpp \
     qchwindowstack.cpp \
     qchplugin.cpp
@@ -53,35 +56,62 @@ qml.files += \
     qml/qmldir \
     qml/AbstractButton.qml \
     qml/AbstractPickSelector.qml \
+    qml/AcceptButtonStyle.qml \
+    qml/AcceptThumbButtonStyle.qml \
+    qml/AppletCloseButtonStyle.qml \
+    qml/AppletConfigureButtonStyle.qml \
+    qml/ApplicationShortcutButtonStyle.qml \
     qml/ApplicationWindow.qml \
     qml/BiDirectionalSlider.qml \
     qml/BiDirectionalSliderStyle.qml \
     qml/Button.qml \
+    qml/ButtonRow.qml \
     qml/ButtonStyle.qml \
     qml/CheckBox.qml \
     qml/CheckBoxStyle.qml \
+    qml/ComboBox.qml \
+    qml/ComboBoxStyle.qml \
     qml/DatePickSelector.qml \
     qml/DialogButtonStyle.qml \
     qml/DoubleSpinBox.qml \
     qml/EditBar.qml \
     qml/EditButtonStyle.qml \
     qml/Flickable.qml \
+    qml/FlickableStyle.qml \
     qml/Label.qml \
     qml/LabelStyle.qml \
     qml/ListItem.qml \
     qml/ListItemStyle.qml \
     qml/ListPickSelector.qml \
     qml/ListView.qml \
+    qml/ListViewStyle.qml \
+    qml/MessageBox.qml \
+    qml/OssoCheckBoxStyle.qml \
+    qml/OssoComboBoxStyle.qml \
+    qml/OssoFlickableStyle.qml \
+    qml/OssoListItemStyle.qml \
+    qml/OssoListViewStyle.qml \
+    qml/OssoRadioButtonStyle.qml \
+    qml/OssoTextAreaStyle.qml \
+    qml/OssoTextFieldStyle.qml \
+    qml/PortraitButtonStyle.qml \
     qml/ProgressBar.qml \
     qml/ProgressBarStyle.qml \
     qml/RadioButton.qml \
+    qml/RadioButtonStyle.qml \
+    qml/RejectButtonStyle.qml \
+    qml/RejectThumbButtonStyle.qml \
     qml/ScrollBar.qml \
     qml/ScrollBarStyle.qml \
+    qml/ScrollDecorator.qml \
+    qml/ScrollDecoratorStyle.qml \
     qml/Slider.qml \
     qml/SliderStyle.qml \
+    qml/SmallProgressBarStyle.qml \
     qml/SpinBox.qml \
     qml/SpinBoxStyle.qml \
     qml/Style.qml \
+    qml/StylusButtonStyle.qml \
     qml/Tab.qml \
     qml/TabBar.qml \
     qml/TabButtonStyle.qml \
@@ -90,6 +120,8 @@ qml.files += \
     qml/TextAreaStyle.qml \
     qml/TextField.qml \
     qml/TextFieldStyle.qml \
+    qml/ThumbButtonStyle.qml \
+    qml/ThumbScrollBarStyle.qml \
     qml/TimePickSelector.qml \
     qml/ToolBar.qml \
     qml/ToolBarStyle.qml \
