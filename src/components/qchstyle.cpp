@@ -15,6 +15,7 @@
  */
 
 #include "qchstyle.h"
+#include "qchtheme.h"
 #include <QMaemo5Style>
 
 /*!
@@ -26,8 +27,10 @@
     \note Style is a context property and cannot be created in QML.
 */
 QchStyle::QchStyle(QObject *parent) :
-    QObject(parent)
+    QObject(parent),
+    m_theme(new QchTheme(this))
 {
+    connect(m_theme, SIGNAL(changed()), this, SIGNAL(changed()));
 }
 
 /*!
