@@ -41,6 +41,13 @@ FocusScope {
     property Action action
     
     /*!
+        \brief Whether the button should grab focus when pressed.
+        
+        The default value is \c true.
+    */
+    property bool activeFocusOnPress: true
+    
+    /*!
         type:bool
         \brief Whether the button should accept auto-repeated key events.
     
@@ -126,6 +133,7 @@ FocusScope {
         
         anchors.fill: parent
         enabled: root.enabled
+        onPressed: if (root.activeFocusOnPress) root.forceActiveFocus();
         onClicked: action ? action.trigger() : defaultAction.trigger()
     }
     
