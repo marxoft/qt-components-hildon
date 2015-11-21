@@ -49,7 +49,7 @@ Dialog {
     property alias text: label.text
     
     /*!
-        \type:enumeration
+        type:enumeration
         \brief The formatting to be used for message label.
     */
     property alias textFormat: label.textFormat
