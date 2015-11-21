@@ -137,7 +137,15 @@ FocusScope {
         onClicked: action ? action.trigger() : defaultAction.trigger()
     }
     
-    Keys.onEnterPressed: {
+    Keys.onPressed: {
+        switch (event.key) {
+        case Qt.Key_Space:
+        case Qt.Key_Enter:
+            break;
+        default:
+            return;
+        }
+        
         if ((!event.autoRepeat) || (autoRepeat)) {
             if (action) {
                 action.trigger();
