@@ -168,7 +168,7 @@ ListView {
                 }
                 else {
                     if (horizontalScrollBar) {
-                        horizontalScrollbar.visible = false;
+                        horizontalScrollBar.visible = false;
                     }
                     
                     root.contentItem.height = root.height;
