@@ -112,5 +112,14 @@ AbstractPickSelector {
         }
     }
     onSelected: accept()
-}
+    
+    Component.onCompleted: {
+        if (currentIndex != view.currentIndex) {
+            view.currentIndex = currentIndex;
+        }
         
+        if (view.currentItem) {
+            currentValueText = view.currentItem.text;
+        }
+    }
+}
