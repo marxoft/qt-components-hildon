@@ -82,6 +82,7 @@ Item {
         anchors.fill: parent
         enabled: root.enabled
         onPressed: {
+            root.ListView.view.forceActiveFocus();
             root.ListView.view.navigationMode = NavigationMode.TouchNavigation;
             root.ListView.view.currentIndex = index;
         }
