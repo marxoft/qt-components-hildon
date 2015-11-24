@@ -29,6 +29,7 @@
 #include "qchmenuitem.h"
 #include "qchnavigationmode.h"
 #include "qchscreen.h"
+#include "qchsortfilterproxymodel.h"
 #include "qchstyle.h"
 #include "qchtextmetrics.h"
 #include "qchtheme.h"
@@ -69,6 +70,7 @@ void QchPlugin::registerTypes(const char *uri) {
     qmlRegisterType<QchMenu>(uri, 1, 0, "Menu");
     qmlRegisterType<QchMenuBar>(uri, 1, 0, "MenuBar");
     qmlRegisterType<QchMenuItem>(uri, 1, 0, "MenuItem");
+    qmlRegisterType<QchSortFilterProxyModel>(uri, 1, 0, "SortFilterProxyModel");
     qmlRegisterType<QchTextMetrics>(uri, 1, 0, "TextMetrics");
     qmlRegisterType<QchWindow>(uri, 1, 0, "Window");
     qmlRegisterType<QchWindowStack>(uri, 1, 0, "WindowStack");

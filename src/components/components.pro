@@ -1,12 +1,13 @@
 TEMPLATE = lib
 CONFIG = qt plugin
-QT += declarative dbus maemo5
+QT += declarative dbus maemo5 script
 
 TARGET = qchcomponents
 
 HEADERS += \
     qchaction.h \
     qchcloseevent.h \
+    qchdeclarativelistmodelproxy.h \
     qchdialog.h \
     qchdialogstatus.h \
     qchexclusivegroup.h \
@@ -22,10 +23,12 @@ HEADERS += \
     qchmenuitem.h \
     qchnavigationmode.h \
     qchscreen.h \
+    qchsortfilterproxymodel.h \
     qchstyle.h \
     qchtextmetrics.h \
     qchtheme.h \
     qchvaluelayout.h \
+    qchvariantlistmodel.h \
     qchwindow.h \
     qchwindowstack.h \
     qchwindowstatus.h \
@@ -33,6 +36,7 @@ HEADERS += \
 
 SOURCES += \
     qchaction.cpp \
+    qchdeclarativelistmodelproxy.cpp \
     qchdialog.cpp \
     qchexclusivegroup.cpp \
     qchfiledialog.cpp \
@@ -45,9 +49,11 @@ SOURCES += \
     qchmenubar.cpp \
     qchmenuitem.cpp \
     qchscreen.cpp \
+    qchsortfilterproxymodel.cpp \
     qchstyle.cpp \
     qchtextmetrics.cpp \
     qchtheme.cpp \
+    qchvariantlistmodel.cpp \
     qchwindow.cpp \
     qchwindowstack.cpp \
     qchplugin.cpp
