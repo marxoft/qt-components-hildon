@@ -16,6 +16,7 @@
     \example screenshot.qml
     \example selectors.qml
     \example settings.qml
+    \example sortfilter.qml
     \example tabs.qml
     \example textarea.qml
     \example textfield.qml
