@@ -5,14 +5,14 @@ QT += declarative dbus
 TARGET = qchdbus
 
 HEADERS += \
-    qchdbusadaptor.h \
+    qchdbus.h \
+    qchdbusconnections.h \
     qchdbusmessage.h \
     qchdbusutils.h \
-    qdbusutil_p.h \
     qchplugin.h
 
 SOURCES += \
-    qchdbusadaptor.cpp \
+    qchdbusconnections.cpp \
     qchdbusmessage.cpp \
     qchdbusutils.cpp \
     qchplugin.cpp

@@ -1,1 +1,3 @@
 plugin qchdbus
+
+DBusConnections 1.0 DBusConnections.qml

@@ -15,14 +15,16 @@
  */
 
 #include "qchplugin.h"
-#include "qchdbusadaptor.h"
+#include "qchdbusconnections.h"
 #include "qchdbusmessage.h"
 
 void QchPlugin::registerTypes(const char *uri) {
     Q_ASSERT(uri == QLatin1String("org.hildon.dbus"));
-
-    qmlRegisterType<QchDBusAdaptor>(uri, 1, 0, "DBusAdaptor");
-    qmlRegisterType<QchDBusMessage>(uri, 1, 0, "DBusMessage");    
+    
+    qmlRegisterType<QchDBusConnections>(uri, 1, 0, "DBusConnections");
+    qmlRegisterType<QchDBusMessage>(uri, 1, 0, "DBusMessage");
+        
+    qmlRegisterUncreatableType<QchDBus>(uri, 1, 0, "DBus", "");
 }
 
 Q_EXPORT_PLUGIN2(qchdbus, QchPlugin)
