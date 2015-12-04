@@ -1,4 +1,14 @@
-qt-components-hildon (0.20.0) unstable; urgency=low
+qt-components-hildon (0.21.0) unstable; urgency=low
+  
+  * Add SortFilterProxyModel component.
+  * Add DBusConnections component.
+  * Improve conversion of DBus arguments in DBusMessage.
+  * Move BusType enum of DBusAdaptor/DBusMessage to DBus class.
+  * Fix typo in Flickable and ListView.
+
+ -- Stuart Howarth <showarth@marxoft.co.uk>  Fri, 04 Dec 2015 22:14:41 +0100
+
+qt-components-hildon (0.20.1) unstable; urgency=low
 
   * Add ButtonRow, ComboBox, MessageBox, RadioButton and ScrollDecorator components.
   * Add Osso* style components to provide Osso styling for various components.
