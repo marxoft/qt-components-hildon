@@ -16,7 +16,6 @@
 
 #include "qchdbusmessage.h"
 #include "qchdbusutils.h"
-#include "qdbusutil_p.h"
 #include <QDBusInterface>
 #include <QDBusConnection>
 #include <QDBusMessage>
@@ -30,14 +29,12 @@ public:
     QchDBusMessagePrivate(QchDBusMessage *parent) :
         q_ptr(parent),
         path("/"),
-        bus(QchDBusMessage::SessionBus),
+        bus(QchDBus::SessionBus),
         type(QchDBusMessage::MethodCallMessage),
         status(QchDBusMessage::Null)
     {
     }
-
-    virtual ~QchDBusMessagePrivate() {}
-
+    
     void callMethod() {
         Q_Q(QchDBusMessage);
 
@@ -48,18 +45,19 @@ public:
         else {
             status = QchDBusMessage::Loading;
             QDBusMessage message = QDBusMessage::createMethodCall(service, path.isEmpty() ? "/" : path, interface, method);
-            QDBusConnection connection = (bus == QchDBusMessage::SystemBus ? QDBusConnection::systemBus() : QDBusConnection::sessionBus());
+            QDBusConnection connection = QchDBus::connection(bus);
 
             if (!arguments.isEmpty()) {
                 if (convertedArguments.isEmpty()) {
                     QDBusInterface iface(service, path.isEmpty() ? "/" : path, interface, connection);
-                    convertedArguments = QchDBusUtils::convertMethodCallArguments(iface, arguments);
+                    convertedArguments = QchDBusUtils::convertMethodCallArguments(iface, method, arguments);
                 }
 
                 message.setArguments(convertedArguments);
             }
 
-            if (!connection.callWithCallback(message, q, SLOT(_q_onReplyFinished(QDBusMessage)), SLOT(_q_onReplyError(QDBusError)))) {
+            if (!connection.callWithCallback(message, q, SLOT(_q_onReplyFinished(QDBusMessage)),
+                                             SLOT(_q_onReplyError(QDBusError)))) {
                 status = QchDBusMessage::Error;
                 qmlInfo(q) << QchDBusMessage::tr("Cannot send message.");
             }
@@ -77,12 +75,12 @@ public:
         }
         else {
             QDBusMessage message = QDBusMessage::createSignal(path, interface, method);
-            QDBusConnection connection = (bus == QchDBusMessage::SystemBus ? QDBusConnection::systemBus() : QDBusConnection::sessionBus());
+            QDBusConnection connection = QchDBus::connection(bus);
 
             if (!arguments.isEmpty()) {
                 if (convertedArguments.isEmpty()) {
                     QDBusInterface iface(service, path.isEmpty() ? "/" : path, interface, connection);
-                    convertedArguments = QchDBusUtils::convertMethodCallArguments(iface, arguments);
+                    convertedArguments = QchDBusUtils::convertMethodCallArguments(iface, method, arguments);
                 }
 
                 message.setArguments(convertedArguments);
@@ -104,12 +102,12 @@ public:
         Q_Q(QchDBusMessage);
 
         QDBusMessage message;
-        QDBusConnection connection = (bus == QchDBusMessage::SystemBus ? QDBusConnection::systemBus() : QDBusConnection::sessionBus());
+        QDBusConnection connection = QchDBus::connection(bus);
 
         if (!arguments.isEmpty()) {
             if (convertedArguments.isEmpty()) {
                 QDBusInterface iface(service, path.isEmpty() ? "/" : path, interface, connection);
-                convertedArguments = QchDBusUtils::convertMethodCallArguments(iface, arguments);
+                convertedArguments = QchDBusUtils::convertMethodCallArguments(iface, method, arguments);
             }
 
             message.setArguments(convertedArguments);
@@ -135,7 +133,7 @@ public:
         }
         else {
             QDBusMessage message = QDBusMessage::createError(arguments.first().toString(), arguments.at(1).toString());
-            QDBusConnection connection = (bus == QchDBusMessage::SystemBus ? QDBusConnection::systemBus() : QDBusConnection::sessionBus());
+            QDBusConnection connection = QchDBus::connection(bus);
 
             if (connection.send(message)) {
                 status = QchDBusMessage::Ready;
@@ -152,7 +150,7 @@ public:
     void _q_onReplyFinished(const QDBusMessage &replyMessage) {
         QVariantList list;
 
-        foreach (QVariant arg, replyMessage.arguments()) {
+        foreach (const QVariant &arg, replyMessage.arguments()) {
             if (arg.canConvert<QDBusArgument>()) {
                 list.append(QchDBusUtils::dbusArgumentToVariant(arg.value<QDBusArgument>()));
             }
@@ -176,7 +174,7 @@ public:
     void _q_onReplyError(const QDBusError &error) {
         Q_Q(QchDBusMessage);
         status = QchDBusMessage::Error;
-        qmlInfo(q) << QchDBusMessage::tr("Error received: ") << error.message();
+        reply = error.message();
         emit q->statusChanged();
     }
 
@@ -190,7 +188,7 @@ public:
     QVariantList arguments;
     QVariantList convertedArguments;
 
-    QchDBusMessage::BusType bus;
+    QchDBus::BusType bus;
 
     QchDBusMessage::MessageType type;
 
@@ -203,13 +201,13 @@ public:
 
 /*!
     \class DBusMessage
-    \brief The DBusMessage components sends messages via DBus.
+    \brief Sends messages via DBus.
     
     \ingroup dbus
     
     \snippet dbus.qml DBusMessage
     
-    \sa DBusAdaptor
+    \sa DBusConnections, DBusAdaptor
 */
 QchDBusMessage::QchDBusMessage(QObject *parent) :
     QObject(parent),
@@ -230,7 +228,6 @@ QchDBusMessage::~QchDBusMessage() {}
 */
 QString QchDBusMessage::serviceName() const {
     Q_D(const QchDBusMessage);
-
     return d->service;
 }
 
@@ -248,7 +245,6 @@ void QchDBusMessage::setServiceName(const QString &name) {
 */
 QString QchDBusMessage::path() const {
     Q_D(const QchDBusMessage);
-
     return d->path;
 }
 
@@ -266,7 +262,6 @@ void QchDBusMessage::setPath(const QString &path) {
 */
 QString QchDBusMessage::interfaceName() const {
     Q_D(const QchDBusMessage);
-
     return d->interface;
 }
 
@@ -289,7 +284,6 @@ void QchDBusMessage::setInterfaceName(const QString &name) {
 */
 QString QchDBusMessage::methodName() const {
     Q_D(const QchDBusMessage);
-
     return d->method;
 }
 
@@ -307,7 +301,6 @@ void QchDBusMessage::setMethodName(const QString &name) {
 */
 QVariantList QchDBusMessage::arguments() const {
     Q_D(const QchDBusMessage);
-
     return d->arguments;
 }
 
@@ -329,22 +322,21 @@ void QchDBusMessage::setArguments(const QVariantList &args) {
             <th>Description</th>
         </tr>
         <tr>
-            <td>DBusAdaptor.SessionBus</td>
-            <td>Registers the target on the session bus (default).</td>
+            <td>DBus.SessionBus</td>
+            <td>Send the message on the session bus (default).</td>
         </tr>
         <tr>
-            <td>DBusAdaptor.SystemBus</td>
-            <td>Registers the target on the system bus.</td>
+            <td>DBus.SystemBus</td>
+            <td>Send the message on the system bus.</td>
         </tr>
     </table>
 */
-QchDBusMessage::BusType QchDBusMessage::bus() const {
+QchDBus::BusType QchDBusMessage::bus() const {
     Q_D(const QchDBusMessage);
-
     return d->bus;
 }
 
-void QchDBusMessage::setBus(QchDBusMessage::BusType bus) {
+void QchDBusMessage::setBus(QchDBus::BusType bus) {
     if (bus != this->bus()) {
         Q_D(QchDBusMessage);
         d->bus = bus;
@@ -383,7 +375,6 @@ void QchDBusMessage::setBus(QchDBusMessage::BusType bus) {
 */
 QchDBusMessage::MessageType QchDBusMessage::type() const {
     Q_D(const QchDBusMessage);
-
     return d->type;
 }
 
@@ -426,28 +417,15 @@ void QchDBusMessage::setType(MessageType type) {
 */
 QchDBusMessage::Status QchDBusMessage::status() const {
     Q_D(const QchDBusMessage);
-
     return d->status;
 }
 
 /*!
     \brief The message reply.
-    
-    \sa replyString
 */
 QVariant QchDBusMessage::reply() const {
     Q_D(const QchDBusMessage);
-
     return d->reply;
-}
-
-/*!
-    \brief The messsage reply, formatted as a string.
-    
-    \sa reply
-*/
-QString QchDBusMessage::replyString() const {
-    return QDBusUtil::argumentToString(reply());
 }
 
 void QchDBusMessage::send() {

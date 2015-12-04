@@ -17,6 +17,7 @@
 #ifndef QCHDBUSMESSAGE_H
 #define QCHDBUSMESSAGE_H
 
+#include "qchdbus.h"
 #include <QObject>
 #include <qdeclarative.h>
 
@@ -33,20 +34,14 @@ class QchDBusMessage : public QObject
     Q_PROPERTY(QString interfaceName READ interfaceName WRITE setInterfaceName NOTIFY interfaceNameChanged)
     Q_PROPERTY(QString methodName READ methodName WRITE setMethodName NOTIFY methodNameChanged)
     Q_PROPERTY(QVariantList arguments READ arguments WRITE setArguments NOTIFY argumentsChanged)
-    Q_PROPERTY(BusType bus READ bus WRITE setBus NOTIFY busChanged)
+    Q_PROPERTY(QchDBus::BusType bus READ bus WRITE setBus NOTIFY busChanged)
     Q_PROPERTY(MessageType type READ type WRITE setType NOTIFY typeChanged)
     Q_PROPERTY(Status status READ status NOTIFY statusChanged)
     Q_PROPERTY(QVariant reply READ reply NOTIFY statusChanged)
-    Q_PROPERTY(QString replyString READ replyString NOTIFY statusChanged)
 
-    Q_ENUMS(BusType MessageType Status)
+    Q_ENUMS(MessageType Status)
 
 public:
-    enum BusType {
-        SessionBus = 0,
-        SystemBus
-    };
-
     enum MessageType {
         MethodCallMessage = 0,
         SignalMessage,
@@ -79,8 +74,8 @@ public:
     QVariantList arguments() const;
     void setArguments(const QVariantList &args);
 
-    BusType bus() const;
-    void setBus(BusType bus);
+    QchDBus::BusType bus() const;
+    void setBus(QchDBus::BusType bus);
 
     MessageType type() const;
     void setType(MessageType type);
@@ -88,8 +83,7 @@ public:
     Status status() const;
 
     QVariant reply() const;
-    QString replyString() const;
-
+    
 public Q_SLOTS:
     void send();
 
