@@ -18,21 +18,43 @@
 #define QCHDBUSUTILS_H
 
 #include <QVariantList>
+#include <QMetaType>
 
 class QDBusInterface;
 class QDBusArgument;
+
+struct QchDBusMethod {
+    QByteArray methodName;
+    QList<QByteArray> parameterNames;
+    
+    QchDBusMethod(const QByteArray &name, const QList<QByteArray> &params) :
+        methodName(name),
+        parameterNames(params)
+    {
+    }
+};
 
 class QchDBusUtils
 {
 
 public:
-    static QVariantList convertMethodCallArguments(const QDBusInterface &iface, const QVariantList &arguments);
-    static QVariant dbusArgumentToVariant(const QDBusArgument &arg);
+    static QVariantList convertMethodCallArguments(const QDBusInterface &iface, const QString &methodName,
+                                                   const QVariantList &arguments);
+    
+    static QList<QchDBusMethod> getSignals(const QDBusInterface &iface);
+    static QList<QByteArray> getSignalNames(const QDBusInterface &iface);
+            
+    static QVariant dbusArgumentToVariant(const QDBusArgument &argument);
 
-private:
+private:    
     static QVariant basicTypeToVariant(const QDBusArgument &arg);
     static QVariant arrayTypeToVariant(const QDBusArgument &arg);
     static QVariant mapTypeToVariant(const QDBusArgument &arg);
+    static QVariant structureTypeToVariant(const QDBusArgument &arg);
 };
+
+Q_DECLARE_METATYPE(QList<bool>)
+Q_DECLARE_METATYPE(QList<double>)
+Q_DECLARE_METATYPE(QList<int>)
 
 #endif // QCHDBUSUTILS_H
