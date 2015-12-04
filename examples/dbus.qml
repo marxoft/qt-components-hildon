@@ -8,32 +8,34 @@ Window {
     title: qsTr("DBus Example")
     visible: true
 
-//! [DBusAdaptor]
-    DBusAdaptor {
-        id: adaptor
+//! [DBusConnections]
+    DBusConnections {
+        id: connections
         
-        serviceName: "org.hildon.dbus.DBusExample"
+        function doSomething(something) {
+            console.log(something);
+        }
+        
+        serviceName: "org.hildon.dbus"
         path: "/org/hildon/dbus"
-        target: window
+        interfaceName: "org.hildon.dbus"
     }
-//! [DBusAdaptor]
+//! [DBusConnections]
     
 //! [DBusMessage]
     DBusMessage {
         id: message
         
-        serviceName: "org.hildon.dbus.DBusExample"
+        serviceName: "org.hildon.dbus"
         path: "/org/hildon/dbus"
-        interfaceName: "org.hildon.dbus.DBusExample"
-        methodName: "setWindowTitle"
-        arguments: [ qsTr("New window title") ]
+        interfaceName: "org.hildon.dbus"
+        methodName: "doSomething"
+        arguments: ["something"]
         onStatusChanged: {
             switch (status) {
             case DBusMessage.Ready:
-                console.log(replyString);
-                break;
             case DBusMessage.Error:
-                console.log("Error");
+                console.log(reply);
                 break;
             default:
                 break;

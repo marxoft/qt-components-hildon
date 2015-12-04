@@ -17,14 +17,15 @@ Window {
 //![ComboBoxStyle]      
         ComboBox {
             width: parent.width
-            model: 10
+            model: [1, 2, 3, 4, 5]
         }
 //![ComboBoxStyle]
 
 //![OssoComboBoxStyle]
         ComboBox {
             width: parent.width
-            model: 10
+            model: [1, 2, 3, 4, 5]
+            editable: true
             style: OssoComboBoxStyle {}
         }
 //![OssoComboBoxStyle]
