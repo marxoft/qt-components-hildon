@@ -42,7 +42,6 @@ private:
     Q_DECLARE_PRIVATE(QchVariantListModel)
     Q_DISABLE_COPY(QchVariantListModel)
     
-    Q_PRIVATE_SLOT(d_func(), void _q_onObjectPropertyChanged())
     Q_PRIVATE_SLOT(d_func(), void _q_onObjectDestroyed(QObject*))
 };
 

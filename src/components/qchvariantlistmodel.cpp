@@ -16,9 +16,7 @@
 
 #include "qchvariantlistmodel.h"
 #include <QDeclarativeInfo>
-#include <QMetaMethod>
-#include <QMetaObject>
-#include <QMetaProperty>
+#include <QDeclarativeListProperty>
 #include <QStringList>
 
 class QchVariantListModelPrivate
@@ -38,27 +36,42 @@ public:
         unloadData();
         
         sourceVariant = variant;
-        Q_Q(QchVariantListModel);
         
         switch (sourceVariant.type()) {
         case QVariant::List:
             loadDataFromList(sourceVariant.toList());
-            break;
+            return;
         case QVariant::StringList:
             loadDataFromStringList(sourceVariant.toStringList());
-            break;
+            return;
         case QVariant::String:
         case QVariant::ByteArray:
             loadDataFromStringList(sourceVariant.toString().split(""));
-            break;
+            return;
         case QVariant::Int:
         case QVariant::Double:
             loadDataFromInteger(sourceVariant.toInt());
-            break;
-        default:
-            qmlInfo(q) << QchVariantListModel::tr("Cannot load model from unsupported type %1")
-                                                 .arg(sourceVariant.typeName());
             return;
+        default:
+            break;
+        }
+        
+        QDeclarativeListReference ref = qvariant_cast<QDeclarativeListReference>(sourceVariant);
+        
+        if ((ref.canAt()) && (ref.canCount())) {
+            loadDataFromDeclarativeList(ref);
+        }
+        else {
+            Q_Q(QchVariantListModel);
+            qmlInfo(q) << QchVariantListModel::tr("Source model type is not supported");
+        }
+    }
+    
+    void loadDataFromDeclarativeList(const QDeclarativeListReference &declarativeList) {
+        for (int i = 0; i < declarativeList.count(); i++) {            
+            if (QObject *obj = declarativeList.at(i)) {
+                appendObjectToModel(obj);
+            }
         }
     }
     
@@ -99,17 +112,6 @@ public:
         q->beginInsertRows(QModelIndex(), size, size);
         list << QVariant::fromValue(obj);
         q->endInsertRows();
-        
-        const QMetaObject *mo = obj->metaObject();
-        
-        for (int i = mo->propertyOffset(); i < mo->propertyCount(); i++) {
-            const QMetaProperty property = mo->property(i);
-            
-            if (property.hasNotifySignal()) {
-                q->connect(obj, property.notifySignal().signature(), q, SLOT(_q_onObjectPropertyChanged()));
-            }
-        }
-        
         q->connect(obj, SIGNAL(destroyed(QObject*)), q, SLOT(_q_onObjectDestroyed(QObject*)));
     }
     
@@ -122,7 +124,6 @@ public:
         
         foreach (QVariant v, list) {
             if (QObject *obj = qvariant_cast<QObject*>(v)) {
-                q->disconnect(obj, 0, q, SLOT(_q_onObjectPropertyChanged()));
                 q->disconnect(obj, SIGNAL(destroyed(QObject*)), q, SLOT(_q_onObjectDestroyed(QObject*)));
             }
         }
@@ -130,22 +131,6 @@ public:
         q->beginResetModel();
         list.clear();
         q->endResetModel();
-    }
-    
-    void _q_onObjectPropertyChanged() {
-        Q_Q(QchVariantListModel);
-        QObject *obj = q->sender();
-        
-        if (!obj) {
-            return;
-        }
-        
-        const int i = list.indexOf(QVariant::fromValue(obj));
-        
-        if (i != -1) {
-            const QModelIndex index = q->index(i);
-            emit q->dataChanged(index, index);
-        }
     }
     
     void _q_onObjectDestroyed(QObject *obj) {
