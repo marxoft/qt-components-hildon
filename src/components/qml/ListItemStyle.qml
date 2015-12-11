@@ -55,12 +55,12 @@ Style {
     /*!
         \brief The top margin for the background image, in pixels.
     */
-    property int backgroundMarginTop: 0
+    property int backgroundMarginTop: 4
     
     /*!
         \brief The bottom margin for the background image, in pixels.
     */
-    property int backgroundMarginBottom: 0
+    property int backgroundMarginBottom: 4
     
     // Dimensions
     
