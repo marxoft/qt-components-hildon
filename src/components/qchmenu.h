@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Stuart Howarth <showarth@marxoft.co.uk>
+ * Copyright (C) 2016 Stuart Howarth <showarth@marxoft.co.uk>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -32,6 +32,7 @@ class QchMenu : public QObject, public QDeclarativeParserStatus
     Q_PROPERTY(QString iconName READ iconName WRITE setIconName NOTIFY iconChanged)
     Q_PROPERTY(QString iconSource READ iconSource WRITE setIconSource NOTIFY iconChanged)
     Q_PROPERTY(QDeclarativeListProperty<QObject> items READ items)
+    Q_PROPERTY(QObject* parent READ parent WRITE setParent NOTIFY parentChanged)
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
     Q_PROPERTY(bool visible READ isVisible WRITE setVisible NOTIFY visibleChanged)
     
@@ -76,12 +77,15 @@ Q_SIGNALS:
     void aboutToShow();
     void enabledChanged();
     void iconChanged();
+    void parentChanged();
     void titleChanged();
     void visibleChanged();
     
 protected:
     virtual void classBegin();
     virtual void componentComplete();
+    
+    virtual bool event(QEvent *e);
     
     QScopedPointer<QchMenuPrivate> d_ptr;
 
