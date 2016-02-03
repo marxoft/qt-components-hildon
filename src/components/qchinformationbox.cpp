@@ -318,6 +318,19 @@ void QchInformationBox::classBegin() {
 }
 
 void QchInformationBox::componentComplete() {
+    QObject *p = parent();
+    
+    while (p) {
+        if (p->isWidgetType()) {
+            if (QWidget *w = qobject_cast<QWidget*>(p)) {
+                m_box->setParent(w);
+                break;
+            }
+        }
+        
+        p = p->parent();
+    }
+    
     m_box->componentComplete();
 }
 
