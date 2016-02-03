@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Stuart Howarth <showarth@marxoft.co.uk>
+ * Copyright (C) 2016 Stuart Howarth <showarth@marxoft.co.uk>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -24,9 +24,9 @@
 
 class QDeclarativeItem;
 
-class QchDialogPrivate;
+class QchDialogWidgetPrivate;
 
-class QchDialog : public QDialog, public QDeclarativeParserStatus
+class QchDialogWidget : public QDialog, public QDeclarativeParserStatus
 {
     Q_OBJECT
     
@@ -49,8 +49,8 @@ class QchDialog : public QDialog, public QDeclarativeParserStatus
     Q_CLASSINFO("DefaultProperty", "data")
     
 public:
-    explicit QchDialog(QWidget *parent = 0);
-    ~QchDialog();
+    explicit QchDialogWidget(QWidget *parent = 0);
+    ~QchDialogWidget();
     
     QDeclarativeListProperty<QDeclarativeItem> children();
     QDeclarativeListProperty<QObject> data();
@@ -76,11 +76,92 @@ protected:
     virtual void resizeEvent(QResizeEvent *e);
     virtual void changeEvent(QEvent *e);
 
-    QScopedPointer<QchDialogPrivate> d_ptr;
+    QScopedPointer<QchDialogWidgetPrivate> d_ptr;
 
-    Q_DECLARE_PRIVATE(QchDialog)
+    Q_DECLARE_PRIVATE(QchDialogWidget)
 
 private:
+    Q_DISABLE_COPY(QchDialogWidget)
+    
+    friend class QchDialog;
+};
+
+class QchDialog : public QObject, public QDeclarativeParserStatus
+{
+    Q_OBJECT
+    
+    Q_PROPERTY(QDeclarativeListProperty<QDeclarativeItem> children READ children)
+    Q_PROPERTY(QDeclarativeListProperty<QObject> data READ data)
+    Q_PROPERTY(int height READ height WRITE setHeight NOTIFY sizeChanged)
+    Q_PROPERTY(bool modal READ isModal WRITE setModal NOTIFY modalChanged)
+    Q_PROPERTY(QObject* parent READ parent WRITE setParent NOTIFY parentChanged)
+    Q_PROPERTY(bool showProgressIndicator READ showProgressIndicator WRITE setShowProgressIndicator
+               NOTIFY showProgressIndicatorChanged)
+    Q_PROPERTY(int result READ result WRITE setResult NOTIFY statusChanged)
+    Q_PROPERTY(QchDialogStatus::Status status READ status NOTIFY statusChanged)
+    Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
+    Q_PROPERTY(bool visible READ isVisible WRITE setVisible NOTIFY visibleChanged)
+    
+    Q_ENUMS(QDialog::DialogCode)
+    
+    Q_INTERFACES(QDeclarativeParserStatus)
+
+    Q_CLASSINFO("DefaultProperty", "data")
+
+public:
+    explicit QchDialog(QObject *parent = 0);
+    ~QchDialog();
+        
+    QDeclarativeListProperty<QDeclarativeItem> children();
+    QDeclarativeListProperty<QObject> data();
+    
+    int height() const;
+    void setHeight(int h);
+        
+    bool isModal() const;
+    void setModal(bool m);
+    
+    bool showProgressIndicator() const;
+    void setShowProgressIndicator(bool enabled);
+    
+    int result() const;
+    void setResult(int r);
+    
+    QchDialogStatus::Status status() const;
+    
+    QString title() const;
+    void setTitle(const QString &t);
+    
+    bool isVisible() const;
+    void setVisible(bool v);
+
+public Q_SLOTS:
+    void accept();
+    void done(int r);
+    int exec();
+    void open();
+    void reject();
+
+Q_SIGNALS:
+    void accepted();
+    void finished(int result);
+    void modalChanged();
+    void parentChanged();
+    void rejected();
+    void showProgressIndicatorChanged();
+    void sizeChanged();
+    void statusChanged();
+    void titleChanged();
+    void visibleChanged();
+
+private:    
+    virtual void classBegin();
+    virtual void componentComplete();
+    
+    virtual bool event(QEvent *e);
+    
+    QchDialogWidget *m_dialog;
+    
     Q_DISABLE_COPY(QchDialog)
 };
 

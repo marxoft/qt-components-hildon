@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Stuart Howarth <showarth@marxoft.co.uk>
+ * Copyright (C) 2016 Stuart Howarth <showarth@marxoft.co.uk>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -24,9 +24,9 @@
 
 class QDeclarativeItem;
 
-class QchInformationBoxPrivate;
+class QchInformationBoxWidgetPrivate;
 
-class QchInformationBox : public QMaemo5InformationBox, public QDeclarativeParserStatus
+class QchInformationBoxWidget : public QMaemo5InformationBox, public QDeclarativeParserStatus
 {
     Q_OBJECT
     
@@ -42,8 +42,8 @@ class QchInformationBox : public QMaemo5InformationBox, public QDeclarativeParse
     Q_CLASSINFO("DefaultProperty", "data")
     
 public:
-    explicit QchInformationBox(QWidget *parent = 0);
-    ~QchInformationBox();
+    explicit QchInformationBoxWidget(QWidget *parent = 0);
+    ~QchInformationBoxWidget();
     
     QDeclarativeListProperty<QDeclarativeItem> children();
     QDeclarativeListProperty<QObject> data();
@@ -63,12 +63,91 @@ protected:
     virtual void hideEvent(QHideEvent *e);
     virtual void resizeEvent(QResizeEvent *e);
 
-    QScopedPointer<QchInformationBoxPrivate> d_ptr;
+    QScopedPointer<QchInformationBoxWidgetPrivate> d_ptr;
 
-    Q_DECLARE_PRIVATE(QchInformationBox)
+    Q_DECLARE_PRIVATE(QchInformationBoxWidget)
 
 private:
-    Q_DISABLE_COPY(QchInformationBox)
+    Q_DISABLE_COPY(QchInformationBoxWidget)
+    
+    friend class QchInformationBox;
+};
+
+class QchInformationBox : public QObject, public QDeclarativeParserStatus
+{
+    Q_OBJECT
+    
+    Q_PROPERTY(QDeclarativeListProperty<QDeclarativeItem> children READ children)
+    Q_PROPERTY(QDeclarativeListProperty<QObject> data READ data)
+    Q_PROPERTY(int height READ height WRITE setHeight NOTIFY sizeChanged)
+    Q_PROPERTY(bool modal READ isModal WRITE setModal NOTIFY modalChanged)
+    Q_PROPERTY(QObject* parent READ parent WRITE setParent NOTIFY parentChanged)
+    Q_PROPERTY(int result READ result WRITE setResult NOTIFY statusChanged)
+    Q_PROPERTY(QchDialogStatus::Status status READ status NOTIFY statusChanged)
+    Q_PROPERTY(int timeout READ timeout WRITE setTimeout NOTIFY timeoutChanged)
+    Q_PROPERTY(bool visible READ isVisible WRITE setVisible NOTIFY visibleChanged)
+    
+    Q_ENUMS(Timeout)
+    
+    Q_INTERFACES(QDeclarativeParserStatus)
+
+    Q_CLASSINFO("DefaultProperty", "data")
+
+public:
+    enum Timeout {
+        NoTimeout = 0,
+        DefaultTimeout = 3000
+    };
+    
+    explicit QchInformationBox(QObject *parent = 0);
+    ~QchInformationBox();
+        
+    QDeclarativeListProperty<QDeclarativeItem> children();
+    QDeclarativeListProperty<QObject> data();
+    
+    int height() const;
+    void setHeight(int h);
+    
+    bool isModal() const;
+    void setModal(bool m);
+    
+    int result() const;
+    void setResult(int r);
+        
+    QchDialogStatus::Status status() const;
+    
+    int timeout() const;
+    void setTimeout(int t);
+        
+    bool isVisible() const;
+    void setVisible(bool v);
+
+public Q_SLOTS:
+    void accept();
+    void done(int r);
+    int exec();
+    void open();
+    void reject();
+
+Q_SIGNALS:
+    void accepted();
+    void clicked();
+    void finished(int result);
+    void modalChanged();
+    void parentChanged();
+    void rejected();
+    void sizeChanged();
+    void statusChanged();
+    void timeoutChanged();
+    void visibleChanged();
+
+private:    
+    virtual void classBegin();
+    virtual void componentComplete();
+    
+    virtual bool event(QEvent *e);
+    
+    QchInformationBoxWidget *m_box;
 };
 
 QML_DECLARE_TYPE(QchInformationBox)
