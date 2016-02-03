@@ -1,3 +1,9 @@
+qt-components-hildon (0.22.1) unstable; urgency=low
+
+  * Fix dialog parenting.
+
+ -- Stuart Howarth <showarth@marxoft.co.uk>  Wed, 03 Feb 2016 18:43:26 +0100
+
 qt-components-hildon (0.22.0) unstable; urgency=low
 
   * Add dateTime context property.
