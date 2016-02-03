@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Stuart Howarth <showarth@marxoft.co.uk>
+ * Copyright (C) 2016 Stuart Howarth <showarth@marxoft.co.uk>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -17,6 +17,7 @@
 #include "qchplugin.h"
 #include "qchaction.h"
 #include "qchcloseevent.h"
+#include "qchdatetime.h"
 #include "qchdialog.h"
 #include "qchexclusivegroup.h"
 #include "qchfiledialog.h"
@@ -50,6 +51,7 @@ void QchPlugin::initializeEngine(QDeclarativeEngine *engine, const char *uri) {
         engine->addImageProvider("theme", new QchThemeImageProvider);
         
         QDeclarativeContext *context = engine->rootContext();
+        context->setContextProperty("dateTime", new QchDateTime(engine));
         context->setContextProperty("platformStyle", new QchStyle(engine));
         context->setContextProperty("screen", new QchScreen(engine));
         context->setContextProperty("theme", new QchTheme(engine));
