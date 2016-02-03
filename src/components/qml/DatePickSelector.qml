@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Stuart Howarth <showarth@marxoft.co.uk>
+ * Copyright (C) 2016 Stuart Howarth <showarth@marxoft.co.uk>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -32,6 +32,27 @@ AbstractPickSelector {
     id: root
     
     /*!
+        \brief The currently displayed year.
+        
+        The default value is the current year.
+    */
+    property int year: dateTime.currentYear()
+    
+    /*!
+        \brief The currently displayed month.
+        
+        The default value is the current month.
+    */
+    property int month: dateTime.currentMonth()
+    
+    /*!
+        \brief The currently displayed day.
+        
+        The default value is the current day.
+    */
+    property int day: dateTime.currentDay()
+    
+    /*!
         \brief The minimum year that can be chosen.
         
         The default value is \c 2009
@@ -46,13 +67,13 @@ AbstractPickSelector {
     property int maximumYear: 2037
     
     /*!
-        \brief The current chosen date.
+        \brief The format used for the date value text.
         
-        The default value is the current date.
+        The default value is \c "ddd, d MMMM yyyy".
     */
-    property variant currentDate: new Date()
+    property variant valueTextFormat: "ddd, d MMMM yyyy"
     
-    minimumHeight: 350
+    height: 360
     
     Row {
         id: row
@@ -70,6 +91,9 @@ AbstractPickSelector {
                             
             width: Math.floor((parent.width - parent.spacing) / 3)
             height: parent.height
+            model: ListModel {
+                id: dayModel
+            }
             delegate: defaultDelegate
         }
         
@@ -78,8 +102,9 @@ AbstractPickSelector {
                 
             width: Math.floor((parent.width - parent.spacing) / 3)
             height: parent.height
-            model: [qsTr("January"), qsTr("February"), qsTr("March"), qsTr("April"), qsTr("May"), qsTr("June"),
-                    qsTr("July"), qsTr("August"), qsTr("September"), qsTr("October"), qsTr("November"), qsTr("December")]
+            model: ListModel {
+                id: monthModel
+            }
             delegate: defaultDelegate
             onCurrentIndexChanged: if (internal.ready) internal.updateDays();
         }
@@ -89,6 +114,9 @@ AbstractPickSelector {
                 
             width: Math.floor((parent.width - parent.spacing) / 3)
             height: parent.height
+            model: ListModel {
+                id: yearModel
+            }
             delegate: defaultDelegate
             onCurrentIndexChanged: if (internal.ready) internal.updateDays();
         }
@@ -106,8 +134,8 @@ AbstractPickSelector {
         style: DialogButtonStyle {}
         enabled: internal.ready
         onClicked: {
-            root.currentDate = internal.currentDate();
-            root.selected(Qt.formatDate(root.currentDate));
+            internal.updateValueText();
+            root.selected(root.currentValueText);
         }
     }
     
@@ -115,42 +143,79 @@ AbstractPickSelector {
         id: internal
         
         property bool ready: false
-                
-        function currentDate() {
-            return new Date(yearView.model[yearView.currentIndex], monthView.currentIndex + 1,
-                            dayView.currentIndex + 1);
+        
+        function init() {
+            // Script values cannot be used with ListElement
+            for (var i = 1; i <= 12; i++) {
+                monthModel.append({name: dateTime.longMonthName(i), value: i});
+            }
+            
+            updateYears();
+            updateDays();
+            updateYear();
+            updateMonth();
+            updateDay();
+            updateValueText();
+            ready = true;
         }
         
-        function updateCurrentDate() {
-            updateDays();
-            root.currentValueText = root.currentValueText = Qt.formatDate(root.currentDate);
-            dayView.currentIndex = root.currentDate.getDate();
-            monthView.currentIndex = root.currentDate.getMonth();
-            yearView.currentIndex = root.currentDate.getYear() - yearView.model[0];
+        function reset() {
+            updateYear();
+            updateMonth();
+            updateDay();
+        }
+        
+        function updateYear() {
+            yearView.currentIndex = root.year - root.minimumYear;
+        }
+        
+        function updateMonth() {
+            monthView.currentIndex = root.month - 1;
+        }
+        
+        function updateDay() {
+            dayView.currentIndex = root.day - 1;
         }
         
         function updateDays() {
-            var start = 1;
-            var end = new Date(yearView.model[yearView.currentIndex], monthView.currentIndex + 1, 0).getDate();
-            var days = [];
+            var count = dayModel.count;
+            var days = dateTime.daysInMonth(yearModel.get(yearView.currentIndex).value,
+                                            monthModel.get(monthView.currentIndex).value);
             
-            while (start <= end) {
-                days.push(start++);
+            if (count > days) {
+                if (dayView.currentIndex >= days) {
+                    dayView.currentIndex = days - 1;
+                }
+                
+                while (count > days) {
+                    count--;
+                    dayModel.remove(count);
+                }
             }
-            
-            dayView.model = days;
+            else {
+                while (count < days) {
+                    count++;
+                    dayModel.append({name: count, value: count});
+                }
+            }
         }
         
         function updateYears() {
             var start = root.minimumYear;
             var end = root.maximumYear;
-            var years = [];
+            yearModel.clear();
             
             while (start <= end) {
-                years.push(start++);
+                var year = start++;
+                yearModel.append({name: year, value: year});
             }
-            
-            yearView.model = years;
+        }
+        
+        function updateValueText() {
+            root.year = yearModel.get(yearView.currentIndex).value;
+            root.month = monthModel.get(monthView.currentIndex).value;
+            root.day = dayModel.get(dayView.currentIndex).value;
+            root.currentValueText = Qt.formatDate(dateTime.date(root.year, root.month, root.day), root.valueTextFormat);
         }
     }
     
@@ -176,7 +241,7 @@ AbstractPickSelector {
                 }
                 horizontalAlignment: Text.AlignHCenter
                 elide: Text.ElideRight
-                text: modelData
+                text: name
             }            
         }
     }
@@ -209,15 +274,13 @@ AbstractPickSelector {
         }
     }
     
-    Component.onCompleted: {
-        internal.updateYears();
-        internal.updateCurrentDate();
-        internal.ready = true;
-    }
-        
-    onCurrentDateChanged: if (internal.ready) internal.updateCurrentDate();
+    Component.onCompleted: internal.init()
+    
+    onYearChanged: if (internal.ready) internal.updateYear();
+    onMonthChanged: if (internal.ready) internal.updateMonth();
+    onDayChanged: if (internal.ready) internal.updateDay();
     onMinimumYearChanged: if (internal.ready) internal.updateYears();
     onMaximumYearChanged: if (internal.ready) internal.updateYears();
+    onRejected: if (internal.ready) internal.reset();
     onSelected: accept()
 }
-        

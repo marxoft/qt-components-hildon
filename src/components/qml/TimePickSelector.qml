@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Stuart Howarth <showarth@marxoft.co.uk>
+ * Copyright (C) 2016 Stuart Howarth <showarth@marxoft.co.uk>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -30,6 +30,20 @@ import "."
 */
 AbstractPickSelector {
     id: root
+        
+    /*!
+        \brief The current chosen hour.
+        
+        The default value is the current hour.
+    */
+    property int hour: dateTime.currentHour()
+    
+    /*!
+        \brief The current chosen minute.
+        
+        The default value is the current minute.
+    */
+    property int minute: dateTime.currentMinute()
     
     /*!
         \brief The interval between each minute value displayed.
@@ -39,13 +53,13 @@ AbstractPickSelector {
     property int minuteStep: 1
     
     /*!
-        \brief The current chosen time.
+        \brief The format used for the time value text.
         
-        The default value is the current time.
+        The default value is \c "h:mm ap".
     */
-    property variant currentTime: new Date()
+    property variant valueTextFormat: "h:mm ap"
     
-    minimumHeight: 350
+    height: 360
     
     Row {
         id: row
@@ -63,15 +77,33 @@ AbstractPickSelector {
                             
             width: Math.floor((parent.width - parent.spacing) / 3)
             height: parent.height
+            model: ListModel {
+                id: hourModel
+                
+                ListElement { name: 12; value: 0 }
+                ListElement { name: 1; value: 1 }
+                ListElement { name: 2; value: 2 }
+                ListElement { name: 3; value: 3 }
+                ListElement { name: 4; value: 4 }
+                ListElement { name: 5; value: 5 }
+                ListElement { name: 6; value: 6 }
+                ListElement { name: 7; value: 7 }
+                ListElement { name: 8; value: 8 }
+                ListElement { name: 9; value: 9 }
+                ListElement { name: 10; value: 10 }
+                ListElement { name: 11; value: 11 }
+            }
             delegate: defaultDelegate
-            model: [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
         }
         
         ListView {
-            id: minView
+            id: minuteView
                 
             width: Math.floor((parent.width - parent.spacing) / 3)
             height: parent.height
+            model: ListModel {
+                id: minuteModel
+            }
             delegate: defaultDelegate
         }
         
@@ -80,7 +112,9 @@ AbstractPickSelector {
                 
             width: Math.floor((parent.width - parent.spacing) / 3)
             height: parent.height
-            model: [qsTr("am"), qsTr("pm")]
+            model: ListModel {
+                id: ampmModel
+            }
             delegate: defaultDelegate
         }
     }
@@ -97,8 +131,8 @@ AbstractPickSelector {
         style: DialogButtonStyle {}
         enabled: internal.ready
         onClicked: {
-            root.currentTime = internal.currentTime();
-            root.selected(Qt.formatTime(root.currentTime));
+            internal.updateValueText();
+            root.selected(root.currentValueText);
         }
     }
     
@@ -107,35 +141,52 @@ AbstractPickSelector {
         
         property bool ready: false
         
-        function currentTime() {
-            var time = new Date();
-            time.setHours(hourView.currentIndex + ampmView.currentIndex * 12);
-            time.setMinutes(minView.currentIndex);
-            return time;
+        function init() {
+            // Script values cannot be used with ListElement
+            ampmModel.append({name: dateTime.amText(), value: 0});
+            ampmModel.append({name: dateTime.pmText(), value: 12});
+            updateMinuteStep();
+            updateHour();
+            updateMinute();
+            updateValueText();
+            ready = true;
         }
         
-        function updateCurrentTime() {
-            root.currentValueText = Qt.formatTime(root.currentTime);
-            var hours = root.currentTime.getHours();
-            var mins = root.currentTime.getMinutes();
-            
-            ampmView.currentIndex = hours > 11 ? 1 : 0
-            hourView.currentIndex = hours - ampmView.currentIndex * 12;
-            minView.currentIndex = Math.floor(mins / Math.max(1, root.minuteStep));
+        function reset() {
+            updateHour();
+            updateMinute();
+        }
+        
+        function updateHour() {
+            ampmView.currentIndex = (root.hour > 12 ? 1 : 0);
+            hourView.currentIndex = root.hour - ampmModel.get(ampmView.currentIndex).value;
+        }
+        
+        function updateMinute() {
+            minuteView.currentIndex = Math.floor(root.minute / root.minuteStep);
         }
         
         function updateMinuteStep() {
-            var mins = [];
+            if ((root.minuteStep <= 0) || (root.minuteStep > 60) || (60 % root.minuteStep > 0)) {
+                return;
+            }
+            
             var min = 0;
-            var step = Math.max(1, root.minuteStep);
+            var step = root.minuteStep;
+            minuteModel.clear();
             
             while (min < 60) {
-                mins.push(min);
+                minuteModel.append({name: min, value: min});
                 min += step;
             }
             
-            minView.model = mins;
-            minView.currentIndex = Math.floor(root.currentTime.getMinutes() / step);
+            minuteView.currentIndex = 0;
+        }
+        
+        function updateValueText() {
+            root.hour = hourModel.get(hourView.currentIndex).value + ampmModel.get(ampmView.currentIndex).value;
+            root.minute = minuteModel.get(minuteView.currentIndex).value;
+            root.currentValueText = Qt.formatTime(dateTime.time(root.hour, root.minute), root.valueTextFormat);
         }
     }
     
@@ -161,7 +212,7 @@ AbstractPickSelector {
                 }
                 horizontalAlignment: Text.AlignHCenter
                 elide: Text.ElideRight
-                text: modelData
+                text: name
             }            
         }
     }
@@ -194,14 +245,12 @@ AbstractPickSelector {
         }
     }
     
-    Component.onCompleted: {
-        internal.updateMinuteStep();
-        internal.updateCurrentTime();
-        internal.ready = true;
-    }
+    Component.onCompleted: internal.init()
     
-    onCurrentTimeChanged: if (internal.ready) internal.updateCurrentTime();
+    onHourChanged: if (internal.ready) internal.updateHour();
+    onMinuteChanged: if (internal.ready) internal.updateMinute();
     onMinuteStepChanged: if (internal.ready) internal.updateMinuteStep();
+    onRejected: if (internal.ready) internal.reset();
     onSelected: accept()
 }
         

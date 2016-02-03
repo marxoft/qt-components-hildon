@@ -7,6 +7,7 @@ TARGET = qchcomponents
 HEADERS += \
     qchaction.h \
     qchcloseevent.h \
+    qchdatetime.h \
     qchdeclarativelistmodelproxy.h \
     qchdialog.h \
     qchdialogstatus.h \
@@ -36,6 +37,7 @@ HEADERS += \
 
 SOURCES += \
     qchaction.cpp \
+    qchdatetime.cpp \
     qchdeclarativelistmodelproxy.cpp \
     qchdialog.cpp \
     qchexclusivegroup.cpp \

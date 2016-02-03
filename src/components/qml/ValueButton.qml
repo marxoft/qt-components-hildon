@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Stuart Howarth <showarth@marxoft.co.uk>
+ * Copyright (C) 2016 Stuart Howarth <showarth@marxoft.co.uk>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -189,12 +189,12 @@ AbstractButton {
     onPickSelectorChanged: {
         if (pickSelector) {
              valueText = pickSelector.currentValueText;
-             pickSelector.windowTitle = text;
+             pickSelector.title = text;
         }
         else {
             valueText = "";
         }
     }
-    onTextChanged: if (pickSelector) pickSelector.windowTitle = text;
+    onTextChanged: if (pickSelector) pickSelector.title = text;
     onClicked: if (pickSelector) pickSelector.open();
 }
