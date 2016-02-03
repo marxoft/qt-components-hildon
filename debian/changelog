@@ -1,5 +1,13 @@
+qt-components-hildon (0.22.0) unstable; urgency=low
+
+  * Add dateTime context property.
+  * Allow dialogs to be parented by non-widget items.
+  * Fix DatePickSelector and TimePickSelector.
+
+ -- Stuart Howarth <showarth@marxoft.co.uk>  Wed, 03 Feb 2016 17:22:18 +0100
+
 qt-components-hildon (0.21.0) unstable; urgency=low
-  
+
   * Add SortFilterProxyModel component.
   * Add DBusConnections component.
   * Improve conversion of DBus arguments in DBusMessage.
