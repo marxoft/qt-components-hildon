@@ -94,6 +94,7 @@ qml.files += \
     qml/ListView.qml \
     qml/ListViewStyle.qml \
     qml/MessageBox.qml \
+    qml/MultiListPickSelector.qml \
     qml/OssoCheckBoxStyle.qml \
     qml/OssoComboBoxStyle.qml \
     qml/OssoFlickableStyle.qml \

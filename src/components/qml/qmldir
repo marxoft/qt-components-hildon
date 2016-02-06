@@ -32,6 +32,7 @@ ListPickSelector 1.0 ListPickSelector.qml
 ListView 1.0 ListView.qml
 ListViewStyle 1.0 ListViewStyle.qml
 MessageBox 1.0 MessageBox.qml
+MultiListPickSelector 1.0 MultiListPickSelector.qml
 OssoCheckBoxStyle 1.0 OssoCheckBoxStyle.qml
 OssoComboBoxStyle 1.0 OssoComboBoxStyle.qml
 OssoFlickableStyle 1.0 OssoFlickableStyle.qml
