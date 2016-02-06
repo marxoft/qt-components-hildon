@@ -624,11 +624,13 @@ FocusScope {
             Keys.onUpPressed: repeater.currentIndex = Math.max(0, repeater.currentIndex - 1)
             Keys.onDownPressed: repeater.currentIndex = Math.min(repeater.count - 1, repeater.currentIndex + 1)
             Keys.onEnterPressed: {
-                root.currentIndex = repeater.currentIndex;
-                popup.visible = false;
-                
-                if (!root.editable) {
-                    root.selected(root.currentValueText);
+                if (!event.isAutoRepeat) {
+                    root.currentIndex = repeater.currentIndex;
+                    popup.visible = false;
+                    
+                    if (!root.editable) {
+                        root.selected(root.currentValueText);
+                    }
                 }
             }
         }
