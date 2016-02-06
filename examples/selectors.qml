@@ -17,8 +17,8 @@ Window {
 //! [ListPickSelector]
         ValueButton {
             width: parent.width
-            text: qsTr("Select from list")
-            pickSelector: ListPickSelector {        
+            text: qsTr("Select item from list")
+            pickSelector: ListPickSelector {
                 model: ListModel {
                     ListElement { name: "One"; value: 1 }
                     ListElement { name: "Two"; value: 2 }
@@ -30,6 +30,23 @@ Window {
             }
         }
 //! [ListPickSelector]
+
+//! [MultiListPickSelector]
+        ValueButton {
+            width: parent.width
+            text: qsTr("Select items from list")
+            pickSelector: MultiListPickSelector {
+                model: ListModel {
+                    ListElement { name: "One"; value: 1 }
+                    ListElement { name: "Two"; value: 2 }
+                    ListElement { name: "Three"; value: 3 }
+                    ListElement { name: "Four"; value: 4 }
+                    ListElement { name: "Five"; value: 5 }
+                }
+                textRole: "name"
+            }
+        }
+//! [MultiListPickSelector]
 
 //! [DatePickSelector]
         ValueButton {
@@ -55,6 +72,7 @@ Window {
                 id: selector
         
                 height: column.height + platformStyle.paddingMedium
+                currentValueText: qsTr("None chosen")
         
                 Column {            
                     anchors {
