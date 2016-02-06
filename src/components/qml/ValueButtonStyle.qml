@@ -57,5 +57,5 @@ ButtonStyle {
     /*!
         \brief The color of the value text.
     */
-    property color valueTextColor: platformStyle.activeTextColor
+    property color valueTextColor: platformStyle.secondaryTextColor
 }

@@ -25,7 +25,7 @@ import org.hildon.components 1.0
     
     \snippet selectors.qml ListPickSelector
     
-    \sa DatePickSelector, ListPickSelector, TimePickSelector, ValueButtonStyle
+    \sa DatePickSelector, ListPickSelector, MultiListPickSelector, TimePickSelector, ValueButtonStyle
 */
 AbstractButton {
     id: root
@@ -119,8 +119,8 @@ AbstractButton {
         elide: Text.ElideRight
         font.pointSize: platformStyle.fontSizeSmall
         color: root.pressed ? root.style.pressedTextColor : root.checked ? root.style.checkedTextColor
-               : !root.enabled ? root.style.disabledTextColor : root.pickSelector ? root.style.valueTextColor
-               : platformStyle.secondaryTextColor
+               : !root.enabled ? root.style.disabledTextColor : root.pickSelector ? platformStyle.activeTextColor
+               : root.style.valueTextColor
         text: root.valueText
     }
     
