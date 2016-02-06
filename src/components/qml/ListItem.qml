@@ -104,6 +104,7 @@ Item {
                 }
             }
             
+            event.accepted = true;
             break;
         }
         case Qt.Key_Up: {
@@ -114,6 +115,8 @@ Item {
                 else {
                     ListView.view.decrementCurrentIndex();
                 }
+                
+                event.accepted = true;
             }
             
             break;
@@ -126,6 +129,8 @@ Item {
                 else {
                     ListView.view.incrementCurrentIndex();
                 }
+                
+                event.accepted = true;
             }
             
             break;
@@ -138,6 +143,8 @@ Item {
                 else {
                     ListView.view.decrementCurrentIndex();
                 }
+                
+                event.accepted = true;
             }
             
             break;
@@ -150,15 +157,14 @@ Item {
                 else {
                     ListView.view.incrementCurrentIndex();
                 }
+                
+                event.accepted = true;
             }
             
             break;
         }
         default:
-            event.accepted = false;
-            return;
-        }
-        
-        event.accepted = true;
+            break;
+        }        
     }
 }
