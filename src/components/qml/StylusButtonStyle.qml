@@ -25,15 +25,15 @@ import QtQuick 1.0
     \sa Button
 */
 ButtonStyle {
-    \!
+    /*!
         \brief Whether the button should use the accented stylus button style.
     */
     property bool accented: false
     
-    background: "image://theme/" + (accented + "Accented" + "") + "StylusButtonNormal"
-    backgroundChecked: "image://theme/" + (accented + "Accented" + "") + "StylusButtonPressed"
-    backgroundDisabled: "image://theme/" + (accented + "Accented" + "") + "StylusButtonDisabled"
-    backgroundPressed: "image://theme/" + (accented + "Accented" + "") + "StylusButtonPressed"
+    background: "image://theme/" + (accented ? "Accented" : "") + "StylusButtonNormal"
+    backgroundChecked: "image://theme/" + (accented ? "Accented" : "") + "StylusButtonPressed"
+    backgroundDisabled: "image://theme/" + (accented ? "Accented" : "") + "StylusButtonDisabled"
+    backgroundPressed: "image://theme/" + (accented ? "Accented" : "") + "StylusButtonPressed"
     
     backgroundMarginLeft: 16
     backgroundMarginRight: 16
