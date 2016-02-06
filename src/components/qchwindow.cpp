@@ -135,7 +135,7 @@ QDeclarativeListProperty<QObject> QchWindow::data() {
 }
 
 /*!
-    \brief The window's content item.
+    \brief The window's root content item.
 */
 QDeclarativeItem* QchWindow::contentItem() const {
     Q_D(const QchWindow);
