@@ -87,6 +87,13 @@ int QchDateTime::currentMinute() {
 }
 
 /*!
+    \brief Returns the current second (0-59).
+*/
+int QchDateTime::currentSecond() {
+    return QTime::currentTime().second();
+}
+
+/*!
     \brief Returns a datetime object created from \a year, \a month, \a day, \a hour, \a minute and \a second.
 */
 QDateTime QchDateTime::dateTime(int year, int month, int day, int hour, int minute, int second) {

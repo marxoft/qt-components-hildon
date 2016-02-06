@@ -37,6 +37,7 @@ public Q_SLOTS:
     static int currentDay();
     static int currentHour();
     static int currentMinute();
+    static int currentSecond();
     
     static QDateTime dateTime(int year, int month, int day, int hour = 0, int minute = 0, int second = 0);
     static QDate date(int year, int month, int day);
