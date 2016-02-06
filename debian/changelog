@@ -1,3 +1,9 @@
+qt-components-hildon (0.23.1) unstable; urgency=low
+
+  * Fix key event handling in ListItem.
+
+ -- Stuart Howarth <showarth@marxoft.co.uk>  Sat, 06 Feb 2016 17:31:29 +0100
+
 qt-components-hildon (0.23.0) unstable; urgency=low
 
   * Add MultiListPickSelector component.
