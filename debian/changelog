@@ -1,3 +1,11 @@
+qt-components-hildon (0.23.0) unstable; urgency=low
+
+  * Add MultiListPickSelector component.
+  * Add 'alignment' property to ToolBar.
+  * Minor implementation tweaks.
+
+ -- Stuart Howarth <showarth@marxoft.co.uk>  Sat, 06 Feb 2016 00:46:47 +0100
+
 qt-components-hildon (0.22.1) unstable; urgency=low
 
   * Fix dialog parenting.
