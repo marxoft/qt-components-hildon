@@ -30,6 +30,32 @@ Item {
     default property alias tools: row.data
     
     /*!
+        type:enumeration
+        \brief The horizontal alignment of the items in the tool bar.
+        
+        Possible values are:
+        
+        <table>
+            <tr>
+                <th>Value</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td>Qt.AlignLeft</td>
+                <td>Items are aligned to the left (default).</td>
+            </tr>
+            <tr>
+                <td>Qt.AlignHCenter</td>
+                <td>Items are aligned centrally.</td>
+            </tr>
+            <tr>
+                <td>Qt.AlignRight</td>
+                <td>Items are aligned to the right.</td>
+            </tr>
+        </table>
+    */
+    property int alignment: Qt.AlignLeft
+    /*!
         type:int
         \brief The space between each item in the tool bar.
         
@@ -77,7 +103,40 @@ Item {
             }
         }
         
-        anchors.fill: parent
+        anchors {
+            left: parent.left
+            top: parent.top
+            bottom: parent.bottom
+        }
+        
+        states: [
+            State {
+                name: "AlignHCenter"
+                when: root.alignment == Qt.AlignHCenter
+                
+                AnchorChanges {
+                    target: row
+                    anchors {
+                        left: undefined
+                        horizontalCenter: parent.horizontalCenter
+                    }
+                }
+            },
+            
+            State {
+                name: "AlignRight"
+                when: root.alignment == Qt.AlignRight
+                
+                AnchorChanges {
+                    target: row
+                    anchors {
+                        left: undefined
+                        right: parent.right
+                    }
+                }
+            }
+        ]
+        
         onChildrenChanged: positionTools()
         onHeightChanged: positionTools()
     }
