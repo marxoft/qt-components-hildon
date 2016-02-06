@@ -159,7 +159,13 @@ FocusScope {
             var index = Math.min(root.currentIndex, children.length - 1);
                         
             for (var i = 0; i < children.length; i++) {
-                children[i].visible = (i == index);
+                if (i == index) {
+                    children[i].visible = true;
+                    children[i].forceActiveFocus();
+                }
+                else {
+                    children[i].visible = (i == index);
+                }
             }
         }
              
