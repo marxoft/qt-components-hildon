@@ -94,6 +94,7 @@ AbstractPickSelector {
             model: ListModel {
                 id: dayModel
             }
+            horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff
             delegate: defaultDelegate
         }
         
@@ -105,6 +106,7 @@ AbstractPickSelector {
             model: ListModel {
                 id: monthModel
             }
+            horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff
             delegate: defaultDelegate
             onCurrentIndexChanged: if (internal.ready) internal.updateDays();
         }
@@ -117,6 +119,7 @@ AbstractPickSelector {
             model: ListModel {
                 id: yearModel
             }
+            horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff
             delegate: defaultDelegate
             onCurrentIndexChanged: if (internal.ready) internal.updateDays();
         }

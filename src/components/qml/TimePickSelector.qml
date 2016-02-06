@@ -93,6 +93,7 @@ AbstractPickSelector {
                 ListElement { name: 10; value: 10 }
                 ListElement { name: 11; value: 11 }
             }
+            horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff
             delegate: defaultDelegate
         }
         
@@ -104,6 +105,7 @@ AbstractPickSelector {
             model: ListModel {
                 id: minuteModel
             }
+            horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff
             delegate: defaultDelegate
         }
         
@@ -115,6 +117,7 @@ AbstractPickSelector {
             model: ListModel {
                 id: ampmModel
             }
+            horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff
             delegate: defaultDelegate
         }
     }

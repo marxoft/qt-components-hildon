@@ -38,15 +38,15 @@ AbstractPickSelector {
     property alias model: view.model
     
     /*!
+        type:int
+        \brief The current number of items in the view.
+    */
+    property alias count: view.count
+    
+    /*!
         \brief The current chosen index in the view.
     */
     property int currentIndex
-    
-    /*!
-        type:Component
-        \brief The delegate to be used by the view.
-    */
-    property alias delegate: view.delegate
     
     /*!
         \brief The name of the role that provides the text to be displayed in the delegate.
@@ -62,6 +62,7 @@ AbstractPickSelector {
         
         anchors.fill: parent
         focus: true
+        horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff
         navigationMode: NavigationMode.KeyNavigation
         delegate: defaultDelegate
         onModelChanged: modelIsArray = !!model ? model.constructor === Array : false
