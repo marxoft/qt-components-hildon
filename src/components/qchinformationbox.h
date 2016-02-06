@@ -32,6 +32,7 @@ class QchInformationBoxWidget : public QMaemo5InformationBox, public QDeclarativ
     
     Q_PROPERTY(QDeclarativeListProperty<QDeclarativeItem> children READ children)
     Q_PROPERTY(QDeclarativeListProperty<QObject> data READ data)
+    Q_PROPERTY(QDeclarativeItem* contentItem READ contentItem CONSTANT)
     Q_PROPERTY(int height READ height WRITE setFixedHeight NOTIFY sizeChanged)
     Q_PROPERTY(QchDialogStatus::Status status READ status NOTIFY statusChanged)
     Q_PROPERTY(bool visible READ isVisible WRITE setVisible NOTIFY visibleChanged)
@@ -47,6 +48,8 @@ public:
     
     QDeclarativeListProperty<QDeclarativeItem> children();
     QDeclarativeListProperty<QObject> data();
+    
+    QDeclarativeItem* contentItem() const;
     
     QchDialogStatus::Status status() const;
 
@@ -79,6 +82,7 @@ class QchInformationBox : public QObject, public QDeclarativeParserStatus
     
     Q_PROPERTY(QDeclarativeListProperty<QDeclarativeItem> children READ children)
     Q_PROPERTY(QDeclarativeListProperty<QObject> data READ data)
+    Q_PROPERTY(QDeclarativeItem* contentItem READ contentItem CONSTANT)
     Q_PROPERTY(int height READ height WRITE setHeight NOTIFY sizeChanged)
     Q_PROPERTY(bool modal READ isModal WRITE setModal NOTIFY modalChanged)
     Q_PROPERTY(QObject* parent READ parent WRITE setParent NOTIFY parentChanged)
@@ -86,6 +90,7 @@ class QchInformationBox : public QObject, public QDeclarativeParserStatus
     Q_PROPERTY(QchDialogStatus::Status status READ status NOTIFY statusChanged)
     Q_PROPERTY(int timeout READ timeout WRITE setTimeout NOTIFY timeoutChanged)
     Q_PROPERTY(bool visible READ isVisible WRITE setVisible NOTIFY visibleChanged)
+    Q_PROPERTY(int width READ width WRITE setWidth NOTIFY sizeChanged)
     
     Q_ENUMS(Timeout)
     
@@ -105,6 +110,8 @@ public:
     QDeclarativeListProperty<QDeclarativeItem> children();
     QDeclarativeListProperty<QObject> data();
     
+    QDeclarativeItem* contentItem() const;
+    
     int height() const;
     void setHeight(int h);
     
@@ -121,6 +128,9 @@ public:
         
     bool isVisible() const;
     void setVisible(bool v);
+    
+    int width() const;
+    void setWidth(int w);
 
 public Q_SLOTS:
     void accept();

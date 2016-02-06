@@ -103,6 +103,11 @@ QDeclarativeListProperty<QObject> QchDialogWidget::data() {
     return QDeclarativeListProperty<QObject>(this, 0, QchDialogWidgetPrivate::data_append);
 }
 
+QDeclarativeItem* QchDialogWidget::contentItem() const {
+    Q_D(const QchDialogWidget);
+    return d->root;
+}
+
 bool QchDialogWidget::showProgressIndicator() const {
     return testAttribute(Qt::WA_Maemo5ShowProgressIndicator);
 }
@@ -198,6 +203,13 @@ QDeclarativeListProperty<QDeclarativeItem> QchDialog::children() {
 */
 QDeclarativeListProperty<QObject> QchDialog::data() {
     return m_dialog->data();
+}
+
+/*!
+    \brief The dialog's root content item.
+*/
+QDeclarativeItem* QchDialog::contentItem() const {
+    return m_dialog->contentItem();
 }
 
 /*!
@@ -301,6 +313,17 @@ bool QchDialog::isVisible() const {
 
 void QchDialog::setVisible(bool v) {
     m_dialog->setVisible(v);
+}
+
+/*!
+    \brief The width of the dialog.
+*/
+int QchDialog::width() const {
+    return m_dialog->width();
+}
+
+void QchDialog::setWidth(int w) {
+    m_dialog->setFixedWidth(w);
 }
 
 /*!

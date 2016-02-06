@@ -105,6 +105,11 @@ QDeclarativeListProperty<QObject> QchInformationBoxWidget::data() {
     return QDeclarativeListProperty<QObject>(this, 0, QchInformationBoxWidgetPrivate::data_append);
 }
 
+QDeclarativeItem* QchInformationBoxWidget::contentItem() const {
+    Q_D(const QchInformationBoxWidget);
+    return d->root;
+}
+
 QchDialogStatus::Status QchInformationBoxWidget::status() const {
     Q_D(const QchInformationBoxWidget);
     return d->status;
@@ -181,6 +186,13 @@ QDeclarativeListProperty<QDeclarativeItem> QchInformationBox::children() {
 */
 QDeclarativeListProperty<QObject> QchInformationBox::data() {
     return m_box->data();
+}
+
+/*!
+    \brief The information box's root content item.
+*/
+QDeclarativeItem* QchInformationBox::contentItem() const {
+    return m_box->contentItem();
 }
 
 /*!
@@ -274,6 +286,17 @@ bool QchInformationBox::isVisible() const {
 
 void QchInformationBox::setVisible(bool v) {
     m_box->setVisible(v);
+}
+
+/*!
+    \brief The width of the information box.
+*/
+int QchInformationBox::width() const {
+    return m_box->width();
+}
+
+void QchInformationBox::setWidth(int w) {
+    m_box->setFixedWidth(w);
 }
 
 /*!
