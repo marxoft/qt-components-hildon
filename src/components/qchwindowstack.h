@@ -43,11 +43,8 @@ public:
     int depth() const;
     
 public Q_SLOTS:
-    QchWindow* push(QDeclarativeComponent* component, const QVariantMap &properties = QVariantMap());
-    QchWindow* push(const QUrl &url, const QVariantMap &properties = QVariantMap());
-    
+    QchWindow* push(const QVariant &variant, const QVariantMap &properties = QVariantMap());
     void pop(QchWindow *toWindow = 0);
-    
     void clear();
 
 Q_SIGNALS:

@@ -33,6 +33,71 @@ public:
     {
     }
     
+    QchWindow* push(QDeclarativeComponent *component, const QVariantMap &properties) {
+        Q_Q(QchWindowStack);
+        QchWindow *current = q->currentWindow();    
+        QDeclarativeContext *context = new QDeclarativeContext(qmlContext(current));
+        context->setContextObject(current);
+    
+        if (QObject *obj = component->beginCreate(context)) {
+            if (QchWindow *window = qobject_cast<QchWindow*>(obj)) {
+                context->setParent(window);
+                window->setParent(current);
+                window->setWindowFlags(Qt::Window);
+                window->setAttribute(Qt::WA_Maemo5StackedWindow, true);
+            
+                const int pos = stack.size();
+                XChangeProperty(QX11Info::display(), window->winId(), 
+                                XInternAtom(QX11Info::display() , "_HILDON_STACKABLE_WINDOW", True), 
+                                XA_INTEGER, 32, PropModeReplace, (unsigned char *) &pos, 1);
+                        
+                component->completeCreate();
+            
+                if (!properties.isEmpty()) {
+                    QMapIterator<QString, QVariant> iterator(properties);
+                
+                    while (iterator.hasNext()) {
+                        iterator.next();
+                        window->setProperty(iterator.key().toUtf8(), iterator.value());
+                    }
+                }
+            
+                stack.append(window);
+                window->show();
+                q->connect(window, SIGNAL(hidden(QchWindow*)), q, SLOT(_q_onWindowHidden(QchWindow*)));
+                emit q->currentChanged();
+                return window;
+            }
+        
+            qmlInfo(q) << QchWindowStack::tr("Only Window items can be pushed onto the stack.");
+            delete obj;
+            delete context;
+        }
+    
+        if (!component->errors().isEmpty()) {
+            qmlInfo(q, component->errors());
+        }
+    
+        return 0;
+    }
+    
+    QchWindow* push(const QUrl &url, const QVariantMap &properties) {
+        Q_Q(QchWindowStack);
+        QDeclarativeComponent *component = componentCache.value(url, 0);
+        
+        if (!component) {
+            component = new QDeclarativeComponent(qmlEngine(q), url, q);
+        }
+        
+        if (QchWindow *window = push(component, properties)) {
+            componentCache.insert(url, component);
+            return window;
+        }
+        
+        delete component;
+        return 0;
+    }
+    
     void _q_onWindowHidden(QchWindow *window) {
         Q_Q(QchWindowStack);
         stack.removeOne(window);
@@ -103,74 +168,23 @@ int QchWindowStack::depth() const {
 }
 
 /*!
-    \brief Pushes a window created from \a component onto the stack, and optionally sets \a properties.
-*/
-QchWindow* QchWindowStack::push(QDeclarativeComponent* component, const QVariantMap &properties) {
-    QchWindow *current = currentWindow();    
-    QDeclarativeContext *context = new QDeclarativeContext(qmlContext(current));
-    context->setContextObject(current);
+    \brief Pushes a window created from \a variant onto the stack, and optionally sets \a properties.
     
-    if (QObject *obj = component->beginCreate(context)) {
-        if (QchWindow *window = qobject_cast<QchWindow*>(obj)) {
-            Q_D(QchWindowStack);
-            context->setParent(window);
-            window->setParent(current);
-            window->setWindowFlags(Qt::Window);
-            window->setAttribute(Qt::WA_Maemo5StackedWindow, true);
-            
-            const int pos = d->stack.size();
-            XChangeProperty(QX11Info::display(), window->winId(), 
-                            XInternAtom(QX11Info::display() , "_HILDON_STACKABLE_WINDOW", True), 
-                            XA_INTEGER, 32, PropModeReplace, (unsigned char *) &pos, 1);
-                        
-            component->completeCreate();
-            
-            if (!properties.isEmpty()) {
-                QMapIterator<QString, QVariant> iterator(properties);
-                
-                while (iterator.hasNext()) {
-                    iterator.next();
-                    window->setProperty(iterator.key().toUtf8(), iterator.value());
-                }
-            }
-            
-            d->stack.append(window);
-            window->show();
-            connect(window, SIGNAL(hidden(QchWindow*)), this, SLOT(_q_onWindowHidden(QchWindow*)));
-            emit currentChanged();
-            return window;
+    The \a variant can be either a url or an instance of QDeclartiveComponent.
+*/
+QchWindow* QchWindowStack::push(const QVariant &variant, const QVariantMap &properties) {
+    Q_D(QchWindowStack);
+    
+    if (QObject *obj = qvariant_cast<QObject*>(variant)) {
+        if (QDeclarativeComponent *component = qobject_cast<QDeclarativeComponent*>(obj)) {
+            return d->push(component, properties);
         }
         
-        qmlInfo(this) << tr("Only Window items can be pushed onto the stack.");
         delete obj;
-        delete context;
+        return 0;
     }
     
-    if (!component->errors().isEmpty()) {
-        qmlInfo(this, component->errors());
-    }
-    
-    return 0;
-}
-
-/*!
-    \brief Pushes a window created from \a url onto the stack, and optionally sets \a properties.
-*/
-QchWindow* QchWindowStack::push(const QUrl &url, const QVariantMap &properties) {
-    Q_D(QchWindowStack);
-    QDeclarativeComponent *component = d->componentCache.value(url, 0);
-    
-    if (!component) {
-        component = new QDeclarativeComponent(qmlEngine(this), url, this);
-    }
-    
-    if (QchWindow *window = push(component, properties)) {
-        d->componentCache.insert(url, component);
-        return window;
-    }
-    
-    delete component;
-    return 0;
+    return d->push(variant.toString(), properties);
 }
 
 /*!
