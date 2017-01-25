@@ -805,7 +805,7 @@ FocusScope {
                 when: (!root.editable) && ((mouseArea.pressed) || (buttonMouseArea.pressed))
                 
                 PropertyChanges {
-                    target: iconPressed
+                    target: icon
                     source: root.style.textInputIcon
                 }
             },
