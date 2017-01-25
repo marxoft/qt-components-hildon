@@ -29,6 +29,7 @@ CheckBoxStyle {
     backgroundChecked: ""
     backgroundDisabled: ""
     backgroundPressed: ""
+    buttonHeight: 26
     icon: "image://theme/qgn_plat_check_box_empty_normal"
     iconChecked: "image://theme/qgn_plat_check_box_selected_normal"
     iconCheckedDisabled: "image://theme/qgn_plat_check_box_selected_disabled"
