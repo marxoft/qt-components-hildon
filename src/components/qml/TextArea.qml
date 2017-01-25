@@ -55,6 +55,12 @@ FocusScope {
     property alias cursorPosition: textEdit.cursorPosition
     
     /*!
+        type:rectangle
+        \brief The current cursor rectanle.
+    */
+    property alias cursorRectangle: textEdit.cursorRectangle
+    
+    /*!
         \brief The number of lines displayed in the text area.
     */
     property int lineCount
@@ -83,6 +89,14 @@ FocusScope {
         \brief The vertical alignment of the text.
     */
     property alias verticalAlignment: textEdit.verticalAlignment
+    
+    /*!
+        type:bool
+        \brief Whether text can be selected using the mouse.
+        
+        The default value is \c true.
+    */
+    property alias selectByMouse: textEdit.selectByMouse
 
     /*!
         type:string

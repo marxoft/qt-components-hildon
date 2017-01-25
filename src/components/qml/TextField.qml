@@ -61,6 +61,12 @@ FocusScope {
     
     /*!
         type:int
+        \brief The current cursor rectangle.
+    */
+    property alias cursorRectangle: textInput.cursorRectangle
+    
+    /*!
+        type:int
         \brief The maximum allowed length of the text.
     */
     property alias maximumLength: textInput.maximumLength
@@ -77,7 +83,7 @@ FocusScope {
         type:bool
         \brief Whether the current text passes validation by the validator.
         
-        Return tru if no validator is set.
+        Return true if no validator is set.
         
         \sa validator
     */
@@ -96,6 +102,14 @@ FocusScope {
         \sa acceptableInput
     */
     property alias validator: textInput.validator
+    
+    /*!
+        type:bool
+        \brief Whether text can be selected using the mouse.
+         
+        The default value is \c true.
+    */
+    property alias selectByMouse: textInput.selectByMouse
     
     /*!
         type:string
