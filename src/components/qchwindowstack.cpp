@@ -180,7 +180,6 @@ QchWindow* QchWindowStack::push(const QVariant &variant, const QVariantMap &prop
             return d->push(component, properties);
         }
         
-        delete obj;
         return 0;
     }
     
