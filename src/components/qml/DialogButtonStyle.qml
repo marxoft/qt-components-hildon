@@ -29,4 +29,5 @@ ButtonStyle {
     backgroundChecked: "image://theme/DialogButtonPressed"
     backgroundDisabled: "image://theme/DialogButtonDisabled"
     backgroundPressed: "image://theme/DialogButtonPressed"
+    buttonWidth: 180
 }
