@@ -88,10 +88,9 @@ FocusScope {
     property bool wrapping: false
     
     /*!
-        type:string
         \brief The text to be displayed instead of a numeric value whenever the current value is equal to minimum.
     */
-    property alias specialValueText: placeholder.text
+    property string specialValueText
     
     property alias inputMethodHints: textInput.inputMethodHints
     property alias font: textInput.font
