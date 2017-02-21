@@ -15,6 +15,8 @@
  */
 
 #include "qchtheme.h"
+#include "qcheventtypes.h"
+#include <QCoreApplication>
 #include <QSettings>
 
 static const QString THEME_DESKTOP_FILE("/etc/hildon/theme/index.theme");
@@ -30,7 +32,8 @@ static const QString THEME_DESKTOP_FILE("/etc/hildon/theme/index.theme");
     \sa Style
 */
 QchTheme::QchTheme(QObject *parent) :
-    QObject(parent)
+    QObject(parent),
+    m_themeChangeQueued(false)
 {
 }
 
@@ -60,4 +63,23 @@ QString QchTheme::iconTheme() const {
 */
 QString QchTheme::name() const {
     return QSettings(THEME_DESKTOP_FILE, QSettings::IniFormat).value("Desktop Entry/Name").toString();
+}
+
+bool QchTheme::event(QEvent *event) {
+    if ((event->type() == EVENT_TYPE_THEME_CHANGE)) {
+        emit changed();
+        m_themeChangeQueued = false;
+        return true;
+    }
+    
+    return QObject::event(event);
+}
+
+bool QchTheme::eventFilter(QObject *watched, QEvent *event) {
+    if ((event->type() == QEvent::ApplicationPaletteChange) && (!m_themeChangeQueued)) {
+        m_themeChangeQueued = true;
+        QCoreApplication::postEvent(this, new QEvent(QEvent::Type(EVENT_TYPE_THEME_CHANGE)));
+    }
+    
+    return QObject::eventFilter(watched, event);
 }

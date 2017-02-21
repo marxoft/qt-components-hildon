@@ -18,6 +18,7 @@
 #define QCHTHEME_H
 
 #include <QObject>
+#include <qdeclarative.h>
 
 class QchTheme : public QObject
 {
@@ -38,9 +39,20 @@ public:
     QString iconTheme() const;
             
     QString name() const;
+    
+protected:
+    virtual bool event(QEvent *event);
+    virtual bool eventFilter(QObject *watched, QEvent *event);
 
 Q_SIGNALS:
     void changed();
+
+private:
+    bool m_themeChangeQueued;
+    
+    Q_DISABLE_COPY(QchTheme)
 };
+
+QML_DECLARE_TYPE(QchTheme)
 
 #endif // QCHTHEME_H
