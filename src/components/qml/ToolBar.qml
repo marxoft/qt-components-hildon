@@ -192,7 +192,7 @@ Item {
         grid.removeItem(item);
     }
     
-    width: 70
+    width: orientation == Qt.Vertical ? 70 : screen.width
     height: 70
     
     MouseArea {
