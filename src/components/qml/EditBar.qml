@@ -30,20 +30,14 @@ import org.hildon.components 1.0
 Item {
     id: root
     
+    default property alias buttons: buttonRow.data
+    
     /*!
         type:string
         \brief The text to be displayed in the edit bar.
     */
     property alias text: label.text
-    
-    /*!
-        type:list<Button>
-        \brief One or more buttons to be displayed in the edit bar.
         
-        When a button is added, it will automatically be styled to suit the edit bar.
-    */
-    property alias buttons: buttonRow.children
-    
     /*!
         \brief This signal can be emitted when the user clicks the button that confirms the edit action.
     */
@@ -55,6 +49,83 @@ Item {
         This signal is also emitted when the 'back' button is pressed.
     */
     signal rejected
+    
+    /*!
+        \fn void EditBar::addButton(Button button)
+        \brief Adds the specified \a button to the edit bar.
+        @param button
+    */
+    
+    /*!
+        \fn Button EditBar::addButton(string text)
+        \brief Adds a button width the specified \a text to the edit bar and returns it.
+        @param text
+        @return button
+    */
+    
+    function addButton() {
+        if (Qt.isQtObject(arguments[0])) {
+            arguments[0].style = editButtonStyle;
+            buttonRow.addItem(arguments[0]);
+        }
+        else {
+            var button = buttonComponent.createObject(buttonRow);
+            
+            if (typeof arguments[0] === "string") {
+                button.text = arguments[0];
+            }
+            
+            return button;
+        }
+    }
+    
+    /*!
+        \brief Returns the button at the specified \a index, or \c null if \a index is out of range.
+        @param type:int index
+        @return type:Button
+    */
+    function button(index) {
+        return buttonRow.itemAt(index);
+    }
+    
+    /*!
+        \fn void EditBar::insertButton(int index, Button button)
+        \brief Inserts the specified \a button into the edit bar at \a index.
+        \param index
+        \param button
+    */
+    
+    /*!
+        \fn Button EditBar::insertButton(int index, string text)
+        \brief Inserts a button width the specified \a text into the edit bar at \a index and returns it.
+        \param index
+        \param text
+    */
+    
+    function insertButton() {
+        if (Qt.isQtObject(arguments[1])) {
+            arguments[1].style = editButtonStyle;
+            buttonRow.insertItem(arguments[0], arguments[1]);
+        }
+        else {
+            var button = buttonComponent.createObject(null);
+            
+            if (typeof arguments[1] === "string") {
+                button.text = arguments[1];
+            }
+            
+            buttonRow.insertItem(arguments[0], button);
+            return button;
+        }
+    }
+    
+    /*!
+        \brief Removes the specified \a button from the edit bar and sets its parent to \c null.
+        @param type:Button button
+    */
+    function removeButton(button) {
+        buttonRow.removeItem(button);
+    }
     
     z: 1000
     width: screen.width
@@ -89,20 +160,13 @@ Item {
         elide: Text.ElideRight
     }
     
-    Row {
+    RowLayout {
         id: buttonRow            
         
         anchors {
             right: separator.left
             rightMargin: platformStyle.paddingLarge
             verticalCenter: parent.verticalCenter
-        }
-        onChildrenChanged: {
-            var child = children[children.length - 1];
-            
-            if (child.hasOwnProperty("style")) {
-                child.style = editButtonStyle;
-            }
         }
     }
     
@@ -134,5 +198,23 @@ Item {
         }
         iconSource: "image://theme/wmBackIcon" + (pressed ? "Pressed" : "")
         onClicked: root.rejected()
+    }
+    
+    Component {
+        id: buttonComponent
+        
+        Button {
+            style: editButtonStyle
+        }
+    }
+    
+    Component.onCompleted: {
+        for (var i = 0; i < buttonRow.children.length; i++) {
+            var child = buttonRow.children[i];
+            
+            if (child.hasOwnProperty("style")) {
+                child.style = editButtonStyle;
+            }
+        }
     }
 }
