@@ -61,9 +61,10 @@ FocusScope {
     property string text
     
     /*!
+        \type:string
         \brief The current text without the prefix and suffix.        
     */
-    property string cleanText
+    property alias cleanText: textInput.text
     
     /*!
         \brief The text to be displayed before the value.
@@ -154,6 +155,7 @@ FocusScope {
     
     width: style.defaultWidth
     height: 70
+    clip: true
     
     BorderImage {
         id: background
@@ -170,44 +172,83 @@ FocusScope {
         smooth: true
     }
     
+    Loader {
+        id: prefixLoader
+        
+        anchors {
+            left: parent.left
+            leftMargin: root.style.paddingLeft
+            verticalCenter: parent.verticalCenter
+            verticalCenterOffset: root.style.baselineOffset
+        }
+        sourceComponent: root.prefix ? prefixLabel : undefined
+    }
+    
+    Loader {
+        id: suffixLoader
+        
+        anchors {
+            left: textInput.right
+            verticalCenter: parent.verticalCenter
+            verticalCenterOffset: root.style.baselineOffset
+        }
+        sourceComponent: root.suffix ? suffixLabel : undefined
+    }
+    
+    Loader {
+        id: placeholderLoader
+        
+        sourceComponent: (root.value == root.minimum) && (root.specialValueText) ? placeholderLabel : undefined
+    }
+    
+    MouseArea {
+        id: mouseArea
+
+        anchors.fill: parent
+        onPressed: {
+            if (root.enabled) {
+                textInput.forceActiveFocus();
+                
+                if (mouseX < textInput.x) {
+                    textInput.cursorPosition = 0;
+                }
+                else if (mouseX > textInput.x + textInput.width) {
+                    textInput.cursorPosition = textInput.text.length;
+                }
+            }
+        }
+        onDoubleClicked: if (root.enabled) textInput.selectAll();
+    }
+    
     TextInput {
         id: textInput
 
         anchors {
-            left: parent.left
-            leftMargin: root.style.paddingLeft
-            right: parent.right
-            rightMargin: root.style.paddingRight
+            left: prefixLoader.right
             verticalCenter: parent.verticalCenter
             verticalCenterOffset: root.style.baselineOffset
         }
         color: root.style.textColor
         selectedTextColor: root.style.selectedTextColor
         selectionColor: root.style.selectionColor
-        text: root.prefix + root.value + root.suffix
+        selectByMouse: true
         validator: IntValidator {
             bottom: root.minimum
             top: root.maximum
         }
-
-        Label {
-            id: placeholder
-
-            anchors.fill: parent
-            verticalAlignment: Text.AlignVCenter
-            elide: Text.ElideRight
-            color: platformStyle.reversedSecondaryTextColor
-            visible: (root.value == root.minimum) && (text != "")
-        }
         
         Keys.onPressed: {
             switch (event.key) {
-            case Qt.Key_Up:
+            case Qt.Key_Up: {
                 root.stepUp();
+                root.selectAll();
                 break;
-            case Qt.Key_Down:
+            }
+            case Qt.Key_Down: {
                 root.stepDown();
+                root.selectAll();
                 break;
+            }
             case Qt.Key_Enter:
                 if ((acceptableInput) && (!event.isAutoRepeat)) {
                     root.accepted();
@@ -220,18 +261,51 @@ FocusScope {
             
             event.accepted = true;
         }
+        
+        onTextChanged: {
+            var value = parseInt(text);
+            
+            if (!isNaN(value)) {
+                root.value = value;
+            }
+        }
+    }    
+    
+    Component {
+        id: prefixLabel
+        
+        Label {
+            color: textInput.color
+            text: root.prefix
+        }
     }
+    
+    Component {
+        id: suffixLabel
+        
+        Label {
+            color: textInput.color
+            text: root.suffix
+        }
+    }
+    
+    Component {
+        id: placeholderLabel
+        
+        Label {
+            id: placeholder
 
-    MouseArea {
-        id: mouseArea
-
-        anchors.fill: parent
-        enabled: !root.enabled
+            anchors.fill: parent
+            verticalAlignment: Text.AlignVCenter
+            elide: Text.ElideRight
+            color: platformStyle.reversedSecondaryTextColor
+        }
     }
     
     onValueChanged: {
-        selectAll();
-        cleanText = value.toString();
-        text = textInput.text;
+        cleanText = value;
+        text = prefix + value + suffix;
     }
+    
+    Component.onCompleted: textInput.text = value
 }
