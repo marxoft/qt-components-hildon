@@ -11,12 +11,14 @@ HEADERS += \
     qchdeclarativelistmodelproxy.h \
     qchdialog.h \
     qchdialogstatus.h \
+    qcheventtypes.h \
     qchexclusivegroup.h \
     qchfiledialog.h \
     qchfontmetrics.h \
     qchgraphicsview.h \
     qchimageproviders.h \
     qchinformationbox.h \
+    qchinputmode.h \
     qchinsertpolicy.h \
     qchitemaction.h \
     qchmenu.h \
@@ -25,6 +27,7 @@ HEADERS += \
     qchnavigationmode.h \
     qchscreen.h \
     qchsortfilterproxymodel.h \
+    qchstandardbutton.h \
     qchstyle.h \
     qchtextmetrics.h \
     qchtheme.h \
@@ -77,15 +80,20 @@ qml.files += \
     qml/ButtonStyle.qml \
     qml/CheckBox.qml \
     qml/CheckBoxStyle.qml \
+    qml/ColumnLayout.qml \
     qml/ComboBox.qml \
     qml/ComboBoxStyle.qml \
     qml/DatePickSelector.qml \
+    qml/DialogButtonBox.qml \
     qml/DialogButtonStyle.qml \
     qml/DoubleSpinBox.qml \
     qml/EditBar.qml \
     qml/EditButtonStyle.qml \
     qml/Flickable.qml \
     qml/FlickableStyle.qml \
+    qml/FlowLayout.qml \
+    qml/GridLayout.qml \
+    qml/InputDialog.qml \
     qml/Label.qml \
     qml/LabelStyle.qml \
     qml/ListItem.qml \
@@ -106,10 +114,12 @@ qml.files += \
     qml/PortraitButtonStyle.qml \
     qml/ProgressBar.qml \
     qml/ProgressBarStyle.qml \
+    qml/ProgressDialog.qml \
     qml/RadioButton.qml \
     qml/RadioButtonStyle.qml \
     qml/RejectButtonStyle.qml \
     qml/RejectThumbButtonStyle.qml \
+    qml/RowLayout.qml \
     qml/ScrollBar.qml \
     qml/ScrollBarStyle.qml \
     qml/ScrollDecorator.qml \

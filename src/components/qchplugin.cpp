@@ -24,6 +24,7 @@
 #include "qchfontmetrics.h"
 #include "qchimageproviders.h"
 #include "qchinformationbox.h"
+#include "qchinputmode.h"
 #include "qchinsertpolicy.h"
 #include "qchmenu.h"
 #include "qchmenubar.h"
@@ -31,6 +32,7 @@
 #include "qchnavigationmode.h"
 #include "qchscreen.h"
 #include "qchsortfilterproxymodel.h"
+#include "qchstandardbutton.h"
 #include "qchstyle.h"
 #include "qchtextmetrics.h"
 #include "qchtheme.h"
@@ -38,6 +40,7 @@
 #include "qchwindow.h"
 #include "qchwindowstack.h"
 #include "qchwindowstatus.h"
+#include <QApplication>
 #include <QDeclarativeEngine>
 #include <QDeclarativeContext>
 
@@ -50,11 +53,16 @@ void QchPlugin::initializeEngine(QDeclarativeEngine *engine, const char *uri) {
         engine->addImageProvider("icon", new QchIconImageProvider);
         engine->addImageProvider("theme", new QchThemeImageProvider);
         
+        QchStyle *style = new QchStyle(engine);
+        QchTheme *theme = new QchTheme(engine);
+        QApplication::instance()->installEventFilter(theme);
+        connect(theme, SIGNAL(changed()), style, SIGNAL(changed()));
+        
         QDeclarativeContext *context = engine->rootContext();
         context->setContextProperty("dateTime", new QchDateTime(engine));
-        context->setContextProperty("platformStyle", new QchStyle(engine));
+        context->setContextProperty("platformStyle", style);
         context->setContextProperty("screen", new QchScreen(engine));
-        context->setContextProperty("theme", new QchTheme(engine));
+        context->setContextProperty("theme", theme);
     }   
 }
 
@@ -79,8 +87,10 @@ void QchPlugin::registerTypes(const char *uri) {
     
     qmlRegisterUncreatableType<QchCloseEvent>(uri, 1, 0, "CloseEvent", "");
     qmlRegisterUncreatableType<QchDialogStatus>(uri, 1, 0, "DialogStatus", "");
+    qmlRegisterUncreatableType<QchInputMode>(uri, 1, 0, "InputMode", "");
     qmlRegisterUncreatableType<QchInsertPolicy>(uri, 1, 0, "InsertPolicy", "");
     qmlRegisterUncreatableType<QchNavigationMode>(uri, 1, 0, "NavigationMode", "");
+    qmlRegisterUncreatableType<QchStandardButton>(uri, 1, 0, "StandardButton", "");
     qmlRegisterUncreatableType<QchValueLayout>(uri, 1, 0, "ValueLayout", "");
     qmlRegisterUncreatableType<QchWindowStatus>(uri, 1, 0, "WindowStatus", "");
 }
