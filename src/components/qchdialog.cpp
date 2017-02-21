@@ -334,6 +334,13 @@ void QchDialog::accept() {
 }
 
 /*!
+    \brief Closes the dialog.
+*/
+void QchDialog::close() {
+    m_dialog->close();
+}
+
+/*!
     \brief Closes the dialog with result code \a r.
 */
 void QchDialog::done(int r) {
@@ -350,6 +357,13 @@ int QchDialog::exec() {
 }
 
 /*!
+    \brief Hides the dialog.
+*/
+void QchDialog::hide() {
+    m_dialog->hide();
+}
+
+/*!
     \brief Opens the dialog as a non-modal dialog.
 */
 void QchDialog::open() {
@@ -361,6 +375,13 @@ void QchDialog::open() {
 */
 void QchDialog::reject() {
     m_dialog->reject();
+}
+
+/*!
+    \brief Shows the dialog.
+*/
+void QchDialog::show() {
+    m_dialog->show();
 }
 
 void QchDialog::classBegin() {
