@@ -122,6 +122,13 @@ qreal QchStyle::disabledOpacity() {
 }
 
 /*!
+    \brief Font family constant.
+*/
+QString QchStyle::fontFamily() {
+    return QFont().family();
+}
+
+/*!
     \brief Default text color constant.
 */
 QColor QchStyle::defaultTextColor() {
