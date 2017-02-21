@@ -31,19 +31,19 @@ QchThemeImageProvider::QchThemeImageProvider() :
 {
 }
 
-QPixmap QchThemeImageProvider::requestPixmap(const QString &id, QSize *size, const QSize &requestedSize) {    
+QPixmap QchThemeImageProvider::requestPixmap(const QString &id, QSize *size, const QSize &requestedSize) {
     QPixmap pixmap(QString("/etc/hildon/theme/images/%1.png").arg(id));
 
     if (!pixmap.isNull()) {
-        int width = pixmap.width();
-        int height = pixmap.height();
+        const int width = pixmap.width();
+        const int height = pixmap.height();
 
         if (size) {
             *size = QSize(width, height);
         }
 
         if ((requestedSize.width() < width) || (requestedSize.height() < height)) {
-            pixmap.scaled(width, height);
+            pixmap = pixmap.scaled(width, height);
         }
     }
 
