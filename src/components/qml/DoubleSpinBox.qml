@@ -34,28 +34,28 @@ FocusScope {
         
         The default value is \c 0.0.
     */
-    property double minimum: 0.0
+    property real minimum: 0.0
     
     /*!
         \brief The maximum value that can be chosen.
         
         The default value is 99.99.
     */
-    property double maximum: 99.99
+    property real maximum: 99.99
     
     /*!
         \brief The step size used to increment/decrement the value.
         
         The default value is \c 1.0.
     */
-    property double singleStep: 1.0
+    property real singleStep: 1.0
     
     /*!
         \brief The current value.
         
         The default value is \c 0.0.
     */
-    property double value
+    property real value: 0.0
     
     /*!
         \brief The number of decimal places used for the value.
@@ -70,9 +70,10 @@ FocusScope {
     property string text
     
     /*!
+        \type:string
         \brief The current text without the prefix and suffix.        
     */
-    property string cleanText
+    property alias cleanText: textInput.text
     
     /*!
         \brief The text to be displayed before the value.
@@ -96,10 +97,9 @@ FocusScope {
     property bool wrapping: false
     
     /*!
-        type:string
         \brief The text to be displayed instead of a numeric value whenever the current value is equal to minimum.
     */
-    property alias specialValueText: placeholder.text
+    property string specialValueText
     
     property alias inputMethodHints: textInput.inputMethodHints
     property alias font: textInput.font
@@ -121,10 +121,10 @@ FocusScope {
     */
     function stepUp() {
         if (value <= (maximum - singleStep)) {
-            value = +toPrecision(value + singleStep);
+            value = (value + singleStep).toFixed(decimals);
         }
         else if (wrapping) {
-            value = +toPrecision(minimum);
+            value = minimum.toFixed(decimals);
         }
     }
     
@@ -133,10 +133,10 @@ FocusScope {
     */
     function stepDown() {
         if (value >= (minimum + singleStep)) {
-            value = +toPrecision(value - singleStep);
+            value = (value - singleStep).toFixed(decimals);
         }
         else if (wrapping) {
-            value = +toPrecision(maximum);
+            value = maximum.toFixed(decimals);
         }
     }
     
@@ -144,7 +144,7 @@ FocusScope {
         \brief Sets the value to the minimum.
     */
     function clear() {
-        value = +toPrecision(minimum);
+        value = minimum.toFixed(decimals);
     }
     
     /*!
@@ -163,6 +163,7 @@ FocusScope {
     
     width: style.defaultWidth
     height: 70
+    clip: true
     
     BorderImage {
         id: background
@@ -179,44 +180,85 @@ FocusScope {
         smooth: true
     }
     
+    Loader {
+        id: prefixLoader
+        
+        anchors {
+            left: parent.left
+            leftMargin: root.style.paddingLeft
+            verticalCenter: parent.verticalCenter
+            verticalCenterOffset: root.style.baselineOffset
+        }
+        sourceComponent: root.prefix ? prefixLabel : undefined
+    }
+    
+    Loader {
+        id: suffixLoader
+        
+        anchors {
+            left: textInput.right
+            verticalCenter: parent.verticalCenter
+            verticalCenterOffset: root.style.baselineOffset
+        }
+        sourceComponent: root.suffix ? suffixLabel : undefined
+    }
+    
+    Loader {
+        id: placeholderLoader
+        
+        sourceComponent: (root.value == root.minimum) && (root.specialValueText) ? placeholderLabel : undefined
+    }
+    
+    MouseArea {
+        id: mouseArea
+
+        anchors.fill: parent
+        onPressed: {
+            if (root.enabled) {
+                textInput.forceActiveFocus();
+                
+                if (mouseX < textInput.x) {
+                    textInput.cursorPosition = 0;
+                }
+                else if (mouseX > textInput.x + textInput.width) {
+                    textInput.cursorPosition = textInput.text.length;
+                }
+            }
+        }
+        onDoubleClicked: if (root.enabled) textInput.selectAll();
+    }
+    
     TextInput {
         id: textInput
 
         anchors {
-            left: parent.left
-            leftMargin: root.style.paddingLeft
-            right: parent.right
-            rightMargin: root.style.paddingRight
+            left: prefixLoader.right
             verticalCenter: parent.verticalCenter
             verticalCenterOffset: root.style.baselineOffset
         }
         color: root.style.textColor
         selectedTextColor: root.style.selectedTextColor
         selectionColor: root.style.selectionColor
-        text: root.prefix + root.value + root.suffix
-        validator: IntValidator {
+        selectByMouse: true
+        validator: DoubleValidator {
             bottom: root.minimum
             top: root.maximum
-        }
-
-        Label {
-            id: placeholder
-
-            anchors.fill: parent
-            verticalAlignment: Text.AlignVCenter
-            elide: Text.ElideRight
-            color: platformStyle.reversedSecondaryTextColor
-            visible: (root.value == root.minimum) && (text != "")
+            decimals: root.decimals
+            notation: DoubleValidator.StandardNotation
         }
         
         Keys.onPressed: {
             switch (event.key) {
-            case Qt.Key_Up:
+            case Qt.Key_Up: {
                 root.stepUp();
+                root.selectAll();
                 break;
-            case Qt.Key_Down:
+            }
+            case Qt.Key_Down: {
                 root.stepDown();
+                root.selectAll();
                 break;
+            }
             case Qt.Key_Enter:
                 if ((acceptableInput) && (!event.isAutoRepeat)) {
                     root.accepted();
@@ -229,18 +271,52 @@ FocusScope {
             
             event.accepted = true;
         }
-    }
-
-    MouseArea {
-        id: mouseArea
-
-        anchors.fill: parent
-        enabled: !root.enabled
+        
+        onTextChanged: {
+            var value = parseFloat(text);
+            
+            if (!isNaN(value)) {
+                root.value = value;
+            }
+        }
+    }    
+    
+    Component {
+        id: prefixLabel
+        
+        Label {
+            color: textInput.color
+            text: root.prefix
+        }
     }
     
-    onValueChanged: {
-        selectAll();
-        cleanText = value.toString();
-        text = textInput.text;
+    Component {
+        id: suffixLabel
+        
+        Label {
+            color: textInput.color
+            text: root.suffix
+        }
     }
+    
+    Component {
+        id: placeholderLabel
+        
+        Label {
+            id: placeholder
+
+            anchors.fill: parent
+            verticalAlignment: Text.AlignVCenter
+            elide: Text.ElideRight
+            color: platformStyle.reversedSecondaryTextColor
+        }
+    }
+    
+    onDecimalsChanged: value = value.toFixed(decimals)
+    onValueChanged: {
+        cleanText = value;
+        text = prefix + value + suffix;
+    }
+    
+    Component.onCompleted: textInput.text = value
 }
