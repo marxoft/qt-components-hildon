@@ -19,8 +19,7 @@
 
 #include <QObject>
 #include <QColor>
-
-class QchTheme;
+#include <qdeclarative.h>
 
 class QchStyle : public QObject
 {
@@ -123,7 +122,9 @@ Q_SIGNALS:
     void changed();
 
 private:
-    QchTheme *m_theme;
+    Q_DISABLE_COPY(QchStyle)
 };
+
+QML_DECLARE_TYPE(QchStyle)
 
 #endif // QCHSTYLE_H
