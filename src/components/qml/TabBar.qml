@@ -73,6 +73,7 @@ FocusScope {
         clip: true
         enabled: root.enabled
         interactive: false
+        highlightMoveDuration: 1
         orientation: ListView.Horizontal
         delegate: Item {
             width: button.width
