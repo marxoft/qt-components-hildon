@@ -76,7 +76,7 @@ public:
     }
     
     void loadDataFromList(const QVariantList &variantlist) {
-        foreach (QVariant v, variantlist) {
+        foreach (const QVariant &v, variantlist) {
             if (QObject *obj = qvariant_cast<QObject*>(v)) {
                 appendObjectToModel(obj);
             }
@@ -87,7 +87,7 @@ public:
     }
     
     void loadDataFromStringList(const QStringList &stringlist) {
-        foreach (QString s, stringlist) {
+        foreach (const QString &s, stringlist) {
             appendVariantToModel(s);
         }
     }
@@ -122,7 +122,7 @@ public:
         
         Q_Q(QchVariantListModel);
         
-        foreach (QVariant v, list) {
+        foreach (const QVariant &v, list) {
             if (QObject *obj = qvariant_cast<QObject*>(v)) {
                 q->disconnect(obj, SIGNAL(destroyed(QObject*)), q, SLOT(_q_onObjectDestroyed(QObject*)));
             }
