@@ -2,15 +2,15 @@
  * Copyright (C) 2016 Stuart Howarth <showarth@marxoft.co.uk>
  *
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License version 3 as
+ * it under the terms of the GNU General Public License version 3 as
  * published by the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
+ * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
@@ -18,6 +18,7 @@
 #define QCHWEBPAGE_H
 
 #include <QWebPage>
+#include <QWebElement>
 #include <QWebFrame>
 #include <QDeclarativeListProperty>
 #include <qdeclarative.h>
@@ -36,8 +37,10 @@ class QchWebPage : public QWebPage
     Q_PROPERTY(QUrl requestedUrl READ requestedUrl NOTIFY urlChanged)
     Q_PROPERTY(QString icon READ icon NOTIFY iconChanged)
     Q_PROPERTY(QString title READ title NOTIFY titleChanged)
+    Q_PROPERTY(QWebElement documentElement READ documentElement NOTIFY statusChanged)
     Q_PROPERTY(QString html READ toHtml WRITE setHtml NOTIFY urlChanged)
     Q_PROPERTY(QString text READ toPlainText WRITE setText NOTIFY urlChanged)
+    Q_PROPERTY(bool forwardUnsupportedContent READ forwardUnsupportedContent CONSTANT)
     Q_PROPERTY(int contentWidth READ contentWidth NOTIFY contentSizeChanged)
     Q_PROPERTY(int contentHeight READ contentHeight NOTIFY contentSizeChanged)
     Q_PROPERTY(int preferredWidth READ preferredWidth WRITE setPreferredWidth NOTIFY preferredWidthChanged)
@@ -78,6 +81,8 @@ public:
     QString icon() const;
 
     QString title() const;
+    
+    QWebElement documentElement() const;
 
     QString toHtml() const;
     void setHtml(const QString &html, const QUrl &baseUrl = QUrl());
@@ -113,7 +118,7 @@ public:
     QObject* newWindowParent() const;
     void setNewWindowParent(QObject *parent);
 
-    Q_INVOKABLE QVariant hitTestContent(int x, int y);
+    Q_INVOKABLE QWebHitTestResult hitTestContent(int x, int y);
 
 public Q_SLOTS:
     bool findText(const QString &text);
@@ -147,8 +152,6 @@ Q_SIGNALS:
     void userAgentChanged();
     void newWindowComponentChanged();
     void newWindowParentChanged();
-    void downloadRequested(const QVariant &request);
-    void unsupportedContent(const QVariant &content);
 
 protected:
     QchWebPage(QchWebPagePrivate &dd, QObject *parent = 0);
@@ -165,7 +168,6 @@ protected:
     Q_PRIVATE_SLOT(d_func(), void _q_onLoadFinished(bool))
     Q_PRIVATE_SLOT(d_func(), void _q_onLoadProgress(int))
     Q_PRIVATE_SLOT(d_func(), void _q_onStatusBarMessage(QString))
-    Q_PRIVATE_SLOT(d_func(), void _q_onDownloadRequested(QNetworkRequest))
     Q_PRIVATE_SLOT(d_func(), void _q_onUnsupportedContent(QNetworkReply*))
     Q_PRIVATE_SLOT(d_func(), void _q_onJavaScriptWindowObjectCleared())
 

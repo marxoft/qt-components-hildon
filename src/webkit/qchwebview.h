@@ -2,15 +2,15 @@
  * Copyright (C) 2016 Stuart Howarth <showarth@marxoft.co.uk>
  *
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License version 3 as
+ * it under the terms of the GNU General Public License version 3 as
  * published by the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
+ * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
@@ -21,10 +21,7 @@
 #include <QGraphicsWebView>
 #include <qdeclarative.h>
 
-class QDeclarativeComponent;
 class QDeclarativeItem;
-class QchWebHistory;
-class QchWebSettings;
 class QchWebViewPrivate;
 
 class QchWebView : public QGraphicsWebView
@@ -35,14 +32,13 @@ class QchWebView : public QGraphicsWebView
                NOTIFY contextMenuPolicyChanged)
     Q_PROPERTY(int preferredWidth READ preferredWidth WRITE setPreferredWidth NOTIFY preferredWidthChanged)
     Q_PROPERTY(int preferredHeight READ preferredHeight WRITE setPreferredHeight NOTIFY preferredHeightChanged)
+    Q_PROPERTY(QWebElement documentElement READ documentElement NOTIFY statusChanged)
     Q_PROPERTY(QString html READ toHtml WRITE setHtml NOTIFY statusChanged)
     Q_PROPERTY(QString text READ toPlainText WRITE setText NOTIFY statusChanged)
     Q_PROPERTY(bool hasSelection READ hasSelection NOTIFY selectedTextChanged)
     Q_PROPERTY(QString selectedText READ selectedText NOTIFY selectedTextChanged)
     Q_PROPERTY(QWebPage::LinkDelegationPolicy linkDelegationPolicy READ linkDelegationPolicy
                WRITE setLinkDelegationPolicy NOTIFY linkDelegationPolicyChanged)
-    Q_PROPERTY(bool forwardUnsupportedContent READ forwardUnsupportedContent WRITE setForwardUnsupportedContent
-               NOTIFY forwardUnsupportedContentChanged)
     Q_PROPERTY(int progress READ progress NOTIFY progressChanged)
     Q_PROPERTY(Status status READ status NOTIFY statusChanged)
     Q_PROPERTY(QString statusText READ statusText NOTIFY statusTextChanged)
@@ -51,9 +47,9 @@ class QchWebView : public QGraphicsWebView
                NOTIFY newWindowComponentChanged)
     Q_PROPERTY(QDeclarativeItem* newWindowParent READ newWindowParent WRITE setNewWindowParent
                NOTIFY newWindowParentChanged)
-    Q_PRIVATE_PROPERTY(QchWebView::d_func(), QchWebPage* page READ page WRITE setPage NOTIFY pageChanged)
     Q_PRIVATE_PROPERTY(QchWebView::d_func(), QchWebHistory* history READ history CONSTANT FINAL)
     Q_PRIVATE_PROPERTY(QchWebView::d_func(), QchWebSettings* settings READ settings CONSTANT FINAL)
+    Q_PRIVATE_PROPERTY(QchWebView::d_func(), QchWebPage* page READ page WRITE setPage NOTIFY pageChanged)
     Q_PRIVATE_PROPERTY(QchWebView::d_func(), QDeclarativeListProperty<QObject> data READ data)
     Q_PRIVATE_PROPERTY(QchWebView::d_func(), QDeclarativeListProperty<QObject> javaScriptWindowObjects READ jsObjects)    
 
@@ -81,6 +77,8 @@ public:
     int preferredHeight() const;
     void setPreferredHeight(int h);
     
+    QWebElement documentElement() const;
+        
     QString toHtml() const;
 
     QString toPlainText() const;
@@ -92,9 +90,6 @@ public:
 
     QWebPage::LinkDelegationPolicy linkDelegationPolicy() const;
     void setLinkDelegationPolicy(QWebPage::LinkDelegationPolicy policy);
-
-    bool forwardUnsupportedContent() const;
-    void setForwardUnsupportedContent(bool forward);
 
     int progress() const;
 
@@ -111,7 +106,7 @@ public:
     QDeclarativeItem* newWindowParent() const;
     void setNewWindowParent(QDeclarativeItem *parent);
 
-    Q_INVOKABLE QVariant hitTestContent(int x, int y);
+    Q_INVOKABLE QWebHitTestResult hitTestContent(int x, int y);
 
 public Q_SLOTS:
     bool findText(const QString &text);
@@ -128,8 +123,8 @@ Q_SIGNALS:
     void preferredWidthChanged();
     void preferredHeightChanged();
     void selectedTextChanged();
+    void linkClicked(const QUrl &link);
     void linkDelegationPolicyChanged();
-    void forwardUnsupportedContentChanged();
     void progressChanged();
     void statusChanged();
     void statusTextChanged();
@@ -138,8 +133,7 @@ Q_SIGNALS:
     void newWindowParentChanged();
     void pageChanged();
     void customContextMenuRequested(int menuX, int menuY);
-    void downloadRequested(const QVariant &request);
-    void unsupportedContent(const QVariant &content);
+    void downloadRequested(const QNetworkRequest &request);
 
 protected:
     QchWebView(QchWebViewPrivate &dd, QGraphicsItem *parent = 0);
@@ -157,7 +151,6 @@ protected:
     Q_PRIVATE_SLOT(d_func(), void _q_onLoadFinished(bool))
     Q_PRIVATE_SLOT(d_func(), void _q_onLoadProgress(int))
     Q_PRIVATE_SLOT(d_func(), void _q_onStatusBarMessage(QString))
-    Q_PRIVATE_SLOT(d_func(), void _q_onDownloadRequested(QNetworkRequest))
     Q_PRIVATE_SLOT(d_func(), void _q_onUnsupportedContent(QNetworkReply*))
     Q_PRIVATE_SLOT(d_func(), void _q_onJavaScriptWindowObjectCleared())
 

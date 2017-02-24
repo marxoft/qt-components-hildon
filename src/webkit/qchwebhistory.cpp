@@ -2,15 +2,15 @@
  * Copyright (C) 2016 Stuart Howarth <showarth@marxoft.co.uk>
  *
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License version 3 as
+ * it under the terms of the GNU General Public License version 3 as
  * published by the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
+ * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
@@ -19,23 +19,25 @@
 #include <QWebHistory>
 #include <QFile>
 #include <QDataStream>
+#include <QDeclarativeEngine>
 #include <QDeclarativeInfo>
 
-static QVariant itemToVariant(const QWebHistoryItem &item) {
-    QVariantMap map;
-    map["icon"] = item.icon().name();
-    map["valid"] = item.isValid();
-    map["lastVisited"] = item.lastVisited();
-    map["originalUrl"] = item.originalUrl();
-    map["title"] = item.title();
-    map["url"] = item.url();
-    map["userData"] = item.userData();
+QchWebHistoryItem::QchWebHistoryItem(const QWebHistoryItem &other, QObject *parent) :
+    QObject(parent),
+    QWebHistoryItem(other)
+{
+}
 
-    return map;
+QVariant QchWebHistoryItem::webUserData() const {
+    return QWebHistoryItem::userData();
+}
+
+void QchWebHistoryItem::setWebUserData(const QVariant &data) {
+    QWebHistoryItem::setUserData(data);
 }
 
 static QWebHistory* qWebHistory(const QchWebHistory *qwh) {
-    if (QWebPage *page = qobject_cast<QWebPage*>(qwh->parent())) {
+    if (const QWebPage *page = qobject_cast<QWebPage*>(qwh->parent())) {
         if (QWebHistory *history = page->history()) {
             return history;
         }
@@ -62,12 +64,14 @@ QchWebHistory::QchWebHistory(QWebPage *parent) :
 /*!
     \brief The list of back items in the history.
 */
-QVariantList QchWebHistory::backItems() const {
-    QVariantList list;
+QList<QchWebHistoryItem*> QchWebHistory::backItems() const {
+    QList<QchWebHistoryItem*> list;
     
-    if (QWebHistory *history = qWebHistory(this)) {
-        foreach (QWebHistoryItem item, history->backItems(history->count())) {
-            list << itemToVariant(item);
+    if (const QWebHistory *history = qWebHistory(this)) {
+        foreach (const QWebHistoryItem &item, history->backItems(history->count())) {
+            QchWebHistoryItem *hi = new QchWebHistoryItem(item);
+            QDeclarativeEngine::setObjectOwnership(hi, QDeclarativeEngine::JavaScriptOwnership);
+            list << hi;
         }
     }
 
@@ -77,12 +81,14 @@ QVariantList QchWebHistory::backItems() const {
 /*!
     \brief The list of forward items in the history.
 */
-QVariantList QchWebHistory::forwardItems() const {
-    QVariantList list;
+QList<QchWebHistoryItem*> QchWebHistory::forwardItems() const {
+    QList<QchWebHistoryItem*> list;
 
-    if (QWebHistory *history = qWebHistory(this)) {
-        foreach (QWebHistoryItem item, history->forwardItems(history->count())) {
-            list << itemToVariant(item);
+    if (const QWebHistory *history = qWebHistory(this)) {
+        foreach (const QWebHistoryItem &item, history->forwardItems(history->count())) {
+            QchWebHistoryItem *hi = new QchWebHistoryItem(item);
+            QDeclarativeEngine::setObjectOwnership(hi, QDeclarativeEngine::JavaScriptOwnership);
+            list << hi;
         }
     }
 
@@ -92,12 +98,14 @@ QVariantList QchWebHistory::forwardItems() const {
 /*!
     \brief The list of items in the history.
 */
-QVariantList QchWebHistory::items() const {
-    QVariantList list;
+QList<QchWebHistoryItem*> QchWebHistory::items() const {
+    QList<QchWebHistoryItem*> list;
 
-    if (QWebHistory *history = qWebHistory(this)) {
-        foreach (QWebHistoryItem item, history->items()) {
-            list << itemToVariant(item);
+    if (const QWebHistory *history = qWebHistory(this)) {
+        foreach (const QWebHistoryItem &item, history->items()) {
+            QchWebHistoryItem *hi = new QchWebHistoryItem(item);
+            QDeclarativeEngine::setObjectOwnership(hi, QDeclarativeEngine::JavaScriptOwnership);
+            list << hi;
         }
     }
 
@@ -107,52 +115,60 @@ QVariantList QchWebHistory::items() const {
 /*!
     \brief The most previous item in the history.
 */
-QVariant QchWebHistory::backItem() const {
-    if (QWebHistory *history = qWebHistory(this)) {
-        return itemToVariant(history->backItem());
+QchWebHistoryItem* QchWebHistory::backItem() const {
+    if (const QWebHistory *history = qWebHistory(this)) {
+        QchWebHistoryItem *hi = new QchWebHistoryItem(history->backItem());
+        QDeclarativeEngine::setObjectOwnership(hi, QDeclarativeEngine::JavaScriptOwnership);
+        return hi;
     }
     
-    return QVariant();
+    return 0;
 }
 
 /*!
     \brief The next item in the history.
 */
-QVariant QchWebHistory::forwardItem() const {
-    if (QWebHistory *history = qWebHistory(this)) {
-        return itemToVariant(history->forwardItem());
+QchWebHistoryItem* QchWebHistory::forwardItem() const {
+    if (const QWebHistory *history = qWebHistory(this)) {
+        QchWebHistoryItem *hi = new QchWebHistoryItem(history->forwardItem());
+        QDeclarativeEngine::setObjectOwnership(hi, QDeclarativeEngine::JavaScriptOwnership);
+        return hi;
     }
     
-    return QVariant();
+    return 0;
 }
 
 /*!
     \brief The current item in the history.
 */
-QVariant QchWebHistory::currentItem() const {
-    if (QWebHistory *history = qWebHistory(this)) {
-        return itemToVariant(history->currentItem());
+QchWebHistoryItem* QchWebHistory::currentItem() const {
+    if (const QWebHistory *history = qWebHistory(this)) {
+        QchWebHistoryItem *hi = new QchWebHistoryItem(history->currentItem());
+        QDeclarativeEngine::setObjectOwnership(hi, QDeclarativeEngine::JavaScriptOwnership);
+        return hi;
     }
     
-    return QVariant();
+    return 0;
 }
 
 /*!    
     Returns the history item at \a index.
 */
-QVariant QchWebHistory::itemAt(int index) const {
-    if (QWebHistory *history = qWebHistory(this)) {
-        return itemToVariant(history->itemAt(index));
+QchWebHistoryItem* QchWebHistory::itemAt(int index) const {
+    if (const QWebHistory *history = qWebHistory(this)) {
+        QchWebHistoryItem *hi = new QchWebHistoryItem(history->itemAt(index));
+        QDeclarativeEngine::setObjectOwnership(hi, QDeclarativeEngine::JavaScriptOwnership);
+        return hi;
     }
     
-    return QVariant();
+    return 0;
 }
 
 /*!
     \brief The index of the current item in the history.
 */
 int QchWebHistory::currentIndex() const {
-    if (QWebHistory *history = qWebHistory(this)) {
+    if (const QWebHistory *history = qWebHistory(this)) {
         return history->currentItemIndex();
     }
     
@@ -172,7 +188,7 @@ void QchWebHistory::setCurrentIndex(int index) {
     \brief The maximum number of items in the history.
 */
 int QchWebHistory::maximumItemCount() const {
-    if (QWebHistory *history = qWebHistory(this)) {
+    if (const QWebHistory *history = qWebHistory(this)) {
         return history->maximumItemCount();
     }
     
@@ -192,7 +208,7 @@ void QchWebHistory::setMaximumItemCount(int count) {
     \brief The current number of items in the history.
 */
 int QchWebHistory::count() const {
-    if (QWebHistory *history = qWebHistory(this)) {
+    if (const QWebHistory *history = qWebHistory(this)) {
         return history->count();
     }
     
@@ -203,7 +219,7 @@ int QchWebHistory::count() const {
     \brief Whether there is a back item available.
 */
 bool QchWebHistory::canGoBack() const {
-    if (QWebHistory *history = qWebHistory(this)) {
+    if (const QWebHistory *history = qWebHistory(this)) {
         return history->canGoBack();
     }
     
@@ -215,7 +231,7 @@ bool QchWebHistory::canGoBack() const {
 */
 
 bool QchWebHistory::canGoForward() const {
-    if (QWebHistory *history = qWebHistory(this)) {
+    if (const QWebHistory *history = qWebHistory(this)) {
         return history->canGoForward();
     }
     

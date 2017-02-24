@@ -2,15 +2,15 @@
  * Copyright (C) 2016 Stuart Howarth <showarth@marxoft.co.uk>
  *
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License version 3 as
+ * it under the terms of the GNU General Public License version 3 as
  * published by the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
+ * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
@@ -124,34 +124,19 @@ public:
         }
     }
 
-    void _q_onDownloadRequested(const QNetworkRequest &request) {
-        Q_Q(QchWebPage);
-
-        QVariantMap map;
-        QVariantMap headers;
-        map["url"] = request.url();
-
-        foreach (QByteArray header, request.rawHeaderList()) {
-            headers[header] = request.rawHeader(header);
-        }
-
-        map["headers"] = headers;
-        emit q->downloadRequested(map);
-    }
-
     void _q_onUnsupportedContent(QNetworkReply *reply) {
         Q_Q(QchWebPage);
 
-        QVariantMap map;
-        QVariantMap headers;
-        map["url"] = reply->url();
-
-        foreach (QByteArray header, reply->rawHeaderList()) {
-            headers[header] = reply->rawHeader(header);
+        if (reply->rawHeader("Content-Disposition").startsWith("attachment")) {
+            emit q->downloadRequested(reply->request());
         }
-
-        map["headers"] = headers;
-        emit q->unsupportedContent(map);
+        else {
+            status = QchWebPage::Error;
+            statusText = QchWebPage::tr("Content not supported");
+            emit q->statusChanged();
+            emit q->statusTextChanged();
+        }
+        
         reply->deleteLater();
     }
 
@@ -202,11 +187,12 @@ QchWebPage::QchWebPage(QObject *parent) :
     QWebPage(parent),
     d_ptr(new QchWebPagePrivate(this))
 {
-    if (QDeclarativeEngine *engine = qmlEngine(this)) {
+    if (const QDeclarativeEngine *engine = qmlEngine(this)) {
         setNetworkAccessManager(engine->networkAccessManager());
     }
 
     setPalette(QApplication::palette("QWebView"));
+    setForwardUnsupportedContent(true);
     
     mainFrame()->setScrollBarPolicy(Qt::Horizontal, Qt::ScrollBarAlwaysOff);
     mainFrame()->setScrollBarPolicy(Qt::Vertical, Qt::ScrollBarAlwaysOff);
@@ -219,7 +205,6 @@ QchWebPage::QchWebPage(QObject *parent) :
     connect(this, SIGNAL(loadFinished(bool)), this, SLOT(_q_onLoadFinished(bool)));
     connect(this, SIGNAL(loadProgress(int)), this, SLOT(_q_onLoadProgress(int)));
     connect(this, SIGNAL(statusBarMessage(QString)), this, SLOT(_q_onStatusBarMessage(QString)));
-    connect(this, SIGNAL(downloadRequested(QNetworkRequest)), this, SLOT(_q_onDownloadRequested(QNetworkRequest)));
     connect(this, SIGNAL(unsupportedContent(QNetworkReply*)), this, SLOT(_q_onUnsupportedContent(QNetworkReply*)));
     connect(mainFrame(), SIGNAL(javaScriptWindowObjectCleared()), this, SLOT(_q_onJavaScriptWindowObjectCleared()));
 }
@@ -228,11 +213,12 @@ QchWebPage::QchWebPage(QchWebPagePrivate &dd, QObject *parent) :
     QWebPage(parent),
     d_ptr(&dd)
 {
-    if (QDeclarativeEngine *engine = qmlEngine(this)) {
+    if (const QDeclarativeEngine *engine = qmlEngine(this)) {
         setNetworkAccessManager(engine->networkAccessManager());
     }
 
     setPalette(QApplication::palette("QWebView"));
+    setForwardUnsupportedContent(true);
     
     mainFrame()->setScrollBarPolicy(Qt::Horizontal, Qt::ScrollBarAlwaysOff);
     mainFrame()->setScrollBarPolicy(Qt::Vertical, Qt::ScrollBarAlwaysOff);
@@ -245,7 +231,6 @@ QchWebPage::QchWebPage(QchWebPagePrivate &dd, QObject *parent) :
     connect(this, SIGNAL(loadFinished(bool)), this, SLOT(_q_onLoadFinished(bool)));
     connect(this, SIGNAL(loadProgress(int)), this, SLOT(_q_onLoadProgress(int)));
     connect(this, SIGNAL(statusBarMessage(QString)), this, SLOT(_q_onStatusBarMessage(QString)));
-    connect(this, SIGNAL(downloadRequested(QNetworkRequest)), this, SLOT(_q_onDownloadRequested(QNetworkRequest)));
     connect(this, SIGNAL(unsupportedContent(QNetworkReply*)), this, SLOT(_q_onUnsupportedContent(QNetworkReply*)));
     connect(mainFrame(), SIGNAL(javaScriptWindowObjectCleared()), this, SLOT(_q_onJavaScriptWindowObjectCleared()));
 }
@@ -289,6 +274,14 @@ QString QchWebPage::icon() const {
 */
 QString QchWebPage::title() const {
     return mainFrame()->title();
+}
+
+/*!
+    \property WebElement WebPage::documentElement
+    \brief The document element of the web page's main frame
+*/
+QWebElement QchWebPage::documentElement() const {
+    return mainFrame()->documentElement();
 }
 
 /*!
@@ -479,30 +472,10 @@ void QchWebPage::setNewWindowParent(QObject *parent) {
 }
 
 /*!    
-    Performs a hit test at \a x,\a y, and returns the result.
+    Performs a hit test at postion \a x,\a y, and returns the result.
 */
-QVariant QchWebPage::hitTestContent(int x, int y) {
-    QWebHitTestResult result = currentFrame()->hitTestContent(QPoint(x, y));
-    QVariantMap content;
-    content["isNull"] = result.isNull();
-
-    if (!result.isNull()) {
-        content["x"] = result.boundingRect().left();
-        content["y"] = result.boundingRect().top();
-        content["width"] = result.boundingRect().width();
-        content["height"] = result.boundingRect().height();
-        content["isNull"] = result.isNull();
-        content["alternateText"] = result.alternateText();
-        content["imageUrl"] = result.imageUrl();
-        content["isContentEditable"] = result.isContentEditable();
-        content["isContentSelected"] = result.isContentSelected();
-        content["linkText"] = result.linkText();
-        content["linkTitle"] = result.linkTitle();
-        content["linkUrl"] = result.linkUrl();
-        content["title"] = result.title();
-    }
-
-    return content;
+QWebHitTestResult QchWebPage::hitTestContent(int x, int y) {
+    return currentFrame()->hitTestContent(QPoint(x, y));
 }
 
 /*!    

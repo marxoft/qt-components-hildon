@@ -65,7 +65,7 @@ QString QchWebHistoryInterface::storageFileName() const {
 }
 
 void QchWebHistoryInterface::setStorageFileName(const QString &fileName) {
-    if (fileName != this->storageFileName()) {
+    if (fileName != storageFileName()) {
         m_fileName = fileName;
         emit storageFileNameChanged();
     }
@@ -75,7 +75,7 @@ void QchWebHistoryInterface::setStorageFileName(const QString &fileName) {
     Returns true if the history can be saved to \link storageFileName\endlink.
 */
 bool QchWebHistoryInterface::save() {
-    QFile file(this->storageFileName());
+    QFile file(storageFileName());
 
     if (file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
         QTextStream out(&file);
@@ -95,8 +95,8 @@ bool QchWebHistoryInterface::save() {
     Returns true if the history can be loaded from \link storageFileName\endlink.
 */
 bool QchWebHistoryInterface::load() {
-    this->clear();
-    QFile file(this->storageFileName());
+    clear();
+    QFile file(storageFileName());
 
     if (file.open(QIODevice::ReadOnly)) {
         QTextStream in(&file);
