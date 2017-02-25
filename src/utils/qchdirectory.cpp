@@ -35,6 +35,7 @@
 QchDirectory::QchDirectory(QObject *parent) :
     QObject(parent)
 {
+    m_dir.setFilter(QDir::AllEntries);
 }
 
 /*!
@@ -165,10 +166,8 @@ void QchDirectory::setFilter(Filters filter) {
 }
 
 void QchDirectory::resetFilter() {
-    if (m_dir.filter() != QDir::NoFilter) {
-        m_dir.setFilter(QDir::NoFilter);
-        emit filterChanged();
-    }
+    m_dir.setFilter(QDir::AllEntries);
+    emit filterChanged();
 }
 
 /*!
@@ -295,7 +294,7 @@ void QchDirectory::resetSorting() {
     }
 }
 
-/*!    
+/*!
     Returns true if the file called \a fileName exists; otherwise returns false.
 
     Unless \a fileName contains an absolute file path, the file name is assumed to be relative to the directory itself, 
@@ -305,7 +304,7 @@ bool QchDirectory::fileExists(const QString &fileName) const {
     return m_dir.exists(fileName);
 }
 
-/*!    
+/*!
     Returns the absolute path name of a file in the directory. Does \e not check if the file actually exists in the 
     directory. Redundant multiple separators or "." and ".." directories in \a fileName are not removed 
     (see cleanPath()).
@@ -316,7 +315,7 @@ QString QchDirectory::absoluteFilePath(const QString &fileName) const {
     return m_dir.absoluteFilePath(fileName);
 }
 
-/*!    
+/*!
     Returns the path name of a file in the directory. Does \e not check if the file actually exists in the directory. 
     If the Directory is relative the returned path name will also be relative. Redundant multiple separators or "." 
     and ".." directories in \a fileName are not removed (see cleanPath()).
@@ -327,7 +326,7 @@ QString QchDirectory::filePath(const QString &fileName) const {
     return m_dir.filePath(fileName);
 }
 
-/*!    
+/*!
     Returns the path to \a fileName relative to the directory.
 
     \sa absoluteFilePath(), filePath(), canonicalPath()
@@ -336,7 +335,7 @@ QString QchDirectory::relativeFilePath(const QString &fileName) const {
     return m_dir.relativeFilePath(fileName);
 }
 
-/*!    
+/*!
     Changes the Directory's directory to \a dirName.
 
     Returns true if the new directory exists and is readable; otherwise returns false. Note that the logical cd() 
@@ -350,7 +349,7 @@ bool QchDirectory::cd(const QString &dirName) {
     return m_dir.cd(dirName);
 }
 
-/*!    
+/*!
     Changes directory by moving one directory up from the Directory's current directory.
 
     Returns true if the new directory exists and is readable; otherwise returns false. Note that the logical cdUp() 
@@ -362,19 +361,54 @@ bool QchDirectory::cdUp() {
     return m_dir.cdUp();
 }
 
-/*!    
+/*!
     Returns a list of the names of all the files and directories in the directory, ordered according to 
     \link filter\endlink and \link nameFilters\endlink, and sorted according to \link sorting\endlink.
-
+        
     Returns an empty list if the directory is unreadable, does not exist, or if nothing matches the specification.
 
     \sa nameFilters, sorting, filter
 */
 QStringList QchDirectory::entryList() const {
-    return m_dir.entryList(m_dir.nameFilters(), m_dir.filter(), m_dir.sorting());
+    return m_dir.entryList(m_dir.nameFilters(), m_dir.filter(), m_dir.sorting());    
 }
 
-/*!    
+static void staticRecursiveEntryList(QDir &dir, QStringList &names, bool includeDirectories) {
+    foreach (const QFileInfo &info, dir.entryInfoList(dir.nameFilters(), dir.filter(), dir.sorting())) {
+        const QString path = info.absoluteFilePath();
+        
+        if (info.isDir()) {
+            if (includeDirectories) {
+                names << path;
+            }
+            
+            dir.setPath(path);
+            staticRecursiveEntryList(dir, names, includeDirectories);
+        }
+        else {
+            names << path;
+        }
+    }
+}
+
+/*!
+    Returns a list of the absolute paths of all the files and directories in the directory and its subdirectories,
+    ordered according to \link filter\endlink and \link nameFilters\endlink, and sorted according to
+    \link sorting\endlink.
+        
+    Returns an empty list if the directory is unreadable, does not exist, or if nothing matches the specification.
+
+    \sa nameFilters, sorting, filter
+*/
+QStringList QchDirectory::recursiveEntryList() const {
+    QStringList names;
+    QDir dir(m_dir);
+    dir.setFilter(dir.filter() | QDir::Dirs | QDir::NoDotAndDotDot);
+    staticRecursiveEntryList(dir, names, m_dir.filter().testFlag(QDir::Dirs));
+    return names;
+}
+
+/*!
     Converts the directory path to an absolute path. If it is already absolute nothing happens. Returns true if the 
     conversion succeeded; otherwise returns false.
 
@@ -384,7 +418,7 @@ bool QchDirectory::makeAbsolute() {
     return m_dir.makeAbsolute();
 }
 
-/*!    
+/*!
     Creates a sub-directory called \a dirName.
 
     Returns true on success; otherwise returns false.
@@ -397,7 +431,7 @@ bool QchDirectory::mkdir(const QString &dirName) const {
     return m_dir.mkdir(dirName);
 }
 
-/*!    
+/*!
     Creates the directory path \a dirPath.
 
     The function will create all parent directories necessary to create the directory.
@@ -412,7 +446,7 @@ bool QchDirectory::mkpath(const QString &dirPath) const {
     return m_dir.mkpath(dirPath);
 }
 
-/*!    
+/*!
     Removes the file, \a fileName.
 
     Returns true if the file is removed successfully; otherwise returns false.
@@ -421,7 +455,43 @@ bool QchDirectory::remove(const QString &fileName) {
     return m_dir.remove(fileName);
 }
 
-/*!    
+static bool staticRemoveRecursively(QDir &dir) {
+    bool ok = false;
+    
+    foreach (const QFileInfo &info, dir.entryInfoList(QDir::NoDotAndDotDot | QDir::System | QDir::Hidden
+                                                      | QDir::AllDirs | QDir::Files, QDir::DirsFirst)) {
+        if (info.isDir()) {
+            dir.setPath(info.absoluteFilePath());
+            ok = staticRemoveRecursively(dir);
+        }
+        else {
+            ok = QFile::remove(info.absoluteFilePath());
+        }
+        
+        if (!ok) {
+            return ok;
+        }
+    }
+    
+    ok = dir.rmdir(dir.path());
+    return ok;
+}
+
+/*!
+    Removes the directory, including all its contents.
+    
+    Returns \c true if successful, otherwise \c false.
+*/
+bool QchDirectory::removeRecursively() {
+#if QT_VERSION >= 0x050000
+    return m_dir.removeRecursively();
+#else
+    QDir dir(m_dir);
+    return staticRemoveRecursively(dir);
+#endif
+}
+
+/*!
     Renames a file or directory from \a oldName to \a newName, and returns true if successful; otherwise returns false.
 
     On most file systems, rename() fails only if \a oldName does not exist, if \a newName and \a oldName are not on the 
@@ -432,7 +502,7 @@ bool QchDirectory::rename(const QString &oldName, const QString &newName) {
     return m_dir.rename(oldName, newName);
 }
 
-/*!    
+/*!
     Removes the directory specified by \a dirName.
 
     The directory must be empty for rmdir() to succeed.
@@ -445,7 +515,7 @@ bool QchDirectory::rmdir(const QString &dirName) const {
     return m_dir.rmdir(dirName);
 }
 
-/*!    
+/*!
     Removes the directory path \a dirPath.
 
     The function will remove all parent directories in \a dirPath, provided that they are empty. This is the opposite of
@@ -459,7 +529,7 @@ bool QchDirectory::rmpath(const QString &dirPath) const {
     return m_dir.rmpath(dirPath);
 }
 
-/*!    
+/*!
     Refreshes the directory information.
 */
 void QchDirectory::refresh() {
@@ -467,7 +537,7 @@ void QchDirectory::refresh() {
     emit pathChanged();
 }
 
-/*!    
+/*!
     Removes all multiple directory separators "/" and resolves any "."s or ".."s found in the path, \a path.
 
     Symbolic links are kept. This function does not return the canonical path, but rather the simplest version of the 
@@ -525,7 +595,7 @@ QString QchDirectory::toNativeSeparators(const QString &pathName) {
 }
 
 
-/*!    
+/*!
     Returns true if the \a fileName matches the wildcard (glob) pattern \a filter; otherwise returns false. The \a 
     filter may contain multiple patterns separated by spaces or semicolons. The matching is case insensitive.
 

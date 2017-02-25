@@ -44,6 +44,7 @@ class QchDirectory : public QObject
     Q_PROPERTY(SortFlags sorting READ sorting WRITE setSorting RESET resetSorting NOTIFY sortingChanged)
 
     Q_ENUMS(Filter SortFlag)
+    Q_FLAGS(Filters SortFlags)
 
 public:
     enum Filter {
@@ -127,12 +128,14 @@ public:
     Q_INVOKABLE bool cdUp();
 
     Q_INVOKABLE QStringList entryList() const;
+    Q_INVOKABLE QStringList recursiveEntryList() const;
 
     Q_INVOKABLE bool makeAbsolute();
 
     Q_INVOKABLE bool mkdir(const QString &dirName) const;
     Q_INVOKABLE bool mkpath(const QString &dirPath) const;
     Q_INVOKABLE bool remove(const QString &fileName);
+    Q_INVOKABLE bool removeRecursively();
     Q_INVOKABLE bool rename(const QString &oldName, const QString &newName);
     Q_INVOKABLE bool rmdir(const QString &dirName) const;
     Q_INVOKABLE bool rmpath(const QString &dirPath) const;
