@@ -37,10 +37,9 @@ FocusScope {
     property alias text: textEdit.text
     
     /*!
-        type:string
         \brief The text to be displayed when no text is set.
     */
-    property alias placeholderText: placeholder.text
+    property string placeholderText
 
     /*!
         type:font
@@ -69,6 +68,12 @@ FocusScope {
         \brief The maximum height of a line of text in the text area.
     */
     property int lineHeight
+    
+    /*!
+        type:int
+        \brief The painted height of the text area
+    */
+    property alias paintedHeight: textEdit.paintedHeight
     
     /*!
         type:bool
@@ -222,7 +227,8 @@ FocusScope {
     }
     
     width: style.defaultWidth
-    height: style.defaultHeight
+    height: Math.max(style.defaultHeight, textEdit.paintedHeight)
+    onHeightChanged: textEdit.height = height - style.paddingBottom
 
     BorderImage {
         id: background
@@ -246,11 +252,12 @@ FocusScope {
         property int lineHeight: cursorRectangle.height
 
         anchors {
-            fill: parent
+            left: parent.left
             leftMargin: root.style.paddingLeft
+            right: parent.right
             rightMargin: root.style.paddingRight
+            top: parent.top
             topMargin: root.style.paddingTop
-            bottomMargin: root.style.paddingBottom
         }
         color: enabled ? root.style.textColor : platformStyle.reversedDisabledTextColor
         enabled: root.enabled
@@ -261,18 +268,27 @@ FocusScope {
         onLineCountChanged: root.lineCount = lineCount
         onLineHeightChanged: root.lineHeight = lineHeight
     
-        Label {
-            id: placeholder
+        Loader {
+            id: placeholderLoader
 
             anchors.fill: parent
-            color: platformStyle.reversedSecondaryTextColor
-            wrapMode: textEdit.wrapMode
-            visible: (textEdit.text == "") && (!textEdit.activeFocus)
+            sourceComponent: (!textEdit.text) && (root.placeholderText) && (!textEdit.activeFocus)
+            ? placeholder : undefined
         }
 
         MouseArea {
             anchors.fill: parent
             enabled: !root.enabled
+        }
+    }
+    
+    Component {
+        id: placeholder
+        
+        Label {
+            color: platformStyle.reversedSecondaryTextColor
+            wrapMode: textEdit.wrapMode
+            text: root.placeholderText
         }
     }
 }
