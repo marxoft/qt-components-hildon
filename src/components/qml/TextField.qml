@@ -36,10 +36,9 @@ FocusScope {
     property alias text: textInput.text
     
     /*!
-        type:string
         \brief The text to be displayed when no text is set.
     */
-    property alias placeholderText: placeholder.text
+    property string placeholderText
     
     /*!
         type:enumeration
@@ -283,15 +282,13 @@ FocusScope {
         selectedTextColor: root.style.selectedTextColor
         selectionColor: root.style.selectionColor
         selectByMouse: true
-
-        Label {
-            id: placeholder
+        
+        Loader {
+            id: placeholderLoader
 
             anchors.fill: parent
-            verticalAlignment: Text.AlignVCenter
-            elide: Text.ElideRight
-            color: platformStyle.reversedSecondaryTextColor
-            visible: (textInput.text == "") && (!textInput.activeFocus)
+            sourceComponent: (!textInput.text) && (root.placeholderText) && (!textInput.activeFocus)
+            ? placeholder : undefined
         }
         
         Keys.onEnterPressed: {
@@ -307,5 +304,16 @@ FocusScope {
 
         anchors.fill: parent
         enabled: !root.enabled
+    }
+    
+    Component {
+        id: placeholder
+        
+        Label {
+            verticalAlignment: Text.AlignVCenter
+            elide: Text.ElideRight
+            color: platformStyle.reversedSecondaryTextColor
+            text: root.placeholderText
+        }
     }
 }
