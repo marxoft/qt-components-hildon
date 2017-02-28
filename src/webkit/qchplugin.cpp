@@ -45,6 +45,7 @@ void QchPlugin::initializeEngine(QDeclarativeEngine *engine, const char *uri) {
         QScriptValue result = se->newQObject(new QchWebHitTestResult(se));
         se->setDefaultPrototype(qMetaTypeId<QWebHitTestResult>(), result);
         se->setDefaultPrototype(qMetaTypeId<QWebHitTestResult*>(), result);
+        qScriptRegisterSequenceMetaType< QList<QWebElement> >(se);
     }
     
     if (engine->rootContext()->contextProperty("webHistory").isNull()) {
@@ -61,7 +62,7 @@ void QchPlugin::registerTypes(const char *uri) {
     Q_ASSERT(uri == QLatin1String("org.hildon.webkit"));
 
     qmlRegisterType<QchWebPage>(uri, 1, 0, "WebPage");
-    qmlRegisterType<QchWebView>(uri, 1, 0, "WebView");
+    qmlRegisterType<QchWebView>(uri, 1, 0, "WebView");    
 }
 
 Q_EXPORT_PLUGIN2(qchwebkit, QchPlugin)
