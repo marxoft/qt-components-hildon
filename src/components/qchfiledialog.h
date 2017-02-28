@@ -17,7 +17,7 @@
 #ifndef QCHFILEDIALOG_H
 #define QCHFILEDIALOG_H
 
-#include <QObject>
+#include "qchdialogstatus.h"
 #include <qdeclarative.h>
 
 class QchFileDialogPrivate;
@@ -30,6 +30,7 @@ class QchFileDialog : public QObject
     Q_PROPERTY(QString folder READ folder WRITE setFolder NOTIFY folderChanged)
     Q_PROPERTY(QStringList nameFilters READ nameFilters WRITE setNameFilters NOTIFY nameFiltersChanged)
     Q_PROPERTY(bool selectFolder READ selectFolder WRITE setSelectFolder NOTIFY selectFolderChanged)
+    Q_PROPERTY(QchDialogStatus::Status status READ status NOTIFY statusChanged)
 
 public:
     explicit QchFileDialog(QObject *parent = 0);
@@ -45,6 +46,8 @@ public:
     
     bool selectFolder() const;
     void setSelectFolder(bool s);
+    
+    QchDialogStatus::Status status() const;
 
 public Q_SLOTS:
     void open();
@@ -55,6 +58,7 @@ Q_SIGNALS:
     void nameFiltersChanged();
     void rejected();
     void selectFolderChanged();
+    void statusChanged();
 
 protected:
     QScopedPointer<QchFileDialogPrivate> d_ptr;

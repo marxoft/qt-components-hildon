@@ -24,7 +24,8 @@ public:
     QchFileDialogPrivate(QchFileDialog *parent) :
         q_ptr(parent),
         folder("/home/user/MyDocs/"),
-        selectFolder(false)
+        selectFolder(false),
+        status(QchDialogStatus::Closed)
     {
     }
     
@@ -51,6 +52,8 @@ public:
     QStringList nameFilters;
     
     bool selectFolder;
+    
+    QchDialogStatus::Status status;
     
     Q_DECLARE_PUBLIC(QchFileDialog)
 };
@@ -132,6 +135,39 @@ void QchFileDialog::setSelectFolder(bool s) {
 }
 
 /*!
+    \brief The current status of the dialog.
+    
+    Possible values are:
+    
+    <table>
+        <tr>
+            <th>Value</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td>DialogStatus.Closed</td>
+            <td>The dialog is closed (default).</td>
+        </tr>
+        <tr>
+            <td>DialogStatus.Opening</td>
+            <td>The dialog is opening.</td>
+        </tr>
+        <tr>
+            <td>DialogStatus.Open</td>
+            <td>The dialog is open.</td>
+        </tr>
+        <tr>
+            <td>DialogStatus.Closing</td>
+            <td>The dialog is closing.</td>
+        </tr>
+    </table>
+*/
+QchDialogStatus::Status QchFileDialog::status() const {
+    Q_D(const QchFileDialog);
+    return d->status;
+}
+
+/*!
     \fn void FileDialog::accepted()
     \brief Emitted when the user chooses a file/folder.    
 */
@@ -150,7 +186,8 @@ void QchFileDialog::setSelectFolder(bool s) {
 */
 void QchFileDialog::open() {
     Q_D(QchFileDialog);
-    
+    d->status = QchDialogStatus::Open;
+    emit statusChanged();
     QString result;
     
     if (selectFolder()) {
@@ -177,8 +214,11 @@ void QchFileDialog::open() {
         }
         else {
             emit rejected();
-        }
+        }        
     }
+    
+    d->status = QchDialogStatus::Closed;
+    emit statusChanged();
 }
 
 #include "moc_qchfiledialog.cpp"

@@ -134,10 +134,13 @@ public:
 
 public Q_SLOTS:
     void accept();
+    void close();
     void done(int r);
     int exec();
+    void hide();
     void open();
     void reject();
+    void show();
 
 Q_SIGNALS:
     void accepted();

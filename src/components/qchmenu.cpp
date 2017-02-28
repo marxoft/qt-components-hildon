@@ -27,19 +27,20 @@ class QchMenuPrivate
 public:
     QchMenuPrivate(QchMenu *parent) :
         q_ptr(parent),
-        menu(0),
-        enabled(true),
-        visible(true),
+        menu(new QMenu),
         submenu(false),
-        complete(false)
+        complete(false),
+        status(QchDialogStatus::Closed)
     {
+        Q_Q(QchMenu);
+        menu->installEventFilter(q);
+        q->connect(menu, SIGNAL(aboutToHide()), q, SIGNAL(aboutToHide()));
+        q->connect(menu, SIGNAL(aboutToShow()), q, SIGNAL(aboutToShow()));
     }
     
     ~QchMenuPrivate() {
-        if (menu) {
-            delete menu;
-            menu = 0;
-        }
+        delete menu;
+        menu = 0;
     }
     
     void init() {
@@ -47,39 +48,16 @@ public:
             return;
         }
         
-        complete = true;
-        menu = new QMenu;
-        menu->setEnabled(enabled);
-        menu->setTitle(title);        
-        
-        if (!iconSource.isEmpty()) {
-            menu->setIcon(QIcon(iconSource));
-        }
-        else if (!iconName.isEmpty()) {
-            menu->setIcon(QIcon::fromTheme(iconName));
-        }
-        
-        if ((!visible) || (submenu)) {
-            menu->setVisible(visible);
-        }
-                
         Q_Q(QchMenu);
-        
+        complete = true;        
         const QObjectList list = q->children();
         
         for (int i = 0; i < list.size(); i++) {
             addItem(list.at(i));
-        }
-        
-        q->connect(menu, SIGNAL(aboutToHide()), q, SIGNAL(aboutToHide()));
-        q->connect(menu, SIGNAL(aboutToShow()), q, SIGNAL(aboutToShow()));
+        }        
     }
     
     void addItem(QObject *obj) {
-        if (!menu) {
-            return;
-        }
-        
         Q_Q(QchMenu);
                   
         if (QchMenuItem *i = qobject_cast<QchMenuItem*>(obj)) {
@@ -91,9 +69,18 @@ public:
             menu->addMenu(m->d_func()->menu);
             q->connect(m, SIGNAL(destroyed(QObject*)), q, SLOT(removeItem(QObject*)));
         }
-        else {
-            qmlInfo(q) << QchMenu::tr("Children of Menu must be of type MenuItem or Menu.");
+    }
+    
+    QchMenuItem* itemForAction(const QAction *action) {
+        Q_Q(QchMenu);
+        
+        foreach (QchMenuItem *item, q->findChildren<QchMenuItem*>()) {
+            if (item->toQAction() == action) {
+                return item;
+            }
         }
+        
+        return 0;
     }
     
     static void items_append(QDeclarativeListProperty<QObject> *list, QObject *obj) {
@@ -113,14 +100,13 @@ public:
     QchMenu *q_ptr;
     QMenu *menu;
     
-    bool enabled;
-    bool visible;
     bool submenu;
     bool complete;
     
     QString iconName;
     QString iconSource;
-    QString title;    
+    
+    QchDialogStatus::Status status;
     
     Q_DECLARE_PUBLIC(QchMenu)
 };
@@ -153,19 +139,14 @@ QchMenu::~QchMenu() {}
 */
 bool QchMenu::isEnabled() const {
     Q_D(const QchMenu);
-    return d->enabled;
+    return d->menu->isEnabled();
 }
 
 void QchMenu::setEnabled(bool e) {
     if (e != isEnabled()) {
         Q_D(QchMenu);
-        d->enabled = e;
-        
-        if (d->menu) {
-            d->menu->setEnabled(e);
-        }
-        
-        emit enabledChanged();        
+        d->menu->setEnabled(e);
+        emit enabledChanged();
     }
 }
 
@@ -183,11 +164,7 @@ void QchMenu::setIconName(const QString &name) {
     if (name != iconName()) {
         Q_D(QchMenu);
         d->iconName = name;
-        
-        if (d->menu) {
-            d->menu->setIcon(QIcon::fromTheme(name));
-        }
-        
+        d->menu->setIcon(QIcon::fromTheme(name));        
         emit iconChanged();
     }
 }
@@ -206,11 +183,7 @@ void QchMenu::setIconSource(const QString &source) {
     if (source != iconSource()) {
         Q_D(QchMenu);
         d->iconSource = source;
-        
-        if (d->menu) {
-            d->menu->setIcon(QIcon(source));
-        }
-        
+        d->menu->setIcon(QIcon(source));        
         emit iconChanged();
     }
 }
@@ -224,47 +197,67 @@ QDeclarativeListProperty<QObject> QchMenu::items() {
 }
 
 /*!
+    \brief The current status of the menu.
+    
+    Possible values are:
+    
+    <table>
+        <tr>
+            <th>Value</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td>DialogStatus.Closed</td>
+            <td>The menu is closed (default).</td>
+        </tr>
+        <tr>
+            <td>DialogStatus.Opening</td>
+            <td>The menu is opening.</td>
+        </tr>
+        <tr>
+            <td>DialogStatus.Open</td>
+            <td>The menu is open.</td>
+        </tr>
+        <tr>
+            <td>DialogStatus.Closing</td>
+            <td>The menu is closing.</td>
+        </tr>
+    </table>
+*/
+QchDialogStatus::Status QchMenu::status() const {
+    Q_D(const QchMenu);
+    return d->status;
+}
+
+/*!
     \brief The display title of the menu.
 */
 QString QchMenu::title() const {
     Q_D(const QchMenu);
-    return d->title;
+    return d->menu->title();
 }
 
 void QchMenu::setTitle(const QString &t) {
     if (t != title()) {
         Q_D(QchMenu);
-        d->title = t;
-        
-        if (d->menu) {
-            d->menu->setTitle(t);
-        }
-        
+        d->menu->setTitle(t);        
         emit titleChanged();
     }
 }
 
 /*!
     \property bool Menu::visible
-    \brief Whether the menu should be visible as a submenu of another Menu.
-    
-    The default value is \c true.
+    \brief Whether the menu is visible.    
 */
 bool QchMenu::isVisible() const {
     Q_D(const QchMenu);
-    return d->visible;
+    return d->menu->isVisible();
 }
 
 void QchMenu::setVisible(bool v) {
     if (v != isVisible()) {
         Q_D(QchMenu);
-        d->visible = v;
-        
-        if ((d->menu) && (d->submenu)) {
-            d->menu->setVisible(v);
-        }
-        
-        emit visibleChanged();
+        d->menu->setVisible(v);
     }
 }
 
@@ -275,11 +268,6 @@ QchMenuItem* QchMenu::addItem(const QString &text) {
     Q_D(QchMenu);
     QchMenuItem* item = new QchMenuItem(this);
     item->setText(text);
-    
-    if (!d->menu) {
-        d->init();
-    }
-    
     d->menu->addAction(item->toQAction());
     connect(item, SIGNAL(destroyed(QObject*)), this, SLOT(removeItem(QObject*)));
     return item;
@@ -290,11 +278,6 @@ QchMenuItem* QchMenu::addItem(const QString &text) {
 */
 QchMenuItem* QchMenu::insertItem(int before, const QString &text) {
     Q_D(QchMenu);
-    
-    if (!d->menu) {
-        d->init();
-    }
-    
     const QList<QAction*> actions = d->menu->actions();
     
     if ((before >= 0) && (before < actions.size())) {
@@ -317,11 +300,6 @@ QchMenu* QchMenu::addMenu(const QString &title) {
     menu->setTitle(title);
     menu->d_func()->submenu = true;
     menu->d_func()->init();
-    
-    if (!d->menu) {
-        d->init();
-    }
-    
     d->menu->addMenu(menu->d_func()->menu);
     connect(menu, SIGNAL(destroyed(QObject*)), this, SLOT(removeItem(QObject*)));
     return menu;
@@ -333,11 +311,6 @@ QchMenu* QchMenu::addMenu(const QString &title) {
 */
 QchMenu* QchMenu::insertMenu(int before, const QString &title) {
     Q_D(QchMenu);
-    
-    if (!d->menu) {
-        d->init();
-    }
-    
     const QList<QAction*> actions = d->menu->actions();
     
     if ((before >= 0) && (before < actions.size())) {
@@ -377,17 +350,55 @@ void QchMenu::removeItem(QObject *item) {
         d->menu->removeAction(action);
         disconnect(item, SIGNAL(destroyed(QObject*)), this, SLOT(removeItem(QObject*)));
     }
-}    
+}
+
+/*!
+    \brief Executes the menu synchronously.
+    
+    Returns the triggered MenuItem, or null if no item was triggered.
+*/
+QchMenuItem* QchMenu::exec() {
+    Q_D(QchMenu);
+    const QAction *action = d->menu->exec(QCursor::pos());
+    
+    if (action) {
+        if (QchMenuItem *item = d->itemForAction(action)) {
+            return item;
+        }
+    }
+    
+    return 0;
+}
+
+/*!
+    \brief Hides the menu.
+*/
+void QchMenu::hide() {
+    Q_D(QchMenu);
+    d->menu->hide();
+}
+
+/*!
+    \brief Displays the menu at the current cursor position.
+*/
+void QchMenu::open() {
+    popup();
+}
 
 /*!
     \brief Displays the menu at the current cursor position.
 */
 void QchMenu::popup() {
     Q_D(QchMenu);
-    
-    if (d->menu) {
-        d->menu->popup(QCursor::pos());
-    }
+    d->menu->popup(QCursor::pos());
+}
+
+/*!
+    \brief Shows the menu.
+*/
+void QchMenu::show() {
+    Q_D(QchMenu);
+    d->menu->show();
 }
 
 void QchMenu::classBegin() {}
@@ -403,6 +414,32 @@ bool QchMenu::event(QEvent *e) {
     }
     
     return QObject::event(e);
+}
+
+bool QchMenu::eventFilter(QObject *watched, QEvent *event) {
+    if (event->type() == QEvent::Show) {
+        Q_D(QchMenu);
+        d->status = QchDialogStatus::Opening;
+        emit statusChanged();
+        watched->event(event);
+        d->status = QchDialogStatus::Open;
+        emit statusChanged();
+        emit visibleChanged();
+        return true;
+    }
+    
+    if (event->type() == QEvent::Hide) {
+        Q_D(QchMenu);
+        d->status = QchDialogStatus::Closing;
+        emit statusChanged();
+        watched->event(event);
+        d->status = QchDialogStatus::Closed;
+        emit statusChanged();
+        emit visibleChanged();
+        return true;
+    }
+    
+    return false;
 }
 
 /*!

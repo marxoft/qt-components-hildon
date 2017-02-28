@@ -17,7 +17,7 @@
 #ifndef QCHMENU_H
 #define QCHMENU_H
 
-#include <QObject>
+#include "qchdialogstatus.h"
 #include <QDeclarativeParserStatus>
 #include <qdeclarative.h>
 
@@ -33,6 +33,7 @@ class QchMenu : public QObject, public QDeclarativeParserStatus
     Q_PROPERTY(QString iconSource READ iconSource WRITE setIconSource NOTIFY iconChanged)
     Q_PROPERTY(QDeclarativeListProperty<QObject> items READ items)
     Q_PROPERTY(QObject* parent READ parent WRITE setParent NOTIFY parentChanged)
+    Q_PROPERTY(QchDialogStatus::Status status READ status NOTIFY statusChanged)
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
     Q_PROPERTY(bool visible READ isVisible WRITE setVisible NOTIFY visibleChanged)
     
@@ -55,6 +56,8 @@ public:
     QString iconSource() const;
     void setIconSource(const QString &source);
     
+    QchDialogStatus::Status status() const;
+    
     QString title() const;
     void setTitle(const QString &t);
     
@@ -70,7 +73,12 @@ public Q_SLOTS:
     
     void removeItem(QObject *item);
     
+    void close();
+    QchMenuItem* exec();
+    void hide();
+    void open();
     void popup();
+    void show();
 
 Q_SIGNALS:
     void aboutToHide();
@@ -78,6 +86,7 @@ Q_SIGNALS:
     void enabledChanged();
     void iconChanged();
     void parentChanged();
+    void statusChanged();
     void titleChanged();
     void visibleChanged();
     
@@ -86,9 +95,10 @@ protected:
     virtual void componentComplete();
     
     virtual bool event(QEvent *e);
+    virtual bool eventFilter(QObject *watched, QEvent *event);
     
     QScopedPointer<QchMenuPrivate> d_ptr;
-
+    
     Q_DECLARE_PRIVATE(QchMenu)
 
 private:

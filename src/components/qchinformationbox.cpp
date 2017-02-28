@@ -307,6 +307,13 @@ void QchInformationBox::accept() {
 }
 
 /*!
+    \brief Closes the information box.
+*/
+void QchInformationBox::close() {
+    m_box->close();
+}
+
+/*!
     \brief Closes the information box with result code \a r.
 */
 void QchInformationBox::done(int r) {
@@ -323,6 +330,13 @@ int QchInformationBox::exec() {
 }
 
 /*!
+    \brief Hides the information box.
+*/
+void QchInformationBox::hide() {
+    m_box->hide();
+}
+
+/*!
     \brief Opens the information box.
 */
 void QchInformationBox::open() {
@@ -334,6 +348,13 @@ void QchInformationBox::open() {
 */
 void QchInformationBox::reject() {
     m_box->reject();
+}
+
+/*!
+    \brief Shows the information box.
+*/
+void QchInformationBox::show() {
+    m_box->show();
 }
 
 void QchInformationBox::classBegin() {
