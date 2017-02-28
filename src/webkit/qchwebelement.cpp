@@ -217,12 +217,12 @@ QVariant QchWebElement::evaluateJavaScript(const QString &sourceScript) {
     return QVariant();
 }
 
-QWebElementCollection QchWebElement::findAll(const QString &selectorQuery) const {
+QList<QWebElement> QchWebElement::findAll(const QString &selectorQuery) const {
     if (const QWebElement *element = qscriptvalue_cast<QWebElement*>(thisObject())) {
-        return element->findAll(selectorQuery);
+        return element->findAll(selectorQuery).toList();
     }
     
-    return QWebElementCollection();
+    return QList<QWebElement>();
 }
 
 QWebElement QchWebElement::findFirst(const QString &selectorQuery) const {

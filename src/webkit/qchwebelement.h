@@ -85,7 +85,7 @@ public:
     
     Q_INVOKABLE QVariant evaluateJavaScript(const QString &scriptSource);
     
-    Q_INVOKABLE QWebElementCollection findAll(const QString &selectoQuery) const;
+    Q_INVOKABLE QList<QWebElement> findAll(const QString &selectoQuery) const;
     Q_INVOKABLE QWebElement findFirst(const QString &selectorQuery) const;
     
     QRect geometry() const;
@@ -123,6 +123,8 @@ private:
     Q_DISABLE_COPY(QchWebElement)
 };
 
+Q_DECLARE_METATYPE(QchWebElement*)
 Q_DECLARE_METATYPE(QWebElement*)
+Q_DECLARE_METATYPE(QList<QWebElement>)
     
 #endif // QCHWEBELEMENT_H
