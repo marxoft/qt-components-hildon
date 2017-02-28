@@ -64,14 +64,14 @@ QchWebHistory::QchWebHistory(QWebPage *parent) :
 /*!
     \brief The list of back items in the history.
 */
-QList<QchWebHistoryItem*> QchWebHistory::backItems() const {
-    QList<QchWebHistoryItem*> list;
+QVariantList QchWebHistory::backItems() const {
+    QVariantList list;
     
     if (const QWebHistory *history = qWebHistory(this)) {
         foreach (const QWebHistoryItem &item, history->backItems(history->count())) {
             QchWebHistoryItem *hi = new QchWebHistoryItem(item);
             QDeclarativeEngine::setObjectOwnership(hi, QDeclarativeEngine::JavaScriptOwnership);
-            list << hi;
+            list << QVariant::fromValue(hi);
         }
     }
 
@@ -81,14 +81,14 @@ QList<QchWebHistoryItem*> QchWebHistory::backItems() const {
 /*!
     \brief The list of forward items in the history.
 */
-QList<QchWebHistoryItem*> QchWebHistory::forwardItems() const {
-    QList<QchWebHistoryItem*> list;
+QVariantList QchWebHistory::forwardItems() const {
+    QVariantList list;
 
     if (const QWebHistory *history = qWebHistory(this)) {
         foreach (const QWebHistoryItem &item, history->forwardItems(history->count())) {
             QchWebHistoryItem *hi = new QchWebHistoryItem(item);
             QDeclarativeEngine::setObjectOwnership(hi, QDeclarativeEngine::JavaScriptOwnership);
-            list << hi;
+            list << QVariant::fromValue(hi);
         }
     }
 
@@ -98,14 +98,14 @@ QList<QchWebHistoryItem*> QchWebHistory::forwardItems() const {
 /*!
     \brief The list of items in the history.
 */
-QList<QchWebHistoryItem*> QchWebHistory::items() const {
-    QList<QchWebHistoryItem*> list;
+QVariantList QchWebHistory::items() const {
+    QVariantList list;
 
     if (const QWebHistory *history = qWebHistory(this)) {
         foreach (const QWebHistoryItem &item, history->items()) {
             QchWebHistoryItem *hi = new QchWebHistoryItem(item);
             QDeclarativeEngine::setObjectOwnership(hi, QDeclarativeEngine::JavaScriptOwnership);
-            list << hi;
+            list << QVariant::fromValue(hi);
         }
     }
 

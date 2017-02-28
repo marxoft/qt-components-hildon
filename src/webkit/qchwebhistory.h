@@ -49,9 +49,9 @@ class QchWebHistory : public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(QList<QchWebHistoryItem*> backItems READ backItems CONSTANT)
-    Q_PROPERTY(QList<QchWebHistoryItem*> forwardItems READ forwardItems CONSTANT)
-    Q_PROPERTY(QList<QchWebHistoryItem*> items READ items CONSTANT)
+    Q_PROPERTY(QVariantList backItems READ backItems CONSTANT)
+    Q_PROPERTY(QVariantList forwardItems READ forwardItems CONSTANT)
+    Q_PROPERTY(QVariantList items READ items CONSTANT)
     Q_PROPERTY(QchWebHistoryItem* backItem READ backItem NOTIFY currentIndexChanged)
     Q_PROPERTY(QchWebHistoryItem* forwardItem READ forwardItem NOTIFY currentIndexChanged)
     Q_PROPERTY(QchWebHistoryItem* currentItem READ currentItem NOTIFY currentIndexChanged)
@@ -65,9 +65,9 @@ class QchWebHistory : public QObject
 public:
     explicit QchWebHistory(QWebPage *parent);
     
-    QList<QchWebHistoryItem*> backItems() const;
-    QList<QchWebHistoryItem*> forwardItems() const;
-    QList<QchWebHistoryItem*> items() const;
+    QVariantList backItems() const;
+    QVariantList forwardItems() const;
+    QVariantList items() const;
 
     QchWebHistoryItem* backItem() const;
     QchWebHistoryItem* forwardItem() const;
