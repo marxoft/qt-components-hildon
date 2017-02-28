@@ -51,6 +51,7 @@ private:
     Q_DISABLE_COPY(QchNetworkRequest)
 };
 
+Q_DECLARE_METATYPE(QchNetworkRequest*)
 Q_DECLARE_METATYPE(QNetworkRequest*)
 
 #endif // QCHNETWORKREQUEST_H
