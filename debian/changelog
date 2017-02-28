@@ -1,3 +1,18 @@
+qt-components-hildon (0.24.0) unstable; urgency=low
+
+  * Add ColumnLayout, DialogButtonBox, FlowLayout, GridLayout, InputDialog, ProgressDialog and RowLayout components.
+  * Add more properties and functions to MessageBox.
+  * Add orientation property to ToolBar.
+  * Add functions to add, insert and remove items to ToolBar.
+  * Add functions to add, insert and remove buttons to EditBar.
+  * Add recursiveEntryList() and removeRecursively() functions to Directory.
+  * Fix value calculation in DoubleSpinBox.
+  * Fix 'filter' and 'sorting' properties in Directory.
+  * Set buttonWidth of DialogButtonStyle to 180 pixels.
+  * Detect change of the system theme.
+
+ -- Stuart Howarth <showarth@marxoft.co.uk>  Sat, 18 Feb 2017 18:24:12 +0100
+
 qt-components-hildon (0.23.3) unstable; urgency=low
 
   * Use QVariant for pushing windows on to the window stack.
