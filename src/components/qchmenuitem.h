@@ -38,9 +38,9 @@ class QchMenuItem : public QObject
     Q_PROPERTY(bool enabled READ isEnabled WRITE setEnabled NOTIFY enabledChanged)
     Q_PROPERTY(QchExclusiveGroup* exclusiveGroup READ exclusiveGroup WRITE setExclusiveGroup
                NOTIFY exclusiveGroupChanged)
-    Q_PROPERTY(QString iconName READ iconName WRITE setIconName NOTIFY iconChanged)
-    Q_PROPERTY(QString iconSource READ iconSource WRITE setIconSource NOTIFY iconChanged)
-    Q_PROPERTY(QVariant shortcut READ shortcut WRITE setShortcut NOTIFY shortcutChanged)
+    Q_PROPERTY(QString iconName READ iconName WRITE setIconName RESET resetIconName NOTIFY iconChanged)
+    Q_PROPERTY(QString iconSource READ iconSource WRITE setIconSource RESET resetIconSource NOTIFY iconChanged)
+    Q_PROPERTY(QVariant shortcut READ shortcut WRITE setShortcut RESET resetShortcut NOTIFY shortcutChanged)
     Q_PROPERTY(QString text READ text WRITE setText NOTIFY textChanged)
     Q_PROPERTY(bool visible READ isVisible WRITE setVisible NOTIFY visibleChanged)
     
@@ -73,12 +73,15 @@ public:
     
     QString iconName() const;
     void setIconName(const QString &name);
+    void resetIconName();
     
     QString iconSource() const;
     void setIconSource(const QString &source);
+    void resetIconSource();
     
     QVariant shortcut() const;
     void setShortcut(const QVariant &s);
+    void resetShortcut();
     
     QString text() const;
     void setText(const QString &t);

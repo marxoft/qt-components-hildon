@@ -33,7 +33,9 @@ public:
         checkable(false),
         checked(false),
         enabled(true),
-        visible(true)
+        visible(true),
+        ownText(false),
+        ownIcon(false)
     {
     }
     
@@ -54,22 +56,35 @@ public:
     }
     
     void _q_onActionIconChanged() {
-        if ((action) && (iconName.isEmpty()) && (iconSource.isEmpty())) {
-            if (!action->iconSource().isEmpty()) {
-                Q_Q(QchMenuItem);
-                q->setIconSource(action->iconSource());
-            }
-            else if (!action->iconName().isEmpty()) {
-                Q_Q(QchMenuItem);
-                q->setIconName(action->iconName());
+        if ((action) && (!ownIcon)) {
+            Q_Q(QchMenuItem);
+            iconSource = action->iconSource();
+            iconName = action->iconName();
+            emit q->iconChanged();
+            
+            if (qaction) {
+                if (!iconSource.isEmpty()) {
+                    qaction->setIcon(QIcon(iconSource));
+                }
+                else if (!iconName.isEmpty()) {
+                    qaction->setIcon(QIcon::fromTheme(iconName));
+                }
+                else {
+                    qaction->setIcon(QIcon());
+                }
             }
         }
     }
     
     void _q_onActionTextChanged() {
-        if ((action) && (text.isEmpty())) {
+        if ((action) && (!ownText)) {
             Q_Q(QchMenuItem);
-            q->setText(action->text());
+            text = action->text();
+            emit q->textChanged();
+            
+            if (qaction) {
+                qaction->setText(text);
+            }
         }
     }
     
@@ -118,6 +133,8 @@ public:
     bool checked;
     bool enabled;
     bool visible;
+    bool ownText;
+    bool ownIcon;
     
     QString iconName;
     QString iconSource;
@@ -369,12 +386,19 @@ void QchMenuItem::setIconName(const QString &name) {
     if (name != iconName()) {
         Q_D(QchMenuItem);
         d->iconName = name;
+        d->ownIcon = true;
         emit iconChanged();
         
         if (d->qaction) {
-            d->qaction->setIcon(QIcon::fromTheme(name));
+            d->qaction->setIcon(name.isEmpty() ? QIcon() : QIcon::fromTheme(name));
         }
     }
+}
+
+void QchMenuItem::resetIconName() {
+    Q_D(QchMenuItem);
+    d->ownIcon = false;
+    emit iconChanged();
 }
 
 /*!
@@ -391,12 +415,19 @@ void QchMenuItem::setIconSource(const QString &source) {
     if (source != iconSource()) {
         Q_D(QchMenuItem);
         d->iconSource = source;
+        d->ownIcon = true;
         emit iconChanged();
         
         if (d->qaction) {
-            d->qaction->setIcon(QIcon(source));
+            d->qaction->setIcon(source.isEmpty() ? QIcon() : QIcon(source));
         }
     }
+}
+
+void QchMenuItem::resetIconSource() {
+    Q_D(QchMenuItem);
+    d->ownIcon = false;
+    emit iconChanged();
 }
 
 /*!
@@ -428,6 +459,10 @@ void QchMenuItem::setShortcut(const QVariant &s) {
     }
 }
 
+void QchMenuItem::resetShortcut() {
+    setShortcut(QVariant());
+}
+
 /*!
     \brief The text to be displayed in the menu item.
 */
@@ -440,6 +475,7 @@ void QchMenuItem::setText(const QString &t) {
     if (t != text()) {
         Q_D(QchMenuItem);
         d->text = t;
+        d->ownText = true;
         emit textChanged();
         
         if (d->qaction) {
