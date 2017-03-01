@@ -30,6 +30,7 @@
 #include "qchmenubar.h"
 #include "qchmenuitem.h"
 #include "qchnavigationmode.h"
+#include "qchpopupmanager.h"
 #include "qchscreen.h"
 #include "qchsortfilterproxymodel.h"
 #include "qchstandardbutton.h"
@@ -61,6 +62,7 @@ void QchPlugin::initializeEngine(QDeclarativeEngine *engine, const char *uri) {
         QDeclarativeContext *context = engine->rootContext();
         context->setContextProperty("dateTime", new QchDateTime(engine));
         context->setContextProperty("platformStyle", style);
+        context->setContextProperty("popupManager", new QchPopupManager(engine));
         context->setContextProperty("screen", new QchScreen(engine));
         context->setContextProperty("theme", theme);
     }   
