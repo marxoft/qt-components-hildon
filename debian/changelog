@@ -6,12 +6,14 @@ qt-components-hildon (0.24.0) unstable; urgency=low
   * Add functions to add, insert and remove items to ToolBar.
   * Add functions to add, insert and remove buttons to EditBar.
   * Add recursiveEntryList() and removeRecursively() functions to Directory.
+  * Add 'shortcutContext' property to Action.
+  * Fix binding of 'text', 'iconName' and 'iconSource' properties when assigning an Action to a MenuItem.
   * Fix value calculation in DoubleSpinBox.
   * Fix 'filter' and 'sorting' properties in Directory.
   * Set buttonWidth of DialogButtonStyle to 180 pixels.
   * Detect change of the system theme.
 
- -- Stuart Howarth <showarth@marxoft.co.uk>  Sat, 18 Feb 2017 18:24:12 +0100
+ -- Stuart Howarth <showarth@marxoft.co.uk>  Wed, 01 Mar 2017 02:24:12 +0100
 
 qt-components-hildon (0.23.3) unstable; urgency=low
 
