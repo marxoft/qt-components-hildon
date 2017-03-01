@@ -37,7 +37,8 @@ class QchAction : public QObject, public QDeclarativeParserStatus
                NOTIFY exclusiveGroupChanged)
     Q_PROPERTY(QString iconName READ iconName WRITE setIconName NOTIFY iconChanged)
     Q_PROPERTY(QString iconSource READ iconSource WRITE setIconSource NOTIFY iconChanged)
-    Q_PROPERTY(QVariant shortcut READ shortcut WRITE setShortcut NOTIFY shortcutChanged)
+    Q_PROPERTY(QVariant shortcut READ shortcut WRITE setShortcut RESET resetShortcut NOTIFY shortcutChanged)
+    Q_PROPERTY(Qt::ShortcutContext shortcutContext WRITE setShortcutContext NOTIFY shortcutContextChanged)
     Q_PROPERTY(QString text READ text WRITE setText NOTIFY textChanged)
     Q_PROPERTY(bool visible READ isVisible WRITE setVisible NOTIFY visibleChanged)
     
@@ -70,6 +71,9 @@ public:
     
     QVariant shortcut() const;
     void setShortcut(const QVariant &s);
+    void resetShortcut();
+    Qt::ShortcutContext shortcutContext() const;
+    void setShortcutContext(Qt::ShortcutContext context);
     
     QString text() const;
     void setText(const QString &t);
@@ -88,6 +92,7 @@ Q_SIGNALS:
     void exclusiveGroupChanged();
     void iconChanged();
     void shortcutChanged();
+    void shortcutContextChanged();
     void textChanged();
     void toggled(bool checked);
     void triggered();

@@ -31,7 +31,8 @@ public:
         checked(false),
         enabled(true),
         visible(true),
-        complete(false)
+        complete(false),
+        shortcutContext(Qt::WindowShortcut)
     {
     }
     
@@ -53,6 +54,7 @@ public:
         
         shortcut = new QShortcut(widget);
         shortcut->setAutoRepeat(autoRepeat);
+        shortcut->setContext(shortcutContext);
         shortcut->setEnabled(enabled);
         
         switch (shortcutKey.type()) {
@@ -99,6 +101,7 @@ public:
     QString text;
     
     QVariant shortcutKey;
+    Qt::ShortcutContext shortcutContext;
     
     Q_DECLARE_PUBLIC(QchAction)
 };
@@ -271,7 +274,7 @@ void QchAction::setIconSource(const QString &source) {
 }
 
 /*!
-    \brief The keyboard shorcut used to trigger the action.
+    \brief The keyboard shortcut used to trigger the action.
 */
 QVariant QchAction::shortcut() const {
     Q_D(const QchAction);
@@ -296,6 +299,35 @@ void QchAction::setShortcut(const QVariant &s) {
             }
         }
         else if ((d->complete) && (!s.isNull())) {
+            d->initShortcut();
+        }
+    }
+}
+
+void QchAction::resetShortcut() {
+    setShortcut(QVariant());
+}
+
+/*!
+    \brief The context for the action's shortcut.
+    
+    The default value is \c Qt.WindowShortcut.
+*/  
+Qt::ShortcutContext QchAction::shortcutContext() const {
+    Q_D(const QchAction);
+    return d->shortcutContext;
+}
+
+void QchAction::setShortcutContext(Qt::ShortcutContext context) {
+    if (context != shortcutContext()) {
+        Q_D(QchAction);
+        d->shortcutContext = context;
+        emit shortcutContextChanged();
+        
+        if (d->shortcut) {
+            d->shortcut->setContext(context);
+        }
+        else if (d->complete) {
             d->initShortcut();
         }
     }
