@@ -25,6 +25,7 @@ HEADERS += \
     qchmenubar.h \
     qchmenuitem.h \
     qchnavigationmode.h \
+    qchpopupmanager.h \
     qchscreen.h \
     qchsortfilterproxymodel.h \
     qchstandardbutton.h \
@@ -53,6 +54,7 @@ SOURCES += \
     qchmenu.cpp \
     qchmenubar.cpp \
     qchmenuitem.cpp \
+    qchpopupmanager.cpp \
     qchscreen.cpp \
     qchsortfilterproxymodel.cpp \
     qchstyle.cpp \
