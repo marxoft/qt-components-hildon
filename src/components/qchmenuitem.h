@@ -30,7 +30,7 @@ class QchMenuItem : public QObject
 {
     Q_OBJECT
     
-    Q_PROPERTY(QchAction* action READ action WRITE setAction NOTIFY actionChanged)
+    Q_PROPERTY(QchAction* action READ action WRITE setAction RESET resetAction NOTIFY actionChanged)
     Q_PROPERTY(bool autoRepeat READ autoRepeat WRITE setAutoRepeat NOTIFY autoRepeatChanged)
     Q_PROPERTY(bool checkable READ isCheckable WRITE setCheckable NOTIFY checkableChanged)
     Q_PROPERTY(bool checked READ isChecked WRITE setChecked NOTIFY toggled)
@@ -52,6 +52,7 @@ public:
     
     QchAction* action() const;
     void setAction(QchAction *a);
+    void resetAction();
     
     bool autoRepeat() const;
     void setAutoRepeat(bool a);

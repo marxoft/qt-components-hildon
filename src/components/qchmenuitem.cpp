@@ -205,9 +205,20 @@ void QchMenuItem::setAction(QchAction *a) {
             d->_q_onActionTextChanged();
             d->_q_onActionVisibleChanged();
         }
+        else {
+            emit checkableChanged();
+            emit enabledChanged();
+            emit iconChanged();
+            emit textChanged();
+            emit visibleChanged();
+        }
         
         emit actionChanged();
     }
+}
+
+void QchMenuItem::resetAction() {
+    setAction(0);
 }
 
 /*!
