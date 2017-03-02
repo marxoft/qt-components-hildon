@@ -124,8 +124,42 @@ FocusScope {
     Action {
         id: defaultAction
         
-        enabled: (root.enabled) && (!action)
-        onTriggered: root.clicked()
+        function update(restore) {
+            if (!complete) {
+                return;
+            }
+            
+            if (action) {
+                if (!ownIcon) {
+                    root.iconName = action.iconName;
+                    root.iconSource = action.iconSource;
+                }
+                
+                if (!ownText) {
+                    root.text = action.text;
+                }
+                
+                root.checkable = action.checkable;
+                root.checked = action.checked;
+                root.enabled = action.enabled;
+                root.visible = action.visible;
+            }
+            else if (restore) {
+                root.checkable = checkable;
+                root.checked = checked;
+                root.enabled = enabled;
+                root.iconName = iconName;
+                root.iconSource = iconSource;
+                root.text = text;
+                root.visible = visible;
+            }
+        }
+        
+        property bool complete: false
+        property bool ownText: false
+        property bool ownIcon: false
+        
+        onTriggered: if (!root.action) root.clicked();
     }
     
     MouseArea {
@@ -163,25 +197,45 @@ FocusScope {
         onCheckableChanged: root.checkable = action.checkable
         onCheckedChanged: root.checked = action.checked
         onEnabledChanged: root.enabled = action.enabled
+        onIconNameChanged: if (!defaultAction.ownIcon) root.iconName = action.iconName;
+        onIconSourceChanged: if (!defaultAction.ownIcon) root.iconSource = action.iconSource;
+        onTextChanged: if (!defaultAction.ownText) root.text = action.text;
+        onVisibleChanged: root.visible = action.visible
     }
     
-    onActionChanged: {
-        if (action) {
-            if ((!iconName) && (!iconSource)) {
-                iconName = action.iconName;
-                iconSource = action.iconSource;
-            }
-            
-            if (!text) {
-                text = action.text;
-            }
-            
-            checkable = action.checkable;
-            checked = action.checked;
-            enabled = action.enabled;
+    onActionChanged: defaultAction.update(true)
+    onCheckableChanged: if (!action) defaultAction.checkable = checked;
+    onCheckedChanged: {
+        if (!action) {
+            defaultAction.checked = checked;
+        }
+        
+        toggled(checked);
+    }        
+    onClicked: if ((checkable) && ((!checked) || (!exclusiveGroup))) checked = !checked;
+    onEnabledChanged: if (!action) defaultAction.enabled = enabled;
+    onExclusiveGroupChanged: if (exclusiveGroup) exclusiveGroup.addCheckable(root);
+    onIconNameChanged: {
+        if ((!action) || (iconName != action.iconName)) {
+            defaultAction.iconName = iconName;
+            defaultAction.ownIcon = true;
         }
     }
-    onCheckedChanged: toggled(checked)
-    onClicked: if ((checkable) && ((!checked) || (!exclusiveGroup))) checked = !checked;
-    onExclusiveGroupChanged: if (exclusiveGroup) exclusiveGroup.addCheckable(root);
+    onIconSourceChanged: {
+        if ((!action) || (iconSource != action.iconSource)) {
+            defaultAction.iconSource = iconSource;
+            defaultAction.ownIcon = true;
+        }
+    }
+    onTextChanged: {
+        if ((!action) || (text != action.text)) {
+            defaultAction.text = text;
+            defaultAction.ownText = true;
+        }
+    }
+    onVisibleChanged: if (!action) defaultAction.visible = visible;
+    Component.onCompleted: {
+        defaultAction.complete = true;
+        defaultAction.update(false);
+    }
 }
