@@ -1,3 +1,9 @@
+qt-components-hildon (0.24.1) unstable; urgency=low
+
+  * Fix error in open() method of popupManager when the parent parameter is 0.
+
+ -- Stuart Howarth <showarth@marxoft.co.uk>  Sat, 04 Mar 2017 03:51:24 +0100
+
 qt-components-hildon (0.24.0) unstable; urgency=low
 
   * Add ColumnLayout, DialogButtonBox, FlowLayout, GridLayout, InputDialog, ProgressDialog and RowLayout components.
