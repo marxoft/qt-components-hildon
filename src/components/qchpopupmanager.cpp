@@ -66,8 +66,22 @@ public:
     
     QObject* open(QDeclarativeComponent *component, QObject *parent, const QVariantMap &properties) {
         Q_Q(QchPopupManager);
-        QDeclarativeContext *context = new QDeclarativeContext(qmlContext(parent));
-        context->setContextObject(parent);
+        QDeclarativeContext *context;
+        
+        if (parent) {
+            context = new QDeclarativeContext(qmlContext(parent));
+            context->setContextObject(parent);
+        }
+        else {
+            QDeclarativeEngine *engine = qobject_cast<QDeclarativeEngine*>(q->parent());
+        
+            if (!engine) {
+                qmlInfo(q) << QchPopupManager::tr("No QDeclarativeEngine instance found");
+                return 0;
+            }
+            
+            context = new QDeclarativeContext(engine);
+        }        
     
         if (QObject *popup = component->beginCreate(context)) {
             init(popup, parent, properties);
