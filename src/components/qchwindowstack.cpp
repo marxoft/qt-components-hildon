@@ -35,13 +35,22 @@ public:
     
     QchWindow* push(QDeclarativeComponent *component, const QVariantMap &properties) {
         Q_Q(QchWindowStack);
-        QchWindow *current = q->currentWindow();    
-        QDeclarativeContext *context = new QDeclarativeContext(qmlContext(current));
-        context->setContextObject(current);
+        QchWindow *current = q->currentWindow();
+        QDeclarativeContext *context = component->creationContext();
+        bool setContextParent = false;
+        
+        if (!context) {
+            context = new QDeclarativeContext(qmlContext(current));
+            context->setContextObject(current);
+            setContextParent = true;
+        }
     
         if (QObject *obj = component->beginCreate(context)) {
             if (QchWindow *window = qobject_cast<QchWindow*>(obj)) {
-                context->setParent(window);
+                if (setContextParent) {
+                    context->setParent(window);
+                }
+                
                 window->setParent(current);
                 window->setWindowFlags(Qt::Window);
                 window->setAttribute(Qt::WA_Maemo5StackedWindow, true);
