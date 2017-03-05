@@ -187,10 +187,6 @@ QchWebPage::QchWebPage(QObject *parent) :
     QWebPage(parent),
     d_ptr(new QchWebPagePrivate(this))
 {
-    if (const QDeclarativeEngine *engine = qmlEngine(this)) {
-        setNetworkAccessManager(engine->networkAccessManager());
-    }
-
     setPalette(QApplication::palette("QWebView"));
     setForwardUnsupportedContent(true);
     
@@ -213,10 +209,6 @@ QchWebPage::QchWebPage(QchWebPagePrivate &dd, QObject *parent) :
     QWebPage(parent),
     d_ptr(&dd)
 {
-    if (const QDeclarativeEngine *engine = qmlEngine(this)) {
-        setNetworkAccessManager(engine->networkAccessManager());
-    }
-
     setPalette(QApplication::palette("QWebView"));
     setForwardUnsupportedContent(true);
     
@@ -601,6 +593,14 @@ QWebPage* QchWebPage::createWindow(WebWindowType type) {
 
 QString QchWebPage::userAgentForUrl(const QUrl &url) const {
     return userAgent().isEmpty() ? QWebPage::userAgentForUrl(url) : userAgent();
+}
+
+void QchWebPage::classBegin() {}
+
+void QchWebPage::componentComplete() {
+    if (const QDeclarativeEngine *engine = qmlEngine(this)) {
+        setNetworkAccessManager(engine->networkAccessManager());
+    }
 }
 
 /*!

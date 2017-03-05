@@ -21,6 +21,7 @@
 #include <QWebElement>
 #include <QWebFrame>
 #include <QDeclarativeListProperty>
+#include <QDeclarativeParserStatus>
 #include <qdeclarative.h>
 
 class QDeclarativeComponent;
@@ -28,7 +29,7 @@ class QchWebHistory;
 class QchWebSettings;
 class QchWebPagePrivate;
 
-class QchWebPage : public QWebPage
+class QchWebPage : public QWebPage, public QDeclarativeParserStatus
 {
     Q_OBJECT
 
@@ -58,8 +59,10 @@ class QchWebPage : public QWebPage
     Q_PRIVATE_PROPERTY(QchWebPage::d_func(), QchWebSettings* settings READ settings CONSTANT FINAL)
     Q_PRIVATE_PROPERTY(QchWebPage::d_func(), QDeclarativeListProperty<QObject> data READ data)
     Q_PRIVATE_PROPERTY(QchWebPage::d_func(), QDeclarativeListProperty<QObject> javaScriptWindowObjects READ jsObjects)
-
+    
     Q_ENUMS(Status)
+    
+    Q_INTERFACES(QDeclarativeParserStatus)
 
 public:
     enum Status {
@@ -159,6 +162,9 @@ protected:
     virtual QWebPage* createWindow(WebWindowType type);
 
     virtual QString userAgentForUrl(const QUrl &url) const;
+    
+    virtual void classBegin();
+    virtual void componentComplete();
 
     QScopedPointer<QchWebPagePrivate> d_ptr;
 

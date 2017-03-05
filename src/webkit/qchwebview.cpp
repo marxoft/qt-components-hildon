@@ -217,27 +217,10 @@ QchWebView::QchWebView(QGraphicsItem *parent) :
     d_ptr(new QchWebViewPrivate(this))
 {
     Q_D(QchWebView);
-
-    d->webPage = new QchWebPage(this);
-    setPage(d->webPage);
+    d->setPage(new QchWebPage(this));
     setResizesToContents(true);
     setAttribute(Qt::WA_OpaquePaintEvent, true);
-    setPalette(QApplication::palette("QWebView"));
-
-    if (const QDeclarativeEngine *engine = qmlEngine(this)) {
-        d->webPage->setNetworkAccessManager(engine->networkAccessManager());
-    }
-    
-    connect(d->webPage, SIGNAL(preferredWidthChanged()), this, SIGNAL(preferredWidthChanged()));
-    connect(d->webPage, SIGNAL(preferredHeightChanged()), this, SIGNAL(preferredHeightChanged()));
-    connect(d->webPage, SIGNAL(selectionChanged()), this, SIGNAL(selectedTextChanged()));
-    connect(d->webPage, SIGNAL(userAgentChanged()), this, SIGNAL(userAgentChanged()));
-    connect(d->webPage, SIGNAL(downloadRequested(QNetworkRequest)),
-            this, SIGNAL(downloadRequested(QNetworkRequest)));
-    connect(d->webPage, SIGNAL(unsupportedContent(QNetworkReply*)),
-            this, SLOT(_q_onUnsupportedContent(QNetworkReply*)));
-    connect(d->webPage->mainFrame(), SIGNAL(javaScriptWindowObjectCleared()),
-            this, SLOT(_q_onJavaScriptWindowObjectCleared()));
+    setPalette(QApplication::palette("QWebView"));    
     connect(this, SIGNAL(loadStarted()), this, SLOT(_q_onLoadStarted()));
     connect(this, SIGNAL(loadFinished(bool)), this, SLOT(_q_onLoadFinished(bool)));
     connect(this, SIGNAL(loadProgress(int)), this, SLOT(_q_onLoadProgress(int)));
@@ -249,27 +232,10 @@ QchWebView::QchWebView(QchWebViewPrivate &dd, QGraphicsItem *parent) :
     d_ptr(&dd)
 {
     Q_D(QchWebView);
-
-    d->webPage = new QchWebPage(this);
-    setPage(d->webPage);
+    d->setPage(new QchWebPage(this));
     setResizesToContents(true);
     setAttribute(Qt::WA_OpaquePaintEvent, true);
-    setPalette(QApplication::palette("QWebView"));
-
-    if (const QDeclarativeEngine *engine = qmlEngine(this)) {
-        d->webPage->setNetworkAccessManager(engine->networkAccessManager());
-    }
-
-    connect(d->webPage, SIGNAL(preferredWidthChanged()), this, SIGNAL(preferredWidthChanged()));
-    connect(d->webPage, SIGNAL(preferredHeightChanged()), this, SIGNAL(preferredHeightChanged()));
-    connect(d->webPage, SIGNAL(selectionChanged()), this, SIGNAL(selectedTextChanged()));
-    connect(d->webPage, SIGNAL(userAgentChanged()), this, SIGNAL(userAgentChanged()));
-    connect(d->webPage, SIGNAL(downloadRequested(QNetworkRequest)),
-            this, SIGNAL(downloadRequested(QNetworkRequest)));
-    connect(d->webPage, SIGNAL(unsupportedContent(QNetworkReply*)),
-            this, SLOT(_q_onUnsupportedContent(QNetworkReply*)));
-    connect(d->webPage->mainFrame(), SIGNAL(javaScriptWindowObjectCleared()),
-            this, SLOT(_q_onJavaScriptWindowObjectCleared()));
+    setPalette(QApplication::palette("QWebView"));    
     connect(this, SIGNAL(loadStarted()), this, SLOT(_q_onLoadStarted()));
     connect(this, SIGNAL(loadFinished(bool)), this, SLOT(_q_onLoadFinished(bool)));
     connect(this, SIGNAL(loadProgress(int)), this, SLOT(_q_onLoadProgress(int)));
@@ -644,6 +610,15 @@ void QchWebView::keyPressEvent(QKeyEvent *event) {
     }
 
     QGraphicsWebView::keyPressEvent(event);
+}
+
+void QchWebView::classBegin() {}
+
+void QchWebView::componentComplete() {
+    if (const QDeclarativeEngine *engine = qmlEngine(this)) {
+        Q_D(QchWebView);
+        d->webPage->setNetworkAccessManager(engine->networkAccessManager());
+    }
 }
 
 /*!

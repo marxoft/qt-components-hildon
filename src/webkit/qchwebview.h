@@ -19,12 +19,13 @@
 
 #include "qchwebpage.h"
 #include <QGraphicsWebView>
+#include <QDeclarativeParserStatus>
 #include <qdeclarative.h>
 
 class QDeclarativeItem;
 class QchWebViewPrivate;
 
-class QchWebView : public QGraphicsWebView
+class QchWebView : public QGraphicsWebView, public QDeclarativeParserStatus
 {
     Q_OBJECT
 
@@ -52,8 +53,9 @@ class QchWebView : public QGraphicsWebView
     Q_PRIVATE_PROPERTY(QchWebView::d_func(), QchWebPage* page READ page WRITE setPage NOTIFY pageChanged)
     Q_PRIVATE_PROPERTY(QchWebView::d_func(), QDeclarativeListProperty<QObject> data READ data)
     Q_PRIVATE_PROPERTY(QchWebView::d_func(), QDeclarativeListProperty<QObject> javaScriptWindowObjects READ jsObjects)    
-
     Q_ENUMS(Status)
+    
+    Q_INTERFACES(QDeclarativeParserStatus)
 
     Q_CLASSINFO("DefaultProperty", "data")
 
@@ -142,6 +144,9 @@ protected:
     
     virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
     virtual void keyPressEvent(QKeyEvent *event);
+    
+    virtual void classBegin();
+    virtual void componentComplete();
 
     QScopedPointer<QchWebViewPrivate> d_ptr;
 
