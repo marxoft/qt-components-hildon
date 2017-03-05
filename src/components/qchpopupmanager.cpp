@@ -30,9 +30,7 @@ public:
     {
     }
     
-    void init(QObject *obj, QObject *parent, const QVariantMap &properties) {
-        obj->setParent(parent);
-        
+    void setProperties(QObject *obj, const QVariantMap &properties) {        
         if (!properties.isEmpty()) {
             QMapIterator<QString, QVariant> iterator(properties);
             
@@ -59,7 +57,8 @@ public:
     }
         
     QObject* open(QObject *obj, QObject *parent, const QVariantMap &properties, bool deleteOnClose) {
-        init(obj, parent, properties);
+        obj->setParent(parent);
+        setProperties(obj, properties);
         launch(obj, deleteOnClose);
         return obj;
     }
@@ -84,9 +83,10 @@ public:
         }        
     
         if (QObject *popup = component->beginCreate(context)) {
-            init(popup, parent, properties);
-            component->completeCreate();
+            popup->setParent(parent);
             context->setParent(popup);
+            component->completeCreate();
+            setProperties(popup, properties);            
             launch(popup, true);
             return popup;
         }
