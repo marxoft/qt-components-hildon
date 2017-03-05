@@ -1,8 +1,9 @@
 qt-components-hildon (0.24.1) unstable; urgency=low
 
   * Fix error in open() method of popupManager when the parent parameter is 0.
+  * Fix acquiring of a QML QNetworkAccessManager in WebView and WebPage.
 
- -- Stuart Howarth <showarth@marxoft.co.uk>  Sat, 04 Mar 2017 03:51:24 +0100
+ -- Stuart Howarth <showarth@marxoft.co.uk>  Sun, 05 Mar 2017 18:06:24 +0100
 
 qt-components-hildon (0.24.0) unstable; urgency=low
 
