@@ -394,7 +394,7 @@ void QchDialog::componentComplete() {
     while (p) {
         if (p->isWidgetType()) {
             if (QWidget *w = qobject_cast<QWidget*>(p)) {
-                m_dialog->setParent(w);
+                m_dialog->setParent(w, Qt::Dialog);
                 break;
             }
         }
@@ -412,7 +412,7 @@ bool QchDialog::event(QEvent *e) {
         while (p) {
             if (p->isWidgetType()) {
                 if (QWidget *w = qobject_cast<QWidget*>(p)) {
-                    m_dialog->setParent(w);
+                    m_dialog->setParent(w, Qt::Dialog);
                     break;
                 }
             }

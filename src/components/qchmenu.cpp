@@ -28,7 +28,6 @@ public:
     QchMenuPrivate(QchMenu *parent) :
         q_ptr(parent),
         menu(new QMenu),
-        submenu(false),
         complete(false),
         status(QchDialogStatus::Closed)
     {
@@ -49,7 +48,20 @@ public:
         }
         
         Q_Q(QchMenu);
-        complete = true;        
+        complete = true;
+        QObject *p = q->parent();
+        
+        while (p) {
+            if (p->isWidgetType()) {
+                if (QWidget *w = qobject_cast<QWidget*>(p)) {
+                    menu->setParent(w, Qt::Popup);
+                    break;
+                }
+            }
+            
+            p = p->parent();
+        }
+        
         const QObjectList list = q->children();
         
         for (int i = 0; i < list.size(); i++) {
@@ -65,7 +77,6 @@ public:
             q->connect(i, SIGNAL(destroyed(QObject*)), q, SLOT(removeItem(QObject*)));
         }
         else if (QchMenu *m = qobject_cast<QchMenu*>(obj)) {
-            m->d_func()->submenu = true;
             menu->addMenu(m->d_func()->menu);
             q->connect(m, SIGNAL(destroyed(QObject*)), q, SLOT(removeItem(QObject*)));
         }
@@ -100,7 +111,6 @@ public:
     QchMenu *q_ptr;
     QMenu *menu;
     
-    bool submenu;
     bool complete;
     
     QString iconName;
@@ -298,7 +308,6 @@ QchMenu* QchMenu::addMenu(const QString &title) {
     Q_D(QchMenu);
     QchMenu *menu = new QchMenu(this);
     menu->setTitle(title);
-    menu->d_func()->submenu = true;
     menu->d_func()->init();
     d->menu->addMenu(menu->d_func()->menu);
     connect(menu, SIGNAL(destroyed(QObject*)), this, SLOT(removeItem(QObject*)));
@@ -316,7 +325,6 @@ QchMenu* QchMenu::insertMenu(int before, const QString &title) {
     if ((before >= 0) && (before < actions.size())) {
         QchMenu *menu = new QchMenu(this);
         menu->setTitle(title);
-        menu->d_func()->submenu = true;
         menu->d_func()->init();
         d->menu->insertMenu(actions.at(before), menu->d_func()->menu);
         connect(menu, SIGNAL(destroyed(QObject*)), this, SLOT(removeItem(QObject*)));
@@ -342,7 +350,6 @@ void QchMenu::removeItem(QObject *item) {
         action = menuItem->toQAction();
     }
     else if (QchMenu *menu = qobject_cast<QchMenu*>(item)) {
-        menu->d_func()->submenu = false;
         action = menu->d_func()->menu->menuAction();
     }
     
@@ -410,6 +417,20 @@ void QchMenu::componentComplete() {
 
 bool QchMenu::event(QEvent *e) {    
     if (e->type() == QEvent::ParentChange) {
+        QObject *p = parent();
+        
+        while (p) {
+            if (p->isWidgetType()) {
+                if (QWidget *w = qobject_cast<QWidget*>(p)) {
+                    Q_D(QchMenu);
+                    d->menu->setParent(w, Qt::Popup);
+                    break;
+                }
+            }
+            
+            p = p->parent();
+        }
+        
         emit parentChanged();
     }
     
