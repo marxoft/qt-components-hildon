@@ -16,6 +16,7 @@
 
 #include "qchplugin.h"
 #include "qchaction.h"
+#include "qchapplication.h"
 #include "qchcloseevent.h"
 #include "qchdatetime.h"
 #include "qchdialog.h"
@@ -32,9 +33,13 @@
 #include "qchnavigationmode.h"
 #include "qchpopupmanager.h"
 #include "qchscreen.h"
+#include "qchscriptengineacquirer.h"
 #include "qchsortfilterproxymodel.h"
 #include "qchstandardbutton.h"
 #include "qchstyle.h"
+#include "qchsyntaxhighlighter.h"
+#include "qchtextcharformat.h"
+#include "qchtextdocument.h"
 #include "qchtextmetrics.h"
 #include "qchtheme.h"
 #include "qchvaluelayout.h"
@@ -44,6 +49,7 @@
 #include <QApplication>
 #include <QDeclarativeEngine>
 #include <QDeclarativeContext>
+#include <QScriptEngine>
 
 void QchPlugin::initializeEngine(QDeclarativeEngine *engine, const char *uri) {
     Q_ASSERT(uri == QLatin1String("org.hildon.components"));
@@ -53,10 +59,22 @@ void QchPlugin::initializeEngine(QDeclarativeEngine *engine, const char *uri) {
     if (!engine->imageProvider("theme")) {
         engine->addImageProvider("icon", new QchIconImageProvider);
         engine->addImageProvider("theme", new QchThemeImageProvider);
-        
+
+        QScriptEngine *se = QchScriptEngineAcquirer::getScriptEngine(engine);
+
+        if (se) {
+            QScriptValue qt = se->globalObject().property("Qt");
+
+            if (QObject *oldApp = qt.property("application").toQObject()) {
+                qApp->removeEventFilter(oldApp);
+            }
+
+            qt.setProperty("application", se->newQObject(new QchApplication(engine), QScriptEngine::QtOwnership,
+                        QScriptEngine::ExcludeDeleteLater));
+        }
+
         QchStyle *style = new QchStyle(engine);
         QchTheme *theme = new QchTheme(engine);
-        QApplication::instance()->installEventFilter(theme);
         connect(theme, SIGNAL(changed()), style, SIGNAL(changed()));
         
         QDeclarativeContext *context = engine->rootContext();
@@ -83,6 +101,10 @@ void QchPlugin::registerTypes(const char *uri) {
     qmlRegisterType<QchMenuBar>(uri, 1, 0, "MenuBar");
     qmlRegisterType<QchMenuItem>(uri, 1, 0, "MenuItem");
     qmlRegisterType<QchSortFilterProxyModel>(uri, 1, 0, "SortFilterProxyModel");
+    qmlRegisterType<QchSyntaxHighlighter>(uri, 1, 0, "SyntaxHighlighter");
+    qmlRegisterType<QchSyntaxHighlightRule>(uri, 1, 0, "SyntaxHighlightRule");
+    qmlRegisterType<QchTextCharFormat>(uri, 1, 0, "TextCharFormat");
+    qmlRegisterType<QchTextDocument>(uri, 1, 0, "TextDocument");
     qmlRegisterType<QchTextMetrics>(uri, 1, 0, "TextMetrics");
     qmlRegisterType<QchWindow>(uri, 1, 0, "Window");
     qmlRegisterType<QchWindowStack>(uri, 1, 0, "WindowStack");
@@ -95,6 +117,8 @@ void QchPlugin::registerTypes(const char *uri) {
     qmlRegisterUncreatableType<QchStandardButton>(uri, 1, 0, "StandardButton", "");
     qmlRegisterUncreatableType<QchValueLayout>(uri, 1, 0, "ValueLayout", "");
     qmlRegisterUncreatableType<QchWindowStatus>(uri, 1, 0, "WindowStatus", "");
+    qmlRegisterUncreatableType<QTextDocument>(uri, 1, 0, "QTextDocument", "");
 }
 
 Q_EXPORT_PLUGIN2(qchcomponents, QchPlugin)
+

@@ -4,8 +4,12 @@ QT += declarative dbus maemo5 script
 
 TARGET = qchcomponents
 
+INCLUDEPATH += ../script
+
 HEADERS += \
+    ../script/qchscriptengineacquirer.h \
     qchaction.h \
+    qchapplication.h \
     qchcloseevent.h \
     qchdatetime.h \
     qchdeclarativelistmodelproxy.h \
@@ -30,6 +34,9 @@ HEADERS += \
     qchsortfilterproxymodel.h \
     qchstandardbutton.h \
     qchstyle.h \
+    qchsyntaxhighlighter.h \
+    qchtextcharformat.h \
+    qchtextdocument.h \
     qchtextmetrics.h \
     qchtheme.h \
     qchvaluelayout.h \
@@ -40,7 +47,9 @@ HEADERS += \
     qchplugin.h
 
 SOURCES += \
+    ../script/qchscriptengineacquirer.cpp \
     qchaction.cpp \
+    qchapplication.cpp \
     qchdatetime.cpp \
     qchdeclarativelistmodelproxy.cpp \
     qchdialog.cpp \
@@ -58,6 +67,9 @@ SOURCES += \
     qchscreen.cpp \
     qchsortfilterproxymodel.cpp \
     qchstyle.cpp \
+    qchsyntaxhighlighter.cpp \
+    qchtextcharformat.cpp \
+    qchtextdocument.cpp \
     qchtextmetrics.cpp \
     qchtheme.cpp \
     qchvariantlistmodel.cpp \
@@ -105,6 +117,7 @@ qml.files += \
     qml/ListViewStyle.qml \
     qml/MessageBox.qml \
     qml/MultiListPickSelector.qml \
+    qml/Object.qml \
     qml/OssoCheckBoxStyle.qml \
     qml/OssoComboBoxStyle.qml \
     qml/OssoFlickableStyle.qml \
