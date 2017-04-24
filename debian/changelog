@@ -1,3 +1,11 @@
+qt-components-hildon (0.25.0) unstable; urgency=low
+
+  * Add SyntaxHighlighter, SyntaxHighlightRule and TextCharFormat components to the
+    org.hildon.components module.
+  * Add FileInfo component to the org.hildon.utils module.
+
+ -- Stuart Howarth <showarth@marxoft.co.uk>  Sun, 23 Apr 2017 19:21:32 +0100
+
 qt-components-hildon (0.24.1) unstable; urgency=low
 
   * Fix error in open() method of popupManager when the parent parameter is 0.
