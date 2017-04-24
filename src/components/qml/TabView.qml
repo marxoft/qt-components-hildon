@@ -30,7 +30,7 @@ FocusScope {
     id: root
     
     /*!
-        type:list<Tab>
+        type:list<Item>
         \brief The tabs belonging to the tab view.
     */
     default property alias tabs: tabItem.children
@@ -52,6 +52,11 @@ FocusScope {
     property int currentIndex
     
     /*!
+        \brief The currently visible tab, or \c null if no tab is visible.
+    */
+    property Item currentTab
+    
+    /*!
         \brief Whether the frame should be visible
         
         The default value is \c true.
@@ -59,47 +64,50 @@ FocusScope {
     property bool frameVisible: true
     
     /*!
-        \brief Whether the tab buttons should be visible.
+        \brief Whether the tab bar should be visible.
         
         The default value is \c true.
     */
-    property bool tabsVisible: true
+    property bool tabBarVisible: true
     
     /*!
-        \brief Adds a new Tab with \a title and optional \a Component.
+        \brief Adds a new tab with \a title and optional \a Component.
         
-        Returns the newly added Tab.
+        Returns the newly added tab.
         
         @param type:string title
         @param type:Component component
-        @return type:Tab
+        @return type:Item
     */
     function addTab(title, component) {
         if (!component) {
             component = tabComponent;
         }
         
-        var tab = component.createObject(tabItem, {title: title});
-        return tab;
+        return component.createObject(tabItem, {title: title});
     }
     
     /*!
-        \brief Returns the Tab at \a index.
+        \brief Returns the tab at \a index.
         @param type:int index
-        @return type:Tab
+        @return type:Item
     */
     function getTab(index) {
         return tabItem.children[index];
     }
     
     /*!
-        \brief Removes and destroys a Tab at the given \a index.
+        \brief Removes and destroys a tab at the given \a index.
         @param type:int index
     */
     function removeTab(index) {
         var tab = tabItem.children[index];
         
         if (tab) {
+            if (index == currentIndex) {
+                currentIndex = Math.max(0, currentIndex - 1);
+            }
+
             tab.destroy();
         }
     }
@@ -116,6 +124,7 @@ FocusScope {
         TabBar {
             model: tabItem.children
             onCurrentIndexChanged: if (root.currentIndex != currentIndex) root.currentIndex = currentIndex;
+            Component.onCompleted: currentIndex = root.currentIndex
         }
     }
     
@@ -123,7 +132,6 @@ FocusScope {
         id: tabBarLoader
         
         z: 1000
-        height: 35
         anchors {
             left: parent.left
             leftMargin: platformStyle.paddingMedium
@@ -131,7 +139,7 @@ FocusScope {
             rightMargin: platformStyle.paddingMedium
             top: parent.top
         }
-        sourceComponent: root.tabsVisible ? tabBarComponent : undefined
+        sourceComponent: root.tabBarVisible ? tabBarComponent : undefined
     }
     
     BorderImage {
@@ -150,21 +158,29 @@ FocusScope {
             
             updateCurrentTab();
         }
-        
+
         function updateCurrentTab() {
             if (!completed) {
                 return;
             }
             
             var index = Math.min(root.currentIndex, children.length - 1);
+
+            if (index == -1) {
+                root.currentTab = null;
+                return;
+            }
                         
             for (var i = 0; i < children.length; i++) {
+                var tab = children[i];
+
                 if (i == index) {
-                    children[i].visible = true;
-                    children[i].forceActiveFocus();
+                    tab.visible = true;
+                    tab.forceActiveFocus();
+                    root.currentTab = tab;
                 }
                 else {
-                    children[i].visible = (i == index);
+                    tab.visible = false;
                 }
             }
         }
