@@ -16,7 +16,7 @@
 
 #include "qchtheme.h"
 #include "qcheventtypes.h"
-#include <QCoreApplication>
+#include <QApplication>
 #include <QSettings>
 
 static const QString THEME_DESKTOP_FILE("/etc/hildon/theme/index.theme");
@@ -35,6 +35,9 @@ QchTheme::QchTheme(QObject *parent) :
     QObject(parent),
     m_themeChangeQueued(false)
 {
+    if (qApp) {
+        qApp->installEventFilter(this);
+    }
 }
 
 /*!
@@ -83,3 +86,4 @@ bool QchTheme::eventFilter(QObject *watched, QEvent *event) {
     
     return QObject::eventFilter(watched, event);
 }
+
