@@ -15,7 +15,7 @@
  */
 
 import QtQuick 1.0
-import "."
+import org.hildon.components 1.0
 
 /*!
     \class TextArea
@@ -60,9 +60,10 @@ FocusScope {
     property alias cursorRectangle: textEdit.cursorRectangle
     
     /*!
+        type:int
         \brief The number of lines displayed in the text area.
     */
-    property int lineCount
+    property alias lineCount: document.lineCount
     
     /*!
         \brief The maximum height of a line of text in the text area.
@@ -138,6 +139,28 @@ FocusScope {
         \brief The input method hints.
     */
     property alias inputMethodHints: textEdit.inputMethodHints
+
+    /*!
+        type:QTextDocument
+        \brief The QTextDocument belonging to the text area.
+    */
+    property alias textDocument: document.textDocument
+
+    /*!
+        type:bool
+        \brief Whether a redo operation is available.
+
+        \sa redo(), canUndo
+    */
+    property alias canRedo: document.canRedo
+
+    /*!
+        type:bool
+        \brief Whether an undo operation is available.
+
+        \sa undo(), canUndo
+    */
+    property alias canUndo: document.canUndo
     
     /*!
         type:TextAreaStyle
@@ -165,7 +188,72 @@ FocusScope {
     function cut() {
         textEdit.cut()
     }
-    
+
+    /*!
+        \brief Appends \a text to the end of the text area.
+        @param type:string text
+    */
+    function append(text) {
+        document.append(text);
+    }
+
+    /*!
+        \brief Inserts \a text into the text area at \a position.
+        @param type:int position
+        @param type:string text
+    */
+    function insert(position, text) {
+        document.insert(position, text);
+    }
+
+    /*!
+        \brief Removes the section of text that is between the \a start and \a end positions of the text area.
+        @param type:int start
+        @param type:int end
+        @return type:string
+    */
+    function remove(start, end) {
+        return document.remove(start, end);
+    }
+
+    /*!
+        \brief Returns the section of text that is between the \a start and \a end positions.
+        @param type:int start
+        @param type:int end
+        The returned text will be formatted according to the textFormat property.
+    */
+    function getFormattedText(start, end) {
+        return document.formattedText(start, end);
+    }
+
+    /*!
+        \brief Returns the section of text that is between the \a start and \a end positions.
+        @param type:int start
+        @param type:int end
+        The returned text does not include any rich text formatting.
+    */
+    function getText(start, end) {
+        return document.text(start, end);
+    }
+
+    /*!
+        \brief Redoes the last editing operation if redo is available.
+
+        \sa redoAvailable, undo()
+    */
+    function redo() {
+        document.redo();
+    }
+
+    /*!
+        \brief Undoes the last editing operation if undo is available.
+        
+        \sa undoAvailable, redo()
+    */
+    function undo() {
+        document.undo();
+    }
+
     /*!
         \brief Clears all text.
     */
@@ -248,7 +336,6 @@ FocusScope {
     TextEdit {
         id: textEdit
         
-        property int lineCount: Math.floor(paintedHeight / lineHeight)
         property int lineHeight: cursorRectangle.height
 
         anchors {
@@ -265,7 +352,6 @@ FocusScope {
         selectionColor: root.style.selectionColor
         selectByMouse: true
         wrapMode: Text.WordWrap
-        onLineCountChanged: root.lineCount = lineCount
         onLineHeightChanged: root.lineHeight = lineHeight
     
         Loader {
@@ -281,7 +367,13 @@ FocusScope {
             enabled: !root.enabled
         }
     }
-    
+
+    TextDocument {
+        id: document
+
+        target: textEdit
+    }
+
     Component {
         id: placeholder
         
