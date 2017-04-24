@@ -18,11 +18,14 @@
 #include "qchclipboard.h"
 #include "qchdirectory.h"
 #include "qchfile.h"
+#include "qchfileinfo.h"
 #include "qchprocess.h"
 #include "qchscreensaver.h"
 #include "qchscreenshot.h"
+#include "qchscriptengineacquirer.h"
 #include <QDeclarativeEngine>
 #include <QDeclarativeContext>
+#include <QScriptEngine>
 
 void QchPlugin::initializeEngine(QDeclarativeEngine *engine, const char *uri) {
     Q_ASSERT(uri == QLatin1String("org.hildon.utils"));
@@ -31,6 +34,15 @@ void QchPlugin::initializeEngine(QDeclarativeEngine *engine, const char *uri) {
 
     if (engine->rootContext()->contextProperty("clipboard").isNull()) {
         engine->rootContext()->setContextProperty("clipboard", new QchClipboard(engine));
+
+        QScriptEngine *se = QchScriptEngineAcquirer::getScriptEngine(engine);
+
+        if (se) {
+            QScriptValue info = se->newQObject(new QchScriptableFileInfo(se));
+            se->setDefaultPrototype(qMetaTypeId<QFileInfo>(), info);
+            se->setDefaultPrototype(qMetaTypeId<QFileInfo*>(), info);
+            qScriptRegisterSequenceMetaType<QFileInfoList>(se);
+        }
     }
 }
 
@@ -39,9 +51,11 @@ void QchPlugin::registerTypes(const char *uri) {
 
     qmlRegisterType<QchDirectory>(uri, 1, 0, "Directory");
     qmlRegisterType<QchFile>(uri, 1, 0, "File");
+    qmlRegisterType<QchFileInfo>(uri, 1, 0, "FileInfo");
     qmlRegisterType<QchProcess>(uri, 1, 0, "Process");
     qmlRegisterType<QchScreenSaver>(uri, 1, 0, "ScreenSaver");
     qmlRegisterType<QchScreenShot>(uri, 1, 0, "ScreenShot");
 }
 
 Q_EXPORT_PLUGIN2(qchutils, QchPlugin)
+

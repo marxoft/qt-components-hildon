@@ -1,22 +1,28 @@
 TEMPLATE = lib
 CONFIG = qt plugin
-QT += declarative
+QT += declarative script
 
 TARGET = qchutils
 
+INCLUDEPATH += ../script
+
 HEADERS += \
+    ../script/qchscriptengineacquirer.h \
     qchclipboard.h \
     qchdirectory.h \
     qchfile.h \
+    qchfileinfo.h \
     qchprocess.h \
     qchscreensaver.h \
     qchscreenshot.h \
     qchplugin.h
 
 SOURCES += \
+    ../script/qchscriptengineacquirer.cpp \
     qchclipboard.cpp \
     qchdirectory.cpp \
     qchfile.cpp \
+    qchfileinfo.cpp \
     qchprocess.cpp \
     qchscreensaver.cpp \
     qchscreenshot.cpp \
