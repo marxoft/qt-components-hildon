@@ -130,6 +130,9 @@ public:
     Q_INVOKABLE QStringList entryList() const;
     Q_INVOKABLE QStringList recursiveEntryList() const;
 
+    Q_INVOKABLE QFileInfoList entryInfoList() const;
+    Q_INVOKABLE QFileInfoList recursiveEntryInfoList() const;
+
     Q_INVOKABLE bool makeAbsolute();
 
     Q_INVOKABLE bool mkdir(const QString &dirName) const;

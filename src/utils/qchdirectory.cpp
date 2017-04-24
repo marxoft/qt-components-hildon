@@ -409,6 +409,50 @@ QStringList QchDirectory::recursiveEntryList() const {
 }
 
 /*!
+    Returns a list of FileInfo of all the files and directories in the directory, ordered according to 
+    \link filter\endlink and \link nameFilters\endlink, and sorted according to \link sorting\endlink.
+        
+    Returns an empty list if the directory is unreadable, does not exist, or if nothing matches the specification.
+
+    \sa nameFilters, sorting, filter
+*/
+QFileInfoList QchDirectory::entryInfoList() const {
+    return m_dir.entryInfoList(m_dir.nameFilters(), m_dir.filter(), m_dir.sorting());
+}
+
+static void staticRecursiveEntryInfoList(QDir &dir, QFileInfoList &infos, bool includeDirectories) {
+    foreach (const QFileInfo &info, dir.entryInfoList(dir.nameFilters(), dir.filter(), dir.sorting())) {
+        if (info.isDir()) {
+            if (includeDirectories) {
+                infos << info;
+            }
+            
+            dir.setPath(info.absoluteFilePath());
+            staticRecursiveEntryInfoList(dir, infos, includeDirectories);
+        }
+        else {
+            infos << info;
+        }
+    }
+}
+
+/*!
+    Returns a list of FileInfo of all the files and directories in the directory and its subdirectories,
+    ordered according to \link filter\endlink and \link nameFilters\endlink, and sorted according to
+    \link sorting\endlink.
+        
+    Returns an empty list if the directory is unreadable, does not exist, or if nothing matches the specification.
+
+    \sa nameFilters, sorting, filter
+*/
+QFileInfoList QchDirectory::recursiveEntryInfoList() const {
+    QFileInfoList infos;
+    QDir dir(m_dir);
+    dir.setFilter(dir.filter() | QDir::Dirs | QDir::NoDotAndDotDot);
+    staticRecursiveEntryInfoList(dir, infos, m_dir.filter().testFlag(QDir::Dirs));
+    return infos;
+}
+/*!
     Converts the directory path to an absolute path. If it is already absolute nothing happens. Returns true if the 
     conversion succeeded; otherwise returns false.
 
