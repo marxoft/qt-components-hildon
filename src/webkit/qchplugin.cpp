@@ -32,23 +32,23 @@ void QchPlugin::initializeEngine(QDeclarativeEngine *engine, const char *uri) {
     Q_ASSERT(uri == QLatin1String("org.hildon.webkit"));
 
     QDeclarativeExtensionPlugin::initializeEngine(engine, uri);
-    
-    QScriptEngine *se = QchScriptEngineAcquirer::getScriptEngine(engine);
-    
-    if (se) {
-        QScriptValue request = se->newQObject(new QchNetworkRequest(se));
-        se->setDefaultPrototype(qMetaTypeId<QNetworkRequest>(), request);
-        se->setDefaultPrototype(qMetaTypeId<QNetworkRequest*>(), request);
-        QScriptValue element = se->newQObject(new QchWebElement(se));
-        se->setDefaultPrototype(qMetaTypeId<QWebElement>(), element);
-        se->setDefaultPrototype(qMetaTypeId<QWebElement*>(), element);
-        QScriptValue result = se->newQObject(new QchWebHitTestResult(se));
-        se->setDefaultPrototype(qMetaTypeId<QWebHitTestResult>(), result);
-        se->setDefaultPrototype(qMetaTypeId<QWebHitTestResult*>(), result);
-        qScriptRegisterSequenceMetaType< QList<QWebElement> >(se);
-    }
-    
+
     if (engine->rootContext()->contextProperty("webHistory").isNull()) {
+        QScriptEngine *se = QchScriptEngineAcquirer::getScriptEngine(engine);
+
+        if (se) {
+            QScriptValue request = se->newQObject(new QchNetworkRequest(se));
+            se->setDefaultPrototype(qMetaTypeId<QNetworkRequest>(), request);
+            se->setDefaultPrototype(qMetaTypeId<QNetworkRequest*>(), request);
+            QScriptValue element = se->newQObject(new QchWebElement(se));
+            se->setDefaultPrototype(qMetaTypeId<QWebElement>(), element);
+            se->setDefaultPrototype(qMetaTypeId<QWebElement*>(), element);
+            QScriptValue result = se->newQObject(new QchWebHitTestResult(se));
+            se->setDefaultPrototype(qMetaTypeId<QWebHitTestResult>(), result);
+            se->setDefaultPrototype(qMetaTypeId<QWebHitTestResult*>(), result);
+            qScriptRegisterSequenceMetaType< QList<QWebElement> >(se);
+        }
+
         engine->rootContext()->setContextProperty("webHistory", new QchWebHistoryInterface(engine));
         engine->rootContext()->setContextProperty("webSettings", new QchWebSettings(engine));
         
