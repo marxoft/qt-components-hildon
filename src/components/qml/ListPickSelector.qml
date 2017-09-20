@@ -101,6 +101,20 @@ AbstractPickSelector {
             }
         }
     }
+
+    StateGroup {
+        id: group
+
+        states: State {
+            name: "Portrait"
+            when: screen.currentOrientation == Qt.WA_Maemo5PortraitOrientation
+
+            PropertyChanges {
+                target: root
+                height: 680
+            }
+        }
+    }
     
     onStatusChanged: if (status == DialogStatus.Opening) view.currentIndex = currentIndex;
     onCurrentIndexChanged: {

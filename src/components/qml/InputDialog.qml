@@ -376,6 +376,36 @@ Dialog {
             Component.onCompleted: forceActiveFocus()
         }
     }
+
+    StateGroup {
+        id: group
+
+        states: State {
+            name: "Portrait"
+            when: screen.currentOrientation == Qt.WA_Maemo5PortraitOrientation
+
+            AnchorChanges {
+                target: column
+                anchors.right: parent.right
+            }
+
+            PropertyChanges {
+                target: column
+                anchors.rightMargin: 0
+            }
+
+            PropertyChanges {
+                target: okButton
+                width: parent.width
+            }
+
+            PropertyChanges {
+                target: root
+                height: column.height + (okButton.visible ? okButton.height + platformStyle.paddingMedium * 2
+                    : platformStyle.paddingMedium)
+            }
+        }
+    }
     
     onInputModeChanged: loader.loadComponent()
     Component.onCompleted: {

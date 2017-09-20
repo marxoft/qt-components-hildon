@@ -392,7 +392,7 @@ Item {
         return StandardButton.NoButton;
     }
     
-    width: grid.width
+    width: 180
     height: grid.height
     anchors {
         right: parent ? parent.right : undefined
@@ -401,6 +401,8 @@ Item {
     
     DialogButtonStyle {
         id: dialogButtonStyle
+
+        buttonWidth: root.width
     }
     
     Grid {
@@ -410,8 +412,27 @@ Item {
             right: parent.right
             bottom: parent.bottom
         }
-        columns: root.orientation == Qt.Horizontal ? children.length : 1
+        columns: 1
         spacing: platformStyle.paddingSmall
+    }
+
+    StateGroup {
+        id: group
+
+        states: State {
+            name: "Horizontal"
+            when: root.orientation == Qt.Horizontal
+
+            PropertyChanges {
+                target: dialogButtonStyle
+                buttonWidth: 180
+            }
+
+            PropertyChanges {
+                target: grid
+                columns: children.length
+            }
+        }
     }
     
     Component {

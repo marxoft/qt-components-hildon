@@ -23,14 +23,14 @@ Dialog {
     /*!
         \brief Whether the dialog gets hidden by reset().
         
-         The default is \c true.
+        The default is \c true.
     */
     property bool autoClose: true
     
     /*!
         \brief Whether the dialog calls reset() as soon as value equals maximum.
         
-         The default is \c true.
+        The default is \c true.
     */
     property bool autoReset: true
     
@@ -171,6 +171,36 @@ Dialog {
         interval: 4000
         repeat: false
         onTriggered: if ((root.value > root.minimum) && (root.value < root.maximum)) root.open();
+    }
+
+    StateGroup {
+        id: group
+
+        states: State {
+            name: "Portrait"
+            when: screen.currentOrientation == Qt.WA_Maemo5PortraitOrientation
+
+            AnchorChanges {
+                target: column
+                anchors.right: parent.right
+            }
+
+            PropertyChanges {
+                target: column
+                anchors.rightMargin: 0
+            }
+
+            PropertyChanges {
+                target: cancelButton
+                width: parent.width
+            }
+
+            PropertyChanges {
+                target: root
+                height: column.height + (cancelButton.visible ? cancelButton.height + platformStyle.paddingMedium * 2
+                    : platformStyle.paddingMedium)
+            }
+        }
     }
     
     onVisibleChanged: timer.stop()

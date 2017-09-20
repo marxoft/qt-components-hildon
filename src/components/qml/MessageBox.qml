@@ -362,4 +362,37 @@ Dialog {
             root.buttonClicked(button);
         }
     }
+
+    StateGroup {
+        id: group
+
+        states: State {
+            name: "Portrait"
+            when: screen.currentOrientation == Qt.WA_Maemo5PortraitOrientation
+
+            AnchorChanges {
+                target: label
+                anchors {
+                    right: parent.right
+                    top: parent.top
+                    verticalCenter: undefined
+                }
+            }
+
+            PropertyChanges {
+                target: label
+                anchors.rightMargin: 0
+            }
+
+            PropertyChanges {
+                target: buttonBox
+                width: parent.width
+            }
+
+            PropertyChanges {
+                target: root
+                height: label.height + buttonBox.height + platformStyle.paddingMedium * 2
+            }
+        }
+    }
 }
