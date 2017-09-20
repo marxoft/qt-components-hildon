@@ -41,6 +41,7 @@ HEADERS += \
     qchtheme.h \
     qchvaluelayout.h \
     qchvariantlistmodel.h \
+    qchvolumekeys.h \
     qchwindow.h \
     qchwindowstack.h \
     qchwindowstatus.h \
@@ -73,6 +74,7 @@ SOURCES += \
     qchtextmetrics.cpp \
     qchtheme.cpp \
     qchvariantlistmodel.cpp \
+    qchvolumekeys.cpp \
     qchwindow.cpp \
     qchwindowstack.cpp \
     qchplugin.cpp

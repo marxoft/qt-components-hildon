@@ -43,6 +43,7 @@
 #include "qchtextmetrics.h"
 #include "qchtheme.h"
 #include "qchvaluelayout.h"
+#include "qchvolumekeys.h"
 #include "qchwindow.h"
 #include "qchwindowstack.h"
 #include "qchwindowstatus.h"
@@ -116,6 +117,8 @@ void QchPlugin::registerTypes(const char *uri) {
     qmlRegisterUncreatableType<QchNavigationMode>(uri, 1, 0, "NavigationMode", "");
     qmlRegisterUncreatableType<QchStandardButton>(uri, 1, 0, "StandardButton", "");
     qmlRegisterUncreatableType<QchValueLayout>(uri, 1, 0, "ValueLayout", "");
+    qmlRegisterUncreatableType<QchVolumeKeys>(uri, 1, 0, "VolumeKeys",
+            QObject::tr("VolumeKeys is only available via attached properties"));
     qmlRegisterUncreatableType<QchWindowStatus>(uri, 1, 0, "WindowStatus", "");
     qmlRegisterUncreatableType<QTextDocument>(uri, 1, 0, "QTextDocument", "");
 }
