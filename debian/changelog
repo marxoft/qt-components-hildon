@@ -1,3 +1,11 @@
+qt-components-hildon (0.26.0) unstable; urgency=low
+
+  * Add VolumeKeys attached property to the org.hildon.components module.
+  * Add support for portrait layout in InputDialog, MessageBox and
+    ProgressDialog.
+
+ -- Stuart Howarth <showarth@marxoft.co.uk>  Sun, 17 Sep 2017 02:34:13 +0100
+
 qt-components-hildon (0.25.0) unstable; urgency=low
 
   * Add SyntaxHighlighter, SyntaxHighlightRule and TextCharFormat components to the
