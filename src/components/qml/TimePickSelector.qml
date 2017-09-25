@@ -245,6 +245,11 @@ AbstractPickSelector {
                 target: button
                 width: parent.width
             }
+
+            PropertyChanges {
+                target: root
+                height: 680
+            }
         }
     }
     
