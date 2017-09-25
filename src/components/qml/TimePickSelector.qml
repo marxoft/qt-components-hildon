@@ -239,6 +239,7 @@ AbstractPickSelector {
                     rightMargin: 0
                     bottomMargin: platformStyle.paddingMedium
                 }
+                clip: true
             }
             
             PropertyChanges {
