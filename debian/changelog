@@ -1,3 +1,9 @@
+qt-components-hildon (0.26.1) unstable; urgency=low
+
+  * Fix repeat emission of the linkClicked() signal in the WebView component.
+
+ -- Stuart Howarth <showarth@marxoft.co.uk>  Wed, 04 Oct 2017 01:51:51 +0100
+
 qt-components-hildon (0.26.0) unstable; urgency=low
 
   * Add VolumeKeys attached property to the org.hildon.components module.
