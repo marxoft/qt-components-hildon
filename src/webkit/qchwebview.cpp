@@ -95,7 +95,6 @@ public:
             q->connect(webPage, SIGNAL(preferredHeightChanged()), q, SIGNAL(preferredHeightChanged()));
             q->connect(webPage, SIGNAL(selectionChanged()), q, SIGNAL(selectedTextChanged()));
             q->connect(webPage, SIGNAL(userAgentChanged()), q, SIGNAL(userAgentChanged()));
-            q->connect(webPage, SIGNAL(linkClicked(QUrl)), q, SIGNAL(linkClicked(QUrl)));
             q->connect(webPage, SIGNAL(downloadRequested(QNetworkRequest)),
                        q, SIGNAL(downloadRequested(QNetworkRequest)));
             q->connect(webPage, SIGNAL(unsupportedContent(QNetworkReply*)),
