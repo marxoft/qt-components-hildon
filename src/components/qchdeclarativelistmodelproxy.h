@@ -36,6 +36,9 @@ public:
     
     virtual QVariant data(const QModelIndex &index, int role) const;
     
+Q_SIGNALS:
+    void roleNamesChanged();
+
 private:
     QScopedPointer<QchDeclarativeListModelProxyPrivate> d_ptr;
     

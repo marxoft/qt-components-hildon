@@ -52,6 +52,7 @@ public:
                 QchDeclarativeListModelProxy *proxy = new QchDeclarativeListModelProxy(q);
                 proxy->setSourceModel(obj);
                 q->setSourceModel(proxy);
+                q->connect(proxy, SIGNAL(roleNamesChanged()), q, SLOT(_q_updateRoleNames()));
                 
                 if ((ownModel) && (oldModel)) {
                     oldModel->deleteLater();
@@ -79,6 +80,22 @@ public:
         q->setFilterRole(q->roleNames().key(filterRoleName.toUtf8()));
         q->setSortRole(q->roleNames().key(sortRoleName.toUtf8()));
         
+        if (q->dynamicSortFilter()) {
+            q->sort();
+        }
+    }
+
+    void _q_updateRoleNames() {
+        Q_Q(QchSortFilterProxyModel);
+
+        if (!q->sourceModel()) {
+            return;
+        }
+
+        q->setRoleNames(q->sourceModel()->roleNames());
+        q->setFilterRole(q->sourceModel()->roleNames().key(filterRoleName.toUtf8()));
+        q->setSortRole(q->sourceModel()->roleNames().key(sortRoleName.toUtf8()));
+
         if (q->dynamicSortFilter()) {
             q->sort();
         }

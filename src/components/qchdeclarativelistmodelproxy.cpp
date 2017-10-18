@@ -76,12 +76,14 @@ public:
         }
         
         q->setRoleNames(roles);
+        emit q->roleNamesChanged();
     }
     
     void _q_onItemsInserted(int index, int count) {
         Q_Q(QchDeclarativeListModelProxy);
         
-        if (q->roleNames().isEmpty()) {
+        if (q->rowCount() == count) {
+            // Set role names when first items are added
             setRoleNames();
         }
         

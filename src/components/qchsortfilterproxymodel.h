@@ -82,6 +82,8 @@ private:
     
     Q_DECLARE_PRIVATE(QchSortFilterProxyModel)
     Q_DISABLE_COPY(QchSortFilterProxyModel)    
+
+    Q_PRIVATE_SLOT(d_func(), void _q_updateRoleNames())
 };
 
 QML_DECLARE_TYPE(QchSortFilterProxyModel)
