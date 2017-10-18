@@ -44,8 +44,8 @@ static bool acquireVolumeKeys(WId windowId, bool acquire = true) {
     \ingroup components
 
     The VolumeKeys attached property is used to enable handling of volume key events
-    in top-level items such as Dialog and Window. When enabled, the item receives a
-    key event with key Qt.Key_F7 or Qt.Key_F8 when the volume up or down keys are pressed.
+    in a Window. When enabled, the item receives a key event with key Qt.Key_F7 or Qt.Key_F8 
+    when the volume up or down keys are pressed.
 
     \include volumekeys.qml
 
