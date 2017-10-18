@@ -348,7 +348,7 @@ Dialog {
             verticalCenter: parent.verticalCenter
         }
         horizontalAlignment: Text.AlignHCenter
-        wrapMode: Text.WordWrap
+        wrapMode: Text.Wrap
     }
     
     DialogButtonBox {
