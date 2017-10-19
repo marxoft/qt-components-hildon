@@ -135,7 +135,10 @@ public:
 
 public Q_SLOTS:
     void start();
+    void start(const QString &command);
     void abort();
+
+    static bool startDetached(const QString &command);
 
 Q_SIGNALS:
     void commandChanged();

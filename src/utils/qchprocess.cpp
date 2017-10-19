@@ -461,6 +461,27 @@ void QchProcess::start() {
     d->process->start(command());
 }
 
+/*!
+    \overload
+    
+    Sets the \a command and starts the process.
+*/
+void QchProcess::start(const QString &command) {
+    setCommand(command);
+    start();
+}
+
+/*!
+    Starts a detached process using the \a command.
+
+    Returns \c true if the process is started, otherwise returns \c false.
+
+    \sa start()
+*/
+bool QchProcess::startDetached(const QString &command) {
+    return QProcess::startDetached(command);
+}
+
 /*!    
     Aborts a running process.
 */
