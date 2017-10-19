@@ -1,3 +1,10 @@
+qt-components-hildon (0.26.2) unstable; urgency=low
+
+  * Update role names dynamically in SortFilterProxyModel when calling append() or insert() on a ListModel source.
+  * Add startDetached() method to Process.
+
+ -- Stuart Howarth <showarth@marxoft.co.uk>  Wed, 18 Oct 2017 20:10:24 +0100
+
 qt-components-hildon (0.26.1) unstable; urgency=low
 
   * Fix repeat emission of the linkClicked() signal in the WebView component.
