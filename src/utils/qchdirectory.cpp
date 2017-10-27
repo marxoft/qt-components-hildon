@@ -346,7 +346,12 @@ QString QchDirectory::relativeFilePath(const QString &fileName) const {
     \sa cdUp(), readable, exists, path
 */
 bool QchDirectory::cd(const QString &dirName) {
-    return m_dir.cd(dirName);
+    if (m_dir.cd(dirName)) {
+        emit pathChanged();
+        return true;
+    }
+
+    return false;
 }
 
 /*!
@@ -358,7 +363,12 @@ bool QchDirectory::cd(const QString &dirName) {
     \sa cd(), readable, exists, path
 */
 bool QchDirectory::cdUp() {
-    return m_dir.cdUp();
+    if (m_dir.cdUp()) {
+        emit pathChanged();
+        return true;
+    }
+
+    return false;
 }
 
 /*!
